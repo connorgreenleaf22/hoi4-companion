@@ -1,10 +1,12 @@
 # HOI4 bridge status
 
-## Milestone 6 source checkpoint — planning workflow validated (2026-11-05)
+## Milestone 6 — planning and portable build validated on laptop (2026-11-05)
 
 - Goal routes, grouped prerequisites/exclusions, conservative condition display, saved strategy comparison and decision/research references extend the existing planner/API/schema. Base-game source context and unresolved mod/DLC/campaign conditions stay explicit. Report: `../application/MILESTONE-6.md`; user walkthrough: `../application/MILESTONE-6-ACCEPTANCE.md`.
 - 116 focused planner/history/strategy tests, TypeScript/build, and retained-real-recording/installed-Germany rendered workflow plus restart pass. Evidence: `artifacts/qa/strategy-planning-2026-11-05T05-09-45-380Z-b45489b1/`. No HOI4 launch or control action; MCP permissions unchanged, existing registration diagnostic passed.
-- Exact next step: commit source, package M6, ZIP/extract into a new outside-repository directory, test actual extracted Electron history/strategy persistence with developer PATH removed, then test missing configured game files. Final artifact and private feature-branch synchronization follow those gates. Main desktop/formal user acceptance remains pending; no M7 work.
+- Source/artifact `7e33b512da9c`: complete ZIP at `C:/Users/conno/Documents/HOI4 Companion Development Builds/M6-7e33b512da9c/M6-7e33b512da9c-windows-x64.zip`. All 73 freshly extracted files match. Two actual packaged workflow/restart checks passed with developer PATH removed and CWD outside checkout. Separate missing configured installation check passed. Evidence: `artifacts/qa/development-package-2026-11-05T05-18-26-656Z-faa75779/` and `artifacts/qa/package-missing-installation-2026-11-05T05-19-13-329Z-39f43f7c/`. Owned test processes stopped; older apps and personal data preserved.
+- Archive module autoload was environmental; helper now uses built-in .NET ZIP support. No Electron recovery loop or new native game test. Full-history audit and normal feature-branch push follow the final documentation checkpoint; exact remote receipt stays ignored locally.
+- Exact next task: user desktop acceptance using the bundled START-HERE.md / `MILESTONE-6-ACCEPTANCE.md`, then prioritize reported issues. Merged mod authority, dynamic/joint script interpretation, research scheduling and verified current campaign conditions remain unsupported or partial. Do not claim tested desktop compatibility or completed broad release gates. No M7 work begun.
 
 ## Milestone 5.1 — Electron recovery validated (2026-11-04 EST)
 

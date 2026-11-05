@@ -1,6 +1,6 @@
 # Milestone 6 — Advanced strategic planning
 
-2026-11-05, source checkpoint on `feature/hoi4-bridge`, based on synchronized M5.1 `d9d470b`. No HOI4 launches, game inputs, source rewrites or dependency changes.
+2026-11-05, engineering delivery on `feature/hoi4-bridge`, based on synchronized M5.1 `d9d470b`. Application/artifact source commit `7e33b512da9c`. No HOI4 launches, game inputs, source rewrites or dependency changes. Main-desktop user acceptance remains pending.
 
 ## Implemented scope
 
@@ -29,11 +29,35 @@ Reviewed Agent Tools registration remains enabled with the same ten tool permiss
 
 Evidence: `artifacts/qa/strategy-planning-2026-11-05T05-09-45-380Z-b45489b1/`. Earlier failures were environmental (Playwright's default downloaded browser absent; used installed Chrome) and a test-label mismatch (`The Four-Year Plan`, not `Four Year Plan`). Corrected the harness, including browser-startup cleanup; no repeated unchanged application failure or native game cycle. Existing broad release/QA-LEDGER gates remain open.
 
-## Windows acceptance gate
+## Windows acceptance build — laptop gates passed
 
-Pending at source checkpoint: commit source, build M6 with existing packaging/worker fix, archive the complete folder using `scripts/package-acceptance.mjs`, then run `scripts/development-package-smoke.ts` with `HOI4_STRATEGY_SMOKE=1` on the **fresh extraction**. The helper sets the packaged process working directory outside the checkout and removes developer paths/NODE_PATH/NODE_OPTIONS. Also run `scripts/package-missing-installation.ts` for missing configured game files. Record concrete artifacts/results here before declaring this gate passed.
+Portable ZIP (162,063,283 bytes), outside Git:
+
+`C:/Users/conno/Documents/HOI4 Companion Development Builds/M6-7e33b512da9c/M6-7e33b512da9c-windows-x64.zip`
+
+ZIP SHA256: `2515d46300a5f37ea10974e08c5b2b5a67f997f0e6ac3de4c1e60e63755b199f`.
+
+Actually tested executable, freshly extracted from that ZIP:
+
+`C:/Users/conno/Documents/HOI4 Companion Development Builds/M6-7e33b512da9c/acceptance-extracted/win-unpacked/HOI4 Companion M6-7e33b512da9c.exe`
+
+EXE SHA256: `fff24999552bd42308080aefbd2e4239cabe0e73a950c25681865a4f3d733b6e`. Entire folder required. Normal isolated data: `%APPDATA%/HOI4 Companion Development/M6-7e33b512da9c/`. Test companion databases were disposable and removed; no user history was prepopulated into the normal build profile. Older apps/builds retained.
+
+`npm run package:development -- M6` passed with unchanged Electron 45.2.1/worker indexing. The first ZIP attempt hit Windows PowerShell's Archive-module autoload failure. Corrected only the packaging helper to use built-in .NET ZipFile; no dependency upgrade or invasive installation. Archive/extraction verified all **73 files** byte-for-byte, including START-HERE.md. Existing destinations and differing walkthroughs are refused.
+
+`scripts/development-package-smoke.ts` with `HOI4_STRATEGY_SMOKE=1` passed both checks on the fresh extraction: first-time installed indexing, actual Electron renderer, history import/baseline, both German routes, saved comparison, decision/technology lookup, embedded service shutdown, and reopen persistence. Runtime evidence confirms CWD is the extracted folder, PATH is only `C:\WINDOWS\System32;C:\WINDOWS`, and NODE_PATH/NODE_OPTIONS are absent. No development server, global Node/Git/Codex executable or developer MCP is required by the app. Sandbox/context isolation stayed enabled; Node integration disabled. ASAR build/dist/assets matched compiled source; source identity was unchanged during the run.
+
+Separate `scripts/package-missing-installation.ts` check passed with a nonexistent configured game folder and fresh isolated data: actual window loads, error identifies missing files, editable installation path and Refresh game data remain available. This checks the missing **configured path** state on the laptop; it does not claim testing every desktop/Steam/security configuration.
+
+Evidence: `artifacts/qa/development-package-2026-11-05T05-18-26-656Z-faa75779/` (two passes, screenshots, startup logs, isolated runtime environment and manifest), `artifacts/qa/package-missing-installation-2026-11-05T05-19-13-329Z-39f43f7c/` (one pass, screenshot). Owned M6 Electron and HOI4 processes were absent after cleanup. Raw recordings/logs/databases/assets remain ignored and are not bundled or pushed.
+
+To reproduce, first build a clean committed checkout using `npm run package:development -- M6`; then `node scripts/package-acceptance.mjs <new-build-directory>`. With the retained recording path set in `HOI4_INTELLIGENCE_RECORDING`, set `HOI4_STRATEGY_SMOKE=1` and run `node --import tsx scripts/development-package-smoke.ts <extracted-executable>`, then `node --import tsx scripts/package-missing-installation.ts <extracted-executable>`. Use a new build root when repeating an existing commit; never overwrite an older artifact.
 
 Read `MILESTONE-6-ACCEPTANCE.md` for desktop review. It is bundled as START-HERE.md. Engineering validation happens now; formal user acceptance and actual desktop compatibility remain pending until the user runs that machine.
+
+## Repository checkpoint
+
+Application/artifact source is `7e33b512da9c`; subsequent commit contains the validated archive-helper correction, runtime-environment assertion and final evidence/status. Full-history secret/path/binary review precedes the authorized normal push to private `origin/feature/hoi4-bridge`. Exact final local/remote SHA verification is retained in ignored `.bridge-local/m6-remote-verification.json` and the delivery message. No merge, force, tag, release, binary upload or branch change.
 
 ## Next milestone
 
