@@ -4,6 +4,7 @@ Updated after Milestone 5. Deliver useful app features on the existing renderer/
 
 | Track / next feature | Priority | Dependencies and current feasibility | Measurable outcome |
 |---|---|---|---|
+| Windows development-build acceptance | P1 blocker | M5 unpacked Electron builds, but Chromium network service crashes at launch; compiled browser fallback is verified and isolated | Resolve with bounded minimal reproduction/child-process exit diagnostics; verify actual executable UI/services/reopen without disabling sandbox or overwriting older builds |
 | Campaign Intelligence: saved recording library and session filters | Delivered M5 | Existing bridge SQLite, separate imported history; explicit removal and duplicate detection | Restart/reopen and retained-recording journey passed; event timeline remains future work |
 | Campaign Intelligence: owned-reader attachment, monitoring and stale/disconnect alerts | P1 | M3 ownership contract exists; needs user-selected connection lifecycle, efficient checks and qualified producer fields; no game commands needed | A running/closed game cannot be confused with a recent file; reconnect requires correct new ownership |
 | Campaign Intelligence: country summaries and event timeline | P2 | Country/date/PP/stability now; events/industry/war fields need supported telemetry/save semantics first | Summaries cite observations and identify every missing field; alerts carry source/time |

@@ -1,5 +1,7 @@
 # Companion feature inventory — Milestone 4
 
+Historical inventory below. M5 adds persistent campaign recordings and reviewed planner baselines; see [MILESTONE-5.md](MILESTONE-5.md) for current functionality and the verified browser development build / blocked Electron launch.
+
 Reviewed at `3851fe7` and the M4 working tree on 2026-11-04 EST. This is a source/navigation/service inventory, not a new certification of every inherited QA gate. M4 exercised the Command center intelligence feature and its reference navigation; inherited tests and `QA-LEDGER.md` retain their previous scope.
 
 The app uses Electron `electron/main.ts` with sandboxed React renderer `src/App.tsx`, a local Node HTTP service `server/api.ts`, SQLite `server/store.ts`, ordered source parsing/import, and a separate `bridge.sqlite`. Browser and Electron share the renderer/service. Paired phone access has a separate authenticated listener; bridge routes remain desktop-local. No new service architecture or MCP dependency was added to the app.
