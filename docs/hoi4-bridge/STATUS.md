@@ -1,11 +1,11 @@
 # HOI4 bridge status
 
-## Milestone 5 source checkpoint — Windows package qualification next (2026-11-04 EST)
+## Milestone 5 checkpoint — Electron launch blocked; browser alternative next (2026-11-04 EST)
 
 - Persistent campaign history and reviewed snapshot-to-new-workspace planning implemented in the existing Command center/planner. SQLite storage stays separate from live state; duplicate imports, session separation, explicit removal and unavailable values covered.
 - 20 focused Node tests passed, including all 15 bridge tests; retained real recording restart/baseline/planner journey and four M4 UI journeys passed. TypeScript/build passed. Details: `../application/MILESTONE-5.md`.
 - Telemetry inventory in `TELEMETRY-INVENTORY.md`: no current regular playset detected; prior owned test profiles archived. PP/stability/country/date remain the native verified mod scope; current-focus OCR is separate. No HOI4 launch/input or mod expansion for M5.
-- Added existing-toolchain isolated Windows development packaging. Exact next step: package this committed source, launch the actual unpacked executable with disposable companion data, verify embedded service/resources/restart, then record artifact path/results and final checkpoint. Do not overwrite the old packaged app or use its database.
+- Source committed as `d9e31e7`; Electron build produced outside Git, but two distinct launch methods failed with Chromium network-service crash and `ERR_FAILED (-2)` loading loopback. Embedded service/index worked. Owned failed processes stopped; no third unchanged attempt. Exact next step: build/verify the isolated browser development alternative, then document its exact user-test path. See M5 report for diagnostics. Packaged Electron acceptance remains open; do not repeat this failure without new evidence.
 - Control remains blocked at M3 OCR title recognition; MCP permissions unchanged. No push, merge or release. Broad QA/release gates remain open.
 
 ## Milestone 4 checkpoint — application integration complete (2026-11-04 EST)
