@@ -7,6 +7,12 @@ description: Discover HOI4 installations, query installed definitions with prove
 
 Read the repository's `AGENTS.md` and `docs/hoi4-bridge/STATUS.md` first. Verify the checkout and requested branch before edits. The existing service is `server/api.ts`; reuse `server/parser.ts`, `server/importer.ts` and `server/store.ts`. The bridge contract is `src/bridge-types.ts`.
 
+## Community source tools
+
+The pinned `hoi4_agent_tools` MCP registration supplies ten source-analysis tools. Read `docs/hoi4-bridge/COMMUNITY-TOOLS.md` for the reviewed revision, setup, evidence and native-adapter blockers. Discover the actual catalog before invoking tools; use `workspaceId: "companion"`. Prefer `hoi4.source_lookup` for exact definitions, nested blocks and overrides; `hoi4.reference_search` followed by `hoi4.reference_read` for installed documentation; `hoi4.script_validate` for command kinds/scopes. Focus, technology, event and decision inspectors provide source analysis, not live state or eligibility. `focus_inspect` writes analysis reports to configured ignored storage (its readOnlyHint is false); game/mod source writes are excluded. Do not rebuild these developer analyzers in the companion.
+
+Inspect `structuredContent.status`, then `data`; MCP transport success alone is insufficient. Validation `valid: null` means unresolved; `parametersChecked: false` remains a limitation even when valid is true. Preserve revision, source layer, line and scan completeness. No source-rewrite tools are enabled. If the MCP catalog is absent, use the documented diagnostic/reconnect procedure once and the existing bridge reference query as a fallback; do not install native control components or launch HOI4 to repair source-tool access.
+
 ## Repeatable workflow
 
 1. Run `npm run dev -- --bridge inspect`. This reads the installation and detected launcher configuration without opening an app database. Use explicit `HOI4_GAME_DIR` and `HOI4_USER_DIR` when automatic discovery is incomplete. Read installed `launcher-settings.json` and `documentation/`; an executable's Windows product version can be the generic `1.0`. Recheck after Steam updates.

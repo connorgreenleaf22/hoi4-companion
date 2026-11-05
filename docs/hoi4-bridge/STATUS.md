@@ -1,6 +1,6 @@
 # HOI4 bridge status
 
-Milestone 1 complete within the verified scope below (2026-11-04). Stop expansion here. Branch: `feature/hoi4-bridge`; baseline `ba4c3c9`, initial bridge checkpoint `9017453`. No push, merge or release authorized/performed.
+Milestone 1 complete within the verified scope below (2026-11-04); follow-up community integration sprint complete. Branch: `feature/hoi4-bridge`; baseline `ba4c3c9`, initial bridge checkpoint `9017453`, native/skill checkpoint `e83d6a2`. No push, merge or release authorized/performed.
 
 Actual checkout: `C:/Users/conno/Documents/Codex/2026-11-04/s/hoi4-companion`. Open Codex in this repository to discover its skill; the original chat directory was empty.
 
@@ -40,4 +40,14 @@ Local evidence (ignored; may contain machine/account diagnostics): `.bridge-loca
 
 ## Next smallest task
 
-Milestone 2 should first add trustworthy live-process/session binding and explicit per-field verification metadata, then qualify ONE ordinary pause/resume adapter with independent readback. Use the existing review in `ADR-001.md`; do not repeat the whole community survey or rebuild the parser/service. Investigate keyboard-input delivery before relying on shortcuts. Any native session needs a new bounded plan and must preserve an existing normal profile; the current helper intentionally cannot use one.
+Implement M2A from `COMMUNITY-TOOLS.md`: bind observations to an owned process/session and add qualified active-focus/research readback, adapting reviewed Live Tools telemetry generation/manifest patterns. Then qualify ONE ordinary focus or research selection through its Windows input path behind ActionAdapter. No native memory integration is authorized. Follow the explicit pass/fail gates there; do not repeat the community survey. Any native session needs a new bounded plan and must preserve an existing normal profile; the current helper intentionally cannot use one.
+
+## Community integration sprint
+
+- Reviewed actual source at seven pinned revisions, compared with Milestone 1 code/evidence; no broad companion regression/build rerun. Detailed matrix, installation, risk assessment, use and next milestone are in `COMMUNITY-TOOLS.md`.
+- Installed/built HOI4 Agent Tools 4.7.0 at `3f035b2ffb8fbd4363b2842d5fdde6ff54517ef8` using upstream shrinkwrap and disabled lifecycle scripts. Companion dependencies and production service unchanged. Added reusable pin, setup/diagnostic scripts and skill routing.
+- User Codex config now contains one `hoi4_agent_tools` stdio registration, fixed to this repository's mod and local game; ten analysis tools allowed, mutations excluded. Existing trust/permission settings preserved. Initial project-scoped registration was ignored because this checkout was not trusted; replaced only our generated config with the user MCP table. Reconnect existing desktop clients to load their catalog; a fresh actual Codex app-server connection was verified.
+- Codex discovered ten tools and invoked real focus lookup, installed documentation search, supported-effect validation and unresolved-command validation; disabled rewrite rejected. No mock MCP server or model turn. Source matches existing germany.txt:124 provenance. Unknown command correctly remained `valid=null`; parameters remain unchecked. The first test script misread the response envelope; corrected once, then passed. Raw evidence under ignored `.bridge-local/agent-tools/`.
+- One new recorded-format regression passed (sanitized original native lines, hour 24, values and stale replay). This is offline coverage. No native launch or game action this sprint; existing two-snapshot evidence remains the only native telemetry gate.
+- Dependencies: upstream production audit reported three moderate findings (Hono HTTP path, glob cancellation, minimatch amplification), zero high/critical. Stdio only, no forced upgrades; review before updates/HTTP exposure. All caches/checkouts stay ignored; retain the pinned Agent Tools directory because the registration depends on it.
+- Native control blocked: saslifat requires executable `7dc947...` versus local `cf781e...`, DLL injection/process writes and unresolved license. No binaries/loaders executed. Live Tools' Rust Windows allowlist is empty; ordinary-input Python implementation is the next candidate, with upstream 1.19.2 evidence but no local 1.19.4.1 qualification. Harness README's stub label contradicts implemented input code; corrected in audit, not treated as native success.

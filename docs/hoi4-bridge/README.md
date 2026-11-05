@@ -2,6 +2,8 @@
 
 The first bridge milestone is verified, including two native telemetry snapshots on Windows HOI4 1.19.4.1. No native command adapter is registered. Read STATUS.md and EVIDENCE.md for the tested scope and limitations. Node 24+ is required by the existing service.
 
+Developer source analysis now also uses the pinned, read-only `hoi4_agent_tools` MCP server. See `COMMUNITY-TOOLS.md` for setup, verified Codex calls, capability comparison and Milestone 2 gates. The companion service/API remains the observation interface.
+
 From the repository root, use a disposable application data directory:
 
 ```powershell
