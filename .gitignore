@@ -7,6 +7,7 @@ coverage/
 test-results/
 playwright-report/
 .cache/
+.bridge-local/
 *.tsbuildinfo
 
 # Local QA captures and archived candidate packages (retain separately)

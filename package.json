@@ -10,6 +10,8 @@
     "browser": "npm run build && node build/cli.cjs",
     "build": "tsc --noEmit && vite build && node scripts/build.mjs",
     "test": "tsx --test tests/*.test.ts",
+    "test:bridge": "tsx --test tests/bridge.test.ts",
+    "bridge:validate": "tsx scripts/bridge-validate.ts",
     "test:ui": "tsx scripts/smoke.ts",
     "index": "tsx server/cli.ts --index-only",
     "package": "npm run build && electron-builder --win portable --publish never"

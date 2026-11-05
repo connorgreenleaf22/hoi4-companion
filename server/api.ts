@@ -13,6 +13,8 @@ import {validatePlanner} from './planner/validation';
 import {mirrorPlanner} from './planner/plans';
 import {preparePlanDraft,makePreview,validatePreviewContext,PlanConflict} from './planner/service';
 import {listDiscovery,getDiscovery,previewDiscovery} from './discovery';
+import {GameBridge} from './bridge/service';
+import type {BridgeMode} from '../src/bridge-types';
 
 export function validateProfile(input:any):Profile {
   if(!input || typeof input!=='object')throw new Error('Expected a campaign profile.');
@@ -39,13 +41,14 @@ export function validateProfile(input:any):Profile {
   return profile.planner?mirrorPlanner(profile):profile;
 }
 
-export async function startServer(options:{dataDir?:string;port?:number;staticDir?:string;autoIndex?:boolean;testRemoteHost?:'127.0.0.1'}={}) {
+export async function startServer(options:{dataDir?:string;port?:number;staticDir?:string;autoIndex?:boolean;testRemoteHost?:'127.0.0.1';bridge?:{mode?:BridgeMode;gameRoot?:string;userRoot?:string;logPath?:string}}={}) {
   // Internal test seam changes only listener binding. Pairing and all authorization remain active.
   if(options.testRemoteHost!==undefined){
     const fixture=options.dataDir&&path.resolve(options.dataDir),temporary=path.resolve(os.tmpdir());
     if(options.testRemoteHost!=='127.0.0.1'||options.autoIndex!==false||!fixture||fixture===path.resolve(dataDirectory())||!fixture.startsWith(temporary+path.sep)||!/^hoi4-[a-z0-9-]+$/i.test(path.basename(fixture)))throw new Error('The loopback test listener requires an explicit isolated temporary HOI4 fixture with auto-index disabled.');
   }
   const store=openStore(options.dataDir);
+  const bridge=new GameBridge(store,options.bridge);
   let meta=store.getSetting<Meta|null>('meta',null);
   let indexingError='';
   let root=store.getSetting('gameRoot','') || discoverGame();
@@ -81,6 +84,22 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
           res.setHeader('Set-Cookie',`hoi4_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=86400`);return send(res,200,{paired:true});
         }
         if(remote&&!authenticated(req))return send(res,401,{error:'Enter the pairing code shown in the desktop app.',pairing:true});
+        if(route.startsWith('bridge/')){
+          if(remote)return send(res,403,{error:'Game bridge interfaces are local-only.'});
+          if(req.method==='GET'){
+            if(route==='bridge/status')return send(res,200,bridge.status());
+            if(route==='bridge/environment')return send(res,200,bridge.environment());
+            if(route==='bridge/reference')return send(res,200,bridge.reference(url.searchParams.get('ref')||'',url.searchParams.get('kind')||undefined));
+            if(route==='bridge/snapshots')return send(res,200,{schemaVersion:1,snapshots:bridge.database.snapshots(url.searchParams.get('session')||undefined)});
+            if(route==='bridge/receipt')return send(res,200,{schemaVersion:1,receipt:bridge.gateway.receipt(url.searchParams.get('id')||'')});
+          }
+          if(req.method==='POST'){
+            if(route==='bridge/poll')return send(res,200,bridge.poll());
+            if(route==='bridge/actions')return send(res,200,await bridge.gateway.submit(await body(req)));
+            if(route==='bridge/stop')return send(res,200,bridge.gateway.stop());
+          }
+          return send(res,404,{error:'Unknown bridge endpoint'});
+        }
         if(req.method==='GET'){store.db.exec('BEGIN');readSnapshot=true;}
         const meta=store.getSetting<Meta|null>('meta',null);
         res.setHeader('X-HOI4-Index-Revision',meta?.indexRevision||'legacy');
@@ -228,5 +247,5 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
   const server=http.createServer((req,res)=>void handler(req,res));
   await new Promise<void>((resolve,reject)=>{server.once('error',reject);server.listen(port,'127.0.0.1',()=>resolve());});
   port=(server.address() as any).port;
-  return {port,url:`http://127.0.0.1:${port}`,store,close:async()=>{if(lan){lan.closeAllConnections();await new Promise<void>(r=>lan!.close(()=>r()));}server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));store.db.close();}};
+  return {port,url:`http://127.0.0.1:${port}`,store,close:async()=>{if(lan){lan.closeAllConnections();await new Promise<void>(r=>lan!.close(()=>r()));}server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));bridge.close();store.db.close();}};
 }

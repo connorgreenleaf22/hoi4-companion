@@ -1,0 +1,14 @@
+# One-way prototype. Unique filename; no replace_path or gameplay effects.
+# GER only for the first bounded smoke test. Producer token is replaced in a disposable copy.
+on_actions = {
+    on_startup = {
+        effect = {
+            log = "HC_BRIDGE|v1|begin|producer=prototype|END"
+        }
+    }
+    on_daily_GER = {
+        effect = {
+            log = "HC_BRIDGE|v1|state|producer=prototype|tag=[THIS.GetTag]|pp=[?political_power]|stability=[?stability]|END"
+        }
+    }
+}
