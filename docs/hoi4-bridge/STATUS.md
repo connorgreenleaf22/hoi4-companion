@@ -1,36 +1,43 @@
 # HOI4 bridge status
 
-Milestone: first read-only bridge and telemetry prototype. **Paused at the user's request on 2026-11-04. The first deliverable is not yet fully accepted.**
+Milestone 1 complete within the verified scope below (2026-11-04). Stop expansion here. Branch: `feature/hoi4-bridge`; baseline `ba4c3c9`, initial bridge checkpoint `9017453`. No push, merge or release authorized/performed.
+
+Actual checkout: `C:/Users/conno/Documents/Codex/2026-11-04/s/hoi4-companion`. Open Codex in this repository to discover its skill; the original chat directory was empty.
 
 ## Completed and verified
 
-- Existing repository `connorgreenleaf22/hoi4-companion`, branch `feature/hoi4-bridge`, baseline `ba4c3c9`; no migration or branch recreation. Actual checkout: `C:/Users/conno/Documents/Codex/2026-11-04/s/hoi4-companion`. The chat's selected `HOI 4 Test and Development` directory is empty.
-- Architecture inspected: Electron/React/TypeScript, Node HTTP and built-in SQLite. No dependency/version changes. Existing parser, index, resolution and HTTP guards reused.
-- Typed v1 bridge API and CLI, local-only routes, Observer default, environment inspection, indexed reference queries with conservative mod-override warnings, separate bridge SQLite persistence, partial-line telemetry reader, duplicate suppression, restart/rotation handling, explicit missing fields, freshness qualification and deterministic offline replay.
-- Action gateway has durable request receipts, mode/authorization/session/version/precondition checks, exclusive controller reservation, readback interface, timeout uncertainty and latched emergency stop. **No production/native adapter registered.** Adapter behavior in tests is simulated.
-- Six focused tests in `tests/bridge.test.ts` passed (wire/replay; rotation/restart; safe rejection; retry/lock/readback/timeout contract; reference overrides; local API/prototype syntax). `tsc --noEmit` passed after API/test integration. Installed-documentation prototype preflight passed against 1.19.4.1.
-- Actual installed reference indexing completed in the disposable `.bridge-local/reference-db`, producing index revision `844a2339f0c1651caffabf1dc4ebacae162740b7301e054f34887b3785afe5a0`. Evidence: `.bridge-local/index-result.json`. An individual real-definition bridge query still needs to be captured; fixture provenance queries passed.
-- Desktop window enumeration works. HOI4 was accessible as a targetable Windows window. Installed version changed from 1.19.3.0 to 1.19.4.1 during the session; recheck before further native work. Test-boundary executable SHA256: `cf781ed178cd801643b233b7e3fcd1c0efd19bd01aecd24bf07a35f69f10476f`.
+- Existing Electron/React/TypeScript/Node HTTP/SQLite architecture preserved. Reused ordered script parsing, installed-reference indexing, source provenance, ambiguity resolution and HTTP host/origin protection. No dependency versions or campaign database schema changed.
+- Typed v1 local bridge API/CLI; Observer default; environment/configuration/descriptor discovery; reference queries and conservative mod override detection; durable telemetry snapshots/cursors and deterministic replay. Bridge persistence is a separate `bridge.sqlite` in the configured application data directory.
+- Codex `skills/list` discovers `.agents/skills/hoi4-game-bridge/SKILL.md` as enabled, repo-scoped, with no errors. Its workflow was used to resolve real installed data. YAML/frontmatter/invocation metadata validated with the already installed js-yaml dependency. The bundled Python validator was unavailable because PyYAML is absent; no dependency added just for it.
+- Real focus `GER_prioritize_economic_growth` resolved to `common/national_focus/germany.txt:124`, version 1.19.4.1, source hash `ac730be5ccc9095fb400e58b2f7d44501288a94186beb148dbbb0b32cf8ea03c`. Existing index revision: `844a2339f0c1651caffabf1dc4ebacae162740b7301e054f34887b3785afe5a0`.
+- Standalone additive GER daily telemetry mod emitted TWO real snapshots on Windows HOI4 1.19.4.1. Country and game date matched the campaign; political power matched the displayed integer precision and stability matched 81%. Fractional PP precision is log-only, not independently measured by the UI.
+- Action gateway rejects Observer/Telemetry commands, unauthorized and unsupported requests, wrong session/version/state and conflicting controllers. Durable receipts distinguish rejection, confirmed success/failure, timeout and uncertainty; retry IDs do not automatically redispatch. Adapter execution/readback paths were tested with a simulated adapter only. No native adapter/grant is registered.
+- All 174 tests passed, including seven bridge/profile tests. `npm run build` passed (TypeScript, Vite, service/Electron bundle). Installed-script preflight passed. No repeated broad cycles after those passes.
 
-## Native blocker and cleanup
+## Native evidence and cleanup
 
-Environmental/isolation blocker: two launches attempted `-userdir=<absolute path>` then `userdir=<absolute path>` via an argument array. Both initialized the normal Documents game-data folder instead of the disposable user root. Neither argument form is validated. Stop here; the two-launch budget is exhausted. **No campaign was started, no gameplay inputs dispatched, no telemetry snapshots captured, and no native control success claimed.**
+Successful session: `.bridge-local/native-vCXJuK`, 2026-11-04 21:05:08–21:10:29 EST, owned PID 42652. One launch, sixteen UI inputs, approximately 5m21s; all within the two-launch/twenty-input/twenty-minute budget. No unchanged failed operation was attempted more than twice. The game exited through its UI. Offline replay then reproduced both persisted snapshots exactly with no HOI4 process running.
 
-Owned PIDs 38188 and 22404 were stopped. The initial normal HOI4 user folder did not exist. Startup-generated files were verified as created within the owned launch windows and moved to ignored evidence; normal folder absence was restored and verified. No pre-existing save, regular playset or vanilla game file was edited by this implementation. A cleanup attempt raced process termination; remaining files were retained separately after termination, not discarded.
+| Engine date | Country | Political power (log / UI) | Stability (log / UI) |
+|---|---|---|---|
+| 1936.01.01.24 | GER | 2.324 / 2 | 0.81 / 81% |
+| 1936.01.02.24 | GER | 4.648 / 4 | 0.81 / 81% |
 
-Retained local evidence: `.bridge-local/native-IxwG5O/plan.json`, `launch.json`, `launch-2.json`, `first-launch-user/`, `second-launch-user/`, `second-launch-user-residual/`. These may contain machine/account diagnostics; never add them to Git. Disposable mod/settings remain under that run's `user/`. All owned native/indexing processes are stopped/completed. No bridge daemon was started.
+Engine midnight is logged as hour `24`; retain it as engine text. The first date comparison was observed in the chat screenshot; `paused-1.jpg` was taken later at Jan 2 07:00. The second exact-date screenshot is `daily-2.jpg`. Do not describe the later first capture as an exact-date match.
 
-## Incomplete work and acceptance gaps
+The standard game profile was initially ABSENT. The revised helper exclusively created it with an ownership marker and directory identity, refusing all existing profiles. After the game exited, it moved only that owned directory into `owned-game-profile/` and verified the normal profile path was absent again. No pre-existing save or regular playset was changed. The installed executable's SHA256 is `cf781ed178cd801643b233b7e3fcd1c0efd19bd01aecd24bf07a35f69f10476f`; no executable modification or injection was used. No native game, bridge daemon or indexing process remains active.
 
-- Reusable skill draft at `.agents/skills/hoi4-game-bridge/` is written but has not passed the bundled skill validator or a fresh Codex discovery/invocation check. This chat is attached to a different directory; resume in the actual repository.
-- `scripts/bridge-prepare-native.ts` is an unfinished preparation helper, retained uncommitted. It does not launch anything; its proposed isolation arguments FAILED. Do not treat generated launch instructions as safe. Fix only after establishing a supported isolation mechanism without editing the installed game or personal profile.
-- Standalone telemetry prototype parses and uses installed documented primitives; actual scope/token expansion, date format and daily scheduling remain unverified.
-- Full existing tests, integrated build, packaged Electron checks, complete API regression and skill discovery are pending. No new regression/release acceptance claimed. Existing `QA-LEDGER.md` obligations remain unchanged.
-- No binary/text-save semantic mapping, automatic telemetry poller, merged mod index, live-process binding or real control adapter yet. Freshness is explicitly log-file age, not a running-process assertion.
-- `npm ci --ignore-scripts` completed; Electron postinstall was intentionally not run. npm reported six moderate dependency advisories; no forced dependency upgrades were attempted.
+Local evidence (ignored; may contain machine/account diagnostics): `.bridge-local/reference-query.json`, `skill-discovery.json`, `full-tests.txt`, `build.txt`, and `native-vCXJuK/{plan.json,result.json,snapshots.jsonl,replay.json,telemetry-lines.txt,daily-2.jpg,owned-game-profile/}`. Concise hashes and validation scope are in `EVIDENCE.md`. Never commit raw logs, saves or game assets.
 
-## Decisions and exact resumption step
+## Known blockers and limits
 
-Keep the existing service and separate telemetry/control gates; see `ADR-001.md` for reviewed upstream projects and license constraints. Do not rerun the same upstream research or either failed launch argument without new evidence.
+- Historical isolation failure retained in `.bridge-local/native-IxwG5O`: both `-userdir=<path>` and `userdir=<path>` were ignored. Its two-launch budget was exhausted and both processes stopped; no campaign was started in that session. Do not retry those arguments without new evidence. The successful session used a different, guarded absent-profile approach. Machines with an existing profile are explicitly refused by this helper and need a separately reviewed isolation workflow.
+- Keyboard `space` and `Escape` dispatch had no observed effect in this session. Pointer controls worked. Do not treat successful telemetry or manual test navigation as gateway/native-control acceptance.
+- Native action adapter remains unsupported. No memory writes, hooks, executable edits or achievement bypass. Achievement eligibility has not been verified.
+- Freshness is qualified log-file age, not process liveness; host version metadata comes from installed launcher settings. Telemetry is GER-only, daily, one campaign/two dates tested. No save mapping, merged mod index, automatic poller, live-process binding or strategic controller.
+- Existing `QA-LEDGER.md` release obligations remain unresolved unless already qualified there. The bridge smoke test does not certify planner parity, accessibility, packaged Electron lifecycle or a full campaign. No new installer/release was created.
+- `npm ci --ignore-scripts` left Electron postinstall unrun; npm reported six moderate advisories. No forced dependency upgrades performed.
 
-**Next smallest task:** open this actual checkout on `feature/hoi4-bridge`, read this status and review the pending skill/native-helper drafts. Complete skill validation/discovery and capture one real indexed focus or technology query using the existing disposable database. Before any new native session, investigate user-data isolation read-only and obtain new evidence of a supported mechanism; the previous session's launch budget is exhausted. Resume broad checks only at the next deliberate integration checkpoint.
+## Next smallest task
+
+Milestone 2 should first add trustworthy live-process/session binding and explicit per-field verification metadata, then qualify ONE ordinary pause/resume adapter with independent readback. Use the existing review in `ADR-001.md`; do not repeat the whole community survey or rebuild the parser/service. Investigate keyboard-input delivery before relying on shortcuts. Any native session needs a new bounded plan and must preserve an existing normal profile; the current helper intentionally cannot use one.

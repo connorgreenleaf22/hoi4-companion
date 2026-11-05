@@ -1,6 +1,6 @@
 # Game bridge developer interface
 
-This is a checkpointed MVP, not a released native game controller. Read STATUS.md for actual verification and blockers. Node 24+ is required by the existing service.
+The first bridge milestone is verified, including two native telemetry snapshots on Windows HOI4 1.19.4.1. No native command adapter is registered. Read STATUS.md and EVIDENCE.md for the tested scope and limitations. Node 24+ is required by the existing service.
 
 From the repository root, use a disposable application data directory:
 
@@ -8,7 +8,7 @@ From the repository root, use a disposable application data directory:
 $env:HOI4_DATA_DIR = Join-Path (Get-Location) '.bridge-local/reference-db'
 npm run dev -- --bridge inspect
 npm run index
-npm run dev -- --bridge reference GER_rhineland focus
+npm run dev -- --bridge reference GER_prioritize_economic_growth focus
 npm run dev -- --bridge status
 ```
 
@@ -20,7 +20,7 @@ For an already safely isolated game with the prototype loaded:
 $env:HOI4_BRIDGE_MODE = 'telemetry'
 $env:HOI4_BRIDGE_LOG = '<verified disposable game.log>'
 npm run dev -- --bridge poll
-npm run dev -- --bridge export > .bridge-local/snapshots.jsonl
+npm run --silent dev -- --bridge export > .bridge-local/snapshots.jsonl
 npm run dev -- --bridge replay .bridge-local/snapshots.jsonl
 ```
 
