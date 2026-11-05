@@ -1,0 +1,41 @@
+# Dependencies and generated output
+node_modules/
+dist/
+build/
+release/
+coverage/
+test-results/
+playwright-report/
+.cache/
+*.tsbuildinfo
+
+# Local QA captures and archived candidate packages (retain separately)
+artifacts/
+candidates/**/*.zip
+candidates/**/*.txt
+
+# Environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local data, game saves, databases and backups
+.test-data/
+*.hoi4
+*.hoi4_backup
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+migration-backups/
+
+# Logs and operating system files
+*.log
+.DS_Store
+Thumbs.db

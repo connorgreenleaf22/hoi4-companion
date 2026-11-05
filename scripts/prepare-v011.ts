@@ -1,0 +1,14 @@
+import fs from 'node:fs';import path from 'node:path';import {openStore} from '../server/store';
+const workspace='C:/Users/conno/Documents/Codex/2026-11-02/task-5';
+const report=JSON.parse(fs.readFileSync(path.join(workspace,'evidence/developer-ui-results.json'),'utf8'));
+const testRoot=path.join(workspace,'packaged-desktop');
+if(fs.existsSync(testRoot))throw Error('Use a fresh packaged test root.');
+fs.mkdirSync(testRoot,{recursive:true});
+fs.cpSync(report.dataDir,path.join(testRoot,'data'),{recursive:true});
+const store=openStore(path.join(testRoot,'data'));const template=store.listProfiles()[0];
+const first=store.saveProfile({...template,id:'packaged-first',revision:0,name:'Packaged baseline',goals:'Packaged desktop fixture'}).saved!;
+const selected=store.saveProfile({...template,id:'packaged-selected',revision:0,name:'Packaged selected campaign',goals:'Should survive changing service origins'}).saved!;
+store.setSetting('selectedProfileId',first.id);store.db.close();
+for(const name of ['appdata','localappdata','electron-profile'])fs.mkdirSync(path.join(testRoot,name),{recursive:true});
+fs.writeFileSync(path.join(testRoot,'seed.json'),JSON.stringify({first,selected,dataDir:path.join(testRoot,'data')},null,2));
+console.log('Prepared isolated portable fixture: '+testRoot);

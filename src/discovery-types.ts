@@ -1,0 +1,6 @@
+import type {Entry,PlanPreview,Profile,CampaignPlan} from './types';
+export type GuideSource={id:string;kind:'installed-script'|'external';path:string;line:number;endLine:number;hash:string;label:string;author?:string;reviewStatus?:string;rights?:string;accessedAt?:string};
+export type GuideClaim={id:string;type:'scripted'|'mechanics'|'strategy'|'lead';text:string;sourceIds:string[];verification:'script-extracted'|'unverified'|'editorial'};
+export type CampaignGuide={id:string;revision:number;title:string;countries:string[];type:string;summary:string;objectives:string[];preparation:string[];difficulty:{label:string;rationale:string};spoiler:boolean;supportedVersion:string;author:string;rights:string;reviewedAt:string;dlcContext:string;limits:string[];sources:GuideSource[];claims:GuideClaim[];references:{id:string;kind:string;source:string}[];starter?:{treeId:string;treeSource:string;focusIds:string[];assumptions:string[]}};
+export type GuideView=CampaignGuide&{freshness:'matched'|'review-required'|'unavailable';reviewReasons:string[];resolvedReferences:{id:string;title:string;uid:string}[];referenceProblems:string[];canPreview:boolean;indexRevision:string};
+export type DiscoveryPreview={guideId:string;guideRevision:number;profile:Profile;plan:CampaignPlan;preview:PlanPreview};

@@ -1,0 +1,1261 @@
+[
+  {
+    "id": "usa-fascist",
+    "revision": 2,
+    "title": "Fascist America: the domestic rupture",
+    "countries": [
+      "USA"
+    ],
+    "type": "Alternate history",
+    "summary": "Trace the America First branch and distinguish the warning events from the eventual democratic uprising. The installed scripts expose several escalation sources; no single focus is a universal civil-war trigger.",
+    "objectives": [
+      "Review the political entry requirements",
+      "Track both civil-war warning flags",
+      "Prepare for an uprising without treating a focus queue as a game-state simulator"
+    ],
+    "preparation": [
+      "Confirm Man the Guns is enabled for this branch",
+      "Read the Gold Standard availability rule before committing to an early economic focus",
+      "Keep a separate checklist for fascist support, an appropriate advisor and Congress"
+    ],
+    "difficulty": {
+      "label": "Hard",
+      "rationale": "Political availability, Congress, advisor state and event escalation interact; a focus-only queue cannot establish these live conditions."
+    },
+    "spoiler": false,
+    "supportedVersion": "1.19.4.1",
+    "author": "HOI4 Companion editorial",
+    "rights": "Original summary; installed-source excerpts referenced, not redistributed.",
+    "reviewedAt": "2026-11-03",
+    "dlcContext": "America First's branch declaration requires Man the Guns. Installed files alone do not prove ownership or enabled status.",
+    "limits": [
+      "Script-extracted requirements have not been checked in a running game during this review.",
+      "This is an early planning sequence and event explanation, not a complete civil-war victory walkthrough.",
+      "Civil-war warnings can also be advanced by other political focuses; do not infer one exclusive trigger from the two examples below.",
+      "Election choices, advisor timing, Congress thresholds, army splits and post-war leadership still need a full campaign check.",
+      "Event .2's compound NOT test is unresolved. Verify which focus-completion combinations select the 280- or 180-day dispatch before using either as a timing rule."
+    ],
+    "sources": [
+      {
+        "id": "usa-entry",
+        "path": "common/national_focus/usa.txt",
+        "line": 2961,
+        "endLine": 3067,
+        "hash": "8478594c7891883451f2b642a26b68b58818d28dacea0c121e1636e88786b165",
+        "kind": "installed-script",
+        "label": "Gold Standard availability and exclusion"
+      },
+      {
+        "id": "usa-america",
+        "path": "common/national_focus/usa.txt",
+        "line": 3255,
+        "endLine": 3310,
+        "hash": "8478594c7891883451f2b642a26b68b58818d28dacea0c121e1636e88786b165",
+        "kind": "installed-script",
+        "label": "America First prerequisite and DLC branch"
+      },
+      {
+        "id": "usa-voter",
+        "path": "common/national_focus/usa.txt",
+        "line": 3377,
+        "endLine": 3424,
+        "hash": "8478594c7891883451f2b642a26b68b58818d28dacea0c121e1636e88786b165",
+        "kind": "installed-script",
+        "label": "Voter Registration Act availability and escalation"
+      },
+      {
+        "id": "usa-silver",
+        "path": "common/national_focus/usa.txt",
+        "line": 3433,
+        "endLine": 3477,
+        "hash": "8478594c7891883451f2b642a26b68b58818d28dacea0c121e1636e88786b165",
+        "kind": "installed-script",
+        "label": "Silver Shirts availability and escalation"
+      },
+      {
+        "id": "usa-warning",
+        "path": "events/MTG_USA.txt",
+        "line": 1052,
+        "endLine": 1117,
+        "hash": "bed0afa639f082e51edb2936201035cf479d59fdff866f721f8882e851b656a3",
+        "kind": "installed-script",
+        "label": "Democratic uprising warning flags and delayed dispatch"
+      },
+      {
+        "id": "usa-war",
+        "path": "events/MTG_USA.txt",
+        "line": 1404,
+        "endLine": 1446,
+        "hash": "bed0afa639f082e51edb2936201035cf479d59fdff866f721f8882e851b656a3",
+        "kind": "installed-script",
+        "label": "Democratic uprising civil-war declaration"
+      },
+      {
+        "id": "wiki-lead",
+        "kind": "external",
+        "path": "https://hoi4.paradoxwikis.com/United_States",
+        "line": 0,
+        "endLine": 0,
+        "hash": "",
+        "label": "United States wiki research lead",
+        "author": "Paradox HOI4 Wiki contributors",
+        "accessedAt": "2026-11-03",
+        "reviewStatus": "Direct fetch returned 401. Full page and patch applicability unreviewed; link only.",
+        "rights": "No page text reproduced; original research-lead annotation only."
+      }
+    ],
+    "claims": [
+      {
+        "id": "gold",
+        "type": "scripted",
+        "text": "Reestablish the Gold Standard excludes Continue the New Deal and requires a democratic government with Roosevelt not the ruling leader.",
+        "sourceIds": [
+          "usa-entry"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "america",
+        "type": "scripted",
+        "text": "America First follows Reestablish the Gold Standard; its branch declares Man the Guns and its reward adds 5 percentage points of fascist popularity.",
+        "sourceIds": [
+          "usa-america"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "silver",
+        "type": "scripted",
+        "text": "Ally with the Silver Shirts follows America First. Its availability requires fascism above 10%, an idea with the fascist_demagogue trait, and neither Limited Intervention nor Neutrality Act completed. It bypasses under a fascist government.",
+        "sourceIds": [
+          "usa-silver"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "two-sources",
+        "type": "scripted",
+        "text": "Both Ally with the Silver Shirts and Voter Registration Act dispatch democratic-uprising event .1 when the first warning flag is absent, or event .2 when the first flag exists and the second is absent. These are conditional warning dispatches, not immediate unconditional civil-war declarations.",
+        "sourceIds": [
+          "usa-silver",
+          "usa-voter",
+          "usa-warning"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "war-dispatch",
+        "type": "scripted",
+        "text": "Unverified timing condition: event .2 sets the second warning flag and declares a 280-day dispatch to event .20 under a NOT block containing the Voter Registration Act and Silver Shirts completion tests, with a 180-day else branch. The compound NOT interpretation is unresolved here; do not infer which completion combinations select either delay. Event .20 contains the democratic civil-war start effect.",
+        "sourceIds": [
+          "usa-warning",
+          "usa-war"
+        ],
+        "verification": "unverified"
+      },
+      {
+        "id": "prepare",
+        "type": "strategy",
+        "text": "Keep political checks beside your army and equipment preparation; a nominal focus date is a planning aid and cannot guarantee how the uprising plays out.",
+        "sourceIds": [],
+        "verification": "editorial"
+      },
+      {
+        "id": "wiki-boundary",
+        "type": "lead",
+        "text": "This wiki link is a research lead. Its full route and patch applicability remain unreviewed; it does not establish an unlock condition.",
+        "sourceIds": [
+          "wiki-lead"
+        ],
+        "verification": "unverified"
+      }
+    ],
+    "references": [
+      {
+        "id": "USA_reestablish_the_gold_standard",
+        "kind": "focus",
+        "source": "common/national_focus/usa.txt"
+      },
+      {
+        "id": "USA_america_first",
+        "kind": "focus",
+        "source": "common/national_focus/usa.txt"
+      },
+      {
+        "id": "USA_ally_with_the_silver_shirts",
+        "kind": "focus",
+        "source": "common/national_focus/usa.txt"
+      },
+      {
+        "id": "USA_voter_registration_act",
+        "kind": "focus",
+        "source": "common/national_focus/usa.txt"
+      },
+      {
+        "id": "mtg_usa_civil_war_democrats.1",
+        "kind": "event",
+        "source": "events/MTG_USA.txt"
+      },
+      {
+        "id": "mtg_usa_civil_war_democrats.2",
+        "kind": "event",
+        "source": "events/MTG_USA.txt"
+      },
+      {
+        "id": "mtg_usa_civil_war_democrats.20",
+        "kind": "event",
+        "source": "events/MTG_USA.txt"
+      }
+    ],
+    "starter": {
+      "treeId": "usa_focus",
+      "treeSource": "common/national_focus/usa.txt",
+      "focusIds": [
+        "USA_reestablish_the_gold_standard",
+        "USA_america_first",
+        "USA_ally_with_the_silver_shirts"
+      ],
+      "assumptions": [
+        "Early political branch only; not the complete civil-war route.",
+        "Manually verify government, current leader, advisor trait, fascism support and enabled Man the Guns.",
+        "The planner does not execute focus rewards, election choices or civil-war warning flags.",
+        "Manual check: event .2's compound NOT interpretation is unresolved; verify the completion combinations before relying on its 280- or 180-day dispatch."
+      ]
+    }
+  },
+  {
+    "id": "british-elizabeth",
+    "revision": 1,
+    "title": "Elizabeth II and Britain's succession events",
+    "countries": [
+      "ENG"
+    ],
+    "type": "Secret leader",
+    "summary": "Inspect the marriage and succession scripts behind George VI and Elizabeth II. The dates and mean-time declarations are conditional event logic, not a fixed coronation timetable.",
+    "objectives": [
+      "Preserve the specific morganatic-marriage route",
+      "Inspect the distinct George VI and Elizabeth events",
+      "Track live control, bombing, government and leader conditions manually"
+    ],
+    "preparation": [
+      "Confirm Man the Guns for the marriage route",
+      "Read the morganatic option before choosing an abdication outcome",
+      "Leave irreversible rival political branches uncommitted until their exclusion rules have been reviewed"
+    ],
+    "difficulty": {
+      "label": "Hard",
+      "rationale": "The route combines a particular event choice, live wartime state conditions and a long random succession wait."
+    },
+    "spoiler": true,
+    "supportedVersion": "1.19.4.1",
+    "author": "HOI4 Companion editorial",
+    "rights": "Original summary; installed-source excerpts referenced, not redistributed.",
+    "reviewedAt": "2026-11-03",
+    "dlcContext": "The morganatic-marriage crisis and event .999 explicitly require Man the Guns. Event .1000 has no separate has_dlc line; its immediate trigger is the George VI, neutrality and date context.",
+    "limits": [
+      "No in-game succession or event-timing comparison was performed.",
+      "This is a sourced succession checklist, not a promise of a guaranteed date or a complete war strategy.",
+      "State 126's recent-bombing predicate is retained as written; its engine behavior has not been simulated here.",
+      "A general claim that ordinary abdication or any royal marriage is sufficient would exceed this reviewed chain."
+    ],
+    "sources": [
+      {
+        "id": "eng-marriage",
+        "path": "events/MTG_Britain.txt",
+        "line": 7,
+        "endLine": 122,
+        "hash": "c8b1a39afa9c9e7c35f01641eda3cc65ba31584bb22ac38905a3861a76c8ea05",
+        "kind": "installed-script",
+        "label": "Abdication crisis and morganatic option"
+      },
+      {
+        "id": "eng-wedding",
+        "path": "events/MTG_Britain.txt",
+        "line": 539,
+        "endLine": 563,
+        "hash": "c8b1a39afa9c9e7c35f01641eda3cc65ba31584bb22ac38905a3861a76c8ea05",
+        "kind": "installed-script",
+        "label": "Marriage-completed flag"
+      },
+      {
+        "id": "eng-george",
+        "path": "events/MTG_Britain.txt",
+        "line": 8332,
+        "endLine": 8369,
+        "hash": "c8b1a39afa9c9e7c35f01641eda3cc65ba31584bb22ac38905a3861a76c8ea05",
+        "kind": "installed-script",
+        "label": "Event .999 trigger and George VI outcome"
+      },
+      {
+        "id": "eng-elizabeth",
+        "path": "events/MTG_Britain.txt",
+        "line": 8371,
+        "endLine": 8406,
+        "hash": "c8b1a39afa9c9e7c35f01641eda3cc65ba31584bb22ac38905a3861a76c8ea05",
+        "kind": "installed-script",
+        "label": "Event .1000 trigger and Elizabeth II outcome"
+      },
+      {
+        "id": "eng-focus",
+        "path": "common/national_focus/uk.txt",
+        "line": 11193,
+        "endLine": 11253,
+        "hash": "470d4f19464c090e6d4aca86a48f108b0086f56bb460063f0aca0028ac4a21f5",
+        "kind": "installed-script",
+        "label": "The King's Party prerequisite, exclusions and availability"
+      },
+      {
+        "id": "wiki-lead",
+        "kind": "external",
+        "path": "https://hoi4.paradoxwikis.com/British_events_MtG",
+        "line": 0,
+        "endLine": 0,
+        "hash": "",
+        "label": "British events wiki research lead",
+        "author": "Paradox HOI4 Wiki contributors",
+        "accessedAt": "2026-11-03",
+        "reviewStatus": "Direct fetch returned 401. Full page and patch applicability unreviewed; link only.",
+        "rights": "No page text reproduced; original research-lead annotation only."
+      }
+    ],
+    "claims": [
+      {
+        "id": "morganatic",
+        "type": "scripted",
+        "text": "The morganatic option mtg_britain.1.b requires that Organize the Blackshirts, Concessions to the Trade Unions and Steady as She Goes have not been completed. It sets the morganatic-marriage flag. Marriage event .5 separately sets edward_viii_married_wallis_simpson.",
+        "sourceIds": [
+          "eng-marriage",
+          "eng-wedding"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "party",
+        "type": "scripted",
+        "text": "The King's Party follows A Change in Course and excludes the Blackshirts and trade-union branches. Its availability includes the completed-marriage flag, independence and peace.",
+        "sourceIds": [
+          "eng-focus"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "george",
+        "type": "scripted",
+        "text": "Event mtg_britain.999 requires tag ENG, ENG_king_died, Man the Guns, the morganatic-marriage flag, the completed-marriage flag, and state 126 controlled by ENG with days_since_last_strategic_bombing below 8. It declares a 30-day mean time; option .a replaces the current leader with George VI.",
+        "sourceIds": [
+          "eng-george"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "elizabeth",
+        "type": "scripted",
+        "text": "Event mtg_britain.1000 requires original_tag ENG, neutrality, date later than 1941.1.1, and George VI as ruling leader. It declares a 1460-day mean time; option .a replaces the leader with Elizabeth II and changes the neutrality party name.",
+        "sourceIds": [
+          "eng-elizabeth"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "timing",
+        "type": "mechanics",
+        "text": "The source uses mean_time_to_happen rather than a fixed scheduled completion date. Keep the succession wait outside a deterministic focus deadline.",
+        "sourceIds": [
+          "eng-george",
+          "eng-elizabeth"
+        ],
+        "verification": "editorial"
+      },
+      {
+        "id": "campaign",
+        "type": "strategy",
+        "text": "Treat wartime readiness and the succession objective as separate plans; intentionally creating bombing exposure carries campaign risk and is not required advice from this guide.",
+        "sourceIds": [],
+        "verification": "editorial"
+      },
+      {
+        "id": "wiki-boundary",
+        "type": "lead",
+        "text": "This wiki link is a research lead. Its full route and patch applicability remain unreviewed; it does not establish an unlock condition.",
+        "sourceIds": [
+          "wiki-lead"
+        ],
+        "verification": "unverified"
+      }
+    ],
+    "references": [
+      {
+        "id": "ENG_a_change_in_course",
+        "kind": "focus",
+        "source": "common/national_focus/uk.txt"
+      },
+      {
+        "id": "ENG_the_kings_party",
+        "kind": "focus",
+        "source": "common/national_focus/uk.txt"
+      },
+      {
+        "id": "mtg_britain.1",
+        "kind": "event",
+        "source": "events/MTG_Britain.txt"
+      },
+      {
+        "id": "mtg_britain.5",
+        "kind": "event",
+        "source": "events/MTG_Britain.txt"
+      },
+      {
+        "id": "mtg_britain.999",
+        "kind": "event",
+        "source": "events/MTG_Britain.txt"
+      },
+      {
+        "id": "mtg_britain.1000",
+        "kind": "event",
+        "source": "events/MTG_Britain.txt"
+      }
+    ],
+    "starter": {
+      "treeId": "british_focus",
+      "treeSource": "common/national_focus/uk.txt",
+      "focusIds": [
+        "ENG_a_change_in_course",
+        "ENG_the_kings_party"
+      ],
+      "assumptions": [
+        "Political preparation only; these focuses do not themselves grant Elizabeth II.",
+        "Manually verify the marriage choice, flags, independence and peace before The King's Party.",
+        "Event .999 and .1000 conditions and mean-time waits are manual checks, not projected focus rewards."
+      ]
+    }
+  },
+  {
+    "id": "japan-secret-leaders",
+    "revision": 1,
+    "title": "Japan's alternate emperors and Tokugawa emergency",
+    "countries": [
+      "JAP"
+    ],
+    "type": "Secret leaders and event chains",
+    "summary": "Follow the newer Japanese event chains for Yasuhito, Nobuhito and Tokugawa Iesato. A regent flag, a promoted country-leader role and a cosmetic restoration are different outcomes.",
+    "objectives": [
+      "Distinguish old and newer DLC branch conditions",
+      "Inspect Yasuhito's event flags and later leader promotion",
+      "Keep Nobuhito's regent outcome separate from the Tokugawa emergency"
+    ],
+    "preparation": [
+      "Confirm No Compromise, No Surrender and the displayed branch conditions",
+      "Read the trial and coup event choices before planning the zero-cost Kodoha branch",
+      "Keep competing democratic and Kodoha routes in separate alternative plans"
+    ],
+    "difficulty": {
+      "label": "Hard",
+      "rationale": "Event-completed branches, faction state, country flags, random outcomes and government changes prevent a single focus queue from proving the whole unlock."
+    },
+    "spoiler": true,
+    "supportedVersion": "1.19.4.1",
+    "author": "HOI4 Companion editorial",
+    "rights": "Original summary; installed-source excerpts referenced, not redistributed.",
+    "reviewedAt": "2026-11-03",
+    "dlcContext": "The newer Revere the Emperor branch and Tokugawa emergency explicitly require No Compromise, No Surrender. Do not substitute the older Support the Kodoha Faction route without checking its NOT-DLC branch gates.",
+    "limits": [
+      "No complete Japan campaign or in-game leader-display comparison was performed.",
+      "The initial trial/coup path and all faction helper conditions are not fully adjudicated here; the linked branch is not a guaranteed starting unlock.",
+      "Nobuhito event .23 sets a regent/emperor flag and a timed idea; this reviewed event does not itself promote a ruling country-leader role.",
+      "Tokugawa event .48 changes a cosmetic tag and adds a trait to an already ruling democratic Tokugawa; it is not evidence that the event creates a new leader.",
+      "Other unusual Japanese leaders remain outside this initial reviewed selection."
+    ],
+    "sources": [
+      {
+        "id": "jap-kodoha",
+        "path": "common/national_focus/japan.txt",
+        "line": 3814,
+        "endLine": 3914,
+        "hash": "6bd6e7866f91bd31ea5cfe62bf5651e359a9aa5d100ba179ba992c3adbf2d619",
+        "kind": "installed-script",
+        "label": "New Kodoha branch and event dispatch"
+      },
+      {
+        "id": "jap-choice",
+        "path": "events/SEA_Japan.txt",
+        "line": 9700,
+        "endLine": 9906,
+        "hash": "3a4fe28be204cbc7c2fd0f3f857c8a9af595b27a9bcd6babf7b7fb7b0db64a8c",
+        "kind": "installed-script",
+        "label": "Emperor choices, refusal and assassination outcomes"
+      },
+      {
+        "id": "jap-promotion",
+        "path": "common/national_focus/japan.txt",
+        "line": 5826,
+        "endLine": 5945,
+        "hash": "6bd6e7866f91bd31ea5cfe62bf5651e359a9aa5d100ba179ba992c3adbf2d619",
+        "kind": "installed-script",
+        "label": "Empower the Emperor conditional leader-role promotion"
+      },
+      {
+        "id": "jap-pacifists",
+        "path": "common/national_focus/japan.txt",
+        "line": 16179,
+        "endLine": 16255,
+        "hash": "6bd6e7866f91bd31ea5cfe62bf5651e359a9aa5d100ba179ba992c3adbf2d619",
+        "kind": "installed-script",
+        "label": "Royal pacifists and Nobuhito replacement flag"
+      },
+      {
+        "id": "jap-nobuhito-dispatch",
+        "path": "common/scripted_effects/JAP_scripted_effects.txt",
+        "line": 1544,
+        "endLine": 1553,
+        "hash": "29d244e5d375e73df7500509c61fbebb1f90d3e0c1e843d0a11fc666e627f17d",
+        "kind": "installed-script",
+        "label": "Democratic-civil-war helper dispatches Nobuhito event"
+      },
+      {
+        "id": "jap-nobuhito",
+        "path": "events/SEA_Japan.txt",
+        "line": 10999,
+        "endLine": 11029,
+        "hash": "3a4fe28be204cbc7c2fd0f3f857c8a9af595b27a9bcd6babf7b7fb7b0db64a8c",
+        "kind": "installed-script",
+        "label": "Nobuhito event .23 flag and timed idea"
+      },
+      {
+        "id": "jap-tokugawa",
+        "path": "events/SEA_Japan.txt",
+        "line": 12703,
+        "endLine": 12764,
+        "hash": "3a4fe28be204cbc7c2fd0f3f857c8a9af595b27a9bcd6babf7b7fb7b0db64a8c",
+        "kind": "installed-script",
+        "label": "Tokugawa national emergency trigger and outcome"
+      },
+      {
+        "id": "wiki-lead",
+        "kind": "external",
+        "path": "https://hoi4.paradoxwikis.com/Japan",
+        "line": 0,
+        "endLine": 0,
+        "hash": "",
+        "label": "Japan wiki research lead",
+        "author": "Paradox HOI4 Wiki contributors",
+        "accessedAt": "2026-11-03",
+        "reviewStatus": "Direct fetch returned 401. Full page and patch applicability unreviewed; link only.",
+        "rights": "No page text reproduced; original research-lead annotation only."
+      }
+    ],
+    "claims": [
+      {
+        "id": "kodoha",
+        "type": "scripted",
+        "text": "Revere the Emperor, Destroy the Traitors requires No Compromise, No Surrender and JAP_aizawas_trial_over_flag. It excludes the purge and Okada speech branches, and its completion schedules SEA_japan_popup_events.4 after 7 days plus up to 4 random days.",
+        "sourceIds": [
+          "jap-kodoha"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "yasuhito-flags",
+        "type": "scripted",
+        "text": "In event .4, the forceful third option dispatches event .7; the alternate-candidates option can dispatch .5 or .6 depending on the cavalry check and random selection. Event .6 offers abdication or house arrest and sets Yasuhito regent/emperor flags. Event .7 sets the killed-Hirohito and Yasuhito flags.",
+        "sourceIds": [
+          "jap-choice"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "yasuhito-role",
+        "type": "scripted",
+        "text": "Empower the Emperor promotes Yasuhito when the abdication flag exists, or when Hirohito is killed or under house arrest; otherwise it promotes Hirohito. The abdication and killed/arrest cases assign different traits.",
+        "sourceIds": [
+          "jap-promotion"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "nobuhito",
+        "type": "scripted",
+        "text": "Gather Royal Pacifists Support sets the will-replace-Hirohito-with-Nobuhito flag. The democratic-civil-war helper checks that flag and schedules event .23 in 24 hours plus up to 72 random hours. Event .23 adds a 365-day royal-support idea and sets Nobuhito's current-regent/emperor flag.",
+        "sourceIds": [
+          "jap-pacifists",
+          "jap-nobuhito-dispatch",
+          "jap-nobuhito"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "tokugawa",
+        "type": "scripted",
+        "text": "Tokugawa emergency event .48 requires tag JAP, No Compromise, No Surrender, democratic government with Tokugawa Iesato ruling, war without civil war, Crush the Internal Factions completed, and a home-island core state not fully controlled by ROOT. The emergency global flag must be absent. The event declares an 84-day mean time; its option adds an emergency-powers trait and the Tokugawa-restored cosmetic tag.",
+        "sourceIds": [
+          "jap-tokugawa"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "not-full",
+        "type": "lead",
+        "text": "A complete, repeatable campaign route through all trial, faction and civil-war helper conditions still needs in-game corroboration. These excerpts establish narrow declarations, not a universal secret-leader unlock recipe.",
+        "sourceIds": [
+          "jap-kodoha",
+          "jap-nobuhito-dispatch"
+        ],
+        "verification": "unverified"
+      },
+      {
+        "id": "separate",
+        "type": "strategy",
+        "text": "Keep the Kodoha emperor route and the democratic Tokugawa route in separate alternative plans, then review their mutually exclusive branches before applying either.",
+        "sourceIds": [],
+        "verification": "editorial"
+      },
+      {
+        "id": "wiki-boundary",
+        "type": "lead",
+        "text": "This wiki link is a research lead. Its full route and patch applicability remain unreviewed; it does not establish an unlock condition.",
+        "sourceIds": [
+          "wiki-lead"
+        ],
+        "verification": "unverified"
+      }
+    ],
+    "references": [
+      {
+        "id": "JAP_revere_the_emperor_destroy_the_traitors",
+        "kind": "focus",
+        "source": "common/national_focus/japan.txt"
+      },
+      {
+        "id": "JAP_empower_the_emperor",
+        "kind": "focus",
+        "source": "common/national_focus/japan.txt"
+      },
+      {
+        "id": "JAP_gather_royal_pacifists_support",
+        "kind": "focus",
+        "source": "common/national_focus/japan.txt"
+      },
+      {
+        "id": "JAP_tokugawa_iesato_focus",
+        "kind": "focus",
+        "source": "common/national_focus/japan.txt"
+      },
+      {
+        "id": "SEA_japan_popup_events.4",
+        "kind": "event",
+        "source": "events/SEA_Japan.txt"
+      },
+      {
+        "id": "SEA_japan_popup_events.6",
+        "kind": "event",
+        "source": "events/SEA_Japan.txt"
+      },
+      {
+        "id": "SEA_japan_popup_events.7",
+        "kind": "event",
+        "source": "events/SEA_Japan.txt"
+      },
+      {
+        "id": "SEA_japan_popup_events.23",
+        "kind": "event",
+        "source": "events/SEA_Japan.txt"
+      },
+      {
+        "id": "SEA_japan_popup_events.48",
+        "kind": "event",
+        "source": "events/SEA_Japan.txt"
+      }
+    ]
+  },
+  {
+    "id": "austrian-restoration",
+    "revision": 1,
+    "title": "Austria: restore the monarchy",
+    "countries": [
+      "AUS"
+    ],
+    "type": "Alternate history",
+    "summary": "Build an Austrian monarchy while keeping the competition for Otto separate from restoring the crown.",
+    "objectives": [
+      "Restore an Austrian monarchy.",
+      "Choose a later imperial or regional objective after inspecting diplomatic requirements."
+    ],
+    "preparation": [
+      "Confirm the Austrian Gotterdammerung tree and your enabled DLC.",
+      "Check whether Hungary has already secured Otto.",
+      "Keep a military survival plan beside the political sequence."
+    ],
+    "difficulty": {
+      "label": "Hard",
+      "rationale": "Austria faces external pressure, and Hungary can claim the desired monarch first. This is an editorial assessment."
+    },
+    "spoiler": false,
+    "supportedVersion": "1.19.4.1",
+    "author": "HOI4 Companion editorial",
+    "rights": "Original summary; installed-source excerpts referenced, not redistributed.",
+    "reviewedAt": "2026-11-03",
+    "dlcContext": "The austria_focus_tree country modifier requires Austrian tag and Gotterdammerung. Installed files do not establish ownership or enabled status.",
+    "limits": [
+      "Script declarations were inspected; no in-game journey was performed.",
+      "The starter is an early political sequence, not the full imperial or territorial route.",
+      "The council can promote Starhemberg instead of Otto if Hungary has already claimed Otto."
+    ],
+    "sources": [
+      {
+        "id": "austria-tree",
+        "path": "common/national_focus/austria.txt",
+        "line": 11,
+        "endLine": 23,
+        "hash": "80985c0d14bb1d41aca10d29281394f2597ea5277b8f3ab026c01e75e93f4787",
+        "kind": "installed-script",
+        "label": "Austrian tree selection"
+      },
+      {
+        "id": "austria-council",
+        "path": "common/national_focus/austria.txt",
+        "line": 5096,
+        "endLine": 5234,
+        "hash": "80985c0d14bb1d41aca10d29281394f2597ea5277b8f3ab026c01e75e93f4787",
+        "kind": "installed-script",
+        "label": "Imperial council and the Otto race"
+      },
+      {
+        "id": "austria-crown",
+        "path": "common/national_focus/austria.txt",
+        "line": 5236,
+        "endLine": 5508,
+        "hash": "80985c0d14bb1d41aca10d29281394f2597ea5277b8f3ab026c01e75e93f4787",
+        "kind": "installed-script",
+        "label": "Imperial legacy and crown conditions"
+      }
+    ],
+    "claims": [
+      {
+        "id": "tree-gate",
+        "type": "scripted",
+        "text": "The Austrian tree declares an Austrian tag and Gotterdammerung condition in its country-selection modifier.",
+        "sourceIds": [
+          "austria-tree"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "otto-race",
+        "type": "scripted",
+        "text": "Reinstate the Imperial Council transfers and promotes Otto only if Hungary's Otto-joined global flag is absent. If that flag is present, its alternative branch promotes Starhemberg.",
+        "sourceIds": [
+          "austria-council"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "crown-gate",
+        "type": "scripted",
+        "text": "Bring Back the Habsburg Rule requires Legacy of the Empire, neutrality popularity above 40%, and either Otto or Starhemberg as ruling leader; completion sets the Austrian kingdom cosmetic tag.",
+        "sourceIds": [
+          "austria-crown"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "sibling-gate",
+        "type": "scripted",
+        "text": "Repeal the Habsburgergesetz and Bring Back the Habsburg Rule are siblings after Legacy of the Empire. The repeal focus requires neutrality popularity above 50%; it is not a prerequisite of Bring Back.",
+        "sourceIds": [
+          "austria-crown"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "preparation",
+        "type": "strategy",
+        "text": "Prepare defensive equipment and diplomacy alongside the political focuses; a valid sequence does not guarantee Austria survives foreign pressure.",
+        "sourceIds": [],
+        "verification": "editorial"
+      }
+    ],
+    "references": [
+      {
+        "id": "AUS_reinstate_the_imperial_council",
+        "kind": "focus",
+        "source": "common/national_focus/austria.txt"
+      },
+      {
+        "id": "AUS_legacy_of_the_empire",
+        "kind": "focus",
+        "source": "common/national_focus/austria.txt"
+      },
+      {
+        "id": "AUS_repeal_the_habsburgergesetz",
+        "kind": "focus",
+        "source": "common/national_focus/austria.txt"
+      },
+      {
+        "id": "AUS_bring_back_the_habsburg_rule",
+        "kind": "focus",
+        "source": "common/national_focus/austria.txt"
+      }
+    ],
+    "starter": {
+      "treeId": "austria_focus_tree",
+      "treeSource": "common/national_focus/austria.txt",
+      "focusIds": [
+        "AUS_repeal_the_may_constitution",
+        "AUS_austria_against_fascism",
+        "AUS_reinstate_the_imperial_council",
+        "AUS_legacy_of_the_empire",
+        "AUS_bring_back_the_habsburg_rule"
+      ],
+      "assumptions": [
+        "Preparation sequence only; military survival and later territorial goals are separate.",
+        "Review the current ruling leader and Hungary's Otto claim.",
+        "Popularity, government and other runtime requirements remain manual checks."
+      ]
+    }
+  },
+  {
+    "id": "hungary",
+    "revision": 1,
+    "title": "Hungary: invite a Habsburg",
+    "countries": [
+      "HUN"
+    ],
+    "type": "Alternate history",
+    "summary": "Choose the modern Hungarian Habsburg branch and distinguish Otto's invitation from the alternative king.",
+    "objectives": [
+      "Invite Otto through the Gotterdammerung tree, or inspect the mutually exclusive alternative.",
+      "Evaluate later restoration demands without assuming foreign acceptance."
+    ],
+    "preparation": [
+      "Use wuw_hungarian_focus rather than mixing legacy Hungarian IDs.",
+      "Check whether Austria has already claimed Otto.",
+      "Complete both required candidate-preparation focuses."
+    ],
+    "difficulty": {
+      "label": "Hard",
+      "rationale": "The desired monarch is contested, and later restoration depends on foreign circumstances. This is an editorial assessment."
+    },
+    "spoiler": false,
+    "supportedVersion": "1.19.4.1",
+    "author": "HOI4 Companion editorial",
+    "rights": "Original summary; installed-source excerpts referenced, not redistributed.",
+    "reviewedAt": "2026-11-03",
+    "dlcContext": "The wuw_hungarian_focus country modifier requires Hungarian tag and Gotterdammerung. The separate legacy hungarian_focus declares Death or Dishonor; this guide uses the WUW tree only.",
+    "limits": [
+      "Script declarations were inspected; no in-game journey was performed.",
+      "The suggested sequence stops at Otto's invitation.",
+      "Later Austrian and Czechoslovak diplomatic outcomes are not promised or fully audited here."
+    ],
+    "sources": [
+      {
+        "id": "hungary-tree",
+        "path": "common/national_focus/hungary_wuw.txt",
+        "line": 9,
+        "endLine": 22,
+        "hash": "b0d77d90b5303ed46e32700957a17f1ab0d34349e7083469f4497a3285e343aa",
+        "kind": "installed-script",
+        "label": "WUW Hungarian tree selection"
+      },
+      {
+        "id": "hungary-preparation",
+        "path": "common/national_focus/hungary_wuw.txt",
+        "line": 35,
+        "endLine": 542,
+        "hash": "b0d77d90b5303ed46e32700957a17f1ab0d34349e7083469f4497a3285e343aa",
+        "kind": "installed-script",
+        "label": "Candidate preparation and Pragmatic Sanction"
+      },
+      {
+        "id": "hungary-king",
+        "path": "common/national_focus/hungary_wuw.txt",
+        "line": 909,
+        "endLine": 1071,
+        "hash": "b0d77d90b5303ed46e32700957a17f1ab0d34349e7083469f4497a3285e343aa",
+        "kind": "installed-script",
+        "label": "Otto and the alternative Habsburg king"
+      },
+      {
+        "id": "hungary-legacy",
+        "path": "common/national_focus/hungary.txt",
+        "line": 9,
+        "endLine": 21,
+        "hash": "dadc3fa04500c090d0b7c4bbf8b295cf950337f78959fb32401ad5f906e80a09",
+        "kind": "installed-script",
+        "label": "Separate legacy Hungarian tree"
+      }
+    ],
+    "claims": [
+      {
+        "id": "tree-gate",
+        "type": "scripted",
+        "text": "The WUW Hungarian tree declares Hungarian tag and Gotterdammerung; the legacy tree separately declares Death or Dishonor. Their focus identifiers must not be mixed.",
+        "sourceIds": [
+          "hungary-tree",
+          "hungary-legacy"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "candidate-and",
+        "type": "scripted",
+        "text": "Reach Out to Candidates requires both Crack Down on Radicals and Subvert Gombos' Troops in separate prerequisite groups; both follow End the Regency.",
+        "sourceIds": [
+          "hungary-preparation"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "otto-gate",
+        "type": "scripted",
+        "text": "Invite Otto to the Throne follows Reinstate the Pragmatic Sanction, requires neutral government and the absence of Austria's Otto-joined global flag, and excludes The Old Habsburg King. Its reward promotes Otto and sets Hungary's Otto-joined flag.",
+        "sourceIds": [
+          "hungary-king"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "old-king",
+        "type": "scripted",
+        "text": "The Old Habsburg King is a mutually exclusive alternative after the Pragmatic Sanction. It requires neutrality and no German reformed-empire flag, then promotes Joseph August with a despotism leader role.",
+        "sourceIds": [
+          "hungary-king"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "diplomatic-preparation",
+        "type": "strategy",
+        "text": "Treat later restoration demands as a separate diplomatic project and keep a plan for refusal.",
+        "sourceIds": [],
+        "verification": "editorial"
+      }
+    ],
+    "references": [
+      {
+        "id": "wuw_HUN_reach_out_to_candidates",
+        "kind": "focus",
+        "source": "common/national_focus/hungary_wuw.txt"
+      },
+      {
+        "id": "wuw_HUN_reinstate_the_pragmatic_sanction",
+        "kind": "focus",
+        "source": "common/national_focus/hungary_wuw.txt"
+      },
+      {
+        "id": "wuw_HUN_invite_otto_to_the_throne",
+        "kind": "focus",
+        "source": "common/national_focus/hungary_wuw.txt"
+      },
+      {
+        "id": "wuw_HUN_the_old_habsburg_king",
+        "kind": "focus",
+        "source": "common/national_focus/hungary_wuw.txt"
+      }
+    ],
+    "starter": {
+      "treeId": "wuw_hungarian_focus",
+      "treeSource": "common/national_focus/hungary_wuw.txt",
+      "focusIds": [
+        "wuw_HUN_end_the_regency",
+        "wuw_HUN_crack_down_on_radicals",
+        "wuw_HUN_subvert_gombos_troops",
+        "wuw_HUN_reach_out_to_candidates",
+        "wuw_HUN_reinstate_the_pragmatic_sanction",
+        "wuw_HUN_invite_otto_to_the_throne"
+      ],
+      "assumptions": [
+        "Use the Gotterdammerung WUW tree; this sequence does not describe the legacy Hungarian tree.",
+        "Austria must not already have secured Otto.",
+        "Government, global flags, bypasses and foreign reactions require manual review."
+      ]
+    }
+  },
+  {
+    "id": "liechtenstein",
+    "revision": 1,
+    "title": "Liechtenstein: Alois takes the throne",
+    "countries": [
+      "AUS"
+    ],
+    "type": "Secret leader",
+    "summary": "Trace the Austrian secret transformation to Alois, including the Swiss ownership and elapsed-flag conditions.",
+    "objectives": [
+      "Meet the declared trigger for AUS_political_events.91.",
+      "Choose the Alois option rather than treating an advisor unlock as the secret route."
+    ],
+    "preparation": [
+      "Start from Austrian monarchy preparation while keeping Otto as ruler.",
+      "Inspect the industry and German-conflict branches separately.",
+      "Plan Swiss state ownership; military control alone does not match the trigger."
+    ],
+    "difficulty": {
+      "label": "Very hard",
+      "rationale": "The script combines a contested monarch, German confrontation, Swiss core ownership and an elapsed flag. This is an editorial assessment."
+    },
+    "spoiler": true,
+    "supportedVersion": "1.19.4.1",
+    "author": "HOI4 Companion editorial",
+    "rights": "Original summary; installed-source excerpts referenced, not redistributed.",
+    "reviewedAt": "2026-11-03",
+    "dlcContext": "The Austrian tree containing these focuses declares Gotterdammerung in its country-selection modifier. Confirm owned and enabled DLC separately.",
+    "limits": [
+      "Script declarations were inspected; no in-game event journey was performed.",
+      "The starter covers early monarchy preparation only; it does not contain the entire secret route.",
+      "Engine event polling and exact arrival time have not been measured.",
+      "This is an Austrian cosmetic-tag and leadership transformation, not proof of a separate playable Liechtenstein country tag."
+    ],
+    "sources": [
+      {
+        "id": "liechtenstein-event",
+        "path": "events/WUW_Austria.txt",
+        "line": 8422,
+        "endLine": 8513,
+        "hash": "560a016612426d8908a6c23b8e884bd96855b4a9b1b26bcd47055426d3de2cd2",
+        "kind": "installed-script",
+        "label": "Alois secret event trigger and choices"
+      },
+      {
+        "id": "liechtenstein-german-focus",
+        "path": "common/national_focus/austria.txt",
+        "line": 10819,
+        "endLine": 10858,
+        "hash": "80985c0d14bb1d41aca10d29281394f2597ea5277b8f3ab026c01e75e93f4787",
+        "kind": "installed-script",
+        "label": "Improved German State flag"
+      },
+      {
+        "id": "liechtenstein-royals",
+        "path": "common/national_focus/austria.txt",
+        "line": 5960,
+        "endLine": 5994,
+        "hash": "80985c0d14bb1d41aca10d29281394f2597ea5277b8f3ab026c01e75e93f4787",
+        "kind": "installed-script",
+        "label": "Liechtenstein advisor focus"
+      },
+      {
+        "id": "liechtenstein-industry",
+        "path": "common/national_focus/austria.txt",
+        "line": 11198,
+        "endLine": 11233,
+        "hash": "80985c0d14bb1d41aca10d29281394f2597ea5277b8f3ab026c01e75e93f4787",
+        "kind": "installed-script",
+        "label": "Princess of Industry focus"
+      },
+      {
+        "id": "liechtenstein-tree",
+        "path": "common/national_focus/austria.txt",
+        "line": 11,
+        "endLine": 23,
+        "hash": "80985c0d14bb1d41aca10d29281394f2597ea5277b8f3ab026c01e75e93f4787",
+        "kind": "installed-script",
+        "label": "Austrian tree DLC rule"
+      }
+    ],
+    "claims": [
+      {
+        "id": "secret-trigger",
+        "type": "scripted",
+        "text": "Event AUS_political_events.91 requires the country flag AUS_an_improved_improved_german_state_flag older than 175 days, ownership by ROOT of every Swiss core state, completion of Improved German State, Courting the Princess of Industry and The Royals of Liechtenstein, neutral government, and Otto as ruling leader.",
+        "sourceIds": [
+          "liechtenstein-event"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "secret-choice",
+        "type": "scripted",
+        "text": "Option AUS_political_events.91.a sets the Austrian Liechtenstein cosmetic tag, promotes Alois with a despotism leader role and King of Liechtenstein trait, and moves the capital to state 848. The other option grants stability and political power instead.",
+        "sourceIds": [
+          "liechtenstein-event"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "flag-source",
+        "type": "scripted",
+        "text": "Improved German State follows Second Brothers' War. Its availability accepts Germany absent, subject to ROOT, or at war with ROOT; completion sets the doubled-improved flag used by the secret event. Annexing Germany is not stated as a requirement of this focus.",
+        "sourceIds": [
+          "liechtenstein-german-focus"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "royals-boundary",
+        "type": "scripted",
+        "text": "The Royals of Liechtenstein follows any one of Evidenzburo, Legitimistische Jugend or Sturmscharen Support and shows advisor unlock tooltips. Event 91 does not require hiring either or both advisors.",
+        "sourceIds": [
+          "liechtenstein-royals",
+          "liechtenstein-event"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "industry-link",
+        "type": "scripted",
+        "text": "Courting the Princess of Industry follows Invest in Erzberg Steel Mines. The secret event requires completion of this focus, rather than hiring its advertised advisor.",
+        "sourceIds": [
+          "liechtenstein-industry",
+          "liechtenstein-event"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "wait-boundary",
+        "type": "mechanics",
+        "text": "Treat the elapsed flag and event arrival as manual checks. The declaration requires more than 175 flag-days plus the other conditions; it does not guarantee arrival at an exact calendar time.",
+        "sourceIds": [
+          "liechtenstein-event"
+        ],
+        "verification": "editorial"
+      },
+      {
+        "id": "military-preparation",
+        "type": "strategy",
+        "text": "Budget for the Swiss and German objectives while protecting Otto's rule. The starter preview is political preparation, not a complete conquest or event plan.",
+        "sourceIds": [],
+        "verification": "editorial"
+      }
+    ],
+    "references": [
+      {
+        "id": "AUS_political_events.91",
+        "kind": "event",
+        "source": "events/WUW_Austria.txt"
+      },
+      {
+        "id": "AUS_the_royals_of_liechtenstein",
+        "kind": "focus",
+        "source": "common/national_focus/austria.txt"
+      },
+      {
+        "id": "AUS_an_improved_german_state",
+        "kind": "focus",
+        "source": "common/national_focus/austria.txt"
+      },
+      {
+        "id": "AUS_courting_the_princess_of_industry",
+        "kind": "focus",
+        "source": "common/national_focus/austria.txt"
+      },
+      {
+        "id": "AUS_alois_of_liechtenstein",
+        "kind": "character",
+        "source": "common/characters/AUS.txt"
+      }
+    ],
+    "starter": {
+      "treeId": "austria_focus_tree",
+      "treeSource": "common/national_focus/austria.txt",
+      "focusIds": [
+        "AUS_repeal_the_may_constitution",
+        "AUS_austria_against_fascism",
+        "AUS_reinstate_the_imperial_council",
+        "AUS_legacy_of_the_empire",
+        "AUS_bring_back_the_habsburg_rule"
+      ],
+      "assumptions": [
+        "Early monarchy preparation only; Swiss ownership, German-conflict and industry branches are not included.",
+        "Otto must remain the ruling leader for the secret trigger.",
+        "The secret event's flag age and all other runtime conditions remain manual checks."
+      ]
+    }
+  },
+  {
+    "id": "scandinavia",
+    "revision": 1,
+    "title": "Unite Scandinavia",
+    "countries": [
+      "SWE",
+      "NOR",
+      "DEN"
+    ],
+    "type": "Formable nation",
+    "summary": "Use the actual formation decision as a territorial checklist, separating country eligibility, visibility and availability.",
+    "objectives": [
+      "Meet the form_scandinavia decision's separate rule groups.",
+      "Review the cosmetic-tag and core-grant rewards before committing to a territorial campaign."
+    ],
+    "preparation": [
+      "Start with Norway, Denmark or Sweden and confirm the relevant DLC condition.",
+      "Check subject status and the decision's exact state-control list.",
+      "Choose a diplomatic or military approach suited to the selected country."
+    ],
+    "difficulty": {
+      "label": "Hard",
+      "rationale": "The objective spans several countries' mainland states and can require substantial diplomacy or war. This is an editorial assessment."
+    },
+    "spoiler": false,
+    "supportedVersion": "1.19.4.1",
+    "author": "HOI4 Companion editorial",
+    "rights": "Original summary; installed-source excerpts referenced, not redistributed.",
+    "reviewedAt": "2026-11-03",
+    "dlcContext": "The decision's allowed block requires Waking the Tiger OR Arms Against Tyranny. These are alternatives, not a combined requirement; installed files do not establish ownership.",
+    "limits": [
+      "This is a decision-declaration checklist, not an in-game parity test.",
+      "No universal focus starter is offered across three countries and their tree variants.",
+      "State IDs reflect this installation; changed source hashes require a new review."
+    ],
+    "sources": [
+      {
+        "id": "scandinavia-decision",
+        "path": "common/decisions/formable_nation_decisions.txt",
+        "line": 1,
+        "endLine": 133,
+        "hash": "8694bc056580544e84b1cb24a48bcf9965621bdde730820a827c0d48f2ec2af4",
+        "kind": "installed-script",
+        "label": "Scandinavian formation decision"
+      }
+    ],
+    "claims": [
+      {
+        "id": "allowed",
+        "type": "scripted",
+        "text": "Allowed countries have original tag Norway, Denmark or Sweden, and Waking the Tiger OR Arms Against Tyranny.",
+        "sourceIds": [
+          "scandinavia-decision"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "available",
+        "type": "scripted",
+        "text": "Availability requires independence and control of Norway-group states 110,142,143,144,920,921,922,923,924,925; Sweden-group states 38,124,138,139,140,141,666,913,915,916,917,918,919; and Denmark-group states 37,99,337,910,911,912. Iceland and Greenland are commented out of this decision's requirements.",
+        "sourceIds": [
+          "scandinavia-decision"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "visible",
+        "type": "scripted",
+        "text": "Visibility requires original tag Norway, Denmark or Sweden and neither the Nordic League formed flag nor the Scandinavia formed flag already set.",
+        "sourceIds": [
+          "scandinavia-decision"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "rewards",
+        "type": "scripted",
+        "text": "Completion sets cosmetic tag SCA_UNIFIED, grants cores on the listed state groups, queues news event wtt_news.53 after six hours, and sets the Scandinavia formed global flag.",
+        "sourceIds": [
+          "scandinavia-decision"
+        ],
+        "verification": "script-extracted"
+      },
+      {
+        "id": "route-choice",
+        "type": "strategy",
+        "text": "Treat the state-control list as the objective and choose diplomacy or war separately; the decision does not prescribe one focus sequence for all three countries.",
+        "sourceIds": [],
+        "verification": "editorial"
+      }
+    ],
+    "references": [
+      {
+        "id": "form_scandinavia",
+        "kind": "formable",
+        "source": "common/decisions/formable_nation_decisions.txt"
+      }
+    ]
+  }
+]

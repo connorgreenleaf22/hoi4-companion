@@ -1,0 +1,3663 @@
+{
+  "source": "task-11 independent preparation, deterministic-fixtures.json",
+  "sourceSHA256": "91BCF6016A674D8662AD9E79FE5C529AA0790924F0D111BB9813A468C3430565",
+  "purpose": "Prepared independent inputs; developer execution is recorded by node:test, not independent acceptance",
+  "fixtures": [
+    {
+      "id": "BOOL-AND-yes-yes",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes always = yes }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-OR-yes-yes",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "OR = { always = yes always = yes }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-AND-yes-no",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes always = no }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-OR-yes-no",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "OR = { always = yes always = no }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-AND-yes-unknown",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes has_war = yes }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-OR-yes-unknown",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "OR = { always = yes has_war = yes }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-AND-no-yes",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no always = yes }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-OR-no-yes",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "OR = { always = no always = yes }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-AND-no-no",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no always = no }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-OR-no-no",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "OR = { always = no always = no }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-AND-no-unknown",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no has_war = yes }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-OR-no-unknown",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "OR = { always = no has_war = yes }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-AND-unknown-yes",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes always = yes }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-OR-unknown-yes",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "OR = { has_war = yes always = yes }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-AND-unknown-no",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes always = no }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-OR-unknown-no",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "OR = { has_war = yes always = no }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-AND-unknown-unknown",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes has_war = yes }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-OR-unknown-unknown",
+      "matrixIds": [
+        "BOOL-01",
+        "BOOL-08"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "OR = { has_war = yes has_war = yes }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-yes-yes-yes",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes OR = { always = yes always = yes } }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-yes-yes-no",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes OR = { always = yes always = no } }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-yes-yes-unknown",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes OR = { always = yes has_war = yes } }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-yes-no-yes",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes OR = { always = no always = yes } }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-yes-no-no",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes OR = { always = no always = no } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-yes-no-unknown",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes OR = { always = no has_war = yes } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-yes-unknown-yes",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes OR = { has_war = yes always = yes } }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-yes-unknown-no",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes OR = { has_war = yes always = no } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-yes-unknown-unknown",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = yes OR = { has_war = yes has_war = yes } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-no-yes-yes",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no OR = { always = yes always = yes } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-no-yes-no",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no OR = { always = yes always = no } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-no-yes-unknown",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no OR = { always = yes has_war = yes } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-no-no-yes",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no OR = { always = no always = yes } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-no-no-no",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no OR = { always = no always = no } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-no-no-unknown",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no OR = { always = no has_war = yes } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-no-unknown-yes",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no OR = { has_war = yes always = yes } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-no-unknown-no",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no OR = { has_war = yes always = no } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-no-unknown-unknown",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { always = no OR = { has_war = yes has_war = yes } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-unknown-yes-yes",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes OR = { always = yes always = yes } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-unknown-yes-no",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes OR = { always = yes always = no } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-unknown-yes-unknown",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes OR = { always = yes has_war = yes } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-unknown-no-yes",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes OR = { always = no always = yes } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-unknown-no-no",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes OR = { always = no always = no } }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-unknown-no-unknown",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes OR = { always = no has_war = yes } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-unknown-unknown-yes",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes OR = { has_war = yes always = yes } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-unknown-unknown-no",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes OR = { has_war = yes always = no } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NEST-unknown-unknown-unknown",
+      "matrixIds": [
+        "BOOL-01"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "AND = { has_war = yes OR = { has_war = yes has_war = yes } }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NOT-yes",
+      "matrixIds": [
+        "BOOL-02"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "NOT = { always = yes }"
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NOT-no",
+      "matrixIds": [
+        "BOOL-02"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "NOT = { always = no }"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-NOT-unknown",
+      "matrixIds": [
+        "BOOL-02"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "NOT = { has_war = yes }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-COMPLETED-ABSENT",
+      "matrixIds": [
+        "BOOL-04"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "NOT = { has_completed_focus = A }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-COMPLETED-PRESENT",
+      "matrixIds": [
+        "BOOL-04"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [
+            "A"
+          ],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "has_completed_focus = A"
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-DATE",
+      "matrixIds": [
+        "BOOL-04"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "date > 1935.1.1"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-FOREIGN-SCOPE",
+      "matrixIds": [
+        "BOOL-03",
+        "BOOL-05"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "FRA = { tag = GER }"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BOOL-COMPARATOR",
+      "matrixIds": [
+        "BOOL-05"
+      ],
+      "operation": "evaluate",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "script": "always != yes"
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-EARLIER",
+      "matrixIds": [
+        "PLAN-01"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "A",
+            "GATE_A"
+          ],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/1/conditionActual": "unknown",
+        "/steps/1/conditionProjected": "yes",
+        "/steps/1/conditionalOn/0": "A",
+        "/actualCompleted": []
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-LATER",
+      "matrixIds": [
+        "PLAN-02"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "GATE_A",
+            "A"
+          ],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/0/conditionActual": "unknown",
+        "/steps/0/conditionProjected": "unknown",
+        "/actualCompleted": []
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-ACTUAL",
+      "matrixIds": [
+        "PLAN-03"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "GATE_A"
+          ],
+          "completed": [
+            "A"
+          ],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/0/conditionActual": "yes",
+        "/steps/0/conditionProjected": "yes",
+        "/actualCompleted": [
+          "A"
+        ]
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-BLOCKED",
+      "matrixIds": [
+        "PLAN-04"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "BLOCKED",
+            "AFTER_BLOCKED"
+          ],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/0/reachability": "blocked",
+        "/steps/1/reachability": "blocked",
+        "/actualCompleted": []
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-MANUAL",
+      "matrixIds": [
+        "PLAN-04"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "MANUAL",
+            "AFTER_MANUAL"
+          ],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/0/reachability": "manual",
+        "/steps/1/reachability": "conditional",
+        "/actualCompleted": []
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-ROWS-A",
+      "matrixIds": [
+        "PLAN-05"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "A",
+            "C",
+            "ROWS"
+          ],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/2/prerequisiteRowsSatisfied": [
+          true,
+          true
+        ],
+        "/actualCompleted": []
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-ROWS-B",
+      "matrixIds": [
+        "PLAN-05"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "B",
+            "C",
+            "ROWS"
+          ],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/2/prerequisiteRowsSatisfied": [
+          true,
+          true
+        ],
+        "/actualCompleted": []
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-MISSING-ROW",
+      "matrixIds": [
+        "PLAN-05"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "A",
+            "ROWS"
+          ],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/1/prerequisiteRowsSatisfied": [
+          true,
+          false
+        ],
+        "/actualCompleted": []
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-NOT-EARLIER",
+      "matrixIds": [
+        "PLAN-06"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "A",
+            "NOT_A"
+          ],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/1/conditionActual": "unknown",
+        "/steps/1/conditionProjected": "no",
+        "/actualCompleted": []
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-EXCLUSION",
+      "matrixIds": [
+        "REF-01"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "A",
+            "EXCLUSIVE_A"
+          ],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/1/reachability": "blocked",
+        "/steps/1/conflicts/0": "A",
+        "/actualCompleted": []
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "PLAN-EXCLUSION-REVERSE",
+      "matrixIds": [
+        "REF-01"
+      ],
+      "operation": "queue",
+      "input": {
+        "profile": {
+          "id": "qa-synthetic",
+          "revision": 7,
+          "name": "QA synthetic only",
+          "country": "GER",
+          "startDate": "1936-01-01",
+          "historical": true,
+          "goals": "",
+          "tree": "fixture-tree",
+          "queue": [
+            "EXCLUSIVE_A",
+            "A"
+          ],
+          "completed": [],
+          "dlcs": [],
+          "dlcConfirmed": false,
+          "bookmarks": [],
+          "notes": {},
+          "templates": [],
+          "referenceIndexRevision": "fixture-index-A"
+        },
+        "catalog": [
+          {
+            "id": "A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "B",
+            "tree": "fixture-tree",
+            "days": 35,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "C",
+            "tree": "fixture-tree",
+            "days": 0,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "GATE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_completed_focus = A"
+          },
+          {
+            "id": "NOT_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "NOT = { has_completed_focus = A }"
+          },
+          {
+            "id": "ROWS",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "A",
+                "B"
+              ],
+              [
+                "C"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = no"
+          },
+          {
+            "id": "AFTER_BLOCKED",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "BLOCKED"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "has_war = yes"
+          },
+          {
+            "id": "AFTER_MANUAL",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [
+              [
+                "MANUAL"
+              ]
+            ],
+            "exclusive": [],
+            "available": "always = yes"
+          },
+          {
+            "id": "EXCLUSIVE_A",
+            "tree": "fixture-tree",
+            "days": 70,
+            "prerequisites": [],
+            "exclusive": [
+              "A"
+            ],
+            "available": "always = yes"
+          },
+          {
+            "id": "UNKNOWN_DAYS",
+            "tree": "fixture-tree",
+            "days": null,
+            "prerequisites": [],
+            "exclusive": [],
+            "available": "always = yes"
+          }
+        ],
+        "completionCoverage": "positive-assertions-only"
+      },
+      "expect": {
+        "/steps/1/reachability": "blocked",
+        "/steps/1/conflicts/0": "EXCLUSIVE_A",
+        "/actualCompleted": []
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TIME-KNOWN",
+      "matrixIds": [
+        "TIME-01"
+      ],
+      "operation": "timing",
+      "input": {
+        "startDate": "1936-01-01",
+        "days": [
+          70,
+          35
+        ]
+      },
+      "expect": {
+        "/knownDays": 105,
+        "/totalDays": 105,
+        "/finishDate": "1936-04-15",
+        "/dates": [
+          "1936-03-11",
+          "1936-04-15"
+        ]
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TIME-UNKNOWN",
+      "matrixIds": [
+        "TIME-02"
+      ],
+      "operation": "timing",
+      "input": {
+        "startDate": "1936-01-01",
+        "days": [
+          70,
+          null,
+          35
+        ]
+      },
+      "expect": {
+        "/knownDays": 105,
+        "/totalDays": null,
+        "/finishDate": null,
+        "/dates": [
+          "1936-03-11",
+          null,
+          null
+        ]
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TIME-ZERO",
+      "matrixIds": [
+        "TIME-03"
+      ],
+      "operation": "timing",
+      "input": {
+        "startDate": "1936-01-01",
+        "days": [
+          0,
+          35
+        ]
+      },
+      "expect": {
+        "/knownDays": 35,
+        "/totalDays": 35,
+        "/finishDate": "1936-02-05",
+        "/dates": [
+          "1936-01-01",
+          "1936-02-05"
+        ]
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TIME-LEAP",
+      "matrixIds": [
+        "TIME-03"
+      ],
+      "operation": "timing",
+      "input": {
+        "startDate": "1936-02-28",
+        "days": [
+          1,
+          1
+        ]
+      },
+      "expect": {
+        "/finishDate": "1936-03-01",
+        "/dates": [
+          "1936-02-29",
+          "1936-03-01"
+        ]
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TIME-BAD-DATE",
+      "matrixIds": [
+        "TIME-03"
+      ],
+      "operation": "timing",
+      "input": {
+        "startDate": "1936-02-31",
+        "days": [
+          70
+        ]
+      },
+      "expect": {
+        "/error": "invalid-input"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TIME-NEGATIVE",
+      "matrixIds": [
+        "TIME-03"
+      ],
+      "operation": "timing",
+      "input": {
+        "startDate": "1936-01-01",
+        "days": [
+          -1
+        ]
+      },
+      "expect": {
+        "/error": "invalid-input"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DLC-ABSENT",
+      "matrixIds": [
+        "REF-02"
+      ],
+      "operation": "dlc",
+      "input": {
+        "id": "fixture-dlc",
+        "name": "Fixture DLC",
+        "installed": "no",
+        "owned": "yes",
+        "enabled": "yes",
+        "integrated": false
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DLC-OWNER-UNKNOWN",
+      "matrixIds": [
+        "REF-02"
+      ],
+      "operation": "dlc",
+      "input": {
+        "id": "fixture-dlc",
+        "name": "Fixture DLC",
+        "installed": "yes",
+        "owned": "unknown",
+        "enabled": "yes",
+        "integrated": false
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DLC-DISABLED",
+      "matrixIds": [
+        "REF-02"
+      ],
+      "operation": "dlc",
+      "input": {
+        "id": "fixture-dlc",
+        "name": "Fixture DLC",
+        "installed": "yes",
+        "owned": "yes",
+        "enabled": "no",
+        "integrated": false
+      },
+      "expect": {
+        "/truth": "no"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DLC-CONFIRMED",
+      "matrixIds": [
+        "REF-02"
+      ],
+      "operation": "dlc",
+      "input": {
+        "id": "fixture-dlc",
+        "name": "Fixture DLC",
+        "installed": "yes",
+        "owned": "yes",
+        "enabled": "yes",
+        "integrated": false
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DLC-UNKNOWN",
+      "matrixIds": [
+        "REF-02"
+      ],
+      "operation": "dlc",
+      "input": {
+        "id": "fixture-dlc",
+        "name": "Fixture DLC",
+        "installed": "unknown",
+        "owned": "yes",
+        "enabled": "yes",
+        "integrated": false
+      },
+      "expect": {
+        "/truth": "unknown"
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DLC-INTEGRATED",
+      "matrixIds": [
+        "REF-02"
+      ],
+      "operation": "dlc",
+      "input": {
+        "id": "fixture-dlc",
+        "name": "Fixture DLC",
+        "installed": "yes",
+        "owned": "unknown",
+        "enabled": "unknown",
+        "integrated": true
+      },
+      "expect": {
+        "/truth": "yes"
+      },
+      "status": "NOT_RUN"
+    }
+  ]
+}

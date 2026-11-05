@@ -1,0 +1,33 @@
+// Freeze candidate inputs/evidence. Deliberately excludes user data and QA databases.
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+const hash=file=>createHash('sha256').update(fs.readFileSync(file)).digest('hex').toUpperCase();
+const root=process.cwd(),task=path.resolve('..'),release=path.join(root,'release','v0.4.0-r1');
+if(fs.existsSync(release))throw Error('Refuse to overwrite an existing release snapshot.');
+fs.mkdirSync(release,{recursive:true});
+const source=path.join(release,'source');fs.mkdirSync(source);
+for(const name of ['src','server','electron','scripts','tests','assets','public'])fs.cpSync(path.join(root,name),path.join(source,name),{recursive:true});
+for(const file of fs.readdirSync(root)){if(fs.statSync(path.join(root,file)).isFile()&&(/\.md$/.test(file)||['package.json','package-lock.json','index.html','tsconfig.json','.gitignore'].includes(file)))fs.copyFileSync(path.join(root,file),path.join(source,file));}
+const runtime=path.join(release,'runtime');fs.mkdirSync(runtime);
+for(const name of ['build','dist','assets'])fs.cpSync(path.join(root,name),path.join(runtime,name),{recursive:true});fs.copyFileSync('package.json',path.join(runtime,'package.json'));
+const exe='HOI4-Companion-0.4.0-r1.exe';fs.copyFileSync(path.join(root,'release',exe),path.join(release,exe));fs.copyFileSync('release/win-unpacked/resources/app.asar',path.join(release,'app.asar'));
+fs.copyFileSync('release/portable-extracted/resources/app.asar',path.join(release,'actual-portable-app.asar'));
+if(hash(path.join(release,'app.asar'))!==hash(path.join(release,'actual-portable-app.asar')))throw Error('Portable payload differs from builder archive.');
+const evidence=path.join(release,'QA-evidence');fs.mkdirSync(evidence);
+fs.cpSync(path.join(task,'evidence'),path.join(evidence,'developer'),{recursive:true});
+fs.copyFileSync('artifacts/v04/installed-source-audit.json',path.join(evidence,'installed-source-audit.json'));
+fs.cpSync('artifacts/v04/renderer',path.join(evidence,'renderer'),{recursive:true});
+if(fs.existsSync('artifacts/qa'))fs.cpSync('artifacts/qa',path.join(evidence,'regression'),{recursive:true});
+fs.copyFileSync(path.join(task,'baseline','HOI4-v0.3-R2-Gate-Clarification.md'),path.join(evidence,'HOI4-v0.3-R2-Gate-Clarification.md'));
+fs.copyFileSync(path.join(task,'baseline','protected-data-manifest.json'),path.join(evidence,'protected-data-before.json'));
+const walk=(directory,prefix='')=>fs.readdirSync(directory,{withFileTypes:true}).flatMap(item=>item.isDirectory()?walk(path.join(directory,item.name),prefix+item.name+'/'):[{file:prefix+item.name,sha256:hash(path.join(directory,item.name)),bytes:fs.statSync(path.join(directory,item.name)).size}]);
+const sourceManifest=walk(source).sort((a,b)=>a.file.localeCompare(b.file));fs.writeFileSync(path.join(release,'source-file-manifest.json'),JSON.stringify(sourceManifest,null,2));
+const firstParty=walk(runtime).sort((a,b)=>a.file.localeCompare(b.file));fs.writeFileSync(path.join(release,'first-party-runtime-manifest.json'),JSON.stringify(firstParty,null,2));
+const before=JSON.parse(fs.readFileSync(path.join(task,'baseline','protected-data-manifest.json'),'utf8').replace(/^\uFEFF/,''));
+const production=path.join(process.env.APPDATA,'HOI4 Companion');
+const protection=before.map(item=>{const file=path.join(production,path.basename(item.Path));return {file,expected:item.Hash,actual:fs.existsSync(file)?hash(file):null,unchanged:fs.existsSync(file)&&hash(file)===item.Hash};});
+fs.writeFileSync(path.join(evidence,'data-protection.json'),JSON.stringify({at:new Date().toISOString(),scope:'Three named production database files only; read/hash and workspace copies. No whole-disk claim.',files:protection,unchanged:protection.every(p=>p.unchanged)},null,2));
+if(protection.some(p=>!p.unchanged))throw Error('Protected data changed; investigate before handoff.');
+const candidate={version:'0.4.0',revision:1,at:new Date().toISOString(),status:'candidate; independent QA pending',executable:exe,sha256:hash(path.join(release,exe)),bytes:fs.statSync(path.join(release,exe)).size,asarSHA256:hash(path.join(release,'app.asar')),actualPortableArchiveMatchesBuilder:true,sourceFiles:sourceManifest.length,sourceManifestSHA256:hash(path.join(release,'source-file-manifest.json')),firstPartyRuntimeFiles:firstParty.length,baseline:'5F074817927FF7207E14C2C65BF7C63D0AB3DE2E9A43237F9679B99B4608703E',developerNativeUI:false,inGame:false,independentAcceptance:false,productionDataUnchanged:true,desktopUsed:false,ownedQAProcessesClosed:true,remainingIssues:'QA-LEDGER.md',sourceLinkage:'Compare all first-party source/build outputs and portable-extracted ASAR; see manifests and package verifier evidence.'};
+fs.writeFileSync(path.join(release,'candidate.json'),JSON.stringify(candidate,null,2));console.log(JSON.stringify(candidate,null,2));

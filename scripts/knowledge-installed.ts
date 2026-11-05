@@ -1,0 +1,31 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {openStore} from '../server/store';
+import {indexGame} from '../server/importer';
+import type {Entry,Relationship,Coverage} from '../src/types';
+import {createQaRun,fileHash} from './qa/fixture';
+
+// Developer source comparison only. Disposable store; never opens production Companion data.
+const flag=(name:string)=>{const position=process.argv.indexOf(name);if(position<0)return undefined;if(!process.argv[position+1]||process.argv[position+1].startsWith('--'))throw Error('Supply a value for '+name);return process.argv[position+1];};
+const configuredRoot=flag('--game-root')||process.env.HOI4_GAME_ROOT;
+if(!configuredRoot)throw Error('Provide --game-root or HOI4_GAME_ROOT explicitly. This check reads installed sources and writes only a disposable QA store.');
+const root=fs.realpathSync.native(path.resolve(configuredRoot));
+if(!fs.statSync(path.join(root,'common')).isDirectory())throw Error('The supplied game root has no common directory.');
+const run=createQaRun('installed-comparison','installed-source',flag('--output'));const output=run.output;
+const selected=['common/technologies/artillery.txt','common/units/equipment/modules/00_plane_modules.txt','common/units/equipment/modules/00_tank_modules.txt','common/units/equipment/upgrades/land_upgrades.txt','common/characters/AFG.txt','common/characters/AFA.txt','events/AAT_Denmark.txt','events/BFTB_Turkey.txt','common/idea_tags/00_idea.txt','common/ideas/army_spirits.txt'];
+const fingerprints=()=>Object.fromEntries(selected.map(source=>[source,fileHash(path.join(root,source))]));
+const before=fingerprints();const startedAt=new Date().toISOString();const store=openStore(run.dataDirectory);
+try{
+  const meta=indexGame(store,root,(source,completed,total)=>{if(completed%200===0)console.log(JSON.stringify({completed,total,source}));});const all:Entry[]=store.db.prepare('SELECT payload FROM entries').all().map(r=>JSON.parse(r.payload as string));
+  const edges:Relationship[]=store.db.prepare('SELECT payload FROM relationships').all().map(r=>JSON.parse(r.payload as string));
+  const find=(id:string,kind?:string)=>all.find(e=>e.id===id&&(!kind||e.kind===kind));
+  const coverage=store.getSetting<Coverage>('coverage',null as any);
+  const checks={artilleryUnlock:edges.some(e=>e.type==='enables-module'&&e.targetRef.id==='tank_medium_cannon'&&e.resolution==='resolved'),reward:find('cavalry_charge')?.kind==='doctrine_reward',spiritCost:find('professional_officer_corps_spirit')?.data.ideaCategory?.declaredBaseCost===20,armorPrecision:find('tank_nsb_armor_upgrade')?.data.addStats?.breakthrough===1.25,missionScope:find('heavy_mg_4x')?.data.missionStats?.some((n:any)=>JSON.stringify(n).includes('attack_logistics')),afgInstances:all.filter(e=>e.kind==='character_instance'&&e.data.parentId==='AFG_mohammed_zahir_shah').length===2,afarRecruitment:edges.some(e=>e.type==='recruits-character'&&e.targetRef.id==='AFA_sultan_mohamed_yayyo_of_aussa'&&e.resolution==='resolved'),delayedDenmark:edges.some(e=>e.type==='triggers-event'&&e.targetRef.id==='denmark_occupation_event.2'&&e.details?.some(n=>n.key==='hours'&&n.value==='6')),eventAfter:all.some(e=>e.kind==='event_stage'&&e.data.parentId==='bftb_turkey.134'&&e.data.stage==='after'),accounting:coverage.files.every(c=>c.discovered===c.accounted&&c.records?.filter(r=>r.disposition==='emitted').length===c.emitted),integrity:store.db.prepare('PRAGMA integrity_check').get()?.integrity_check==='ok'};
+  Object.assign(checks,{categoryReverse:edges.some(e=>e.type==='slot-accepts-category'&&e.targetRef.id==='tank_medium_main_armament'&&e.resolution==='resolved'&&e.to===find('tank_medium_main_armament','module_category')?.uid)&&edges.some(e=>e.type==='module-category'&&e.targetRef.id==='tank_medium_main_armament'&&e.resolution==='resolved'),conflictNotes:['tank_nsb_armor_upgrade','heavy_mg_4x','new_mobile_warfare'].every(id=>find(id)?.data.sourceConflicts?.some((n:any)=>n.verification==='source-cross-checked')),anonymousRevisionSafety:all.filter(e=>e.data.anonymousIdentity).every(e=>e.entityKey?.includes('@source:'+e.hash))});
+  const after=fingerprints();const noOp=indexGame(store,root);
+  const report={startedAt,finishedAt:new Date().toISOString(),developerValidation:true,independentAcceptance:false,gameRoot:root,meta,checks,noOpRevisionStable:noOp.indexRevision===meta.indexRevision,noOpChangedFiles:noOp.changedFiles,sourceUnchanged:JSON.stringify(before)===JSON.stringify(after),selectedSourceHashes:before,coverageSummary:{files:coverage.files.length,records:coverage.files.reduce((s,c)=>s+c.discovered,0),emitted:all.length,recovered:coverage.files.filter(c=>c.status==='recovered').map(c=>({source:c.source,warnings:c.warnings})),unsupportedSources:coverage.files.filter(c=>c.status==='unsupported').map(c=>({source:c.source,omissions:c.omissions})),unsupportedRoots:coverage.unsupportedRoots,relationships:coverage.relationships},sampleEntries:['tank_medium_cannon','heavy_mg_4x','tank_nsb_armor_upgrade','cavalry_charge','professional_officer_corps_spirit'].map(id=>find(id)).filter(Boolean)};
+  fs.writeFileSync(path.join(output,'installed-comparison.json'),JSON.stringify(report,null,2));fs.writeFileSync(path.join(output,'coverage.json'),JSON.stringify(coverage,null,2));
+  for(const [name,passed] of Object.entries({...checks,noOpRevisionStable:report.noOpRevisionStable,sourceUnchanged:report.sourceUnchanged}))run.results.push({name,status:passed?'passed':'failed',level:'installed-source',requirements:['RG10'],ms:0});
+  console.log(JSON.stringify({output,checks,counts:meta.counts,relationships:coverage.relationships,sourceUnchanged:report.sourceUnchanged,noOpRevisionStable:report.noOpRevisionStable,elapsedSeconds:(Date.now()-Date.parse(startedAt))/1000}));
+  if(Object.values(checks).some(v=>v!==true)||!report.sourceUnchanged||!report.noOpRevisionStable)process.exitCode=1;
+}catch(error){run.results.push({name:'Installed import/comparison',status:'failed',level:'installed-source',requirements:['RG10'],ms:0,error:String(error)});throw error;}finally{store.db.close();run.finish({gameRoot:root,selectedSourceHashes:before,nativePortableUI:false,inGameParityTested:false});run.cleanup();}

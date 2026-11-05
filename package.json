@@ -1,0 +1,54 @@
+{
+  "name": "hoi4-companion",
+  "version": "0.4.0",
+  "private": true,
+  "description": "Local HOI4 encyclopedia and campaign planner",
+  "main": "build/electron.cjs",
+  "scripts": {
+    "dev": "tsx server/cli.ts",
+    "start": "npm run build && electron .",
+    "browser": "npm run build && node build/cli.cjs",
+    "build": "tsc --noEmit && vite build && node scripts/build.mjs",
+    "test": "tsx --test tests/*.test.ts",
+    "test:ui": "tsx scripts/smoke.ts",
+    "index": "tsx server/cli.ts --index-only",
+    "package": "npm run build && electron-builder --win portable --publish never"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "lucide-react": "^0.468.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "electron": "45.2.1",
+    "electron-builder": "^26.0.12",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.0.0",
+    "@playwright/test": "^1.56.0"
+  },
+  "build": {
+    "appId": "local.hoi4.companion",
+    "productName": "HOI4 Companion",
+    "files": [
+      "build/**/*",
+      "dist/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "assets/icon.ico"
+    },
+    "portable": {
+      "artifactName": "HOI4-Companion-${version}-r3.exe"
+    }
+  }
+}
