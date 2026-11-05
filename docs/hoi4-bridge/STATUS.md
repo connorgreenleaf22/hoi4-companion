@@ -1,5 +1,12 @@
 # HOI4 bridge status
 
+## Milestone 5.1 source checkpoint — Electron recovery (2026-11-04 EST)
+
+- Private repository verified; all existing history audited and pushed normally to `origin/feature/hoi4-bridge` at `744f74c`. Main/develop unchanged. Full review and diagnostic matrix: `../application/MILESTONE-5.1.md`.
+- Cold indexing in Electron main reproduces the launch failure; cached indexing, minimal runtime and minimal ASAR package load. A 22-second pause alone does not reproduce it. Same importer in a short-lived worker now passes a fresh development launch; lower-level Chromium cause remains unproven.
+- Worker/startup diagnostics and isolated dotted-milestone packaging implemented without dependency/security changes. Thirteen focused tests and TypeScript pass. No HOI4 launch, gameplay action, or M6 work.
+- Exact next step: package the committed source as M5.1 and run the actual packaged history-to-planner/restart smoke. Desktop package acceptance remains pending until that test passes. Existing browser preview and older desktop app retained.
+
 ## Milestone 5 checkpoint — app workflow delivered; Electron launch blocked (2026-11-04 EST)
 
 - Persistent campaign history and reviewed snapshot-to-new-workspace planning implemented in the existing Command center/planner. SQLite storage stays separate from live state; duplicate imports, session separation, explicit removal and unavailable values covered.

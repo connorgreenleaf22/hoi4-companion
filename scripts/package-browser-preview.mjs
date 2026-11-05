@@ -3,7 +3,7 @@ import path from 'node:path';
 import os from 'node:os';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
-const milestone=process.argv[2]||'M5';if(!/^M\d+$/.test(milestone))throw Error('Use a milestone such as M5');
+const milestone=process.argv[2]||'M5';if(!/^M\d+(?:\.\d+)?$/.test(milestone))throw Error('Use a milestone such as M5');
 if(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim())throw Error('Commit the source before packaging the browser alternative.');
 const commit=execFileSync('git',['rev-parse','--short=12','HEAD'],{encoding:'utf8'}).trim(),label=`${milestone}-${commit}`;
 const output=path.resolve(process.env.HOI4_DEV_BUILD_ROOT||path.join(os.homedir(),'Documents','HOI4 Companion Development Builds'),label,'browser-preview');

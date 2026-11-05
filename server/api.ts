@@ -5,6 +5,7 @@ import os from 'node:os';
 import { randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
 import { openStore,dataDirectory,ProfileWriteRejected } from './store';
 import { discoverGame, indexGame } from './importer';
+import {indexInBackground} from './index-background';
 import { treeFocuses, validatePlan, calculateTemplate, production, resolveEquipment, productionSupport, evaluate,dlcFacts,type TreeReferenceIssue } from './domain';
 import { guides, troubleshooting, europe, majors } from './content';
 import type { Entry, Profile, Meta, Relationship, FactState } from '../src/types';
@@ -43,7 +44,7 @@ export function validateProfile(input:any):Profile {
   return profile.planner?mirrorPlanner(profile):profile;
 }
 
-export async function startServer(options:{dataDir?:string;port?:number;staticDir?:string;autoIndex?:boolean;testRemoteHost?:'127.0.0.1';bridge?:{mode?:BridgeMode;gameRoot?:string;userRoot?:string;logPath?:string}}={}) {
+export async function startServer(options:{dataDir?:string;port?:number;staticDir?:string;autoIndex?:boolean;indexWorkerPath?:string;testRemoteHost?:'127.0.0.1';bridge?:{mode?:BridgeMode;gameRoot?:string;userRoot?:string;logPath?:string}}={}) {
   // Internal test seam changes only listener binding. Pairing and all authorization remain active.
   if(options.testRemoteHost!==undefined){
     const fixture=options.dataDir&&path.resolve(options.dataDir),temporary=path.resolve(os.tmpdir());
@@ -55,7 +56,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
   let meta=store.getSetting<Meta|null>('meta',null);
   let indexingError='';
   let root=store.getSetting('gameRoot','') || discoverGame();
-  if(options.autoIndex!==false && root)try{meta=indexGame(store,root);}catch(e){indexingError=String(e);}
+  if(options.autoIndex!==false && root)try{meta=options.indexWorkerPath?await indexInBackground(options.indexWorkerPath,store.directory,root):indexGame(store,root);}catch(e){indexingError=String(e);}
   let port=options.port??39436;
   let lan:http.Server|undefined;let lanPort=0;let pairingCode='';
   const sessions=new Map<string,number>();const attempts=new Map<string,{count:number;reset:number}>();
@@ -229,7 +230,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
         if(route==='reindex'&&req.method==='POST'){
           if(remote)return send(res,403,{error:'Refresh game data from the desktop.'});
           const input=await body(req);const nextRoot=typeof input.root==='string'?input.root:store.getSetting<Meta|null>('meta',null)?.root||root;
-          try{const refreshed=indexGame(store,nextRoot);root=nextRoot;indexingError='';res.setHeader('X-HOI4-Index-Revision',refreshed.indexRevision||'legacy');return send(res,200,refreshed);}catch(e){indexingError=String(e);throw e;}
+          try{const refreshed=options.indexWorkerPath?await indexInBackground(options.indexWorkerPath,store.directory,nextRoot):indexGame(store,nextRoot);root=nextRoot;indexingError='';res.setHeader('X-HOI4-Index-Revision',refreshed.indexRevision||'legacy');return send(res,200,refreshed);}catch(e){indexingError=String(e);throw e;}
         }
         if(route==='network'&&req.method==='POST'){
           if(remote)return send(res,403,{error:'Manage phone access from the desktop.'});

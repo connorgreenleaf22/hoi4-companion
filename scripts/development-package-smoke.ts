@@ -23,17 +23,28 @@ async function main(){
    await expect(p.getByRole('heading',{name:'Command center',exact:true})).toBeVisible({timeout:60000});
    const status=await p.evaluate(()=>fetch('/api/v1/status').then(r=>r.json()));assertOwnedStatus(status,run.dataDirectory);if(!status.meta?.counts?.focus)throw Error('Installed focus resources unavailable');
    const security=await app!.evaluate(({BrowserWindow})=>{const w=BrowserWindow.getAllWindows()[0];return w.webContents.getLastWebPreferences();});if(security.nodeIntegration||!security.contextIsolation||!security.sandbox)throw Error('Renderer isolation changed');
-   if(process.env.HOI4_INTELLIGENCE_RECORDING){const panel=p.getByRole('region',{name:'Your observed campaign'});await panel.getByLabel('Open snapshot recording').setInputFiles(process.env.HOI4_INTELLIGENCE_RECORDING);await expect(panel.getByText('Recording saved locally and available after restart.')).toBeVisible();recordingId=await panel.getByLabel('Saved campaign recording').inputValue();}
+   if(process.env.HOI4_INTELLIGENCE_RECORDING){const panel=p.getByRole('region',{name:'Your observed campaign'});await panel.getByLabel('Open snapshot recording').setInputFiles(process.env.HOI4_INTELLIGENCE_RECORDING);await expect(panel.getByText('Recording saved locally and available after restart.')).toBeVisible();recordingId=await panel.getByLabel('Saved campaign recording').inputValue();
+    const german=panel.getByLabel('Baseline focus tree').getByRole('option',{name:/German National Focus/});await expect(german).toHaveCount(1);
+    await panel.getByLabel('Baseline focus tree').selectOption((await german.getAttribute('value'))!);
+    await panel.getByLabel('New planning workspace').fill('M5.1 desktop baseline');
+    await panel.getByRole('button',{name:'Preview planning baseline'}).click();await expect(panel.getByRole('region',{name:'Baseline preview'})).toContainText('Country: GER');
+    await panel.getByRole('button',{name:'Confirm and open planner'}).click();await expect(p.getByLabel('Planner country')).toHaveValue('GER');await expect(p.getByLabel('Planning baseline',{exact:true})).toHaveValue('1936-01-01');
+    await expect(p.getByRole('region',{name:'Recorded planning baseline'})).toContainText('Unavailable: research, completed focuses');
+    await p.getByRole('button',{name:'Add Prioritize Economic Growth to queue',exact:true}).click();await expect(p.getByRole('button',{name:'Apply reviewed plan'})).toBeEnabled();await p.getByRole('button',{name:'Apply reviewed plan'}).click();await expect(p.getByText('Reviewed plan applied. Actual completion history is unchanged.')).toBeVisible();
+    await p.screenshot({path:path.join(run.output,'packaged-planner.png'),fullPage:true});
+    await p.getByRole('button',{name:'Command center',exact:true}).click();
+   }
    await p.screenshot({path:path.join(run.output,'packaged-command-center.png'),fullPage:true});
   });
-  const oldUrl=p.url();await app.close();app=undefined;
+  const oldUrl=new URL(p.url()).origin;await app.close();app=undefined;
   await run.check('closed packaged service stops and recording survives packaged restart',['M5-PACKAGE-REOPEN'],async()=>{
    let stopped=false;try{await fetch(oldUrl+'/api/v1/status');}catch{stopped=true;}if(!stopped)throw Error('Closed application left its service running');
    app=await _electron.launch({executablePath:executable,env,timeout:60000});run.ownedProcesses.push({pid:app.process().pid!,kind:'Owned restart of unpacked development build'});p=await app.firstWindow({timeout:60000});
    await expect(p.getByRole('heading',{name:'Command center',exact:true})).toBeVisible({timeout:60000});
-   if(recordingId){const panel=p.getByRole('region',{name:'Your observed campaign'});await panel.getByLabel('Saved campaign recording').selectOption(recordingId);await expect(panel.getByText('No focus selected',{exact:true})).toBeVisible();}
+   if(recordingId){const panel=p.getByRole('region',{name:'Your observed campaign'});await panel.getByLabel('Saved campaign recording').selectOption(recordingId);await expect(panel.getByText('No focus selected',{exact:true})).toBeVisible();await p.getByRole('button',{name:'Campaign planner',exact:true}).click();await expect(p.getByRole('region',{name:'Recorded planning baseline'})).toContainText('Political power: 2.324');await expect(p.getByLabel('Plan name')).toHaveValue('Main');await expect(p.locator('.cp-step-title').getByRole('button',{name:'Prioritize Economic Growth',exact:true})).toBeVisible();await p.screenshot({path:path.join(run.output,'packaged-reopened.png'),fullPage:true});}
   });
-  if(errors.length)throw Error(errors.join('\n'));run.finish({executable,executableSHA256:fileHash(executable),nativeGameLaunched:false,packagedElectronLaunched:true});console.log(run.output);
+  if(errors.length)throw Error(errors.join('\n'));const diagnostics=path.join(run.dataDirectory,'diagnostics');if(fs.existsSync(diagnostics))for(const name of fs.readdirSync(diagnostics))fs.copyFileSync(path.join(diagnostics,name),path.join(run.output,name));
+  run.finish({executable,executableSHA256:fileHash(executable),nativeGameLaunched:false,packagedElectronLaunched:true});console.log(run.output);
  }finally{await app?.close();run.finish();run.cleanup();}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});
