@@ -1,10 +1,10 @@
 # HOI4 Companion roadmap
 
-Updated after Milestone 5. Deliver useful app features on the existing renderer/service/index. Native control is a separate qualification track, not a prerequisite for read-only planning improvements. No release or native test is authorized by this roadmap itself.
+Updated after Milestone 5.1. Deliver useful app features on the existing renderer/service/index. Native control is a separate qualification track, not a prerequisite for read-only planning improvements. No release or native test is authorized by this roadmap itself. Next milestone is advanced strategic planning (focus paths, decisions, research and alternative comparisons); formal user acceptance follows M6 with a stable Windows development build. M6 has not begun.
 
 | Track / next feature | Priority | Dependencies and current feasibility | Measurable outcome |
 |---|---|---|---|
-| Windows development-build acceptance | P1 blocker | M5 unpacked Electron builds, but Chromium network service crashes at launch; compiled browser fallback is verified and isolated | Resolve with bounded minimal reproduction/child-process exit diagnostics; verify actual executable UI/services/reopen without disabling sandbox or overwriting older builds |
+| Windows development-build acceptance | Delivered M5.1; repeat for major milestones | Cold indexing moved to a worker using the same importer/schema; minimal runtime/package and actual companion validated, sandbox unchanged | M5.1-b1b036bdcd53 actual executable passed history-to-planner, service shutdown and reopen persistence; retain per-build isolated data and diagnostics. See application/MILESTONE-5.1.md |
 | Campaign Intelligence: saved recording library and session filters | Delivered M5 | Existing bridge SQLite, separate imported history; explicit removal and duplicate detection | Restart/reopen and retained-recording journey passed; event timeline remains future work |
 | Campaign Intelligence: owned-reader attachment, monitoring and stale/disconnect alerts | P1 | M3 ownership contract exists; needs user-selected connection lifecycle, efficient checks and qualified producer fields; no game commands needed | A running/closed game cannot be confused with a recent file; reconnect requires correct new ownership |
 | Campaign Intelligence: country summaries and event timeline | P2 | Country/date/PP/stability now; events/industry/war fields need supported telemetry/save semantics first | Summaries cite observations and identify every missing field; alerts carry source/time |
