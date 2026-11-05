@@ -7,3 +7,5 @@
 - Separate extracted declarations, fixtures, observed telemetry and independently verified native outcomes. Input dispatch is not command success; telemetry is not a control API.
 - Test the smallest affected component first. Native sessions need a written budget: at most two launches, twenty control actions, twenty minutes, and two attempts per unchanged failure. Stop and retain diagnostics at a limit.
 - Keep raw telemetry, saves, secrets, game assets and generated evidence out of Git. Commit concise evidence summaries and status at validated milestones; no release, push or merge is implied.
+
+- Major application milestones require an isolated, milestone/commit-identified runnable Windows development build plus a packaged launch/service/resource check. Use `npm run package:development -- M5` (substitute the milestone); never overwrite older builds or publish implicitly.

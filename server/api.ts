@@ -15,6 +15,7 @@ import {preparePlanDraft,makePreview,validatePreviewContext,PlanConflict} from '
 import {listDiscovery,getDiscovery,previewDiscovery} from './discovery';
 import {GameBridge} from './bridge/service';
 import {replaySnapshots} from './bridge/telemetry';
+import {CampaignHistory} from './bridge/history';
 import type {BridgeMode} from '../src/bridge-types';
 
 export function validateProfile(input:any):Profile {
@@ -50,6 +51,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
   }
   const store=openStore(options.dataDir);
   const bridge=new GameBridge(store,options.bridge);
+  const history=new CampaignHistory(bridge.database);
   let meta=store.getSetting<Meta|null>('meta',null);
   let indexingError='';
   let root=store.getSetting('gameRoot','') || discoverGame();
@@ -106,6 +108,16 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
             if(route==='bridge/stop')return send(res,200,bridge.gateway.stop());
           }
           return send(res,404,{error:'Unknown bridge endpoint'});
+        }
+        if(route.startsWith('history/')){
+          if(remote)return send(res,403,{error:'Campaign history is local-only.'});
+          if(route==='history/recordings'&&req.method==='GET')return send(res,200,history.list());
+          if(route==='history/import'&&req.method==='POST')return send(res,200,history.import(await body(req)));
+          if(route==='history/remove'&&req.method==='POST'){const input=await body(req);history.remove(input.id,input.confirmation);return send(res,200,{removed:true});}
+          if(route==='history/baseline'&&req.method==='GET')return send(res,200,store.getSetting('history-baseline:'+(url.searchParams.get('profile')||''),null));
+          if(route==='history/preview'&&req.method==='POST')return send(res,200,history.preview(store,await body(req)));
+          if(route==='history/apply'&&req.method==='POST'){const input=await body(req);return send(res,200,{profile:history.apply(store,input.input,input.fingerprint)});}
+          return send(res,404,{error:'Unknown history operation.'});
         }
         if(req.method==='GET'){store.db.exec('BEGIN');readSnapshot=true;}
         const meta=store.getSetting<Meta|null>('meta',null);

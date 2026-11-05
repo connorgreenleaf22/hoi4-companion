@@ -19,7 +19,7 @@ export function valueText(value:Value<string|number|null>|undefined):string {
   return value?.status==='observed'?(value.value===null?'No focus selected':String(value.value)):'Unavailable';
 }
 export function compareSnapshots(before:BridgeSnapshot,after:BridgeSnapshot){
-  if(before.sessionId!==after.sessionId||before.values.country.value!==after.values.country.value||before.gameVersion!==after.gameVersion)return null;
+  if(before.values.country.status!=='observed'||after.values.country.status!=='observed'||!before.gameVersion||!after.gameVersion||before.sessionId!==after.sessionId||before.values.country.value!==after.values.country.value||before.gameVersion!==after.gameVersion)return null;
   return (['politicalPower','stability'] as const).map(key=>{
     const a=before.values[key],b=after.values[key];
     return {key,delta:a.status==='observed'&&b.status==='observed'?b.value-a.value:null};

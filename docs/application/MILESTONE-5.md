@@ -1,0 +1,48 @@
+# Milestone 5 — Campaign history and planning
+
+Implemented from `597c5dc` on `feature/hoi4-bridge`, 2026-11-04 EST. Native HOI4 launches/game inputs: **zero**. MCP permissions and native control adapters unchanged. No push, merge or release.
+
+## User workflow
+
+1. Open Command center → Your observed campaign. Choose file provenance and open a snapshot JSONL recording (700 KB maximum per import).
+2. The recording is saved locally. Reopen it from **Saved campaign recording**, including after closing/restarting the app. Duplicate content opens the existing copy, regardless of filename or line order. A fixture stays a fixture.
+3. Filter by country/session, select an engine date/capture, and compare compatible observations. Different sessions are never combined on the basis of country. Log and focus capture times remain separate; imports never become live ownership.
+4. Under **Plan from this snapshot**, name a new planning workspace and choose an installed focus tree, or choose it later for a partial baseline. Preview then **Confirm and open planner**.
+5. Country and calendar date populate the actual planner controls and nominal timing baseline. PP, stability and focus capture remain visible as historical context with source/hash/version/session. The existing tree browser, source drawer, prerequisites, alternatives, queue preview/apply and manual completion tracking remain available. No active focus is presumed completed or queued automatically.
+6. Return to the recorded campaign from the planner without losing its selection. To change a baseline, select another snapshot and create a new replacement workspace; the earlier workspace remains intact. This is a deliberate safe fork, not in-place overwriting of existing assumptions/queues.
+7. Removing a recording requires typing its exact name. Original JSONL files and created planning baselines remain intact. Removing imported history does not claim to erase all derived planning evidence.
+
+Observed country and valid engine date are required for transfer. Missing required values explain why a manual campaign is needed; they are not defaulted to GER/1936. Hour 24 remains in the evidence; the planner uses the stated calendar day without inventing a timezone/hour conversion. Research, completed-focus coverage, decisions, political conditions, DLC/playset and historical-AI setting remain unavailable. The legacy historical-AI checkbox defaults unchecked in a new workspace and is explicitly not an observed negative. Current installation configuration is never substituted for missing historical configuration.
+
+## Data and interfaces
+
+- `server/bridge/history.ts`, `src/history-types.ts`: v1 recording/baseline contracts. Additive `imported_recordings(id,payload)` table in the existing `bridge.sqlite`, completely separate from live snapshots/cursors/action receipts. Content-derived IDs include declared fixture/recording origin and sanitized snapshots; separate nonidentical recording bundles are not silently merged, even if session IDs match. Each bundle can retain multiple sessions.
+- Persist explicit fields only. Keep source hashes, offset, version, producer/session identity and observations. Reduce source/executable/image paths to basenames; drop OCR panel text and unknown imported keys; no image/save/game assets stored. Known schema has no historical mod/playset manifest, so context is explicitly unavailable. Imported ownership is historical metadata, not authentication.
+- Existing companion schema stays **3**. New profiles use the established schema-3 planner structure. Baseline evidence is atomically stored with profile creation in companion settings under `history-baseline:<profileId>`; existing schema/migration/release gates remain intact. An ordinary profile JSON export currently does not include that evidence association: keep original recording files or back up both databases while closed.
+- Local-only API: `GET history/recordings`, `POST history/import`, `POST history/remove`, `GET history/baseline?profile=...`, `POST history/preview`, `POST history/apply`, all under `/api/v1/`. Existing host/origin/size protections apply; remote phone requests are refused. Preview fingerprints bind the recording evidence, selected references/index revision and new workspace meaning. Apply refuses changed previews, collisions, repeated applies and deleted workspace IDs.
+- `src/CampaignIntelligence.tsx`, `src/BaselineTransfer.tsx`, `src/App.tsx`, `src/intelligence.css`: persistent library, preview/confirmation, existing planner integration and return navigation. `src/intelligence.ts` refuses comparisons with unknown country/version. No additional production dependencies or runtime MCP tool exposure.
+- `electron/main.ts`, `scripts/package-development.mjs`, `scripts/development-package-smoke.ts`: isolated development packaging and executable verification. Existing builder and security/close guard reused.
+
+## Validation
+
+- 20 focused Node tests passed: history persistence/reopen, duplicate imports, session separation, fixture isolation, invalid schemas, deletion safeguard, preview/apply atomicity, changed-preview/retry rejection, unavailable fields, API origin protection, plus all 15 existing bridge tests. Final small comparison changes were rerun with history/intelligence tests.
+- Retained M3 native JSONL plus installed Germany definitions exercised the actual renderer: import and duplicate handling → close renderer/service → restart → reopen → compare → preview → confirm → planner country/date/evidence → add Prioritize Economic Growth → existing reviewed plan apply → return to history → reload/reopen planner. Evidence: `artifacts/qa/campaign-history-2026-11-05T04-08-04-640Z-b2424360/`. Two journeys passed; screenshots inspected, including corrected preview layout and 390px no-overflow check. The recording's two snapshots share one game date; they are not new live observations.
+- Four inherited M4 rendered journeys passed: `artifacts/qa/campaign-intelligence-2026-11-05T04-08-34-474Z-e5eff450/`.
+- TypeScript and renderer/service/Electron build passed. Full release QA was not repeated or relabeled. Existing unresolved `QA-LEDGER.md` obligations remain.
+- One new UI assertion initially used an exact implicit label that included option text. Added explicit Snapshot aria-label and reran. Visual review found inherited `.notice` flex layout unsuitable for the baseline form; scoped grid styling corrected it and targeted journey passed. Neither required HOI4.
+
+Run `npm run test:history`, `npm run test:intelligence`, `npm run test:bridge`; build before rendered checks, then `npm run test:history-ui`. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` if needed. For the real retained journey, set `HOI4_INTELLIGENCE_RECORDING=.bridge-local/native-HN3JuU/owned-snapshots.jsonl` and `HOI4_UI_REFERENCE_DB=.bridge-local/reference-db/companion.sqlite`; the latter is opened read-only and only relevant source rows are copied to the test database.
+
+## Windows development build
+
+Packaging/launch qualification is the remaining acceptance gate at the source checkpoint. Final artifact and results will be recorded here after packaging that commit.
+
+`npm run package:development -- M5` builds through the existing toolchain, requires committed source, and uses electron-builder's unpacked Windows target. Output defaults outside the repository to `~/Documents/HOI4 Companion Development Builds/M5-<12-character-commit>/win-unpacked/`. Existing destinations are refused; `HOI4_DEV_BUILD_ROOT` selects another parent. The full directory is the runnable artifact, not just its exe. No installer/update/release is invoked.
+
+The build embeds its milestone/commit in its executable/window title and uses separate Electron identity/lock and default companion data under `%APPDATA%/HOI4 Companion Development/<build-label>/`. It does not open or migrate the regular companion database. An explicit `HOI4_DATA_DIR` override is honored for isolated testing. Keep that build directory and reopen the same executable to retain your development campaign history. A later build has a different default data directory.
+
+Compared with `npm run browser`, the packaged app includes its Electron/Node runtime, serves bundled resources through its own loopback service on a free port, has a desktop window/sandbox/close guard, and needs no development Node installation. Browser mode requires the developer toolchain, uses the shared browser renderer and normally port 39436, and uses normal companion storage unless `HOI4_DATA_DIR` is explicitly set. The development executable is unsigned and not a production release.
+
+## Next milestone and limits
+
+See `../hoi4-bridge/TELEMETRY-INVENTORY.md` for actual source/installation status, independently verified values and supported-script candidates. Recommend a small telemetry qualification milestone: economic fields plus a bounded known-ID focus-completion/research manifest with explicit coverage. Then integrate those verified facts into planner conditions. Current source index is base-game data, not merged mod authority; recorded version mismatch is warned, and tree applicability remains conditional. Native focus-selection OCR remains blocked and unchanged. No optimization engine, general AI advisor, in-place baseline rebase, library bulk merge, or broader automation was added.

@@ -1,13 +1,13 @@
 # HOI4 Companion roadmap
 
-Prioritized after Milestone 4. Deliver useful app features on the existing renderer/service/index. Native control is a separate qualification track, not a prerequisite for read-only planning improvements. No release or native test is authorized by this roadmap itself.
+Updated after Milestone 5. Deliver useful app features on the existing renderer/service/index. Native control is a separate qualification track, not a prerequisite for read-only planning improvements. No release or native test is authorized by this roadmap itself.
 
 | Track / next feature | Priority | Dependencies and current feasibility | Measurable outcome |
 |---|---|---|---|
-| Campaign Intelligence: saved recording library, session filters and observation timeline | P1 | Current snapshot/replay API and UI are sufficient; add explicit historical storage separate from live state | Reopen a recording after app restart, compare within a session, preserve provenance and unavailable values |
+| Campaign Intelligence: saved recording library and session filters | Delivered M5 | Existing bridge SQLite, separate imported history; explicit removal and duplicate detection | Restart/reopen and retained-recording journey passed; event timeline remains future work |
 | Campaign Intelligence: owned-reader attachment, monitoring and stale/disconnect alerts | P1 | M3 ownership contract exists; needs user-selected connection lifecycle, efficient checks and qualified producer fields; no game commands needed | A running/closed game cannot be confused with a recent file; reconnect requires correct new ownership |
 | Campaign Intelligence: country summaries and event timeline | P2 | Country/date/PP/stability now; events/industry/war fields need supported telemetry/save semantics first | Summaries cite observations and identify every missing field; alerts carry source/time |
-| Strategic Planning: reviewed snapshot-to-baseline transfer | P1 | Existing planner preview/apply and country/date observations; manual confirmation for unsupported facts | Preview exact changes; never overwrite manual completion history or infer focus completion |
+| Strategic Planning: reviewed snapshot-to-baseline transfer | Delivered M5 | Creates a new planner workspace; country/date seed planning, other observations retained as context | Preview/confirm/reopen tested; unsupported state remains unknown; original history and previous workspaces preserved |
 | Strategic Planning: research/doctrine prerequisites and decision/event paths | P1–P2 | Installed definitions, reference UI, enabled tech/event/decision inspectors; qualify outputs before reuse; can build static/manual planners now | Navigable source-linked paths, explicit DLC/condition assumptions, no false current-research claim |
 | Strategic Planning: political and alternate-history comparisons | P2 | Existing discovery starters/planner alternatives; partial evaluator and declared facts | Compare source-defined costs/unlocks and unresolved conditions; distinguish curated advice from engine outcomes |
 | Military/economy: stronger division and production explanations | P1–P2 | Existing Lab and supported equipment stats; needs patch-matched field comparison for claimed parity | Explain model inputs, unsupported modifiers and manually supplied stockpiles/efficiency; verify selected outputs |
@@ -21,7 +21,7 @@ Prioritized after Milestone 4. Deliver useful app features on the existing rende
 | AI Strategic Advisor: campaign-aware recommendations | P2–P3 | Reliable snapshot/plan context, optional qualified probability inspectors and cost models | Recommendations cite patch/source/time and conditional scenarios; weights are not unconditional real-game odds |
 | AI Strategic Advisor: authorized action proposals | After control gate | Preview/approval UX plus qualified gateway capabilities | Suggestions cannot bypass authorization or independent verification |
 
-First product follow-up: a small persistent recording library and reviewed baseline transfer, using the dashboard already delivered. First control follow-up: resolve and fixture-test recognition from saved evidence, then independently qualify one action. Neither requires a new general-purpose agent framework.
+Next product/telemetry follow-up: qualify a small supported-scripting completion/research manifest and economic values, then use explicit observation coverage to improve planner conditions. A runnable isolated Windows build is an acceptance gate for each major application milestone. First control follow-up: resolve and fixture-test recognition from saved evidence, then independently qualify one action. Neither requires a new general-purpose agent framework.
 
 The native `saslifat-gif/hoi4-mcp` option remains deferred under `hoi4-bridge/NATIVE-ADAPTER-FUTURE.md`: license, exact executable compatibility, security and explicit invasive-method authorization are separate gates. No hash-check bypass, DLL injection or executable patch is planned as part of ordinary app integration.
 

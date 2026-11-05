@@ -5,6 +5,7 @@ import { api, download } from './api';
 import { sourceNumber } from './format';
 import { DivisionLab } from './Lab';
 import { CampaignIntelligence } from './CampaignIntelligence';
+import {PlannerObservation} from './BaselineTransfer';
 import { Discovery } from './Discovery';
 import type {GuideView} from './discovery-types';
 import { CampaignPlanner } from './planner/CampaignPlanner';
@@ -24,6 +25,7 @@ const blank=():Profile=>({id:crypto.randomUUID(),name:'My German campaign',count
 export default function App(){
   const [status,setStatus]=useState<Status>();const [profiles,setProfiles]=useState<Profile[]>([]);
   const [selected,setSelected]=useState('');
+  const [historyView,setHistoryView]=useState({recordingId:'',snapshotId:''});
   const [recoveries,setRecoveries]=useState<Recovery[]>([]);const [pendingSaves,setPendingSaves]=useState(0);
   const plannerDrafts=useSyncExternalStore(subscribePlannerDrafts,getOutstandingPlannerDrafts);
   const [draftReview,setDraftReview]=useState(false);
@@ -156,7 +158,7 @@ export default function App(){
       {!status?<div className="loading" role="status">Loading game data and campaigns…</div>:<main>
         {page==='overview'&&<>
           <div className="page-heading"><div><div className="eyebrow"><span className="tiny-line"/> CAMPAIGN WORKSPACE</div><h1>Command center</h1><p>Continue a plan or open your installed game reference.</p></div><div className="edition"><Globe size={38}/><span>HEARTS OF IRON IV</span><strong>FIELD COMPANION</strong><span>PERSONAL EDITION / {status.meta?.version||'SETUP'}</span></div></div>
-          <CampaignIntelligence local={status.local} openEntry={openEntry}/>
+          <CampaignIntelligence local={status.local} openEntry={openEntry} view={historyView} onView={setHistoryView} onApplied={saved=>{setProfiles(previous=>[...previous,saved]);void selectProfile(saved.id);setPage('planner');}}/>
           <div className="stats-grid">{[{label:'COUNTRIES INDEXED',value:status.meta?.counts.country||0,icon:Flag},{label:'NATIONAL FOCUSES',value:(status.meta?.counts.focus||0)+(status.meta?.counts.shared_focus||0)+(status.meta?.counts.joint_focus||0),icon:GitBranch},{label:'REFERENCE ENTRIES',value:Object.values(status.meta?.counts||{}).reduce((a,b)=>a+b,0),icon:BookOpen},{label:'CAMPAIGN PLANS',value:profiles.length,icon:Compass}].map(s=><div className="stat" key={s.label}><s.icon size={20}/><strong>{number(s.value)}</strong><span>{s.label}</span></div>)}</div>
           {!status.meta&&<div className="notice">Connect your HOI4 installation to populate the encyclopedia. <button className="text-link" onClick={()=>setPage('settings')}>Open setup <ArrowRight size={14}/></button></div>}
           <div className="dashboard-columns"><section className="panel campaign-panel"><div className="section-label">ON YOUR DESK <span className="tag">MANUAL TRACKING</span></div><h2>{active?.name||'Create your first campaign'}</h2><p>{active?.goals||'Choose a country and build a focus queue.'}</p>{active?<><div className="campaign-facts"><span><Flag size={15}/>{countries.find(c=>c.id===active.country)?.title||active.country}</span><span><Clock size={15}/>{active.startDate}</span><span>{active.historical?'Historical AI':'Alternate AI'}</span></div><div className="progress-label"><span>{active.completed.length} focuses completed</span><span>{active.queue.length} planned</span></div><div className="progress-track"><div style={{width:`${active.completed.length?active.completed.length/Math.max(1,active.completed.length+active.queue.length)*100:0}%`}}/></div></>:null}<div className="button-row"><button className="button primary" onClick={()=>active?setPage('planner'):setProfileEditor(blank())}>{active?'Continue planning':'Create a campaign'}<ArrowRight size={16}/></button><button className="button" onClick={()=>setProfileEditor(blank())}><Plus size={16}/>New campaign</button></div></section>
@@ -165,6 +167,7 @@ export default function App(){
           <div className="idea-grid">{guideData.guides.slice(0,3).map((g,i)=><button className={`idea-card landscape-${i}`} key={g.id} onClick={()=>setPage('discover')}><div className="card-grid-pattern"/><span className="tag">{g.type}</span><div><small>{g.countries.join(' / ')} · {g.difficulty.label.toUpperCase()}</small><h3>{g.spoiler?'An unexpected restoration':g.title}</h3><p>{g.spoiler?'Reveal unusual paths in the campaign catalog.':g.summary}</p></div><ArrowUpRight size={21}/></button>)}</div>
           <div className="source-strip"><span className="status-dot"/><strong>Grounded in your installation</strong><span>{status.meta?`${status.meta.files} source files · Indexed ${new Date(status.meta.indexedAt).toLocaleDateString()}`:'Waiting for game files'}</span><button className="text-link" onClick={()=>setPage('settings')}>View sources <ArrowRight size={14}/></button></div>
         </>}
+        {page==='planner'&&active&&<PlannerObservation profileId={active.id} openEntry={openEntry} onHistory={(recordingId,snapshotId)=>{setHistoryView({recordingId,snapshotId});setPage('overview');}}/>}
         {page==='planner'&&<CampaignPlanner onApplied={saved=>{setProfiles(previous=>previous.map(p=>p.id===saved.id?saved:p));}} profile={active} save={save} countries={countries} onCountry={openCountry} openEntry={openEntry} fail={fail} jump={focusJump} onNew={()=>setProfileEditor(blank())} indexRevision={status.meta?.indexRevision}/>}
         {page==='encyclopedia'&&<ReferenceLibrary query={query} setQuery={setQuery} openEntry={openEntry} active={active} fail={fail} countries={countries} kinds={Object.keys(status.meta?.counts||{})}/>}
         {page==='discover'&&<Discovery profile={active} countries={countries} indexRevision={status.meta?.indexRevision} onCountry={openCountry} openEntry={openEntry} save={save} onApplied={saved=>setProfiles(previous=>previous.map(p=>p.id===saved.id?saved:p))} fail={fail}/>}

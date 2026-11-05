@@ -24,6 +24,8 @@ test('comparisons preserve unavailable fields and refuse cross-session baselines
  const a=snapshot(),b=snapshot();b.values={...b.values,politicalPower:{status:'observed',value:4},stability:{status:'unavailable',value:null,reason:'missing'}};
  assert.deepEqual(compareSnapshots(a,b),[{key:'politicalPower',delta:2},{key:'stability',delta:null}]);
  assert.equal(compareSnapshots(a,{...b,sessionId:'other'}),null);
+ assert.equal(compareSnapshots(a,{...b,gameVersion:null}),null);
+ assert.equal(compareSnapshots(a,{...b,values:{...b.values,country:{status:'unavailable',value:null,reason:'missing'}}}),null);
 });
 test('dashboard API and replay remain local, historical and do not mutate live storage',async()=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'hoi4-intelligence-'));

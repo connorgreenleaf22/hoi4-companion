@@ -17,7 +17,10 @@
     "bridge:prepare-native": "tsx scripts/bridge-prepare-native.ts",
     "test:ui": "tsx scripts/smoke.ts",
     "index": "tsx server/cli.ts --index-only",
-    "package": "npm run build && electron-builder --win portable --publish never"
+    "package": "npm run build && electron-builder --win portable --publish never",
+    "test:history": "tsx --test tests/history.test.ts",
+    "test:history-ui": "tsx scripts/history-ui.ts",
+    "package:development": "npm run build && node scripts/package-development.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",

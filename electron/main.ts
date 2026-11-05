@@ -1,10 +1,20 @@
 import { app, BrowserWindow, shell, dialog } from 'electron';
 import path from 'node:path';
+import fs from 'node:fs';
 import { startServer } from '../server/api';
 import {dataDirectory} from '../server/store';
 import {MigrationRequired,migrateStore} from '../server/migrations';
 import {createCloseGuard} from './close-guard';
 
+const stampPath=path.join(app.getAppPath(),'build','development.json');
+const development=fs.existsSync(stampPath)?JSON.parse(fs.readFileSync(stampPath,'utf8')) as {label:string}:null;
+if(development){
+  if(!/^M\d+-[a-f0-9]{12}$/.test(development.label))throw Error('Invalid development build identity');
+  const isolated=path.join(app.getPath('appData'),'HOI4 Companion Development',development.label);
+  fs.mkdirSync(path.join(isolated,'electron'),{recursive:true});
+  app.setPath('userData',path.join(isolated,'electron'));
+  process.env.HOI4_DATA_DIR ||= path.join(isolated,'data');
+}
 let service:Awaited<ReturnType<typeof startServer>>|undefined;
 let mainWindow:BrowserWindow|undefined;
 if(!app.requestSingleInstanceLock())app.quit();
@@ -19,7 +29,7 @@ else {
       if(choice.response!==0){app.quit();return;}
       migrateStore(error.directory,{closedApps:true});service=await start();
     }
-    mainWindow=new BrowserWindow({width:1500,height:960,minWidth:760,minHeight:600,backgroundColor:'#111b20',title:'HOI4 Companion',icon:path.join(app.getAppPath(),'assets','icon.png'),autoHideMenuBar:true,webPreferences:{nodeIntegration:false,contextIsolation:true,sandbox:true}});
+    mainWindow=new BrowserWindow({width:1500,height:960,minWidth:760,minHeight:600,backgroundColor:'#111b20',title:development?`HOI4 Companion ${development.label}`:'HOI4 Companion',icon:path.join(app.getAppPath(),'assets','icon.png'),autoHideMenuBar:true,webPreferences:{nodeIntegration:false,contextIsolation:true,sandbox:true}});
     const window=mainWindow;
     const guard=createCloseGuard({
       read:async()=>{
@@ -43,6 +53,7 @@ else {
     mainWindow.webContents.setWindowOpenHandler(({url})=>{if(url.startsWith('https://'))void shell.openExternal(url);return {action:'deny'};});
     mainWindow.webContents.on('will-navigate',(event,url)=>{if(new URL(url).origin!==service!.url)event.preventDefault();});
     await mainWindow.loadURL(service.url);
+    if(development){mainWindow.on('page-title-updated',event=>event.preventDefault());mainWindow.setTitle(`HOI4 Companion ${development.label}`);}
   }).catch(error=>{dialog.showErrorBox('Could not start HOI4 Companion',String(error));app.quit();});
   app.on('window-all-closed',()=>app.quit());
   let closing=false;
