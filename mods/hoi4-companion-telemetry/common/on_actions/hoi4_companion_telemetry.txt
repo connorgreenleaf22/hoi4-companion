@@ -4,6 +4,12 @@ on_actions = {
     on_startup = {
         effect = {
             log = "HC_BRIDGE|v1|begin|producer=prototype|END"
+            GER = {
+                if = {
+                    limit = { is_ai = no }
+                    log = "HC_BRIDGE|v1|state|producer=prototype|tag=[THIS.GetTag]|pp=[?political_power]|stability=[?stability]|END"
+                }
+            }
         }
     }
     on_daily_GER = {

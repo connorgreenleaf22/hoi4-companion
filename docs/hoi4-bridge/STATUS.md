@@ -1,5 +1,20 @@
 # HOI4 bridge status
 
+## Milestone 3 checkpoint — native action blocked (2026-11-04 EST)
+
+Branch remains `feature/hoi4-bridge`, resumed from `2854940`. Owned-session observation and offline safety/replay work are implemented; **Milestone 3 native action acceptance is NOT complete**. See `MILESTONE-3.md` for design, commands and evidence. The earlier milestone sections below are historical.
+
+- Fresh actual Codex app-server connection rediscovered all ten restricted Agent Tools tools and passed real source lookup, documentation, validation and mutation rejection. Registration/permissions unchanged.
+- Added owned process identity (PID + creation FILETIME + executable hash), exclusive profile/producer-token/log-generation binding, monotonic observation sequences, disconnected/quarantined status, separate focus freshness, and an opt-in Live Tools Python adapter behind the existing gateway. No production API controller is enabled.
+- Native session `.bridge-local/native-HN3JuU`: one launch, 20 input reservations (19 UI inputs; one adapter reservation failed before dispatch), 6m05s to stop. HOI4 1.19.4.1, GER, 1936.01.01.12, PP 2.324 (UI 2), stability .81 (UI 81%). Owned startup telemetry and idle-focus OCR verified. Candidate prerequisites confirmed in the UI.
+- Focus request `m3-first-focus` returned `uncertain`: detail-title OCR split/reordered text and read Economic as EcoNomrc. No selection input was dispatched; no active-focus readback or native control success is claimed. Same-request retry returned the exact stored receipt without another reservation. The native input budget is exhausted: no further launch/test in this milestone.
+- 15 bridge tests, TypeScript noEmit and installed-script preflight pass. Two real owned snapshots replay exactly offline (startup anchor + idle-focus observation at the same game date). This is not two dates or a successful post-action state. Existing full QA/release gates were not rerun or relabeled.
+- Game exited through UI; stop latched; live status null; owned profile archived; normal profile restored to absent. No game/adapter/OCR helper remains running. Raw diagnostics/assets remain ignored.
+- Exact next step: use saved `focus-evidence/1793847876982934500-detail.png` and `.ocr.json` to implement and fixture-test spatial title/button recognition with negative cases, without launching HOI4. Then qualify capture-to-input mapping and active-focus readback in a separately budgeted future native session. Research-state access remains deferred.
+
+## Earlier milestones
+
+
 Milestone 1 complete within the verified scope below (2026-11-04); follow-up community integration sprint complete. Branch: `feature/hoi4-bridge`; baseline `ba4c3c9`, initial bridge checkpoint `9017453`, native/skill checkpoint `e83d6a2`. No push, merge or release authorized/performed.
 
 Actual checkout: `C:/Users/conno/Documents/Codex/2026-11-04/s/hoi4-companion`. Open Codex in this repository to discover its skill; the original chat directory was empty.
@@ -38,7 +53,7 @@ Local evidence (ignored; may contain machine/account diagnostics): `.bridge-loca
 - Existing `QA-LEDGER.md` release obligations remain unresolved unless already qualified there. The bridge smoke test does not certify planner parity, accessibility, packaged Electron lifecycle or a full campaign. No new installer/release was created.
 - `npm ci --ignore-scripts` left Electron postinstall unrun; npm reported six moderate advisories. No forced dependency upgrades performed.
 
-## Next smallest task
+## Previous next task (superseded by Milestone 3 checkpoint)
 
 Implement M2A from `COMMUNITY-TOOLS.md`: bind observations to an owned process/session and add qualified active-focus/research readback, adapting reviewed Live Tools telemetry generation/manifest patterns. Then qualify ONE ordinary focus or research selection through its Windows input path behind ActionAdapter. No native memory integration is authorized. Follow the explicit pass/fail gates there; do not repeat the community survey. Any native session needs a new bounded plan and must preserve an existing normal profile; the current helper intentionally cannot use one.
 

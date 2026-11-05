@@ -1,16 +1,17 @@
 import type {ActionReceipt,BridgeAction,BridgeCapability,BridgeMode,BridgeSnapshot} from '../../src/bridge-types';
 import {BridgeDatabase,digest,freshness} from './telemetry';
 
-/** No native adapter ships in this milestone. Registration requires independent version/session verification. */
+/** Adapters require explicit session registration and version constraints; dispatch never proves success. */
 export interface ActionAdapter {
   capability:string; commands:string[]; verifiedVersions:string[];
   validate(action:BridgeAction,before:BridgeSnapshot):string|null;
+  stateFresh?(before:BridgeSnapshot):boolean;
   execute(action:BridgeAction,signal:AbortSignal):Promise<void>;
   verify(action:BridgeAction,before:BridgeSnapshot,signal:AbortSignal):Promise<{outcome:'success'|'failure'|'unknown';snapshotId?:string;reason:string}>;
 }
 export class ActionGateway {
   constructor(private db:BridgeDatabase,private context:()=>{mode:BridgeMode;snapshot:BridgeSnapshot|null},private adapters:ActionAdapter[]=[],private grants=new Set<string>()){}
-  capabilities():BridgeCapability[]{return ['game.pause','game.resume'].map(id=>({id,available:this.adapters.some(a=>a.capability===id),reason:this.adapters.some(a=>a.capability===id)?'Registered adapter; authorization and preconditions still required':'No independently verified compatible native adapter registered',evidence:'unverified'}));}
+  capabilities():BridgeCapability[]{return [...new Set(['game.pause','game.resume',...this.adapters.map(a=>a.capability)])].map(id=>({id,available:this.adapters.some(a=>a.capability===id),reason:this.adapters.some(a=>a.capability===id)?'Registered adapter; authorization and preconditions still required':'No independently verified compatible native adapter registered',evidence:'unverified'}));}
   stop(){this.db.set('emergency-stop',true);return {stopped:true,meaning:'Prevents subsequent dispatch. Does not undo an executed action or guarantee cancellation of an in-flight input.'};}
   receipt(id:string):ActionReceipt|null{const row=this.db.db.prepare('SELECT payload FROM receipts WHERE id=?').get(id);return row?JSON.parse(String(row.payload)):null;}
   async submit(input:unknown):Promise<ActionReceipt>{
@@ -32,7 +33,7 @@ export class ActionGateway {
       else if(a.authorization!=='local-grant'||!this.grants.has(a.controllerId))reason='Controller has no local authorization grant';
       else if(!adapter)reason='Unsupported capability or command';
       else if(!a.parameters||typeof a.parameters!=='object'||Array.isArray(a.parameters)||!a.verification||a.verification.policy!=='independent-readback'||!Number.isInteger(a.verification.timeoutMs)||a.verification.timeoutMs<1||a.verification.timeoutMs>30000)reason='Invalid parameters or verification policy';
-      else if(!before||freshness(before).status!=='recent-log-write'||before.sessionId!==a.sessionId||before.id!==a.expected?.snapshotId||before.values.country.status!=='observed'||before.values.country.value!==a.expected.country||before.gameVersion!==a.expected.gameVersion)reason='Session, freshness or expected state does not match';
+      else if(!before||!(adapter.stateFresh?adapter.stateFresh(before):freshness(before).status==='recent-log-write')||before.sessionId!==a.sessionId||before.id!==a.expected?.snapshotId||before.values.country.status!=='observed'||before.values.country.value!==a.expected.country||before.gameVersion!==a.expected.gameVersion)reason='Session, freshness or expected state does not match';
       else if(!before.gameVersion||!adapter.verifiedVersions.includes(before.gameVersion))reason='Adapter is not verified for this game version';
       else if(this.db.db.prepare('SELECT request FROM controller_lock WHERE id=1').get())reason='Another controller action is in flight or needs reconciliation';
       else reason=adapter.validate(a,before)||'';

@@ -8,6 +8,8 @@ export interface BridgeSnapshot {
   source:{kind:'game-log'; path:string; offset:number; hash:string};
   values:{country:Value<string>; gameDate:Value<string>; politicalPower:Value<number>; stability:Value<number>};
   unavailable:string[];
+  ownership?:{sessionId:string;pid:number;creationTime:string;executable:string;executableHash:string;logIdentity:string;beginOffset:number;sequence:number;correlation:'owned-profile-and-launch-token'};
+  focusObservation?:{current:Value<string|null>;observedAt:string;sessionId:string;source:{kind:'ui-ocr';imagePath:string;imageHash:string;text:string;panelText:string};verification:'exact-localized-ui-label'|'unverified'};
 }
 export interface BridgeCapability { id:string; available:boolean; reason:string; evidence:'implemented'|'native-verified'|'unverified'; }
 export interface BridgeEnvironment {
