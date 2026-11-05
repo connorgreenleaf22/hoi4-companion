@@ -1,6 +1,22 @@
 # HOI4 bridge status
 
-## Milestone 3 checkpoint � native action blocked (2026-11-04 EST)
+## Milestone 4 checkpoint — application integration complete (2026-11-04 EST)
+
+Branch remains `feature/hoi4-bridge`, from `3851fe7`. The existing Command center now includes **Your observed campaign**, a read-only Campaign Intelligence panel. See [application report](../application/MILESTONE-4.md), [feature inventory](../application/FEATURE-INVENTORY.md), [full MCP matrix](MCP-CAPABILITIES.md) and [application roadmap](../APPLICATION-ROADMAP.md).
+
+- Implemented typed local intelligence/replay endpoints over the existing bridge, installation/version diagnostics, separate bridge/game connectivity, snapshot history and comparison, installed-reference links, unavailable values and separate telemetry/focus freshness. Imports are historical and origin-unverified; explicit fixtures are labeled. Ordinary app startup has no owned-game attachment or gameplay grant.
+- Verified 18 focused Node tests (including all 15 existing bridge tests), three offline OCR diagnostic tests, four deterministic rendered UI journeys and one retained-native-recording UI journey. `npm run build` passed. Desktop/mobile screenshots reviewed; no full release QA recertification.
+- Evidence: `artifacts/qa/campaign-intelligence-2026-11-05T03-22-18-319Z-1fda0ae3/`, `artifacts/qa/campaign-intelligence-2026-11-05T03-25-43-210Z-5368430f/`, `.bridge-local/m4-build.txt`, `.bridge-local/m4-mcp-inventory.json`, `.bridge-local/m4-ocr/`. Raw evidence stays ignored. See report for commands and scope.
+- Audited all 28 standard pinned Agent Tools definitions plus two private opt-ins and protocol surfaces. Ten analysis tools remain enabled; only three implementations were independently exercised in prior milestones. No new permissions or production dependency changes. Recommended additions require their own focused qualification.
+- Offline M3 diagnosis: spatial sorting removes interleaved neighboring text, but title-only OCR still reads Economic incorrectly. Unique Start recognition does not authorize input. Added deterministic diagnostics and negative tests; native adapter and its safety checks unchanged.
+- Blockers/limits: native focus selection and active-focus/research readback remain unverified. No automatic app owned-session attachment, persistent recording library or automatic planner baseline import. Existing Electron lifecycle/release QA obligations remain open. Older packaged executable is unchanged; run this checkout to view the feature.
+- No native launches or game inputs this milestone. Temporary UI services/browsers closed by their test harness; no personal saves, playsets or installation files changed. No push, merge or release.
+- Exact next application step: add a persistent, explicitly labeled recording library to this panel, then a reviewed snapshot-to-planner baseline preview with field provenance and explicit user apply. Keep it separate from control qualification.
+- Exact next control step: qualify a reliable title/target recognizer with negative offline cases and capture-to-input mapping before writing a separate bounded native plan for one action plus independent active-focus readback. Do not retry the unchanged M3 OCR matcher.
+
+## Historical checkpoints
+
+## Milestone 3 checkpoint — native action blocked (2026-11-04 EST)
 
 Branch remains `feature/hoi4-bridge`, resumed from `2854940`. Owned-session observation and offline safety/replay work are implemented; **Milestone 3 native action acceptance is NOT complete**. See `MILESTONE-3.md` for design, commands and evidence. The earlier milestone sections below are historical.
 

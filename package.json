@@ -11,6 +11,8 @@
     "build": "tsc --noEmit && vite build && node scripts/build.mjs",
     "test": "tsx --test tests/*.test.ts",
     "test:bridge": "tsx --test tests/bridge*.test.ts",
+    "test:intelligence": "tsx --test tests/intelligence.test.ts",
+    "test:intelligence-ui": "tsx scripts/intelligence-ui.ts",
     "bridge:validate": "tsx scripts/bridge-validate.ts",
     "bridge:prepare-native": "tsx scripts/bridge-prepare-native.ts",
     "test:ui": "tsx scripts/smoke.ts",

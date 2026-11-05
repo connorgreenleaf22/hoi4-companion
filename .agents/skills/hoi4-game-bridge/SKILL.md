@@ -13,6 +13,12 @@ The pinned `hoi4_agent_tools` MCP registration supplies ten source-analysis tool
 
 Inspect `structuredContent.status`, then `data`; MCP transport success alone is insufficient. Validation `valid: null` means unresolved; `parametersChecked: false` remains a limitation even when valid is true. Preserve revision, source layer, line and scan completeness. No source-rewrite tools are enabled. If the MCP catalog is absent, use the documented diagnostic/reconnect procedure once and the existing bridge reference query as a fallback; do not install native control components or launch HOI4 to repair source-tool access.
 
+## Application integration and complete MCP catalog
+
+Read `docs/hoi4-bridge/MCP-CAPABILITIES.md` for all 28 standard tools plus the two private opt-ins. Only ten are enabled; prior execution evidence covers source_lookup, reference_search and script_validate, not every enabled inspector. `node scripts/bridge-community-inventory.mjs` inventories the pinned definitions without invoking tools or changing permissions. Qualify already-enabled domain inspectors before adding duplicate analysis code. Recommended render/GUI/probability permissions are proposals, not current authorization; source-writing tools remain disabled outside a specifically approved Git-tracked mod workspace.
+
+The Command center's Campaign Intelligence panel consumes `GET /api/v1/bridge/intelligence` and the local-only `POST /api/v1/bridge/replay`. Replay validates JSONL but never writes live history or grants ownership. Imported recordings remain origin-unverified; fixtures must be labeled. Keep manual planner state separate. Use `docs/application/FEATURE-INVENTORY.md` before adding another screen and `docs/application/MILESTONE-4.md` for focused UI checks. Diagnose M3 OCR from saved JSON with `python scripts/bridge-ocr-diagnose.py <ocr.json>`; it corrects spatial ordering only and cannot authorize input. No new native test is needed for dashboard or OCR-fixture work.
+
 ## Repeatable workflow
 
 1. Run `npm run dev -- --bridge inspect`. This reads the installation and detected launcher configuration without opening an app database. Use explicit `HOI4_GAME_DIR` and `HOI4_USER_DIR` when automatic discovery is incomplete. Read installed `launcher-settings.json` and `documentation/`; an executable's Windows product version can be the generic `1.0`. Recheck after Steam updates.

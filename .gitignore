@@ -41,3 +41,7 @@ migration-backups/
 *.log
 .DS_Store
 Thumbs.db
+
+# Python diagnostic bytecode
+__pycache__/
+*.pyc

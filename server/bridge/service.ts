@@ -1,5 +1,5 @@
 import type {Store} from '../store';
-import type {BridgeMode} from '../../src/bridge-types';
+import type {BridgeMode,CampaignIntelligence} from '../../src/bridge-types';
 import {inspectEnvironment,queryReference} from './environment';
 import {BridgeDatabase,TelemetryReader,freshness} from './telemetry';
 import {ActionGateway} from './actions';
@@ -27,6 +27,14 @@ export class GameBridge {
   }
   environment(){return inspectEnvironment(this.options.gameRoot??(this.store.getSetting('gameRoot','')||undefined),this.options.userRoot);}
   reference(ref:string,kind?:string){return queryReference(this.store,this.environment(),ref,kind);}
+  intelligence():CampaignIntelligence {
+    const current=this.owned?.latest()??null;
+    const fresh=!!current&&(freshness(current).status==='recent-log-write'||this.owned!.focusFresh(current));
+    return {schemaVersion:1,checkedAt:new Date().toISOString(),mode:this.mode,environment:this.environment(),
+      session:{state:current?'owned-connected':'disconnected',id:current?.sessionId??null,reason:current?'Owned process and log binding checked':this.owned?.check()||'No owned game session connected. Recent log writes alone do not prove a running game.'},
+      liveSnapshotId:fresh&&current?.dataOrigin!=='fixture'?current!.id:null,
+      snapshots:this.database.snapshots(undefined,200),emergencyStop:this.database.get('emergency-stop',false)};
+  }
   status(){const latest=this.owned?this.owned.latest():this.database.latest();return {ownershipError:this.owned?.check()??null,schemaVersion:1,mode:this.mode,capabilities:[{id:'environment.inspect',available:true,evidence:'implemented'},{id:'reference.query',available:true,evidence:'implemented'},{id:'telemetry.read',available:this.mode!=='observer',evidence:'implemented',reason:'Wire reader implemented; live verification is version-specific. See STATUS.md.'},{id:'telemetry.replay',available:true,evidence:'implemented'},...this.gateway.capabilities()],reader:this.reader.diagnostic,emergencyStop:this.database.get('emergency-stop',false),latest,freshness:freshness(latest)};}
   poll(){if(this.mode==='observer')throw new Error('Enable Telemetry Mode explicitly before polling a mod log');const added=this.reader.poll();return {schemaVersion:1,added:this.owned?added.map(s=>this.owned!.bind(s)):added,diagnostic:this.reader.diagnostic};}
   async observeFocus(){if(this.mode==='observer'||!this.owned)throw new Error('Owned test session required');return this.owned.recordFocus(await this.owned.tool('observe'));}

@@ -14,6 +14,7 @@ import {mirrorPlanner} from './planner/plans';
 import {preparePlanDraft,makePreview,validatePreviewContext,PlanConflict} from './planner/service';
 import {listDiscovery,getDiscovery,previewDiscovery} from './discovery';
 import {GameBridge} from './bridge/service';
+import {replaySnapshots} from './bridge/telemetry';
 import type {BridgeMode} from '../src/bridge-types';
 
 export function validateProfile(input:any):Profile {
@@ -88,12 +89,18 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
           if(remote)return send(res,403,{error:'Game bridge interfaces are local-only.'});
           if(req.method==='GET'){
             if(route==='bridge/status')return send(res,200,bridge.status());
+            if(route==='bridge/intelligence')return send(res,200,bridge.intelligence());
             if(route==='bridge/environment')return send(res,200,bridge.environment());
             if(route==='bridge/reference')return send(res,200,bridge.reference(url.searchParams.get('ref')||'',url.searchParams.get('kind')||undefined));
             if(route==='bridge/snapshots')return send(res,200,{schemaVersion:1,snapshots:bridge.database.snapshots(url.searchParams.get('session')||undefined)});
             if(route==='bridge/receipt')return send(res,200,{schemaVersion:1,receipt:bridge.gateway.receipt(url.searchParams.get('id')||'')});
           }
           if(req.method==='POST'){
+            if(route==='bridge/replay'){
+              const input=await body(req);
+              if(typeof input.text!=='string'||!['recording','fixture'].includes(input.origin))throw new Error('Supply snapshot JSONL and recording or fixture origin');
+              return send(res,200,{schemaVersion:1,origin:input.origin,snapshots:replaySnapshots(input.text)});
+            }
             if(route==='bridge/poll')return send(res,200,bridge.poll());
             if(route==='bridge/actions')return send(res,200,await bridge.gateway.submit(await body(req)));
             if(route==='bridge/stop')return send(res,200,bridge.gateway.stop());
@@ -103,7 +110,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
         if(req.method==='GET'){store.db.exec('BEGIN');readSnapshot=true;}
         const meta=store.getSetting<Meta|null>('meta',null);
         res.setHeader('X-HOI4-Index-Revision',meta?.indexRevision||'legacy');
-        if(route==='status'&&req.method==='GET')return send(res,200,{meta,appVersion:'0.3.0',dbSchemaVersion:3,indexingError,profiles:store.listProfiles(),selectedProfileId:remote?undefined:store.selectedProfileId(),local:!remote,network:remote?{enabled:true}:lanInfo(),dataDirectory:remote?undefined:store.directory,root:remote?undefined:meta?.root||root,roadmap:['Read-only save analysis','Real-time telemetry feasibility','Backup and preview based save editing','Optional local or cloud AI']});
+        if(route==='status'&&req.method==='GET')return send(res,200,{meta,appVersion:'0.3.0',dbSchemaVersion:3,indexingError,profiles:store.listProfiles(),selectedProfileId:remote?undefined:store.selectedProfileId(),local:!remote,network:remote?{enabled:true}:lanInfo(),dataDirectory:remote?undefined:store.directory,root:remote?undefined:meta?.root||root,roadmap:['Campaign intelligence: monitoring, history and alerts','Strategic planning: research and decision paths','Military and economy: supported production and logistics analysis','Assisted gameplay: one independently verified action','AI advisor: source-cited advice with explicit uncertainty']});
         if(route==='countries'&&req.method==='GET')return send(res,200,all('country').map(e=>({...e,data:{...e.data,europe:europe.includes(e.id),major:majors.includes(e.id)}})).sort((a,b)=>a.title.localeCompare(b.title)));
         if(route==='entries'&&req.method==='GET'){
           return send(res,200,searchEntries(store,url.searchParams));

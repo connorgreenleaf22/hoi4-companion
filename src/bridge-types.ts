@@ -3,6 +3,7 @@ import type { Resolution } from './types';
 export type BridgeMode = 'observer' | 'telemetry' | 'control';
 export type Value<T> = { value:T; status:'observed' } | { value:null; status:'unavailable'; reason:string };
 export interface BridgeSnapshot {
+  dataOrigin?:'game-log'|'fixture';
   schemaVersion:1; id:string; sessionId:string; producerId:string;
   observedAt:string; gameVersion:string|null;
   source:{kind:'game-log'; path:string; offset:number; hash:string};
@@ -10,6 +11,11 @@ export interface BridgeSnapshot {
   unavailable:string[];
   ownership?:{sessionId:string;pid:number;creationTime:string;executable:string;executableHash:string;logIdentity:string;beginOffset:number;sequence:number;correlation:'owned-profile-and-launch-token'};
   focusObservation?:{current:Value<string|null>;observedAt:string;sessionId:string;source:{kind:'ui-ocr';imagePath:string;imageHash:string;text:string;panelText:string};verification:'exact-localized-ui-label'|'unverified'};
+}
+export interface CampaignIntelligence {
+  schemaVersion:1;checkedAt:string;mode:BridgeMode;environment:BridgeEnvironment;
+  session:{state:'owned-connected'|'disconnected';id:string|null;reason:string};
+  liveSnapshotId:string|null;snapshots:BridgeSnapshot[];emergencyStop:boolean;
 }
 export interface BridgeCapability { id:string; available:boolean; reason:string; evidence:'implemented'|'native-verified'|'unverified'; }
 export interface BridgeEnvironment {
