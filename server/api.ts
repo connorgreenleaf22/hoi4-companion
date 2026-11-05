@@ -17,6 +17,8 @@ import {listDiscovery,getDiscovery,previewDiscovery} from './discovery';
 import {GameBridge} from './bridge/service';
 import {replaySnapshots} from './bridge/telemetry';
 import {CampaignHistory} from './bridge/history';
+import {explorePaths,compareStrategies,planningSources} from './planner/strategy';
+import {evaluateRequirements,plannerDlcFacts} from './planner/requirements';
 import type {BridgeMode} from '../src/bridge-types';
 
 export function validateProfile(input:any):Profile {
@@ -157,6 +159,34 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
           return send(res,200,trees.filter(t=>!country||t.data.countries.includes(country)||t.id==='generic_focus').map(t=>({...t,data:{...t.data,script:undefined}})));
         }
         if(route==='tree'&&req.method==='GET'){const result=getTree(url.searchParams.get('uid')||'');return send(res,200,{...result,tree:summary(result.tree),focuses:result.focuses.map(summary)});}
+        if((route==='strategy/paths'||route==='strategy/compare')&&req.method==='POST'){
+          const input=await body(req),profile=validateProfile(input.profile),meta=store.getSetting<Meta|null>('meta',null);
+          if(input.indexRevision!==(meta?.indexRevision||'legacy'))throw new PlanConflict('reference-conflict','References changed; refresh the planner before exploring.');
+          const sources=planningSources(meta,bridge.environment());
+          if(route==='strategy/paths'){
+            if(typeof input.goal!=='string'||input.goal.length>800)throw Error('Choose a valid focus objective.');
+            const {plan}=preparePlanDraft(profile,input.plan),{tree,focuses}=getTree(plan.tree);
+            return send(res,200,explorePaths(profile,plan,input.goal,focuses,tree,meta,sources));
+          }
+          if(!Array.isArray(input.planIds)||input.planIds.length<2||input.planIds.length>4)throw Error('Choose two to four saved plans.');
+          const saved=store.profile(profile.id);
+          if(!saved||saved.revision!==profile.revision)throw new PlanConflict('profile-conflict','Saved campaign changed; reload before comparing.');
+          const plans=input.planIds.map((id:unknown)=>{const p=saved.planner?.plans.find(p=>p.id===id);if(!p)throw Error('Saved alternative missing.');return p;});
+          return send(res,200,compareStrategies(saved,plans,getTree,meta,sources));
+        }
+        if(route==='strategy/references'&&req.method==='GET'){
+          const kind=url.searchParams.get('kind');if(!['decision','technology'].includes(kind||''))throw Error('Choose decisions or technologies.');
+          const profile=store.profile(url.searchParams.get('profile')||'');if(!profile)throw Error('Save a campaign before browsing planning references.');
+          const params=new URLSearchParams(url.searchParams);params.set('limit','20');
+          // Country matching is a discovery hint, never an availability claim.
+          if(kind==='decision'&&params.get('scope')==='country')params.set('country',profile.country);else params.delete('country');
+          const result=searchEntries(store,params),dlcAvailability=plannerDlcFacts(profile,meta?.dlcs||[]);
+          return send(res,200,{schemaVersion:1,sources:planningSources(meta,bridge.environment()),total:result.total,entries:result.entries.map(e=>{
+            const entry=store.entry('definition:'+e.uid)!;const declarations=entry.data.nodes||[];
+            const conditions=declarations.filter((n:any)=>['allowed','visible','available','allow','potential'].includes(n.key)).map((n:any)=>({name:n.key,result:evaluateRequirements(Array.isArray(n.value)?n.value:[n],profile,{role:n.key==='visible'?'branch':'availability',dlcAvailability,source:entry.evidence?.[0]})}));
+            return {entry,relevance:kind==='decision'&&params.get('scope')==='country'?'Country ID or indexed country mention; eligibility and category gates still require review.':'All-country installed reference; ownership, current research and availability unknown.',conditions};
+          })});
+        }
         if(route==='guides'&&req.method==='GET')return send(res,200,{guides:listDiscovery(store,{spoilers:url.searchParams.get('spoilers')==='show',q:url.searchParams.get('q')||'',country:url.searchParams.get('country')||''}),troubleshooting});
         if(route==='discovery/preview'&&req.method==='POST'){
           const input=await body(req),guide=getDiscovery(store,input.guideId,input.spoilers==='show');

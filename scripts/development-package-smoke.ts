@@ -3,11 +3,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {createQaRun,assertOwnedStatus,fileHash} from './qa/fixture';
 import {captureRuntimeArchive} from './verify-package.mjs';
+import {createAndCompareStrategies,verifyStrategyComparison} from './qa/strategy-journey';
 
 async function main(){
  const executable=path.resolve(process.argv[2]||'');if(!fs.existsSync(executable)||!executable.endsWith('.exe'))throw Error('Supply the newly packaged development executable.');
  const run=createQaRun('development-package','compiled-runtime');
- const env={...process.env,HOI4_DATA_DIR:run.dataDirectory};delete env.ELECTRON_RUN_AS_NODE;
+ const env={...process.env,HOI4_DATA_DIR:run.dataDirectory};delete env.ELECTRON_RUN_AS_NODE;delete env.NODE_PATH;delete env.NODE_OPTIONS;
+ if(process.env.HOI4_STRATEGY_SMOKE==='1')env.PATH=`${process.env.SystemRoot}\\System32;${process.env.SystemRoot}`;
  let app:Awaited<ReturnType<typeof _electron.launch>>|undefined;
  try{
   const archive=path.join(path.dirname(executable),'resources','app.asar');
@@ -16,7 +18,7 @@ async function main(){
   for(const member of manifest.members.filter((m:any)=>/^(build|dist|assets)\//.test(m.file)&&m.file!=='build/development.json')){
    if(fileHash(path.resolve(member.file))!==member.sha256)throw Error('Packaged runtime differs: '+member.file);
   }
-  app=await _electron.launch({executablePath:executable,env,timeout:60000});run.ownedProcesses.push({pid:app.process().pid!,kind:'Owned unpacked Electron development build'});
+  app=await _electron.launch({executablePath:executable,cwd:path.dirname(executable),env,timeout:60000});run.ownedProcesses.push({pid:app.process().pid!,kind:'Owned unpacked Electron development build'});
   let p=await app.firstWindow({timeout:60000});const errors:string[]=[];p.on('pageerror',e=>errors.push(e.message));
   let recordingId='';
   await run.check('packaged renderer, embedded API and installed references load',['M5-PACKAGE'],async()=>{
@@ -31,6 +33,7 @@ async function main(){
     await panel.getByRole('button',{name:'Confirm and open planner'}).click();await expect(p.getByLabel('Planner country')).toHaveValue('GER');await expect(p.getByLabel('Planning baseline',{exact:true})).toHaveValue('1936-01-01');
     await expect(p.getByRole('region',{name:'Recorded planning baseline'})).toContainText('Unavailable: research, completed focuses');
     await p.getByRole('button',{name:'Add Prioritize Economic Growth to queue',exact:true}).click();await expect(p.getByRole('button',{name:'Apply reviewed plan'})).toBeEnabled();await p.getByRole('button',{name:'Apply reviewed plan'}).click();await expect(p.getByText('Reviewed plan applied. Actual completion history is unchanged.')).toBeVisible();
+    if(process.env.HOI4_STRATEGY_SMOKE==='1')await createAndCompareStrategies(p,run.output);
     await p.screenshot({path:path.join(run.output,'packaged-planner.png'),fullPage:true});
     await p.getByRole('button',{name:'Command center',exact:true}).click();
    }
@@ -39,9 +42,9 @@ async function main(){
   const oldUrl=new URL(p.url()).origin;await app.close();app=undefined;
   await run.check('closed packaged service stops and recording survives packaged restart',['M5-PACKAGE-REOPEN'],async()=>{
    let stopped=false;try{await fetch(oldUrl+'/api/v1/status');}catch{stopped=true;}if(!stopped)throw Error('Closed application left its service running');
-   app=await _electron.launch({executablePath:executable,env,timeout:60000});run.ownedProcesses.push({pid:app.process().pid!,kind:'Owned restart of unpacked development build'});p=await app.firstWindow({timeout:60000});
+   app=await _electron.launch({executablePath:executable,cwd:path.dirname(executable),env,timeout:60000});run.ownedProcesses.push({pid:app.process().pid!,kind:'Owned restart of unpacked development build'});p=await app.firstWindow({timeout:60000});
    await expect(p.getByRole('heading',{name:'Command center',exact:true})).toBeVisible({timeout:60000});
-   if(recordingId){const panel=p.getByRole('region',{name:'Your observed campaign'});await panel.getByLabel('Saved campaign recording').selectOption(recordingId);await expect(panel.getByText('No focus selected',{exact:true})).toBeVisible();await p.getByRole('button',{name:'Campaign planner',exact:true}).click();await expect(p.getByRole('region',{name:'Recorded planning baseline'})).toContainText('Political power: 2.324');await expect(p.getByLabel('Plan name')).toHaveValue('Main');await expect(p.locator('.cp-step-title').getByRole('button',{name:'Prioritize Economic Growth',exact:true})).toBeVisible();await p.screenshot({path:path.join(run.output,'packaged-reopened.png'),fullPage:true});}
+   if(recordingId){const panel=p.getByRole('region',{name:'Your observed campaign'});await panel.getByLabel('Saved campaign recording').selectOption(recordingId);await expect(panel.getByText('No focus selected',{exact:true})).toBeVisible();await p.getByRole('button',{name:'Campaign planner',exact:true}).click();await expect(p.getByRole('region',{name:'Recorded planning baseline'})).toContainText('Political power: 2.324');if(process.env.HOI4_STRATEGY_SMOKE==='1')await verifyStrategyComparison(p);else {await expect(p.getByLabel('Plan name')).toHaveValue('Main');await expect(p.locator('.cp-step-title').getByRole('button',{name:'Prioritize Economic Growth',exact:true})).toBeVisible();}await p.screenshot({path:path.join(run.output,'packaged-reopened.png'),fullPage:true});}
   });
   if(errors.length)throw Error(errors.join('\n'));const diagnostics=path.join(run.dataDirectory,'diagnostics');if(fs.existsSync(diagnostics))for(const name of fs.readdirSync(diagnostics))fs.copyFileSync(path.join(diagnostics,name),path.join(run.output,name));
   run.finish({executable,executableSHA256:fileHash(executable),nativeGameLaunched:false,packagedElectronLaunched:true});console.log(run.output);

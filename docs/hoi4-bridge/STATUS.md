@@ -1,5 +1,11 @@
 # HOI4 bridge status
 
+## Milestone 6 source checkpoint — planning workflow validated (2026-11-05)
+
+- Goal routes, grouped prerequisites/exclusions, conservative condition display, saved strategy comparison and decision/research references extend the existing planner/API/schema. Base-game source context and unresolved mod/DLC/campaign conditions stay explicit. Report: `../application/MILESTONE-6.md`; user walkthrough: `../application/MILESTONE-6-ACCEPTANCE.md`.
+- 116 focused planner/history/strategy tests, TypeScript/build, and retained-real-recording/installed-Germany rendered workflow plus restart pass. Evidence: `artifacts/qa/strategy-planning-2026-11-05T05-09-45-380Z-b45489b1/`. No HOI4 launch or control action; MCP permissions unchanged, existing registration diagnostic passed.
+- Exact next step: commit source, package M6, ZIP/extract into a new outside-repository directory, test actual extracted Electron history/strategy persistence with developer PATH removed, then test missing configured game files. Final artifact and private feature-branch synchronization follow those gates. Main desktop/formal user acceptance remains pending; no M7 work.
+
 ## Milestone 5.1 — Electron recovery validated (2026-11-04 EST)
 
 - Private repository verified; all existing history audited and pushed normally to `origin/feature/hoi4-bridge` at `744f74c`. Main/develop unchanged. Full review and diagnostic matrix: `../application/MILESTONE-5.1.md`.
