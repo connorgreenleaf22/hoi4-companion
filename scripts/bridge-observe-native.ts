@@ -23,7 +23,10 @@ async function main(){
   const launchedAt=new Date().toISOString();budget.startedAt||=launchedAt;budget.launches++;saveBudget();
   const child=spawn(plan.environment.executable,plan.launchArguments,{cwd:plan.environment.gameRoot,detached:true,stdio:'ignore',windowsHide:false});await new Promise<void>((resolve,reject)=>{child.once('spawn',resolve);child.once('error',reject);});child.unref();
   const manifest:OwnedManifest={schemaVersion:1,purpose:'telemetry',sessionId:randomUUID(),producerId:lease.token,identity:readProcessIdentity(child.pid!),executableHash:plan.executableHash,gameVersion:plan.environment.version,launchedAt,logPath,lease,controllerId:'no-controller',python:''};
-  fs.writeFileSync(manifestFile,JSON.stringify(manifest,null,2),{flag:'wx'});console.log(JSON.stringify({run,manifest,budget},null,2));return;
+  fs.writeFileSync(manifestFile,JSON.stringify(manifest,null,2),{flag:'wx'});
+  const watchdog=spawn(process.execPath,['--import','tsx',path.resolve('scripts/bridge-native-watchdog.ts'),run],{cwd:process.cwd(),detached:true,stdio:'ignore',windowsHide:true});
+  await new Promise<void>((resolve,reject)=>{watchdog.once('spawn',resolve);watchdog.once('error',reject);});watchdog.unref();
+  console.log(JSON.stringify({run,manifest,budget,watchdogPid:watchdog.pid},null,2));return;
  }
  if(command==='count'){withinBudget();if(!label||budget.actions.length>=10)throw Error('Supply a labeled ordinary action within the ten-action limit');budget.actions.push({at:new Date().toISOString(),label});saveBudget();console.log(JSON.stringify(budget));return;}
  const manifest:OwnedManifest=JSON.parse(fs.readFileSync(manifestFile,'utf8'));if(manifest.purpose!=='telemetry')throw Error('Not a read-only session');

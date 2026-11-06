@@ -4,6 +4,7 @@ import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
 import {BridgeDatabase,TelemetryReader,parseTelemetry,replaySnapshots,freshness} from '../server/bridge/telemetry';
 import {CampaignHistory} from '../server/bridge/history';
 import {observationCapabilities} from '../server/bridge/observation-capabilities';
+import {expireOwnedTest} from '../scripts/bridge-native-watchdog';
 const line=(tail='n=2.324,0.81,0.5,4,31,28,10|f=0,0|t=1,0,0|r=0,1,0',date='1936.01.02.24')=>`[00:00:00][${date}] HC_BRIDGE|v2|state|producer=test|manifest=ger-m65-1|tag=GER|${tail}|END`;
 const context={sessionId:'session',observedAt:'2026-11-06T00:00:00Z',gameVersion:'1.19.4.2',path:'game.log',offset:70};
 test('manifest snapshot exposes bounded positive/negative checks and numeric units; replay stays historical',()=>{
@@ -27,4 +28,36 @@ test('v1 and v2 recording storage coexist, duplicates persist across reopen, for
 });
 test('observation capabilities never turn historical data into live state or imply current-focus support',()=>{
  const s=parseTelemetry(line(),context)!;const historical=observationCapabilities(s,false,'1.19.4.2');assert.equal(historical.find(v=>v.id==='researchSlots')!.availability,'historical-only');assert.equal(historical.find(v=>v.id==='currentFocus')!.availability,'unsupported');assert.equal(observationCapabilities(s,true,'1.20').find(v=>v.id==='researchSlots')!.availability,'version-incompatible');assert.equal(observationCapabilities(null,false,'1.19.4.2').find(v=>v.id==='researchSlots')!.availability,'not-recently-observed');
+});
+
+test('qualification requires current ownership and never promotes fixtures; partial groups stay unqualified',()=>{
+ const s=parseTelemetry(line(),{...context,observedAt:new Date().toISOString()})!;
+ const get=()=>observationCapabilities(s,true,'1.19.4.2');
+ assert.equal(get().find(v=>v.id==='researchSlots')!.availability,'historical-only');
+ s.ownership={sessionId:s.sessionId,pid:123,creationTime:'test',executable:'test',executableHash:'test',logIdentity:'test',beginOffset:0,sequence:1,correlation:'owned-profile-and-launch-token'};
+ assert.equal(get().find(v=>v.id==='researchSlots')!.availability,'verified');
+ assert.equal(get().find(v=>v.id==='technologyResearching.basic_machine_tools')!.availability,'verified');
+ assert.equal(get().find(v=>v.id==='focusCompleted')!.qualification,'script-supported-unqualified');
+ s.dataOrigin='fixture';assert.equal(get().find(v=>v.id==='researchSlots')!.availability,'historical-only');
+ s.dataOrigin='game-log';s.observedAt='2020-01-01T00:00:00Z';assert.equal(get().find(v=>v.id==='researchSlots')!.availability,'not-recently-observed');
+});
+
+test('two sanitized native M6.5 records replay the actual research transition without live ownership',()=>{
+ // Adapted from native-dR04YQ owned snapshots 1/8; only the producer token is replaced.
+ const lines=fs.readFileSync(new URL('./fixtures/bridge-native-1.19.4.2.txt',import.meta.url),'utf8').trim().split(/\r?\n/);
+ const snapshots=lines.map((text,offset)=>{const s=parseTelemetry(text,{...context,offset})!;s.dataOrigin='fixture';return s;});
+ assert.deepEqual(snapshots.map(s=>s.values.gameDate.value),['1936.01.01.12','1936.01.07.24']);
+ assert.deepEqual(snapshots.map(s=>s.campaign!.technologyResearching.basic_machine_tools.value),[false,true]);
+ assert.deepEqual(snapshots.map(s=>s.values.civilianFactories!.value),[35,37]);
+ assert.deepEqual(replaySnapshots(snapshots.map(s=>JSON.stringify(s)).join('\n')),snapshots);
+ assert.ok(snapshots.every(s=>!s.ownership&&s.values.warSupport!.value===0.35&&s.values.researchSlots!.value===4));
+});
+
+test('deadline cleanup refuses reused PIDs, changed executables and unavailable identities',()=>{
+ const expected={pid:123,creation_time:'one',executable_path:path.resolve('hoi4.exe')};const killed:number[]=[];
+ expireOwnedTest(expected,()=>({...expected}),pid=>killed.push(pid));assert.deepEqual(killed,[123]);
+ for(const changed of [{...expected,pid:456},{...expected,creation_time:'two'},{...expected,executable_path:path.resolve('other.exe')}])assert.throws(()=>expireOwnedTest(expected,()=>changed,pid=>killed.push(pid)),/identity changed/);
+ assert.throws(()=>expireOwnedTest(expected,()=>{throw Error('No process');},pid=>killed.push(pid)),/No process/);
+ assert.throws(()=>expireOwnedTest({...expected,executable_path:path.resolve('other.exe')},()=>expected,pid=>killed.push(pid)),/only accepts/);
+ assert.deepEqual(killed,[123]);
 });

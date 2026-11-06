@@ -1,4 +1,18 @@
-# Telemetry mod inventory — Milestone 5
+# Telemetry mod inventory — Milestone 6.5
+
+Current source audit and native evidence: [MILESTONE-6.5.md](MILESTONE-6.5.md). Human GER, exact **1.19.4.2**, schema 2 / manifest ger-m65-1. Descriptor 0.2.0's 1.19.* range is broader than verified compatibility.
+
+Source: `mods/hoi4-companion-telemetry/descriptor.mod`, `common/on_actions/hoi4_companion_telemetry.txt` and generated `common/scripted_effects/hoi4_companion_telemetry.txt`. Startup marker + startup/daily snapshot; seven numeric values and eight named checks. Temporary variables only, no replace_path or gameplay rewards. One daily GER record; no per-tick/all-country scan.
+
+Verified numeric fields: country/date/PP at UI precision/stability; newly war support, total research slots, civilian factories including trade, military factories and dockyards. Active research for **basic_machine_tools** independently verified false then true. Two focus-completed checks, three known-tech checks and three active-research checks are exported, but only that one research transition is qualified; all-group completion qualification remains open. Current focus, progress, complete inventories, availability and completion events stay unavailable. See report table for exact IDs, source mechanisms and independent evidence limits.
+
+Installation after cleanup: not active in a current laptop playset; the formerly absent default profile is again absent. Disposable installed source is archived under `.bridge-local/native-dR04YQ/owned-game-profile/mod/companion_telemetry/`. No desktop saves/mods/playset were touched. Eight connected owned snapshots and 110 archived raw snapshots were replayed offline. One launch/four ordinary actions; the 25-minute timing gate was exceeded during context recovery and is explicitly recorded as failed. No second launch.
+
+Recommended expansion: qualified disposable text-save observation for current focus/progress and full inventories; broader named scripting checks only with patch/country coverage and load/restart tests. Installed `manpower` is deprecated and may overflow; investigate `manpower_k` before any future export. General completion hooks were not found; do not use MIO hooks as universal events or rewrite vanilla rewards. No new OCR, DLL or memory adapter is required for this foundation.
+
+The M5 inventory below is retained as historical context and is superseded by this section where fields were added.
+
+# Historical inventory — Milestone 5
 
 Inspected on 2026-11-04 EST against installed HOI4 **1.19.4.1**. No game was launched and no mod script was changed for M5.
 
