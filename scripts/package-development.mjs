@@ -14,6 +14,9 @@ if(fs.existsSync(output))throw Error('Build destination already exists; retain i
 fs.writeFileSync('build/development.json',JSON.stringify({label,commit,milestone},null,2));
 try{
  await build({targets:Platform.WINDOWS.createTarget('dir'),config:{directories:{output},appId:'local.hoi4.companion.development',productName:`HOI4 Companion ${label}`,win:{target:'dir',signAndEditExecutable:false},forceCodeSigning:false,publish:null}});
+ if(fs.existsSync('build/bridge-mcp.cjs'))fs.copyFileSync('build/bridge-mcp.cjs',path.join(output,'win-unpacked','HOI4-Bridge-MCP.cjs'),fs.constants.COPYFILE_EXCL);
+ const notices=['@modelcontextprotocol/server','@modelcontextprotocol/core','zod'].map(name=>name+'\n'+fs.readFileSync(path.join('node_modules',name,'LICENSE'),'utf8')).join('\n\n');
+ fs.writeFileSync(path.join(output,'win-unpacked','HOI4-Bridge-MCP-LICENSES.txt'),notices,{flag:'wx'});
  fs.writeFileSync(path.join(output,'BUILD.json'),JSON.stringify({label,commit,source:process.cwd(),executable:path.join(output,'win-unpacked',`HOI4 Companion ${label}.exe`),packaging:'Unsigned isolated development build; no update or release'},null,2));
  console.log(output);
 }finally{fs.rmSync('build/development.json',{force:true});}

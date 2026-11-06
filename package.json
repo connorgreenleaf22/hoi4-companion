@@ -21,14 +21,19 @@
     "test:history": "tsx --test tests/history.test.ts",
     "test:history-ui": "tsx scripts/history-ui.ts",
     "package:development": "npm run build && node scripts/package-development.mjs",
-    "package:browser-preview": "npm run build && node scripts/package-browser-preview.mjs"
+    "package:browser-preview": "npm run build && node scripts/package-browser-preview.mjs",
+    "bridge:mcp": "node build/bridge-mcp.cjs"
   },
   "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "lucide-react": "^0.468.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "lucide-react": "^0.468.0"
+    "zod": "4.6.7"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
+    "@playwright/test": "^1.56.0",
     "@types/node": "^24.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
@@ -37,8 +42,7 @@
     "esbuild": "^0.25.0",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0",
-    "vite": "^7.0.0",
-    "@playwright/test": "^1.56.0"
+    "vite": "^7.0.0"
   },
   "build": {
     "appId": "local.hoi4.companion",

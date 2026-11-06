@@ -1,5 +1,15 @@
 # HOI4 bridge status
 
+## Milestone 7 — platform implemented, packaged qualification in progress (2026-11-06)
+
+- Branch feature/hoi4-platform-m7 from 67d7d05. M6.5 already contains M6.1; no merge/history rewrite. Earlier branches/builds preserved.
+- Shared typed platform, read-only connection/monitoring, plaintext save inspector, 15-tool authenticated stdio MCP adapter, one existing gateway/receipt store, UI connection diagnostics and persistent stop implemented. No gameplay execution tool. See MILESTONE-7.md and PLATFORM-CONTRACT.md.
+- 39 distinct focused tests, affected rerun, TypeScript/build pass. Independent synthetic Windows watchdog/identity tests pass; no HOI4 native shutdown claim. Efficient batch ownership and rollback rejection implemented; same-date loaded-save lifecycle remains unqualified.
+- Real archived M6.5 autosave parsed read-only: one completed focus, 55 positive-level technologies and four serialized research slots. Every save mapping remains parsed-unqualified; no current token despite progress=10, so current focus/progress unavailable. Binary/compressed saves unsupported. No new native launch or mod export expansion.
+- Updated skill/frontmatter, source MCP startup-documentation probe, telemetry inventory, roadmap, future native plan and M7.5 feasibility brief. PyYAML validator unavailable; installed js-yaml validates frontmatter. Existing packaging-chain moderate audit findings retained without forced upgrades.
+- Current work: isolated commit-identified Windows package and actual UI/MCP/save/restart acceptance. No package success claimed yet. Exact next step: commit validated source, package outside Git, test fresh extraction with retained historical recording and disposable save, append evidence, audit and push only M7 branch.
+- Native work is a proposal only: M7-NATIVE-PLAN.md (one launch/eight actions/twenty minutes). M6.5 overrun/stopped budget preserved. No M7 memory/injection/control work; M7.5-FEASIBILITY.md is research.
+
 ## Milestone 6.5 — read-only telemetry and packaged review delivered (2026-11-06)
 
 - Isolated feature/hoi4-telemetry-m65 from f02b1c5. Schema-2 GER emitter, fixed-ID manifest, typed reader/replay/history, field-specific capability qualification and one diagnostic UI section implemented. No M3 adapter execution/modification; normal control remains unavailable. M6.1 artifact/branch preserved.

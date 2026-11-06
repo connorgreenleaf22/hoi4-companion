@@ -22,6 +22,7 @@ export class OwnedSession {
   check():string|null {
     try{
       const m=this.manifest;
+      if(!Number.isFinite(Date.parse(m.launchedAt))||Date.parse(m.launchedAt)>this.now()+2000||!Number.isSafeInteger(m.identity.pid)||m.identity.pid<1)throw new Error('Invalid owned launch identity/time');
       if(this.db.get(this.key('quarantined'),false))throw new Error('Owned session quarantined; create a new session');
       if(this.db.get(this.key('stopped'),false))throw new Error('Owned session stopped');
       if(this.now()-Date.parse(m.launchedAt)>(m.purpose==='telemetry'?25:20)*60*1000)throw new Error('Native time budget reached');
@@ -42,15 +43,30 @@ export class OwnedSession {
       return null;
     }catch(error){if(this.db.get(this.key('log'),null))this.db.set(this.key('quarantined'),true);return String(error);}
   }
-  bind(snapshot:BridgeSnapshot):BridgeSnapshot {
+  bind(snapshot:BridgeSnapshot):BridgeSnapshot {return this.bindBatch([snapshot])[0];}
+  bindBatch(snapshots:BridgeSnapshot[]):BridgeSnapshot[] {
+    if(!snapshots.length)return [];
     const error=this.check();if(error)throw new Error(error);
     const m=this.manifest,binding=this.db.get<{identity:string;beginOffset:number}>(this.key('log'),{identity:'',beginOffset:-1});
-    if(snapshot.producerId!==m.producerId||snapshot.gameVersion!==m.gameVersion||path.resolve(snapshot.source.path)!==path.resolve(m.logPath)||snapshot.source.offset<=binding.beginOffset||snapshot.values.country.value!=='GER')throw new Error('Observation is not from the owned campaign');
-    const bytes=fs.readFileSync(m.logPath),end=bytes.indexOf(10,snapshot.source.offset);
-    if(end<0||digest(bytes.subarray(snapshot.source.offset,end).toString('utf8').trimEnd())!==snapshot.source.hash)throw new Error('Observation source bytes no longer match');
-    const sequence=this.db.get(this.key('sequence'),0)+1;this.db.set(this.key('sequence'),sequence);
-    const result:BridgeSnapshot={...snapshot,id:digest(m.sessionId+snapshot.id),sessionId:m.sessionId,ownership:{sessionId:m.sessionId,pid:m.identity.pid,creationTime:m.identity.creation_time,executable:m.identity.executable_path,executableHash:m.executableHash,logIdentity:binding.identity,beginOffset:binding.beginOffset,sequence,correlation:'owned-profile-and-launch-token'}};
-    this.db.db.prepare('INSERT OR IGNORE INTO snapshots VALUES(?,?,?)').run(result.id,result.sessionId,JSON.stringify(result));this.db.set(this.key('latest'),result);return result;
+    const bytes=fs.readFileSync(m.logPath),baseSequence=this.db.get(this.key('sequence'),0);
+    let previousDate=this.db.get<BridgeSnapshot|null>(this.key('latest'),null)?.values.gameDate.value;
+    const results=snapshots.map((snapshot,index)=>{
+      const date=snapshot.values.gameDate.value;
+      if(date&&previousDate&&date<previousDate){this.db.set(this.key('quarantined'),true);throw Error('Campaign date rolled back; loaded-save ownership is unqualified');}if(date)previousDate=date;
+      if(snapshot.producerId!==m.producerId||snapshot.gameVersion!==m.gameVersion||path.resolve(snapshot.source.path)!==path.resolve(m.logPath)||snapshot.source.offset<=binding.beginOffset||snapshot.values.country.value!=='GER')throw new Error('Observation is not from the owned campaign');
+      const end=bytes.indexOf(10,snapshot.source.offset);
+      if(end<0||digest(bytes.subarray(snapshot.source.offset,end).toString('utf8').trimEnd())!==snapshot.source.hash)throw new Error('Observation source bytes no longer match');
+      return {...snapshot,id:digest(m.sessionId+snapshot.id),sessionId:m.sessionId,ownership:{sessionId:m.sessionId,pid:m.identity.pid,creationTime:m.identity.creation_time,executable:m.identity.executable_path,executableHash:m.executableHash,logIdentity:binding.identity,beginOffset:binding.beginOffset,sequence:baseSequence+index+1,correlation:'owned-profile-and-launch-token' as const}};
+    });
+    const after=this.check();if(after)throw new Error(after);
+    // Detect in-place rewrites even when file identity and length remain the same.
+    const current=fs.readFileSync(m.logPath);if(current.length<bytes.length||!current.subarray(0,bytes.length).equals(bytes))throw new Error('Owned source changed during batch');
+    this.db.db.exec('BEGIN IMMEDIATE');
+    try{
+      for(const result of results)this.db.db.prepare('INSERT OR IGNORE INTO snapshots VALUES(?,?,?)').run(result.id,result.sessionId,JSON.stringify(result));
+      this.db.set(this.key('sequence'),baseSequence+results.length);this.db.set(this.key('latest'),results.at(-1));this.db.db.exec('COMMIT');
+    }catch(error){this.db.db.exec('ROLLBACK');throw error;}
+    return results;
   }
   latest():BridgeSnapshot|null {return this.check()?null:this.db.get<BridgeSnapshot|null>(this.key('latest'),null);}
   focusFresh(s:BridgeSnapshot):boolean {

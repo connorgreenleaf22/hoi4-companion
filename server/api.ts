@@ -18,6 +18,9 @@ import {listDiscovery,getDiscovery,previewDiscovery} from './discovery';
 import {GameBridge} from './bridge/service';
 import {replaySnapshots} from './bridge/telemetry';
 import {CampaignHistory} from './bridge/history';
+import {BridgePlatform} from './bridge/platform';
+import {callBridgeTool} from './bridge/tools';
+import {McpConnection} from './bridge/mcp-connection';
 import {explorePaths,compareStrategies,planningSources} from './planner/strategy';
 import {evaluateRequirements,plannerDlcFacts} from './planner/requirements';
 import type {BridgeMode} from '../src/bridge-types';
@@ -56,6 +59,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
   const store=openStore(options.dataDir);
   const bridge=new GameBridge(store,options.bridge);
   const history=new CampaignHistory(bridge.database);
+  const platform=new BridgePlatform(bridge),mcpConnection=new McpConnection(store.directory);
   let meta=store.getSetting<Meta|null>('meta',null);
   let indexingError='';
   let root=store.getSetting('gameRoot','') || discoverGame();
@@ -93,6 +97,12 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
         if(remote&&!authenticated(req))return send(res,401,{error:'Enter the pairing code shown in the desktop app.',pairing:true});
         if(route.startsWith('bridge/')){
           if(remote)return send(res,403,{error:'Game bridge interfaces are local-only.'});
+          if(route==='bridge/mcp'&&req.method==='POST'){
+            if(!mcpConnection.accepts(req.headers.authorization))return send(res,401,{error:'Matching local MCP connection token required'});
+            const input=await body(req);return send(res,200,await callBridgeTool(platform,input.tool,input.args));
+          }
+          if(route==='bridge/platform/status'&&req.method==='GET')return send(res,200,{...platform.status(),mcp:{connectionFile:mcpConnection.file,executionEnabled:false}});
+          if(route==='bridge/platform'&&req.method==='POST'){const input=await body(req);return send(res,200,await callBridgeTool(platform,input.tool,input.args));}
           if(req.method==='GET'){
             if(route==='bridge/status')return send(res,200,bridge.status());
             if(route==='bridge/intelligence')return send(res,200,bridge.intelligence());
@@ -109,7 +119,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
             }
             if(route==='bridge/poll')return send(res,200,bridge.poll());
             if(route==='bridge/actions')return send(res,200,await bridge.gateway.submit(await body(req)));
-            if(route==='bridge/stop')return send(res,200,bridge.gateway.stop());
+            if(route==='bridge/stop')return send(res,200,platform.stop());
           }
           return send(res,404,{error:'Unknown bridge endpoint'});
         }
@@ -299,5 +309,6 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
   const server=http.createServer((req,res)=>void handler(req,res));
   await new Promise<void>((resolve,reject)=>{server.once('error',reject);server.listen(port,'127.0.0.1',()=>resolve());});
   port=(server.address() as any).port;
-  return {port,url:`http://127.0.0.1:${port}`,store,close:async()=>{if(lan){lan.closeAllConnections();await new Promise<void>(r=>lan!.close(()=>r()));}server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));bridge.close();store.db.close();}};
+  mcpConnection.publish(port);
+  return {port,url:`http://127.0.0.1:${port}`,store,close:async()=>{platform.close();mcpConnection.close();if(lan){lan.closeAllConnections();await new Promise<void>(r=>lan!.close(()=>r()));}server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));bridge.close();store.db.close();}};
 }

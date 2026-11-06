@@ -43,7 +43,7 @@ export class BridgeDatabase {
   close(){this.db.close();}
 }
 
-interface Cursor {offset:number;anchor:string;generation:string;sessionId:string;identity:string;version:string|null;}
+interface Cursor {offset:number;anchor:string;generation:string;sessionId:string;identity:string;version:string|null;lastDate?:string;}
 export class TelemetryReader {
   diagnostic='Not polled';
   constructor(private storage:BridgeDatabase,readonly logPath:string,private version:string|null){}
@@ -68,9 +68,12 @@ export class TelemetryReader {
         for(const chunk of buffer.subarray(0,end+1).toString('utf8').split(/(?<=\n)/)){
           const offset=cursor.offset+consumed;consumed+=Buffer.byteLength(chunk);const line=chunk.trimEnd();
           if(line.length>16384){malformed++;continue;}
-          if(/HC_BRIDGE\|v[12]\|begin\|producer=[a-zA-Z0-9_-]{1,80}\|END\s*$/.test(line))cursor.sessionId=digest(cursor.generation+':'+offset);
+          if(/HC_BRIDGE\|v[12]\|begin\|producer=[a-zA-Z0-9_-]{1,80}\|END\s*$/.test(line)){cursor.sessionId=digest(cursor.generation+':'+offset);cursor.lastDate=undefined;}
           const snapshot=parseTelemetry(line,{sessionId:cursor.sessionId,observedAt:new Date(stat.mtimeMs).toISOString(),gameVersion:this.version,path:this.logPath,offset});
           if(snapshot){
+            const date=snapshot.values.gameDate.value;
+            if(date&&cursor.lastDate&&date<cursor.lastDate){cursor.sessionId=digest(cursor.generation+':rollback:'+offset);snapshot.sessionId=cursor.sessionId;}
+            if(date)cursor.lastDate=date;
             // Repeated emissions at the same game date with identical values are one observation.
             const duplicate=digest(JSON.stringify(snapshot.schemaVersion===1?[snapshot.sessionId,snapshot.producerId,snapshot.values]:[snapshot.sessionId,snapshot.producerId,snapshot.values,snapshot.campaign]));
             snapshot.id=duplicate;

@@ -7,6 +7,7 @@ import './intelligence.css';
 import type {CampaignRecording} from './history-types';
 import type {Profile} from './types';
 import {BaselineTransfer} from './BaselineTransfer';
+import {BridgeConnection} from './BridgeConnection';
 
 export function CampaignIntelligence({local,openEntry,onApplied,view,onView}:{local:boolean;openEntry:(id:string)=>void;onApplied:(p:Profile)=>void;view:{recordingId:string;snapshotId:string};onView:(v:{recordingId:string;snapshotId:string})=>void}){
   const [data,setData]=useState<Intelligence|null>(null),[error,setError]=useState(''),[connectionError,setConnectionError]=useState('');
@@ -33,6 +34,7 @@ export function CampaignIntelligence({local,openEntry,onApplied,view,onView}:{lo
       {connectionError&&<p role="alert" className="notice">Bridge unavailable: {connectionError}. Displayed imports remain historical.</p>}{error&&<p role="alert" className="notice">Recording could not be opened: {error}</p>}
       <div className="intelligence-status" aria-live="polite"><strong>{data?'Local bridge connected':busy?'Connecting to local bridge…':'Local bridge disconnected'}</strong><span>{data?.session.state==='owned-connected'?'Owned game session connected':'No owned game session connected'}</span><span>{data?`${data.mode} mode`:'Mode unavailable'}</span></div>
       <div className="intelligence-environment"><BookOpen size={17}/><span><strong>Installed game · static information</strong><br/>{data?.environment.gameRoot?`HOI4 ${data.environment.version||'version unavailable'}`:'Game installation unavailable'}</span><details><summary>Installation & connection details</summary><p>{data?.session.reason||'Bridge has not returned session information.'}</p><p>{data?.environment.gameRoot||'Installation path unavailable'}</p><p>{data?.environment.configuration.status==='detected'?`${data.environment.configuration.enabledMods.length} configured mods (configuration is not proof of what a running game loaded).`:'Active playset unavailable.'}</p>{data?.environment.diagnostics.map((d,i)=><p key={i}>{d}</p>)}</details></div>
+      <BridgeConnection/>
       <label>Saved campaign recording<select aria-label="Saved campaign recording" value={recording?.id||''} onChange={e=>choose(e.target.value)}><option value="">Bridge history (not imported)</option>{library.map(r=><option key={r.id} value={r.id}>{r.name} · {r.origin==='fixture'?'Fixture':'Historical'} · {r.snapshots.length} snapshots</option>)}</select></label>
       {notice&&<p role="status">{notice}</p>}{view.recordingId&&!recording&&<p className="notice">Selected recording is unavailable or was removed. Your planning baseline retains its evidence copy.</p>}
       <div className="intelligence-import"><label>File provenance<select value={origin} onChange={e=>setOrigin(e.target.value as RecordingOrigin)}><option value="recording">Recorded data (origin unverified)</option><option value="fixture">Offline test fixture</option></select></label><label className="intelligence-file"><Upload size={15}/>Open snapshot recording<input aria-label="Open snapshot recording" type="file" accept=".jsonl,.txt" disabled={busy} onChange={async e=>{

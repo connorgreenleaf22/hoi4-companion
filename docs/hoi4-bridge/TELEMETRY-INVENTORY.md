@@ -1,3 +1,11 @@
+# M7 inventory update
+
+The M6.5 emitter and manifest are unchanged. M7 improves batch reading (two identity probes per batch), rollback quarantine, connection diagnostics and shared field qualification. No new scripted field or loaded-save behavior is claimed. Agent Tools 4.7.0 was reused to inspect installed on_startup documentation; that hook listing does not prove same-date load behavior. Existing M6.5 script validation/native evidence remains applicable to the unchanged emitter, with its unresolved argument-validation limits.
+
+A real archived M6.5 plaintext autosave was found and read without modification: 1936.4.1.1 GER, one completed focus, 55 positive-level technologies, four serialized slots (Basic Machine Tools plus three empty). There is no explicit current-focus token despite progress=10, so current focus/progress stay unavailable. All save mappings are parsed-unqualified. This is persisted save evidence, not new native validation or an expanded mod export. See MILESTONE-7.md and M7-NATIVE-PLAN.md.
+
+No regular playset was enabled or changed in M7. Future script work should first qualify startup/load markers and bounded existing checks; investigate documented manpower_k and additional named research/focus checks only with independent version-specific evidence. Complete current focus/research inventories may need qualified save/native sources rather than wider logging. No OCR expansion is necessary for this platform milestone.
+
 # Telemetry mod inventory — Milestone 6.5
 
 Current source audit and native evidence: [MILESTONE-6.5.md](MILESTONE-6.5.md). Human GER, exact **1.19.4.2**, schema 2 / manifest ger-m65-1. Descriptor 0.2.0's 1.19.* range is broader than verified compatibility.

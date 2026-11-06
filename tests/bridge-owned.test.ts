@@ -39,6 +39,19 @@ test('old or contradictory log generation is refused and cannot be revived',()=>
     assert.equal(f.session.latest(),null);
   }finally{f.cleanup();}
 });
+
+test('owned batches use two identity checks and never partially publish after a lifetime change',()=>{
+ for(const change of [false,true]){
+  const f=fixture();try{
+   for(let day=2;day<=10;day++)fs.appendFileSync(f.log,`[1936.01.${String(day).padStart(2,'0')}.24] HC_BRIDGE|v1|state|producer=${f.m.producerId}|tag=GER|pp=${day}|stability=0.81|END\n`);
+   const snapshots=f.reader.poll(),before=f.db.snapshots('owned').length;let probes=0;
+   const session=new OwnedSession(f.m,f.db,()=>{probes++;return {...f.m.identity,...(change&&probes===2?{creation_time:'changed'}:{})};});
+   if(change){assert.throws(()=>session.bindBatch(snapshots),/identity changed/);assert.equal(f.db.snapshots('owned').length,before);}
+   else {assert.equal(session.bindBatch(snapshots).length,9);assert.equal(f.db.snapshots('owned').length,before+9);}
+   assert.equal(probes,2);
+  }finally{f.cleanup();}
+ }
+});
 test('focus gateway rejects Observer, unknown ID, stale/foreign session and missing observation',async()=>{
   const f=fixture();try{
     const adapter=new FocusSelectionAdapter(f.session,()=>true);let mode:BridgeMode='observer';

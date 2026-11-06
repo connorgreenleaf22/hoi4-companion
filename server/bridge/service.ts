@@ -14,8 +14,8 @@ export class GameBridge {
   readonly database:BridgeDatabase;
   readonly gateway:ActionGateway;
   private reader:TelemetryReader;
-  readonly mode:BridgeMode;
-  readonly owned?:OwnedSession;
+  mode:BridgeMode;
+  owned?:OwnedSession;
   constructor(private store:Store,private options:{mode?:BridgeMode;gameRoot?:string;userRoot?:string;logPath?:string;ownedSession?:OwnedManifest}={}){
     this.mode=options.mode||'observer';
     if(!['observer','telemetry','control'].includes(this.mode))throw new Error('Invalid bridge mode');
@@ -28,6 +28,16 @@ export class GameBridge {
   }
   environment(){return inspectEnvironment(this.options.gameRoot??(this.store.getSetting('gameRoot','')||undefined),this.options.userRoot);}
   reference(ref:string,kind?:string){return queryReference(this.store,this.environment(),ref,kind);}
+  attachTelemetry(logPath:string,manifest?:OwnedManifest){
+    if(this.mode==='control'||this.options.ownedSession&&this.options.ownedSession.purpose!=='telemetry')throw Error('Read-only connection cannot replace a controller session');
+    let owned:OwnedSession|undefined;
+    if(manifest){
+      if(manifest.purpose!=='telemetry'||manifest.gameVersion!==this.environment().version||manifest.identity.executable_path!==this.environment().executable)throw Error('Expected compatible read-only owned manifest');
+      owned=new OwnedSession(manifest,this.database);const reason=owned.check();if(reason)throw Error(reason);
+    }
+    this.owned=owned;this.mode='telemetry';this.reader=new TelemetryReader(this.database,logPath,this.environment().version);
+  }
+  detachTelemetry(){if(this.mode==='control')throw Error('Cannot replace a controller session');this.owned=undefined;this.mode='observer';}
   intelligence():CampaignIntelligence {
     const current=this.owned?.latest()??null;
     const fresh=!!current&&(freshness(current).status==='recent-log-write'||this.owned!.focusFresh(current));
@@ -37,7 +47,7 @@ export class GameBridge {
       observationCapabilities:observationCapabilities(current??this.database.latest(),!!current,this.environment().version),snapshots:this.database.snapshots(undefined,200),emergencyStop:this.database.get('emergency-stop',false)};
   }
   status(){const latest=this.owned?this.owned.latest():this.database.latest();return {observationCapabilities:observationCapabilities(latest,!!this.owned&&!!latest,this.environment().version),ownershipError:this.owned?.check()??null,schemaVersion:1,mode:this.mode,capabilities:[{id:'environment.inspect',available:true,evidence:'implemented'},{id:'reference.query',available:true,evidence:'implemented'},{id:'telemetry.read',available:this.mode!=='observer',evidence:'implemented',reason:'Wire reader implemented; live verification is version-specific. See STATUS.md.'},{id:'telemetry.replay',available:true,evidence:'implemented'},...this.gateway.capabilities()],reader:this.reader.diagnostic,emergencyStop:this.database.get('emergency-stop',false),latest,freshness:freshness(latest)};}
-  poll(){if(this.mode==='observer')throw new Error('Enable Telemetry Mode explicitly before polling a mod log');const added=this.reader.poll();return {schemaVersion:1,added:this.owned?added.map(s=>this.owned!.bind(s)):added,diagnostic:this.reader.diagnostic};}
+  poll(){if(this.mode==='observer')throw new Error('Enable Telemetry Mode explicitly before polling a mod log');const added=this.reader.poll();return {schemaVersion:1,added:this.owned?this.owned.bindBatch(added):added,diagnostic:this.reader.diagnostic};}
   async observeFocus(){if(this.mode==='observer'||!this.owned)throw new Error('Owned test session required');return this.owned.recordFocus(await this.owned.tool('observe'));}
   close(){this.database.close();}
 }
