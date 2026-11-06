@@ -3,23 +3,26 @@ import path from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 import type {BridgeSnapshot,Value} from '../../src/bridge-types';
+import {extendTelemetry,validateExpandedSnapshot,unpackTelemetry} from './telemetry-v2';
 
 export const digest=(text:string|Buffer)=>createHash('sha256').update(text).digest('hex');
 const unavailable=(reason:string):Value<never>=>({value:null,status:'unavailable',reason});
 const numberValue=(value:string|undefined):Value<number>=>value!==undefined&&/^-?\d+(?:\.\d+)?$/.test(value)&&Number.isFinite(Number(value))?{value:Number(value),status:'observed'}:unavailable('Missing or unexpanded numeric token');
 
-/** Only terminated v1 wire records are accepted. Never coerce an unknown token to zero. */
+/** Only terminated versioned wire records are accepted. Never coerce an unknown token to zero. */
 export function parseTelemetry(line:string,context:{sessionId:string;observedAt:string;gameVersion:string|null;path:string;offset:number}):BridgeSnapshot|null {
-  const match=line.match(/HC_BRIDGE\|v1\|state\|([^\r\n]*?)\|END\s*$/);
+  const match=line.match(/HC_BRIDGE\|v([12])\|state\|([^\r\n]*?)\|END\s*$/);
   if(!match)return null;
   const fields:Record<string,string>=Object.create(null);
-  for(const part of match[1].split('|')){const pair=part.match(/^([a-z]+)=([^|]*)$/);if(!pair||fields[pair[1]]!==undefined)return null;fields[pair[1]]=pair[2];}
+  for(const part of match[2].split('|')){const pair=part.match(/^([a-z][a-z0-9]*)=([^|]*)$/);if(!pair||fields[pair[1]]!==undefined)return null;fields[pair[1]]=pair[2];}
   if(!/^[a-zA-Z0-9_-]{1,80}$/.test(fields.producer||''))return null;
+  if(match[1]==='2'&&!unpackTelemetry(fields))return null;
   const gameDate=line.match(/\[(\d{4}\.\d{2}\.\d{2}\.\d{2})\]/)?.[1];
   const country=/^[A-Z0-9]{3}$/.test(fields.tag||'')?{value:fields.tag,status:'observed' as const}:unavailable('Missing or unexpanded country tag');
   const values={country,gameDate:gameDate?{value:gameDate,status:'observed' as const}:unavailable('Engine date prefix unavailable'),politicalPower:numberValue(fields.pp),stability:numberValue(fields.stability)};
   const hash=digest(line);
-  return {dataOrigin:'game-log',schemaVersion:1,id:digest(context.sessionId+'\n'+line),sessionId:context.sessionId,producerId:fields.producer,observedAt:context.observedAt,gameVersion:context.gameVersion,source:{kind:'game-log',path:context.path,offset:context.offset,hash},values,unavailable:['research','focus','production','construction','diplomacy','military','pause',...Object.entries(values).filter(([,v])=>v.status==='unavailable').map(([k])=>k)]};
+  const snapshot:BridgeSnapshot={dataOrigin:'game-log',schemaVersion:1,id:digest(context.sessionId+'\n'+line),sessionId:context.sessionId,producerId:fields.producer,observedAt:context.observedAt,gameVersion:context.gameVersion,source:{kind:'game-log',path:context.path,offset:context.offset,hash},values,unavailable:['research','focus','production','construction','diplomacy','military','pause',...Object.entries(values).filter(([,v])=>v.status==='unavailable').map(([k])=>k)]};
+  return match[1]==='2'?extendTelemetry(snapshot,fields):snapshot;
 }
 
 export class BridgeDatabase {
@@ -65,11 +68,11 @@ export class TelemetryReader {
         for(const chunk of buffer.subarray(0,end+1).toString('utf8').split(/(?<=\n)/)){
           const offset=cursor.offset+consumed;consumed+=Buffer.byteLength(chunk);const line=chunk.trimEnd();
           if(line.length>16384){malformed++;continue;}
-          if(/HC_BRIDGE\|v1\|begin\|producer=[a-zA-Z0-9_-]{1,80}\|END\s*$/.test(line))cursor.sessionId=digest(cursor.generation+':'+offset);
+          if(/HC_BRIDGE\|v[12]\|begin\|producer=[a-zA-Z0-9_-]{1,80}\|END\s*$/.test(line))cursor.sessionId=digest(cursor.generation+':'+offset);
           const snapshot=parseTelemetry(line,{sessionId:cursor.sessionId,observedAt:new Date(stat.mtimeMs).toISOString(),gameVersion:this.version,path:this.logPath,offset});
           if(snapshot){
             // Repeated emissions at the same game date with identical values are one observation.
-            const duplicate=digest(JSON.stringify([snapshot.sessionId,snapshot.producerId,snapshot.values]));
+            const duplicate=digest(JSON.stringify(snapshot.schemaVersion===1?[snapshot.sessionId,snapshot.producerId,snapshot.values]:[snapshot.sessionId,snapshot.producerId,snapshot.values,snapshot.campaign]));
             snapshot.id=duplicate;
             const inserted=this.storage.db.prepare('INSERT OR IGNORE INTO snapshots VALUES(?,?,?)').run(snapshot.id,snapshot.sessionId,JSON.stringify(snapshot));
             if(inserted.changes)snapshots.push(snapshot);
@@ -94,8 +97,9 @@ export function replaySnapshots(text:string):BridgeSnapshot[]{
   const seen=new Map<string,string>();const results:BridgeSnapshot[]=[];
   for(const line of text.split(/\r?\n/).filter(s=>s.trim())){
     const s=JSON.parse(line) as BridgeSnapshot;
-    if(s.schemaVersion!==1||typeof s.id!=='string'||!s.id||typeof s.sessionId!=='string'||!s.sessionId||typeof s.producerId!=='string'||!Number.isFinite(Date.parse(s.observedAt))||!(s.gameVersion===null||typeof s.gameVersion==='string')||s.source?.kind!=='game-log'||typeof s.source.path!=='string'||!Number.isSafeInteger(s.source.offset)||s.source.offset<0||typeof s.source.hash!=='string'||!Array.isArray(s.unavailable)||!s.unavailable.every(v=>typeof v==='string'))throw new Error('Invalid snapshot envelope');
+    if(![1,2].includes(s.schemaVersion)||typeof s.id!=='string'||!s.id||typeof s.sessionId!=='string'||!s.sessionId||typeof s.producerId!=='string'||!Number.isFinite(Date.parse(s.observedAt))||!(s.gameVersion===null||typeof s.gameVersion==='string')||s.source?.kind!=='game-log'||typeof s.source.path!=='string'||!Number.isSafeInteger(s.source.offset)||s.source.offset<0||typeof s.source.hash!=='string'||!Array.isArray(s.unavailable)||!s.unavailable.every(v=>typeof v==='string'))throw new Error('Invalid snapshot envelope');
     for(const [key,type] of [['country','string'],['gameDate','string'],['politicalPower','number'],['stability','number']] as const){const v=s.values?.[key];if(!v||(v.status==='observed'?(typeof v.value!==type||type==='number'&&!Number.isFinite(v.value)):v.status!=='unavailable'||v.value!==null||typeof v.reason!=='string'))throw new Error(`Invalid snapshot value: ${key}`);}
+    validateExpandedSnapshot(s);
     if(s.dataOrigin!==undefined&&!['game-log','fixture'].includes(s.dataOrigin))throw new Error('Invalid data origin');
     const o=s.ownership,f=s.focusObservation;
     if(o&&(o.sessionId!==s.sessionId||!Number.isSafeInteger(o.pid)||o.pid<1||typeof o.creationTime!=='string'||typeof o.executable!=='string'||typeof o.executableHash!=='string'||typeof o.logIdentity!=='string'||!Number.isSafeInteger(o.beginOffset)||o.beginOffset<0||!Number.isSafeInteger(o.sequence)||o.sequence<0||o.correlation!=='owned-profile-and-launch-token'))throw new Error('Invalid ownership metadata');

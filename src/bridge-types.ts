@@ -4,10 +4,11 @@ export type BridgeMode = 'observer' | 'telemetry' | 'control';
 export type Value<T> = { value:T; status:'observed' } | { value:null; status:'unavailable'; reason:string };
 export interface BridgeSnapshot {
   dataOrigin?:'game-log'|'fixture';
-  schemaVersion:1; id:string; sessionId:string; producerId:string;
+  schemaVersion:1|2; id:string; sessionId:string; producerId:string;
   observedAt:string; gameVersion:string|null;
   source:{kind:'game-log'; path:string; offset:number; hash:string};
-  values:{country:Value<string>; gameDate:Value<string>; politicalPower:Value<number>; stability:Value<number>};
+  values:{country:Value<string>; gameDate:Value<string>; politicalPower:Value<number>; stability:Value<number>; warSupport?:Value<number>;researchSlots?:Value<number>;civilianFactories?:Value<number>;militaryFactories?:Value<number>;dockyards?:Value<number>};
+  campaign?:{manifestId:string;method:'scripted-snapshot';coverage:'explicit-id-subset';focusCompleted:Record<string,Value<boolean>>;technologyCompleted:Record<string,Value<boolean>>;technologyResearching:Record<string,Value<boolean>>};
   unavailable:string[];
   ownership?:{sessionId:string;pid:number;creationTime:string;executable:string;executableHash:string;logIdentity:string;beginOffset:number;sequence:number;correlation:'owned-profile-and-launch-token'};
   focusObservation?:{current:Value<string|null>;observedAt:string;sessionId:string;source:{kind:'ui-ocr';imagePath:string;imageHash:string;text:string;panelText:string};verification:'exact-localized-ui-label'|'unverified'};
@@ -15,7 +16,7 @@ export interface BridgeSnapshot {
 export interface CampaignIntelligence {
   schemaVersion:1;checkedAt:string;mode:BridgeMode;environment:BridgeEnvironment;
   session:{state:'owned-connected'|'disconnected';id:string|null;reason:string};
-  liveSnapshotId:string|null;snapshots:BridgeSnapshot[];emergencyStop:boolean;
+  liveSnapshotId:string|null;snapshots:BridgeSnapshot[];emergencyStop:boolean;observationCapabilities?:ObservationCapability[];
 }
 export interface BridgeCapability { id:string; available:boolean; reason:string; evidence:'implemented'|'native-verified'|'unverified'; }
 export interface BridgeEnvironment {
@@ -40,4 +41,10 @@ export interface ActionReceipt {
   schemaVersion:1; requestId:string; sessionId:string; command:string;
   status:'confirmed-success'|'confirmed-failure'|'rejected'|'timeout'|'uncertain';
   reason:string; recordedAt:string; beforeSnapshotId?:string; afterSnapshotId?:string;
+}
+
+export interface ObservationCapability {
+ id:string; availability:'verified'|'not-recently-observed'|'historical-only'|'unsupported'|'version-incompatible';
+ qualification:'native-verified'|'script-supported-unqualified'|'unsupported';
+ reason:string; coverage:string; snapshotId?:string;
 }

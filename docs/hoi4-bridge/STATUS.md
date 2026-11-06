@@ -1,5 +1,11 @@
 # HOI4 bridge status
 
+## Milestone 6.5 — offline telemetry checkpoint (2026-11-06)
+
+- Isolated branch feature/hoi4-telemetry-m65 from f02b1c5; M6.1 artifact/branch unchanged. GER-only v2 emitter, fixed subset manifest, typed reader/replay/history, observational capabilities and minimal diagnostic UI implemented. No M3 adapter modification or execution.
+- 25 focused tests, TypeScript and installed-doc/ID preflight pass. Agent Tools 4.7.0 fresh stdio validation: triggers supported; temporary argument blocks/custom helper unresolved, native qualification pending. Original overlong string corrected to 238 characters before game launch. See MILESTONE-6.5.md.
+- Native budget: two launches, 25 minutes, ten ordinary campaign actions. Desktop automation is reachable; no running HOI4 or existing default/OneDrive profile detected. Exact next step: prepare exclusively owned profile, record plan, then bounded native field/readback verification. No new field is yet labeled native verified.
+
 ## Milestone 6.1 — portable build ready for desktop review (2026-11-06)
 
 - Implemented categorized local name/ID/alias search, immediate keyboard objective suggestions, clearer navigation/context and deterministic mechanics summaries with advanced source. Existing service/parser/schema, history, saved alternatives and indexing worker preserved. Report: `../application/MILESTONE-6.1.md`; bundled walkthrough: `../application/MILESTONE-6.1-ACCEPTANCE.md`. Confirmed future preferences recorded in APPLICATION-ROADMAP.md; no deferred system implemented.

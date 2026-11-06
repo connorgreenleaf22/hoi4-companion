@@ -84,3 +84,7 @@ test('owned observations replay unchanged without reviving a stopped live sessio
    assert.throws(()=>replaySnapshots(JSON.stringify({...f.before,focusObservation:{...f.before.focusObservation,sessionId:'foreign'}})),/focus/);
  }finally{f.cleanup();}
 });
+
+test('read-only telemetry session refuses the legacy adapter and never reserves gameplay input',async()=>{
+ const f=fixture();try{f.m.purpose='telemetry';await assert.rejects(()=>f.session.tool('observe'),/Read-only telemetry/);assert.throws(()=>f.session.reserveInput(),/Read-only telemetry/);assert.equal(f.session.check(),null);}finally{f.cleanup();}
+});

@@ -1,20 +1,17 @@
-# One-way prototype. Unique filename; no replace_path or gameplay effects.
-# GER only for the first bounded smoke test. Producer token is replaced in a disposable copy.
+# One-way GER-only daily telemetry. No replace_path and no gameplay effects.
+# Producer token is replaced in every log-bearing file of a disposable copy.
 on_actions = {
     on_startup = {
         effect = {
-            log = "HC_BRIDGE|v1|begin|producer=prototype|END"
+            log = "HC_BRIDGE|v2|begin|producer=prototype|END"
             GER = {
-                if = {
-                    limit = { is_ai = no }
-                    log = "HC_BRIDGE|v1|state|producer=prototype|tag=[THIS.GetTag]|pp=[?political_power]|stability=[?stability]|END"
-                }
+                if = { limit = { is_ai = no } hc_bridge_observe_effect = yes }
             }
         }
     }
     on_daily_GER = {
         effect = {
-            log = "HC_BRIDGE|v1|state|producer=prototype|tag=[THIS.GetTag]|pp=[?political_power]|stability=[?stability]|END"
+            if = { limit = { is_ai = no } hc_bridge_observe_effect = yes }
         }
     }
 }

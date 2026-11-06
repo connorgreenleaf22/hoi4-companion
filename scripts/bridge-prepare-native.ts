@@ -27,12 +27,12 @@ if(process.argv[2]==='--restore'){
   const run=fs.mkdtempSync(path.join(parent,'native-'));
   const lease=reserveEmptyProfile(user,run),mod=path.join(user,'mod','companion_telemetry');
   fs.mkdirSync(path.dirname(mod));fs.cpSync(path.resolve('mods/hoi4-companion-telemetry'),mod,{recursive:true});
-  const script=path.join(mod,'common/on_actions/hoi4_companion_telemetry.txt');
-  fs.writeFileSync(script,fs.readFileSync(script,'utf8').replaceAll('producer=prototype',`producer=${lease.token}`));
+  for(const relative of ['common/on_actions/hoi4_companion_telemetry.txt','common/scripted_effects/hoi4_companion_telemetry.txt']){const script=path.join(mod,relative);fs.writeFileSync(script,fs.readFileSync(script,'utf8').replaceAll('producer=prototype',`producer=${lease.token}`));}
   fs.writeFileSync(path.join(user,'mod','companion_telemetry.mod'),`name="HOI4 Companion Disposable Telemetry"\npath="${mod.replaceAll('\\','/')}"\nsupported_version="1.19.*"\n`);
   fs.writeFileSync(path.join(user,'dlc_load.json'),JSON.stringify({enabled_mods:['mod/companion_telemetry.mod'],disabled_dlcs:[]}));
   fs.writeFileSync(path.join(user,'settings.txt'),'language="l_english"\ngraphics={ size={ x=1280 y=720 } fullScreen=no borderless=no }\nsave_as_binary=no\nautosave="never"\n');
-  const plan={schemaVersion:1,createdAt:new Date().toISOString(),run,user,producer:lease.token,environment,executableHash:createHash('sha256').update(fs.readFileSync(environment.executable)).digest('hex'),limits:{launches:2,actions:20,minutes:20,sameFailureAttempts:2},launchArguments:['-debug_mode','-gdpr-compliant'],isolation:'Exclusively owned previously absent default profile; no redirection flags',procedure:'New 1936 GER campaign; advance two days; pause; compare country/date/PP/stability; exit owned game; replay snapshots; archive owned profile with --restore. No native action adapter.'};
+  const telemetryOnly=process.argv.includes('--telemetry-m65');
+  const plan={schemaVersion:1,...(telemetryOnly?{purpose:'telemetry'}:{}),createdAt:new Date().toISOString(),run,user,producer:lease.token,environment,executableHash:createHash('sha256').update(fs.readFileSync(environment.executable)).digest('hex'),limits:{launches:2,actions:telemetryOnly?10:20,minutes:telemetryOnly?25:20,sameFailureAttempts:2},launchArguments:['-debug_mode','-gdpr-compliant'],isolation:'Exclusively owned previously absent default profile; no redirection flags',procedure:'New 1936 GER campaign; advance two days; pause; compare country/date/PP/stability; exit owned game; replay snapshots; archive owned profile with --restore. No native action adapter.'};
   fs.writeFileSync(path.join(run,'plan.json'),JSON.stringify(plan,null,2));
   console.log(JSON.stringify(plan,null,2));
 }

@@ -4,10 +4,11 @@ import {execFileSync,execFile} from 'node:child_process';
 import type {BridgeSnapshot} from '../../src/bridge-types';
 import {BridgeDatabase,digest} from './telemetry';
 import {verifyProfileLease,type ProfileLease} from './native-profile';
+import {readProcessIdentity} from './process-identity';
 
 export interface ProcessIdentity {pid:number;creation_time:string;executable_path:string;}
 export interface OwnedManifest {
-  schemaVersion:1;sessionId:string;producerId:string;identity:ProcessIdentity;executableHash:string;gameVersion:string;
+  schemaVersion:1;purpose?:'telemetry';sessionId:string;producerId:string;identity:ProcessIdentity;executableHash:string;gameVersion:string;
   launchedAt:string;logPath:string;lease:ProfileLease;controllerId:string;python:string;
 }
 export interface FocusCapture {known:boolean;focusId:string|null;text:string;panelText:string;imagePath:string;imageHash:string;observedAt:number;}
@@ -16,14 +17,14 @@ export function queryIdentity(python:string,pid:number,executable:string):Proces
   return JSON.parse(execFileSync(python,[helper],{input:JSON.stringify({operation:'identity',pid,executable}),encoding:'utf8',windowsHide:true,timeout:15000}));
 }
 export class OwnedSession {
-  constructor(readonly manifest:OwnedManifest,private db:BridgeDatabase,private probe=()=>queryIdentity(manifest.python,manifest.identity.pid,manifest.identity.executable_path),private now=Date.now){}
+  constructor(readonly manifest:OwnedManifest,private db:BridgeDatabase,private probe=()=>manifest.purpose==='telemetry'?readProcessIdentity(manifest.identity.pid):queryIdentity(manifest.python,manifest.identity.pid,manifest.identity.executable_path),private now=Date.now){}
   private key(suffix:string){return `owned:${this.manifest.sessionId}:${suffix}`;}
   check():string|null {
     try{
       const m=this.manifest;
       if(this.db.get(this.key('quarantined'),false))throw new Error('Owned session quarantined; create a new session');
       if(this.db.get(this.key('stopped'),false))throw new Error('Owned session stopped');
-      if(this.now()-Date.parse(m.launchedAt)>20*60*1000)throw new Error('Native twenty-minute budget reached');
+      if(this.now()-Date.parse(m.launchedAt)>(m.purpose==='telemetry'?25:20)*60*1000)throw new Error('Native time budget reached');
       if(JSON.stringify(this.probe())!==JSON.stringify(m.identity))throw new Error('Owned process identity changed or disconnected');
       verifyProfileLease(m.lease);
       if(m.producerId!==m.lease.token||path.resolve(m.logPath)!==path.join(m.lease.profileRoot,'logs','game.log'))throw new Error('Profile, producer or log binding mismatch');
@@ -32,7 +33,7 @@ export class OwnedSession {
       if(stat.birthtimeMs<Date.parse(m.launchedAt)-2000)throw new Error('Log predates owned launch');
       if(stat.size>64*1024*1024)throw new Error('Owned log exceeds bounded inspection size');
       const text=fs.readFileSync(m.logPath,'utf8');
-      const markers=[...text.matchAll(/HC_BRIDGE\|v1\|begin\|producer=([a-zA-Z0-9_-]+)\|END/g)];
+      const markers=[...text.matchAll(/HC_BRIDGE\|v[12]\|begin\|producer=([a-zA-Z0-9_-]+)\|END/g)];
       if(markers.length!==1||markers[0][1]!==m.producerId)throw new Error('Missing, old or contradictory launch marker');
       const binding={identity,beginOffset:Buffer.byteLength(text.slice(0,text.lastIndexOf('\n',markers[0].index)+1))};
       const prior=this.db.get<{identity:string;beginOffset:number;size:number}|null>(this.key('log'),null);
@@ -65,6 +66,7 @@ export class OwnedSession {
     this.db.db.prepare('INSERT OR IGNORE INTO snapshots VALUES(?,?,?)').run(result.id,result.sessionId,JSON.stringify(result));this.db.set(this.key('latest'),result);return result;
   }
   async tool(operation:'observe'|'select',signal?:AbortSignal):Promise<any>{
+    if(this.manifest.purpose==='telemetry')throw new Error('Read-only telemetry session cannot invoke an input/OCR adapter');
     const error=this.check();if(error)throw new Error(error);
     const m=this.manifest;
     const input={operation,pid:m.identity.pid,executable:m.identity.executable_path,identity:m.identity,evidenceRoot:path.join(m.lease.runRoot,'focus-evidence'),focusId:'GER_prioritize_economic_growth'};
@@ -74,6 +76,7 @@ export class OwnedSession {
     const after=this.check();if(after)throw new Error(after);return value;
   }
   reserveInput(){
+    if(this.manifest.purpose==='telemetry')throw new Error('Read-only telemetry session cannot reserve adapter input');
     const error=this.check();if(error)throw new Error(error);
     const file=path.join(this.manifest.lease.runRoot,'native-budget.json');
     const budget=JSON.parse(fs.readFileSync(file,'utf8'));

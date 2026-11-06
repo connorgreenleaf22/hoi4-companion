@@ -5,6 +5,7 @@ import type {CampaignRecording,BaselineInput,BaselinePreview} from '../../src/hi
 import type {Profile,Meta} from '../../src/types';
 import type {Store} from '../store';
 import {BridgeDatabase,replaySnapshots} from './telemetry';
+import {telemetryNumbers} from '../../src/telemetry-manifest';
 import {mirrorPlanner} from '../planner/plans';
 import {makePreview} from '../planner/service';
 import {validPlanDate} from '../planner/validation';
@@ -15,9 +16,9 @@ const basename=(s:string)=>path.win32.basename(s.replaceAll('/','\\'));
 function portable(s:BridgeSnapshot):BridgeSnapshot {
   const value=(v:any):any=>v.status==='observed'?{status:'observed',value:v.value}:{status:'unavailable',value:null,reason:v.reason};
   const o=s.ownership,f=s.focusObservation;
-  return {schemaVersion:1,id:s.id,sessionId:s.sessionId,producerId:s.producerId,observedAt:s.observedAt,gameVersion:s.gameVersion,
+  return {schemaVersion:s.schemaVersion,id:s.id,sessionId:s.sessionId,producerId:s.producerId,observedAt:s.observedAt,gameVersion:s.gameVersion,
     ...(s.dataOrigin?{dataOrigin:s.dataOrigin}:{}),source:{kind:'game-log',path:basename(s.source.path),offset:s.source.offset,hash:s.source.hash},
-    values:{country:value(s.values.country),gameDate:value(s.values.gameDate),politicalPower:value(s.values.politicalPower),stability:value(s.values.stability)},unavailable:[...s.unavailable],
+    values:{country:value(s.values.country),gameDate:value(s.values.gameDate),politicalPower:value(s.values.politicalPower),stability:value(s.values.stability),...Object.fromEntries(Object.keys(telemetryNumbers).filter(k=>k in s.values).map(k=>[k,value((s.values as any)[k])]))},...(s.campaign?{campaign:{manifestId:s.campaign.manifestId,method:s.campaign.method,coverage:s.campaign.coverage,focusCompleted:Object.fromEntries(Object.entries(s.campaign.focusCompleted).map(([k,v])=>[k,value(v)])),technologyCompleted:Object.fromEntries(Object.entries(s.campaign.technologyCompleted).map(([k,v])=>[k,value(v)])),technologyResearching:Object.fromEntries(Object.entries(s.campaign.technologyResearching).map(([k,v])=>[k,value(v)]))}}:{}),unavailable:[...s.unavailable],
     ...(o?{ownership:{sessionId:o.sessionId,pid:o.pid,creationTime:o.creationTime,executable:basename(o.executable),executableHash:o.executableHash,logIdentity:o.logIdentity,beginOffset:o.beginOffset,sequence:o.sequence,correlation:o.correlation}}:{}),
     ...(f?{focusObservation:{current:value(f.current),observedAt:f.observedAt,sessionId:f.sessionId,verification:f.verification,source:{kind:'ui-ocr' as const,imagePath:basename(f.source.imagePath),imageHash:f.source.imageHash,text:f.source.text,panelText:''}}}:{})};
 }
@@ -44,6 +45,7 @@ export class CampaignHistory {
     const startDate=validPlanDate(date.value.slice(0,10).replaceAll('.','-'));
     if(input.tree&&!store.resolve(input.tree,'focus_tree').entry)throw Error('Selected focus tree is missing or ambiguous. Choose a current installed definition.');
     const warnings=['Historical imported evidence; origin is not independently authenticated. No live game command.', 'Completed focuses, research, decisions, political conditions, DLC/playset and historical-AI setting are unavailable. Empty manual completions are not an in-game negative.', 'Active focus is context only: no completion or remaining duration is inferred. Hour 24 is retained in evidence; the planner uses the stated calendar day.'];
+    if(snapshot.campaign)warnings.push('Recorded focus/research checks cover only the explicit manifest subset. They remain historical context and do not overwrite manual completions or assumptions.');
     const meta=store.getSetting<Meta|null>('meta',null);if(snapshot.gameVersion!==meta?.version)warnings.push('Recording game version differs from or cannot be checked against the installed reference index. Recheck source rules.');
     if(record.origin==='fixture')warnings.unshift('OFFLINE TEST FIXTURE: this workspace is not evidence of a real campaign.');
     const p:Profile=mirrorPlanner({id:input.profileId,revision:0,name:input.name.trim(),country:tag.value,startDate,historical:false,goals:'Historical baseline; review unsupported conditions before planning.',tree:input.tree,dlcs:[],dlcConfirmed:false,dlcStates:{},queue:[],completed:[],bookmarks:[],notes:{},templates:[],exportSchemaVersion:3,referenceIndexRevision:input.indexRevision});
