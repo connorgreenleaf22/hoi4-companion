@@ -1,5 +1,13 @@
 # HOI4 bridge status
 
+## Milestone 6.1 — source implementation validated; packaging next (2026-11-05)
+
+- Implemented local categorized name/ID/alias search, immediate keyboard objective suggestions, clearer navigation/context and deterministic mechanics summaries with advanced source. Existing parser/service/schema, history, saved strategies and Electron indexing worker preserved. Details: `../application/MILESTONE-6.1.md`; walkthrough: `../application/MILESTONE-6.1-ACCEPTANCE.md`.
+- Installed game is now 1.19.4.2; verified Dutch East Indies maps through INS_HOL to INS. Retained native recordings remain 1.19.4.1 historical evidence. No HOI4 launches, input, save/mod/playset writes or telemetry expansion.
+- 32 focused tests and TypeScript pass. Initial source UI journey/restart passed four checks; compact summary refinements will be checked in the extracted package. Evidence references are in the report.
+- MCP reference call failed with Transport closed; installed documentation/parser fallback used, no repeated investigation or permission changes. Unknown script scopes, merged mod authority, dynamic localization and desktop user acceptance remain open.
+- Exact next step: commit the validated source on feature/hoi4-bridge, create the isolated M6.1 portable ZIP, then run the existing fresh-extraction Electron workflow/restart check. Record artifact/evidence and perform the authorized audited private feature-branch push. Do not start another milestone.
+
 ## Milestone 6 — planning and portable build validated on laptop (2026-11-05)
 
 - Goal routes, grouped prerequisites/exclusions, conservative condition display, saved strategy comparison and decision/research references extend the existing planner/API/schema. Base-game source context and unresolved mod/DLC/campaign conditions stay explicit. Report: `../application/MILESTONE-6.md`; user walkthrough: `../application/MILESTONE-6-ACCEPTANCE.md`.

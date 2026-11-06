@@ -6,6 +6,7 @@ import {ensurePlanner,mirrorPlanner} from '../../server/planner/plans';
 import {captureChecklist} from '../../server/planner/checklists';
 import {capturedGuideCorrections} from '../guide-corrections';
 import './planner.css';
+import {RequirementView} from '../MechanicsView';
 import {StrategyWorkbench} from './StrategyWorkbench';
 import {conditionState,conditionText} from './condition-state';
 import {getPlannerDraft,rememberPlannerDraft,forgetPlannerDraft,subscribePlannerDiscard,beginPlannerWrite,downloadablePlannerDraft,type CachedPlannerDraft} from './drafts';
@@ -173,13 +174,4 @@ function AmbiguityPicker({reference,position,candidateUids,disabled,openEntry,ch
   return <section className="cp-definition-picker" aria-label={`Choose definition for queue item ${position+1}`}><strong>Choose the intended definition</strong><p>This updates only the preview. Inspect its source before Apply.</p>{error&&<p className="danger">{error}</p>}{!entries.length&&!error&&<p className="muted">Loading exact candidate definitions…</p>}{entries.map(entry=><div key={entry.uid}><strong>{entry.title}</strong><small>{entry.source}:{entry.line} · {entry.version}</small><code>{entry.uid}</code><div className="button-row"><button className="text-link" onClick={()=>openEntry(`definition:${entry.uid}`)}>Inspect source<ChevronRight size={12}/></button><button className="button" disabled={disabled} aria-label={`Use definition ${entry.uid} for queue item ${position+1}`} onClick={()=>choose(entry)}>Use this definition</button></div></div>)}</section>;
 }
 
-function Requirement({result,openEntry}:{result:RequirementResult;openEntry:(ref:string)=>void}){
-  return <div className={`cp-requirement ${result.truth}`}><div><span className={`cp-truth ${result.truth}`}>{conditionText[conditionState(result)]}</span><code>{result.key}{result.op?` ${result.op}`:''}{result.value!==undefined?` ${result.value}`:''}</code><small>{result.role}{result.scope?.length?` · scope ${result.scope.join(' / ')}`:''}</small></div><p>{result.reason}</p>{result.value&&result.key==='has_completed_focus'&&<button className="text-link" onClick={()=>openEntry(result.value!)}>Inspect completion reference<ChevronRight size={12}/></button>}{result.assumptions.map((a,i)=><p key={i} className="cp-assumption">{a}</p>)}{result.source&&<p className="cp-source">{result.source.source}:{result.source.line??'?'}<code>{result.source.hash}</code></p>}{!!result.children.length&&<div className="cp-children">{result.children.map((child,i)=><Requirement key={i} result={child} openEntry={openEntry}/>)}</div>}</div>;
-}
-
-
-
-
-
-
-
+function Requirement({result}:{result:RequirementResult;openEntry:(ref:string)=>void}){return <RequirementView result={result}/>;}

@@ -1,6 +1,6 @@
 # HOI4 Companion roadmap
 
-Updated after Milestone 6 engineering validation. Deliver useful app features on the existing renderer/service/index. Native control is a separate qualification track, not a prerequisite for read-only planning improvements. No release or native test is authorized by this roadmap itself. M6 implements bounded objective routes, saved comparisons and decision/research references. Fresh-extraction Windows workflow/restart and missing-path checks passed on the laptop; formal user acceptance and main-desktop compatibility remain pending. See application/MILESTONE-6-ACCEPTANCE.md.
+Updated during Milestone 6.1 usability work. Deliver useful app features on the existing renderer/service/index. Native control is a separate qualification track, not a prerequisite for read-only planning improvements. No release or native test is authorized by this roadmap itself. M6 implements bounded objective routes, saved comparisons and decision/research references. Fresh-extraction Windows workflow/restart and missing-path checks passed on the laptop; formal user acceptance and main-desktop compatibility remain pending. See application/MILESTONE-6-ACCEPTANCE.md.
 
 | Track / next feature | Priority | Dependencies and current feasibility | Measurable outcome |
 |---|---|---|---|
@@ -27,3 +27,18 @@ Next product/telemetry follow-up: qualify a small supported-scripting completion
 The native `saslifat-gif/hoi4-mcp` option remains deferred under `hoi4-bridge/NATIVE-ADAPTER-FUTURE.md`: license, exact executable compatibility, security and explicit invasive-method authorization are separate gates. No hash-check bypass, DLL injection or executable patch is planned as part of ordinary app integration.
 
 Preserve `QA-LEDGER.md` obligations for native lifecycle, accessibility, performance, migrations and engine parity. Focused feature passes do not close those gates. Reconcile obsolete smoke navigation and version metadata when next touching those areas.
+
+## Confirmed product preferences (M6.1)
+
+These are user requirements for future design, not authorization to build every feature now. M6.1 delivers universal local search, immediate objective suggestions and a bounded plain-English explanation layer with advanced source on demand. Desktop acceptance is required before calling the reported usability problems resolved.
+
+- Hybrid home combining campaign status, recent plans and standalone tools.
+- Both an authentic HOI4-style focus tree and a simplified objective-specific tree, synchronized.
+- Guided route recommendations that remain customizable; two or three ranked strategies with explicit tradeoffs. M6 alternatives are comparisons, not ranked strategic recommendations.
+- Plain-English explanations alongside key statistics; advanced mechanics and raw script on demand; universal search throughout the application.
+- Explicit assumptions and manual correction of missing campaign data; conflict warnings with suggested fixes that preserve hypothetical plans.
+- A collapsible, context-aware AI assistant, dependent on a separate provider/privacy and grounded-answer design.
+- Automatic background synchronization when reliable telemetry exists; current recorded imports are not live synchronization.
+- Adjustable delegation of gameplay responsibilities and optional future autonomous gameplay. Both depend on separately qualified state access, authorized adapters, independent readback and interruption controls.
+
+Near-term: review M6.1 on the user's desktop and address concrete friction before a new renderer or recommendation engine. Telemetry, AI and native-control dependencies remain separate tracks with their existing verification gates.

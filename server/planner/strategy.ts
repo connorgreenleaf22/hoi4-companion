@@ -1,6 +1,7 @@
 import type {CampaignPlan,Entry,Meta,Profile} from '../../src/types';
 import type {PathExploration,PlanningSources,StrategyComparison} from '../../src/strategy-types';
 import type {BridgeEnvironment} from '../../src/bridge-types';
+import {entryMechanics} from '../../src/mechanics';
 import {resolveFocus,actualCompletionContext} from './projection';
 import {evaluatePlanner} from './evaluate';
 
@@ -53,5 +54,5 @@ export function compareStrategies(profile:Profile,plans:CampaignPlan[],catalog:(
  const shared=resolved[0].entries.filter(e=>resolved.every(p=>p.entries.some(other=>other.uid===e.uid))).map(e=>e.uid);
  const conflicts=new Map<string,{left:string;right:string}>();
  for(let i=0;i<resolved.length;i++)for(let j=i+1;j<resolved.length;j++)for(const a of resolved[i].entries)for(const b of resolved[j].entries)if(a.uid!==b.uid&&exclusive(a,b))conflicts.set([a.uid,b.uid].sort().join('|'),{left:a.id,right:b.id});
- return {schemaVersion:1,sources,shared,conflicts:[...conflicts.values()],plans:resolved.map(({plan,tree,focuses,entries},i)=>({plan,report:evaluatePlanner(profile,plan,focuses,{tree,dlcs:meta?.dlcs||[],indexRevision:sources.indexRevision}),unique:entries.filter(e=>!resolved.some((p,j)=>i!==j&&p.entries.some(other=>other.uid===e.uid))).map(e=>e.uid),rewards:entries.map(e=>({reference:`definition:${e.uid}`,title:e.title,script:String(e.data.effects||'No completion reward extracted.'),source:e.source,line:e.line,version:e.version}))}))};
+ return {schemaVersion:1,sources,shared,conflicts:[...conflicts.values()],plans:resolved.map(({plan,tree,focuses,entries},i)=>({plan,report:evaluatePlanner(profile,plan,focuses,{tree,dlcs:meta?.dlcs||[],indexRevision:sources.indexRevision}),unique:entries.filter(e=>!resolved.some((p,j)=>i!==j&&p.entries.some(other=>other.uid===e.uid))).map(e=>e.uid),rewards:entries.map(e=>({reference:`definition:${e.uid}`,title:e.title,script:String(e.data.effects||'No completion reward extracted.'),explanation:entryMechanics(e).summary,source:e.source,line:e.line,version:e.version}))}))};
 }

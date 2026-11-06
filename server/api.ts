@@ -9,6 +9,7 @@ import {indexInBackground} from './index-background';
 import { treeFocuses, validatePlan, calculateTemplate, production, resolveEquipment, productionSupport, evaluate,dlcFacts,type TreeReferenceIssue } from './domain';
 import { guides, troubleshooting, europe, majors } from './content';
 import type { Entry, Profile, Meta, Relationship, FactState } from '../src/types';
+import {universalSearch} from './universal-search';
 import {searchEntries,summary} from './search';
 import {validatePlanner} from './planner/validation';
 import {mirrorPlanner} from './planner/plans';
@@ -127,6 +128,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
         res.setHeader('X-HOI4-Index-Revision',meta?.indexRevision||'legacy');
         if(route==='status'&&req.method==='GET')return send(res,200,{meta,appVersion:'0.3.0',dbSchemaVersion:3,indexingError,profiles:store.listProfiles(),selectedProfileId:remote?undefined:store.selectedProfileId(),local:!remote,network:remote?{enabled:true}:lanInfo(),dataDirectory:remote?undefined:store.directory,root:remote?undefined:meta?.root||root,roadmap:['Campaign intelligence: monitoring, history and alerts','Strategic planning: research and decision paths','Military and economy: supported production and logistics analysis','Assisted gameplay: one independently verified action','AI advisor: source-cited advice with explicit uncertainty']});
         if(route==='countries'&&req.method==='GET')return send(res,200,all('country').map(e=>({...e,data:{...e.data,europe:europe.includes(e.id),major:majors.includes(e.id)}})).sort((a,b)=>a.title.localeCompare(b.title)));
+        if(route==='search'&&req.method==='GET')return send(res,200,universalSearch(store,url.searchParams));
         if(route==='entries'&&req.method==='GET'){
           return send(res,200,searchEntries(store,url.searchParams));
         }
