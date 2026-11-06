@@ -1,13 +1,15 @@
 # HOI4 bridge status
 
-## Milestone 6.5 — native evidence preserved, package checkpoint (2026-11-06)
+## Milestone 6.5 — read-only telemetry and packaged review delivered (2026-11-06)
 
 - Isolated feature/hoi4-telemetry-m65 from f02b1c5. Schema-2 GER emitter, fixed-ID manifest, typed reader/replay/history, field-specific capability qualification and one diagnostic UI section implemented. No M3 adapter execution/modification; normal control remains unavailable. M6.1 artifact/branch preserved.
 - Independently verified on 1.19.4.2: war support, total research slots, civilian factories including trade, military factories, dockyards and basic_machine_tools not-researching → researching. Focus-positive log and other completion checks are emitted but not fully independently qualified. Current focus/progress/events/full inventories unavailable. See MILESTONE-6.5.md and TELEMETRY-INVENTORY.md.
 - Eight owned snapshots captured across distinct dates replay exactly after exit; all source hashes match. 110 archived records also replay, without retroactive ownership. Evidence: .bridge-local/native-dR04YQ/offline-review.json and ui-evidence/. No current game process; owned profile archived, prior absence restored.
 - Failed gate: launch 09:02:19 UTC, hard deadline 09:27:19, terminated about 09:28:35 following context recovery. One launch/four ordinary actions; timing was NOT within budget. Budget remains stopped. Independent deadline watchdog added with offline identity-rejection tests; native shutdown still untested. No repeat native launch. Owned backlog polling remains slow due repeated identity/hash checks.
 - 28 focused tests and TypeScript pass. Agent Tools 4.7.0 validation partly unresolved but no remaining static errors; actual new emitter ran with empty error.log. Evidence .bridge-local/m65-tests-final.txt and m65-agent-validation-short-wire.txt. New-game only; load/restart/mod/version expansion is a future gate.
-- Exact next step: build isolated M6.5 package, validate rendered eight-snapshot import/reopen, retain artifact/evidence, then audit and push only this requested branch. No more HOI4 tests. Broad QA and M6.1 user acceptance remain open.
+- M6.5-d07ff2502542 Windows ZIP built outside Git; all 74 extracted files match. Two actual packaged v2 import/display/restart checks passed with embedded service/resources and isolated test storage. Recording + walkthrough bundled. Artifact path/hash and evidence in MILESTONE-6.5.md. Screens reviewed, companion processes stopped; M6.1 ZIP hash unchanged. Broad QA and desktop acceptance remain open.
+- Reachable-history audit found zero secret-pattern/suspicious/large findings, only existing icon binaries. Private origin verified; final documentation commit and normal push target only feature/hoi4-telemetry-m65. Exact remote receipt stays ignored locally. No merge/release/other branch modification.
+- Exact next task: user reviews the bundled historical M6.5 recording in the isolated app. A future authorized telemetry milestone should first optimize owned backlog validation and exercise watchdog scheduling offline, then qualify disposable text-save current-focus/progress/full research coverage. No more M6.5 HOI4 tests or control development.
 
 ## Milestone 6.1 — portable build ready for desktop review (2026-11-06)
 

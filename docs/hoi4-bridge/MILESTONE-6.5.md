@@ -73,6 +73,17 @@ Troubleshooting: version mismatch → inspect installed patch and stop; do not r
 
 ## Application build and next milestone
 
-A separate M6.5 Windows development package is being validated using the existing Electron toolchain; final artifact/evidence details follow in the completion checkpoint. No M6.1 runtime or user data is overwritten. Broad QA-LEDGER gates and desktop acceptance remain open.
+Source/artifact **d07ff2502542**: `C:/Users/conno/Documents/HOI4 Companion Development Builds/M6.5-d07ff2502542/M6.5-d07ff2502542-windows-x64.zip`.
+
+- ZIP SHA256: `fef12ed0b6a8adb2781b8a2658edb257bc90f97462d2cd6ba695fe33689d02c7`.
+- Extract all into a new folder; run `win-unpacked/HOI4 Companion M6.5-d07ff2502542.exe`. Keep every supporting file together. The folder contains START-HERE.md and M6.5-native-recording.jsonl (eight real historical snapshots, local paths reduced to basenames). No Node/Git/MCP/server setup is needed for review.
+- Dedicated storage: `%APPDATA%/HOI4 Companion Development/M6.5-d07ff2502542/`. No older app data migration/overwrite. No update or release published.
+- Build passes (TypeScript/Vite/service/Electron). All **74 files** match fresh extraction; packaged ASAR runtime bytes match compiled source resources. **Two actual packaged workflow checks passed**: installed references plus v2 import/numeric display/false-to-true research transition, then service shutdown and persisted history after restart. Tests used a temporary data directory, removed developer PATH/Node overrides, retained Electron sandbox/context isolation, and launched from outside the checkout. Screens reviewed; owned app processes closed.
+- Evidence: `artifacts/qa/telemetry-package-2026-11-06T09-43-03-204Z-4525df07/`; harness `scripts/telemetry-package-smoke.ts`. This is laptop engineering validation, not user desktop acceptance or a native game launch.
+- `npm run browser` runs the same compiled service/UI in an external browser with Node. The package embeds the service/runtime, includes resources and isolates data by build label. Neither automatically attaches to a game or enables commands. Recorded review needs no telemetry mod.
+
+M6.1 ZIP SHA256 still `90a83c1946811cb08a2a28c0d8e533f91460b2e30671da91d8542b25ce99eb18`. No M6.1 runtime, branch or user data was overwritten. Broad QA-LEDGER gates, main-desktop compatibility and M6.1 user acceptance remain open.
+
+Git audit of reachable source history found no credential-pattern findings, suspicious paths or large blobs; only the two pre-existing app icons are binary. Private repository verified via the existing authenticated Git credential after the GitHub connector returned 404. Final documentation checkpoint is followed by a normal push of only feature/hoi4-telemetry-m65; exact remote equality receipt stays ignored locally. No merge, force push or release.
 
 Next: qualify read-only text-save focus/current-progress and complete research coverage, plus new-game/load/restart behavior; first optimize owned backlog checks and exercise the deadline watchdog without a native game. Review a separate bounded native plan only after deterministic checks. Active Basic Machine Tools now offers useful independent state for a future research-assignment adapter, but no slot identity or control adapter is qualified. Focus selection is still blocked on current-focus observation and the separately unresolved M3 input-recognition gate. Do not infer selection success from completed-focus flags.
