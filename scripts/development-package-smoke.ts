@@ -54,6 +54,6 @@ async function main(){
   });
   if(errors.length)throw Error(errors.join('\n'));const diagnostics=path.join(run.dataDirectory,'diagnostics');if(fs.existsSync(diagnostics))for(const name of fs.readdirSync(diagnostics))fs.copyFileSync(path.join(diagnostics,name),path.join(run.output,name));
   run.finish({executable,executableSHA256:fileHash(executable),nativeGameLaunched:false,packagedElectronLaunched:true});console.log(run.output);
- }finally{try{await app?.close();}finally{retainDiagnostics();run.finish();run.cleanup();}}
+ }catch(error){const page=app?.windows()[0];if(page){await page.screenshot({path:path.join(run.output,'failure.png')}).catch(()=>{});await page.locator('body').ariaSnapshot().then(value=>fs.writeFileSync(path.join(run.output,'failure-aria.txt'),value)).catch(()=>{});}throw error;}finally{try{await app?.close();}finally{retainDiagnostics();run.finish();run.cleanup();}}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

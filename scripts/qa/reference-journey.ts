@@ -1,6 +1,6 @@
 import {expect,type Page} from '@playwright/test';import path from 'node:path';
 export async function verifyReferenceExplanations(p:Page,output:string){
- const refs=p.getByRole('region',{name:'Decision and research references'});if(!(await refs.getAttribute('open')))await refs.getByText('Look up decisions and technologies',{exact:true}).click();
+ const refs=p.getByRole('region',{name:'Decision and research references'});if(await refs.getAttribute('open')===null)await refs.getByText('Look up decisions and technologies',{exact:true}).click();
  await refs.getByLabel('Planning reference type').selectOption('decision');await refs.getByLabel('Decision scope').selectOption('all');const search=refs.getByLabel('Search planning references');await search.fill('BEL_EU_');
  const cards=refs.locator('.strategy-reference-list article');await expect(cards.first()).toBeVisible();await expect(cards.first()).toContainText('annexes');await expect(cards.first()).toContainText('becomes a core');await expect(refs.getByText(/Needs review:/)).toHaveCount(0);
  const boxes=await Promise.all([cards.nth(0).boundingBox(),cards.nth(1).boundingBox()]);if(!boxes[0]||!boxes[1]||Math.abs(boxes[0].x-boxes[1].x)>1||boxes[1].y<boxes[0].y+boxes[0].height)throw Error('References are not a readable single-column list');
