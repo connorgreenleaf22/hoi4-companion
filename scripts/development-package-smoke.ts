@@ -11,6 +11,7 @@ async function main(){
  const env={...process.env,HOI4_DATA_DIR:run.dataDirectory};delete env.ELECTRON_RUN_AS_NODE;delete env.NODE_PATH;delete env.NODE_OPTIONS;
  if(process.env.HOI4_STRATEGY_SMOKE==='1')env.PATH=`${process.env.SystemRoot}\\System32;${process.env.SystemRoot}`;
  let app:Awaited<ReturnType<typeof _electron.launch>>|undefined;
+ const retainDiagnostics=()=>{const directory=path.join(run.dataDirectory,'diagnostics');if(fs.existsSync(directory))for(const name of fs.readdirSync(directory))fs.copyFileSync(path.join(directory,name),path.join(run.output,name));};
  try{
   const archive=path.join(path.dirname(executable),'resources','app.asar');
   const manifest=captureRuntimeArchive(archive);run.write('runtime-manifest.json',manifest);
@@ -19,7 +20,8 @@ async function main(){
    if(fileHash(path.resolve(member.file))!==member.sha256)throw Error('Packaged runtime differs: '+member.file);
   }
   app=await _electron.launch({executablePath:executable,cwd:path.dirname(executable),env,timeout:60000});run.ownedProcesses.push({pid:app.process().pid!,kind:'Owned unpacked Electron development build'});
-  let p=await app.firstWindow({timeout:60000});const errors:string[]=[];p.on('pageerror',e=>errors.push(e.message));
+  app.process().stdout?.on('data',bytes=>fs.appendFileSync(path.join(run.output,'electron-stdout.txt'),bytes));app.process().stderr?.on('data',bytes=>fs.appendFileSync(path.join(run.output,'electron-stderr.txt'),bytes));
+  let p!:Awaited<ReturnType<typeof app.firstWindow>>;await run.check('packaged first window appears',['M6.1-STARTUP'],async()=>{p=await app!.firstWindow({timeout:60000});});const errors:string[]=[];p.on('pageerror',e=>errors.push(e.message));
   let recordingId='';
   await run.check('packaged renderer, embedded API and installed references load',['M5-PACKAGE'],async()=>{
    await expect(p.getByRole('heading',{name:'Command center',exact:true})).toBeVisible({timeout:60000});
@@ -50,6 +52,6 @@ async function main(){
   });
   if(errors.length)throw Error(errors.join('\n'));const diagnostics=path.join(run.dataDirectory,'diagnostics');if(fs.existsSync(diagnostics))for(const name of fs.readdirSync(diagnostics))fs.copyFileSync(path.join(diagnostics,name),path.join(run.output,name));
   run.finish({executable,executableSHA256:fileHash(executable),nativeGameLaunched:false,packagedElectronLaunched:true});console.log(run.output);
- }finally{await app?.close();run.finish();run.cleanup();}
+ }finally{try{await app?.close();}finally{retainDiagnostics();run.finish();run.cleanup();}}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

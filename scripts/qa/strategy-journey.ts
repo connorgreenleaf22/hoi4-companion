@@ -38,5 +38,5 @@ export async function verifyUniversalSearch(p:Page){
  for(const query of ['Indonesia','INS','dUtCh EaSt','Dutch East Indes','Dutch East Indies']){
   await field.fill(query);await expect(p.getByRole('option').filter({hasText:'Countries'}).filter({hasText:'Indonesia'}).first()).toBeVisible();
  }
- await field.press('ArrowDown');await field.press('Enter');await expect(p.getByRole('dialog',{name:'Indonesia',exact:true})).toBeVisible();await p.getByRole('button',{name:'Close reference',exact:true}).click();await field.fill('');
+ const options=await p.getByRole('option').allTextContents();const countryIndex=options.findIndex(text=>text.startsWith('Countries')&&text.includes('Indonesia'));expect(countryIndex).toBeGreaterThanOrEqual(0);for(let i=0;i<=countryIndex;i++)await field.press('ArrowDown');await field.press('Enter');await expect(p.getByRole('dialog',{name:'Indonesia',exact:true})).toBeVisible();await p.getByRole('button',{name:'Close reference',exact:true}).click();await field.fill('');
 }
