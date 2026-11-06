@@ -189,7 +189,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
         if(route==='strategy/references'&&req.method==='GET'){
           const kind=url.searchParams.get('kind');if(!['decision','technology'].includes(kind||''))throw Error('Choose decisions or technologies.');
           const profile=store.profile(url.searchParams.get('profile')||'');if(!profile)throw Error('Save a campaign before browsing planning references.');
-          const params=new URLSearchParams(url.searchParams);params.set('limit','20');
+          const params=new URLSearchParams(url.searchParams);params.set('limit','10');
           // Country matching is a discovery hint, never an availability claim.
           if(kind==='decision'&&params.get('scope')==='country')params.set('country',profile.country);else params.delete('country');
           const result=searchEntries(store,params),dlcAvailability=plannerDlcFacts(profile,meta?.dlcs||[]);

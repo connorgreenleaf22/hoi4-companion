@@ -1,74 +1,56 @@
 import type {Entry,Node,RequirementResult} from './types';
-export type Explanation={text:string;unknown?:boolean;children?:Explanation[]};
-export type NameLookup=(id:string)=>string;
-const literal=(v:string)=>/^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(v)?Number(v):null;
-const number=(n:number)=>new Intl.NumberFormat('en-US',{maximumFractionDigits:3}).format(n);
+import {explainConditions,explainEffects,explainModifiers,defaultContext,literal,number,unresolved,type Explanation,type NameLookup,type ExplainContext} from './mechanics-interpreter';
+export {explainConditions,explainEffects,explanationPreview} from './mechanics-interpreter';
+export type {Explanation,NameLookup,ExplanationStatus} from './mechanics-interpreter';
 const named=(id:string,lookup:NameLookup)=>lookup(id)||id;
-const unknown=(what='effect'):Explanation=>({text:`An additional scripted ${what} is not translated. Its scope, variables or command semantics need review in the advanced source.`,unknown:true});
-export function explainConditions(nodes:Node[],lookup:NameLookup=id=>id):Explanation[]{
- return nodes.map(n=>{
-  if(Array.isArray(n.value)){
-   if(['AND','OR','NOT'].includes(n.key)&&(!n.op||n.op==='='))return {text:n.key==='OR'?'At least one of these conditions must hold:':n.key==='NOT'?'None of these conditions may hold:':'All of these conditions must hold:',children:explainConditions(n.value,lookup)};
-   return unknown('condition');
-  }
-  if(n.op&&n.op!=='=')return unknown('comparison');
-  const v=n.value;
-  if(n.key==='always'&&['yes','no'].includes(v))return {text:v==='yes'?'No restriction from this rule.':'This rule prevents availability.'};
-  if(n.key==='has_completed_focus')return {text:`Complete ${named(v,lookup)}.`};
-  if(n.key==='has_tech')return {text:`Research ${named(v,lookup)}.`};
-  if(n.key==='has_dlc')return {text:`Requires ${named(v,lookup)} DLC. Ownership and enabled state must be confirmed.`};
-  if(['tag','original_tag'].includes(n.key))return {text:`${n.key==='original_tag'?'Original country identity':'Country'} must be ${named(v,lookup)}.`};
-  if(n.key==='has_war'&&['yes','no'].includes(v))return {text:v==='yes'?'Must be at war.':'Must be at peace.'};
-  return unknown('condition');
- });
-}
-/** Deliberately bounded translation. Never flatten unsupported scopes into unconditional effects. */
-export function explainEffects(nodes:Node[],lookup:NameLookup=id=>id,depth=0):Explanation[]{
- if(depth>16)return [unknown('nested effect')];
- return nodes.flatMap((n,index):Explanation[]=>{
-  if(n.op&&n.op!=='=')return [unknown()];
-  if(Array.isArray(n.value)){
-   if(['if','else_if','else'].includes(n.key)){
-    const previous=nodes[index-1]?.key;
-    if(n.key!=='if'&&!['if','else_if'].includes(previous))return [unknown('conditional effect')];
-    const limits=n.value.filter(c=>c.key==='limit');if(limits.some(c=>!Array.isArray(c.value)))return [unknown('conditional effect')];
-    return [{text:n.key==='if'?'Only if all conditions below hold:':n.key==='else_if'?'Otherwise, if all conditions below hold:':'Otherwise (when earlier branches do not apply):',children:[...explainConditions(limits.flatMap(c=>c.value as Node[]),lookup),...explainEffects(n.value.filter(c=>c.key!=='limit'),lookup,depth+1)]}];
-   }
-   if(n.key==='hidden_effect')return [{text:'Effects hidden by the game tooltip (same scope and conditions):',children:explainEffects(n.value,lookup,depth+1)}];
-   // Unknown scopes, loops, random branches and bonus formulas retain their whole source block.
-   return [unknown()];
-  }
-  const amount=literal(n.value);
-  const units:Record<string,string>={add_political_power:'political power',add_manpower:'manpower',army_experience:'army experience',navy_experience:'naval experience',air_experience:'air experience'};
-  if(units[n.key]&&amount!==null)return [{text:`${amount<0?'Lose':'Gain'} ${number(Math.abs(amount))} ${units[n.key]}.`}];
-  if(['add_stability','add_war_support'].includes(n.key)&&amount!==null)return [{text:`${amount<0?'Decrease':'Increase'} ${n.key==='add_stability'?'stability':'war support'} by ${number(Math.abs(amount)*100)} percentage points.`}];
-  if(['add_ideas','remove_ideas'].includes(n.key)&&!/[\[\]$?]/.test(n.value))return [{text:`${n.key==='add_ideas'?'Add':'Remove'} national spirit / idea: ${named(n.value,lookup)}. Its modifiers need separate inspection.`}];
-  if(n.key==='custom_effect_tooltip')return [{text:'The game supplies an additional tooltip; it is descriptive text, not an independently evaluated effect.',unknown:true}];
-  return [unknown()];
- });
-}
 export function entryMechanics(entry:Entry,lookup:NameLookup=id=>entry.data.mechanicNames?.[id]||id){
- const nodes=(entry.data.nodes||[]) as Node[];const focus=['focus','shared_focus','joint_focus'].includes(entry.kind);
- const effects=nodes.filter(n=>[focus?'completion_reward':'complete_effect','remove_effect'].includes(n.key));
- const summary:Explanation[]=[];
- if(focus)summary.push({text:typeof entry.data.days==='number'?`${number(entry.data.days)} nominal days to complete, before stored progress, bypasses or delays.`:'Completion time is not known from the indexed source.',unknown:typeof entry.data.days!=='number'});
- if(entry.kind==='decision'){
-  const cost=nodes.find(n=>n.key==='cost');if(cost)summary.push(typeof cost.value==='string'&&literal(cost.value)!==null&&Number(cost.value)>=0?{text:`Listed decision cost: ${number(Number(cost.value))} political power. Modifiers and special cost scripts are not included.`}:unknown('decision cost'));
+ const nodes=(entry.data.nodes||[]) as Node[],focus=['focus','shared_focus','joint_focus'].includes(entry.kind),decision=entry.kind==='decision'||entry.data.subtype==='decision';
+ const ctx:ExplainContext={...defaultContext(),ideas:entry.data.mechanicIdeas};
+ if(nodes.some(n=>n.key==='state_target'))ctx.from={kind:'state',label:'the selected state (campaign target unknown)'};
+ else if(nodes.some(n=>['targets','target_array','target_root_trigger'].includes(n.key)))ctx.from={kind:'country',label:'the selected country (campaign target unknown)'};
+ const summary:Explanation[]=[],requirements:Explanation[]=[];
+ const atom=(n:Node,text:string,role:Explanation['role']='timing'):Explanation=>({text,status:'explained',code:n.key,line:n.line,role});
+ const val=(key:string)=>nodes.find(n=>n.key===key)?.value;
+ if(focus)summary.push(typeof entry.data.days==='number'?{text:`${number(entry.data.days)} nominal days to complete, before stored progress, bypasses or delays.`,status:'explained',role:'timing'}:unresolved({key:'cost',value:'',line:entry.line},'unsupported','Completion time is not known from the indexed source.'));
+ if(decision){
+  const cost=nodes.find(n=>n.key==='cost');if(cost)summary.push(literal(cost.value)!==null&&Number(cost.value)>=0?atom(cost,`${number(Number(cost.value))} political power (base cost).`,'cost'):unresolved(cost,'unsupported','Political-power cost uses a dynamic formula; the payable amount is unknown.'));
+  if(nodes.some(n=>n.key==='custom_cost_trigger'))summary.push({text:'Additional resource requirement; spending must be checked in the effects.',status:'state-unknown',role:'cost',code:'custom_cost_trigger'});
+  for(const [key,label] of [['days_remove','Active duration'],['days_re_enable','Repeat cooldown'],['days_mission_timeout','Mission timeout']] as const){const n=nodes.find(x=>x.key===key);if(n)summary.push(literal(n.value)!==null&&Number(n.value)>=0?atom(n,`${label}: ${number(Number(n.value))} days.`):unresolved(n,'unsupported',`${label} is dynamic or unspecified.`));}
+  if(val('selectable_mission')==='no')summary.push({text:'Automatic mission; not a manually selectable decision.',status:'explained',role:'timing'});
  }
  if(entry.kind==='technology'){
-  for(const [key,label] of [['research_cost','Base research-cost factor'],['start_year','Technology year']] as const){const n=nodes.find(n=>n.key===key);if(n)summary.push(typeof n.value==='string'&&literal(n.value)!==null?{text:`${label}: ${number(Number(n.value))}${key==='research_cost'?'. Actual days depend on research speed and ahead-of-time penalties.':'.'}`}:unknown('research value'));}
-  const categories=nodes.find(n=>n.key==='categories');if(categories&&Array.isArray(categories.value))summary.push({text:`Research categories: ${categories.value.map(n=>typeof n.value==='string'?named(n.value,lookup):'unresolved category').join(', ')}.`});
-  const modifiers:Record<string,string>={production_factory_max_efficiency_factor:'Production efficiency cap',production_factory_efficiency_gain_factor:'Production efficiency growth',research_speed_factor:'Research speed'};
-  for(const node of nodes)if(modifiers[node.key]&&typeof node.value==='string'&&literal(node.value)!==null)summary.push({text:`${modifiers[node.key]} modifier: ${Number(node.value)>=0?'+':''}${node.value} (source coefficient; final campaign value is not calculated).`});
-  const known=new Set(['research_cost','start_year','categories','folder','path','ai_will_do',...Object.keys(modifiers)]);
-  if(nodes.some(n=>!known.has(n.key)||modifiers[n.key]&&(typeof n.value!=='string'||literal(n.value)===null)))summary.push({text:'This technology has additional benefits or modifiers that are not yet translated; inspect advanced mechanics before relying on them.',unknown:true});
+  for(const [key,label] of [['research_cost','Base research-cost factor'],['start_year','Technology year']] as const){const n=nodes.find(n=>n.key===key);if(n)summary.push(literal(n.value)!==null?atom(n,`${label}: ${number(Number(n.value))}${key==='research_cost'?'. Actual days depend on research speed and ahead-of-time penalties.':'.'}`,'cost'):unresolved(n));}
+  const metadata=new Set(['research_cost','start_year','categories','folder','path','ai_will_do','allow','allowed','available','visible','on_research_complete','on_research_complete_limit','enable_equipment','enable_subunits']);
+  const modifiers=nodes.filter(n=>!metadata.has(n.key));summary.push(...explainModifiers(modifiers,lookup));
+  for(const n of nodes.filter(n=>['enable_equipment','enable_subunits'].includes(n.key)))summary.push(Array.isArray(n.value)&&n.value.every(x=>typeof x.value==='string')?atom(n,`Unlocks ${n.key==='enable_equipment'?'equipment':'units'}: ${n.value.map(x=>named(x.value as string,lookup)).join(', ')}.`,'effect'):unresolved(n));
  }
- for(const n of effects)summary.push({text:n.key==='remove_effect'?'When the decision is removed:':'On completion:',children:Array.isArray(n.value)?explainEffects(n.value,lookup):[unknown()]});
- const requirements:Explanation[]=(entry.data.prerequisites||[]).map((g:string[],i:number)=>({text:`Requirement ${i+1} — ${g.length>1?'complete at least one of':'complete'}: ${g.map(id=>named(id,lookup)).join(' OR ')}.`}));
- if(requirements.length>1)requirements.unshift({text:'Every numbered requirement below is required (AND).'});
- if(entry.data.exclusive?.length)requirements.push({text:`Choose a different branch if already completed: ${entry.data.exclusive.map((id:string)=>named(id,lookup)).join(', ')}. These focuses are mutually exclusive.`});
- for(const n of nodes.filter(n=>['available','allowed','allow','visible','allow_branch','bypass','cancel'].includes(n.key))){const labels:Record<string,string>={available:'To start',allowed:'Eligibility',allow:'Eligibility',visible:'To appear',allow_branch:'For this branch to appear',bypass:'May be skipped if',cancel:'May be cancelled if'};requirements.push({text:labels[n.key]+':',children:Array.isArray(n.value)?explainConditions(n.value,lookup):[unknown('condition')]});}
- return {summary:summary.length?summary:[{text:'No supported mechanical summary is available for this definition yet. The source and its limitations remain available below.',unknown:true}],requirements};
+ const phases:Record<string,string>={completion_reward:'On completion:',complete_effect:decision?(val('days_mission_timeout')?'When the mission completes:':'When selected:'):'On completion:',remove_effect:literal(val('days_remove'))!==null?`When removed (normally after ${val('days_remove')} days):`:'When the decision is removed:',timeout_effect:'When the mission times out:',cancel_effect:'When cancelled:',on_research_complete:'When research completes:'};
+ for(const n of nodes){if(phases[n.key])summary.push({text:phases[n.key],status:'explained',code:n.key,line:n.line,role:'effect',children:Array.isArray(n.value)?[...(n.key==='on_research_complete'&&Array.isArray(val('on_research_complete_limit'))?[{text:'Only if the research-completion conditions hold:',status:'conditional' as const,role:'condition' as const,children:explainConditions(val('on_research_complete_limit') as Node[],lookup,ctx)}]:[]),...explainEffects(n.value,lookup,0,ctx)]:[unresolved(n,'parser-limitation')]});
+  if(n.key==='modifier'&&decision&&Array.isArray(n.value)&&n.value.length)summary.push({text:`While active${literal(val('days_remove'))!==null?' for '+val('days_remove')+' days':''}:`,status:'explained',role:'modifier',code:n.key,children:explainModifiers(n.value,lookup)});
+ }
+ requirements.push(...(entry.data.prerequisites||[]).map((g:string[],i:number)=>({text:`Requirement ${i+1} — ${g.length>1?'complete at least one of':'complete'}: ${g.map(id=>named(id,lookup)).join(' OR ')}.`,status:'state-unknown' as const,role:'condition' as const})));
+ if(requirements.length>1)requirements.unshift({text:'Every numbered requirement below is required (AND).',status:'state-unknown',role:'condition'});
+ if(entry.data.exclusive?.length)requirements.push({text:`Choose a different branch if already completed: ${entry.data.exclusive.map((id:string)=>named(id,lookup)).join(', ')}. These focuses are mutually exclusive.`,status:'state-unknown',role:'condition'});
+ const labels:Record<string,string>={available:'To start',allowed:'Eligibility',allow:'Eligibility',visible:'To appear',activation:'Mission activation',allow_branch:'For this branch to appear',bypass:'May be skipped if',cancel:'May be cancelled if',cancel_trigger:'Cancelled when',target_trigger:'Target requirements',custom_cost_trigger:'Additional resource requirement'};
+ const addRequirements=(ns:Node[],prefix='')=>{for(const n of ns)if(labels[n.key]&&Array.isArray(n.value)&&n.value.length)requirements.push({text:prefix+labels[n.key]+':',status:'state-unknown',role:'condition',code:n.key,line:n.line,children:explainConditions(n.value,lookup,ctx)});};
+ addRequirements(nodes);addRequirements(entry.data.inheritedConditions||[],'Category: ');addRequirements(entry.data.categoryConditions||[],'Category: ');
+ if(entry.data.localizationEvidence?.[0]?.status==='unresolved'||referenceTitle(entry).includes('[dynamic name]'))summary.push({text:'The title lacks a resolved name or uses a runtime naming function.',status:'missing-localization',code:'title-localization'});
+ if(entry.data.importWarnings?.length)summary.push({text:'The source parser recovered this definition with warnings; interpretation may be incomplete.',status:'parser-limitation',unknown:true,code:'importWarnings'});
+ if(entry.data.definitionVariant>1)summary.push({text:'This definition is one of multiple variants; source identity matters.',status:'ambiguous-scope',unknown:true,code:'definitionVariant'});
+ return {summary:summary.length?summary:[{text:'No supported mechanical summary is available for this definition.',status:'unsupported' as const,unknown:true}],requirements};
+}
+/** Only render named source placeholders; never invent a current country identity or selected target. */
+export function referenceTitle(e:Entry):string{
+ const lookup=(id:string)=>e.data.mechanicNames?.[id]||id;const state=(e.data.nodes||[]).some((n:Node)=>n.key==='state_target');
+ return e.title.replace(/\[([^\]]+)\]/g,(_whole,token:string)=>{
+  if(token==='FROM.GetName'||token==='FROM.GetNameDef')return state?'the selected state':'the selected country';
+  if(token==='FROM.GetAdjective')return 'the selected country’s';
+  if(/^FROM\.OWNER\.Get/.test(token))return 'the selected state’s owner';
+  if(token==='ROOT.GetFactionName')return 'the acting country’s faction';
+  if(token==='ROOT.GetAdjective')return 'the acting country’s';
+  const m=token.match(/^([A-Z0-9]{3})\.(GetName|GetNameDef|GetAdjective)$/);if(m){const key=m[1]+(m[2]==='GetAdjective'?'_ADJ':'');return lookup(key)!==key?lookup(key):'a country name';}
+  return '[dynamic name]';
+ });
 }
 export function requirementExplanation(r:RequirementResult,lookup:NameLookup):string{
  if(r.scope?.length)return 'A rule applies in a different country, state or script scope; the companion cannot verify it.';

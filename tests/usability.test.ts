@@ -37,19 +37,19 @@ test('name matching tolerates a bounded spelling difference, IDs and punctuation
 });
 test('known effects have correct signs and units; unsupported scopes/variables never become unconditional rewards',()=>{
  assert.deepEqual(explainEffects(parseScript('add_stability=-0.1 add_war_support=0.05 add_political_power=50 add_manpower=-1000')).map(e=>e.text),['Decrease stability by 10 percentage points.','Increase war support by 5 percentage points.','Gain 50 political power.','Lose 1,000 manpower.']);
- assert.equal(explainEffects(parseScript('GER={add_political_power=100}'))[0].unknown,true);
+ assert.equal(explainEffects(parseScript('GER={add_political_power=100}'))[0].text,'For GER:');assert.equal(explainEffects(parseScript('GER={add_political_power=100}'))[0].children![0].text,'Gain 100 political power.');
  assert.equal(explainEffects(parseScript('random_list={50={add_political_power=100}}'))[0].unknown,true);
  assert.equal(explainEffects(parseScript('add_stability=my_variable'))[0].unknown,true);
  assert.equal(explainEffects(parseScript('invented_effect=5'))[0].unknown,true);
  const condition=explainEffects(parseScript('if={limit={has_completed_focus=A} add_political_power=50} else={add_stability=0.1}'),id=>id==='A'?'Known focus':id);
  assert.match(condition[0].text,/Only if/);assert.equal(condition[0].children![0].text,'Complete Known focus.');assert.match(condition[1].text,/Otherwise/);
  assert.equal(explainEffects(parseScript('else={add_political_power=50}'))[0].unknown,true);
- assert.equal(explainConditions(parseScript('SOV={has_war=yes}'))[0].unknown,true);
+ assert.equal(explainConditions(parseScript('SOV={has_war=yes}'))[0].status,'state-unknown');
 });
 test('requirements preserve AND/OR, exclusions, bypass and readable research costs without fabricated days',()=>{
  const e:Entry={uid:'test',id:'T',title:'Test',kind:'focus',source:'fixture',line:1,hash:'fixture',version:'fixture',description:'',data:{days:35,prerequisites:[['A','B'],['C']],exclusive:['D'],nodes:parseScript('bypass={has_completed_focus=X} completion_reward={add_political_power=10}')}};
  const value=entryMechanics(e,id=>({A:'Alpha',B:'Beta',C:'Gamma',D:'Delta',X:'Other'}[id]||id));
  assert.match(value.requirements[0].text,/AND/);assert.match(value.requirements[1].text,/Alpha OR Beta/);assert.match(value.requirements[2].text,/Gamma/);assert.match(value.requirements[3].text,/Delta/);assert.equal(value.requirements[4].text,'May be skipped if:');
  const tech=entryMechanics({...e,kind:'technology',data:{nodes:parseScript('research_cost=1.5 start_year=1936 production_factory_max_efficiency_factor=0.1')} });
- assert.match(tech.summary[0].text,/factor: 1.5/);assert.match(tech.summary[0].text,/depend on/);assert.ok(tech.summary.some(s=>s.text.includes('Production efficiency cap modifier: +0.1')));
+ assert.match(tech.summary[0].text,/factor: 1.5/);assert.match(tech.summary[0].text,/depend on/);assert.ok(tech.summary.some(s=>s.text.includes('Production efficiency cap: +10%')));
 });

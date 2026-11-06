@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {createQaRun,assertOwnedStatus,fileHash} from './qa/fixture';
 import {captureRuntimeArchive} from './verify-package.mjs';
+import {verifyReferenceExplanations} from './qa/reference-journey';
 import {createAndCompareStrategies,verifyStrategyComparison,verifyUniversalSearch} from './qa/strategy-journey';
 
 async function main(){
@@ -38,6 +39,7 @@ async function main(){
     await expect(p.getByRole('region',{name:'Recorded planning baseline'})).toContainText('Unavailable: research, completed focuses');
     await p.getByRole('button',{name:'Add Prioritize Economic Growth to queue',exact:true}).click();await expect(p.getByRole('button',{name:'Apply reviewed plan'})).toBeEnabled();await p.getByRole('button',{name:'Apply reviewed plan'}).click();await expect(p.getByText('Reviewed plan applied. Actual completion history is unchanged.')).toBeVisible();
     if(process.env.HOI4_STRATEGY_SMOKE==='1')await createAndCompareStrategies(p,run.output);
+    if(process.env.HOI4_EXPLANATION_SMOKE==='1')await verifyReferenceExplanations(p,run.output);
     await p.screenshot({path:path.join(run.output,'packaged-planner.png'),fullPage:true});
     await p.getByRole('button',{name:'Command center',exact:true}).click();
    }

@@ -1,9 +1,10 @@
+import {entryMechanics,explanationPreview,referenceTitle} from '../src/mechanics';
 import type {Store} from './store';
 import type {Entry} from '../src/types';
 import {declaredYearWhitespaceCodePoints} from '../src/year';
 
 export function summary(e:Entry):Entry{
-  const {script,nodes,...data}=e.data;return {...e,data};
+  const {script,nodes,...data}=e.data;if(['decision','technology'].includes(e.kind)){const value=entryMechanics(e);data.mechanicPreview=explanationPreview(value.summary,2);data.mechanicCosts=value.summary.filter(x=>x.role==='cost'||x.role==='timing');data.mechanicTitle=referenceTitle(e);}return {...e,data};
 }
 const stopWords=new Set('what which who how when where why do does did can could would should i we you the a an is are was were to for of this that these those my me please unlock unlocks unlocked enable enables enabled gives give get grants grant change changes recruit recruits recruitment become becoming need needs required requirement requirements research researches reward rewards effect effects bonus bonuses stats improve improves much cost costs price prices happen happens happened occur occurs after afterward afterwards before next then'.split(' '));
 export function questionTerms(q:string){

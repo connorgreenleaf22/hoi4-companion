@@ -1,5 +1,13 @@
 # HOI4 bridge status
 
+## Milestone 7.1 — explanation implementation validated; package acceptance next (2026-11-06)
+
+- Isolated branch `feature/hoi4-ux-m71` from M7 `0620369`; no native launch/input, dependencies, telemetry qualification or MCP permission changes.
+- Shared deterministic explanation engine, structured statuses, same-index idea/event/category provenance and readable single-column decision/technology browsing implemented. Twelve identical 1.19.4.2 definitions improve from 0/12 to 12/12 specific compact outcomes; this is not complete interpretation. Source hashes and old recognized requirements/effects retained. See `../application/MILESTONE-7.1.md`.
+- 43 distinct focused tests pass across affected source/planner/history/platform suites; final overlapping affected rerun 21/21. TypeScript/build and installed-source rendered keyboard/mobile journey pass. Evidence `.bridge-local/m71-*` and `artifacts/qa/explanation-browser-2026-11-06T22-14-35-261Z-811fc0ff/`; screenshots reviewed.
+- Blockers/limits: scripted helpers, conditional trigger if, random unit/template effects, dynamic modifier values, some runtime names and event consequences remain unsupported/unavailable. Connected Agent Tools transport closed; one pinned stdio fallback returned successful documentation and partial decision analysis. First UI run used a wrong retained-recording filename; corrected to owned-snapshots.jsonl, no product/native retry. Full QA-LEDGER and user desktop acceptance remain open.
+- Exact next step: commit validated source, package M7.1 with the existing isolated workflow, archive/fresh-extract, run the combined strategy/reference/history/restart journey, record evidence and artifact hash, audit repository and push only this branch. Do not restart HOI4 or repeat completed research.
+
 ## Milestone 7 — read-only platform and Windows acceptance delivered (2026-11-06)
 
 - Branch feature/hoi4-platform-m7 from 67d7d05. M6.5 already contains M6.1; no merge/history rewrite. Earlier branches/builds preserved.

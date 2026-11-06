@@ -27,7 +27,7 @@ const wrapped=(nodes:Node[],key:string):Node[]=>children(nodes,key).flatMap(n=>A
 const blocks=(nodes:Node[])=>nodes.filter((n):n is Node&{value:Node[]}=>Array.isArray(n.value)&&!n.key.startsWith('@'));
 const conditionKeys=new Set(['limit','allowed','available','allow','visible','trigger','enable','potential','allow_branch','bypass','cancel','target_trigger']);
 export const supportedRoots=['common/country_tags','common/national_focus','common/continuous_focus','common/technologies','common/ideas','common/idea_tags','common/doctrines','common/units','common/terrain','common/decisions','common/characters','common/country_leader','common/unit_leader','common/buildings','common/military_industrial_organization','common/special_projects','common/combat_tactics.txt','history/countries','events','dlc_metadata/dlc_info','dlc','integrated_dlc','localisation/english','common/defines','documentation'];
-const RULES='knowledge-foundation-v5.5-country-names';
+const RULES='knowledge-foundation-v5.6.2-mechanic-context';
 
 /** Publish a whole coherent reference snapshot or retain the preceding snapshot on failure. */
 export function indexGame(store:Store,root:string,onProgress?:(source:string,completed:number,total:number)=>void):Meta{
@@ -96,9 +96,12 @@ export function indexGame(store:Store,root:string,onProgress?:(source:string,com
         const nameKey=titleKey;const descriptionKey=scalar(b,'description',`${id}_desc`);const sourceClass=source.startsWith('companion/')?'editorial':source.startsWith('documentation/')?'bundled-doc':'installed-script';
         const localizationEvidence=[...localization.evidence(nameKey),...localization.evidence(descriptionKey)];
         const e:Entry={uid:base+(variant>1?`:variant:${variant}`:''),id,kind,title:title??loc(nameKey),description:localization.has(descriptionKey)?loc(descriptionKey):'',source,line,version,hash:file.hash,verification:'extracted',evidence:[{class:sourceClass,source,line,hash:file.hash,gameVersion:version,rule:RULES,dependencies:[...new Set(localizationEvidence.filter(x=>x.source).map(x=>x.source as string))]}],data:{...data,nodes:b,definitionVariant:variant,aliases:[id,id.replaceAll('_',' '),...(data.aliases||[])],localizationEvidence,...(parseWarnings.length?{importWarnings:parseWarnings}:{}),script:formatScript(b)}};
-        if(['focus','shared_focus','joint_focus','decision','technology'].includes(kind)){
-          const refs=['focus','has_completed_focus','has_tech','has_dlc','add_ideas','remove_ideas','category','tag','original_tag'].flatMap(key=>collect(b,key));
+        if(['focus','shared_focus','joint_focus','decision','formable','technology'].includes(kind)){
+          const refs:string[]=[data.category||''];
+          const names=(ns:Node[])=>{for(const n of ns){refs.push(n.key);if(/^\d+$/.test(n.key))refs.push('STATE_'+n.key);if(Array.isArray(n.value))names(n.value);else {refs.push(n.value);if(/^\d+$/.test(n.value))refs.push('STATE_'+n.value);}}};names(b);for(const ref of [...refs])if(/^[A-Z0-9]{3}$/.test(ref))refs.push(ref+'_ADJ');
+          for(const part of [loc(nameKey),localization.has(descriptionKey)?loc(descriptionKey):''].join(' ').matchAll(/\[([A-Z0-9]{3})\.Get(?:Name|NameDef|Adjective)\]/g))refs.push(part[1],part[1]+'_ADJ');
           e.data.mechanicNames=Object.fromEntries([...new Set(refs)].filter(id=>localization.has(id)).map(id=>[id,loc(id)]));
+          e.data.mechanicNameEvidence=Object.fromEntries(Object.keys(e.data.mechanicNames).map(id=>[id,localization.evidence(id)]));
         }
         applySourceNotes(e);entries.push(e);return e;
       };
@@ -191,6 +194,16 @@ export function indexGame(store:Store,root:string,onProgress?:(source:string,com
     // Inherited spirit costs remain references to category evidence, not copied verified gameplay numbers.
     const categories=new Map(allEntries.filter(e=>e.kind==='idea_category').map(e=>[e.id,e]));
     for(const idea of allEntries.filter(e=>e.kind==='idea')){const category=categories.get(idea.data.group);if(category){idea.data.ideaCategory={id:category.id,type:category.data.type,declaredBaseCost:category.data.stats?.cost,source:category.source,line:category.line,hash:category.hash};store.db.prepare('UPDATE entries SET payload=? WHERE uid=?').run(JSON.stringify(idea),idea.uid);}}
+    // Attach bounded, uniquely resolved idea modifiers and event names from this same reference snapshot.
+    const related=new Map<string,Entry[]>();for(const e of allEntries)if(['idea','event','decision_category'].includes(e.kind)){const key=e.kind+':'+e.id;related.set(key,[...(related.get(key)||[]),e]);}
+    for(const e of allEntries)if(['focus','shared_focus','joint_focus','decision','formable','technology'].includes(e.kind)){
+      const ids=[...new Set(['idea','add_ideas','remove_ideas'].flatMap(key=>collect(e.data.nodes||[],key)))];
+      const links:Record<string,any>={};for(const id of ids.slice(0,64)){const found=related.get('idea:'+id)||[];if(found.length===1){const idea=found[0];links[id]={title:idea.title,modifiers:block(idea.data.nodes||[],'modifier'),source:idea.source,line:idea.line,hash:idea.hash,version:idea.version};}else if(found.length>1)links[id]={ambiguous:true};}
+      e.data.mechanicIdeas=links;
+      for(const id of collect(e.data.nodes||[],'id')){const events=related.get('event:'+id)||[];if(events.length===1)e.data.mechanicNames[id]=events[0].title;}
+      const category=related.get('decision_category:'+e.data.category)||[];if(category.length===1){const c=category[0];e.data.categoryTitle=c.title;e.data.categoryConditions=(c.data.nodes||[]).filter((n:Node)=>['allowed','visible','available'].includes(n.key));e.data.categoryEvidence={source:c.source,line:c.line,hash:c.hash,version:c.version};}
+      store.db.prepare('UPDATE entries SET payload=? WHERE uid=?').run(JSON.stringify(e),e.uid);
+    }
     const categoryEntries=buildCategoryEntries(allEntries);for(const e of categoryEntries){store.insert(e);allEntries.push(e);}
     if(categoryEntries.length)coverage.files.push({source:'companion/derived/module_categories',hash:hash(categoryEntries.map(e=>e.hash).join('\n')),status:'complete',discovered:categoryEntries.length,emitted:categoryEntries.length,accounted:categoryEntries.length,omissions:[],warnings:[],kinds:{module_category:categoryEntries.length},records:categoryEntries.map(e=>({path:e.id,line:1,uid:e.uid,disposition:'emitted'}))});
     const edges=buildRelationships(allEntries);store.replaceRelationships(edges);

@@ -1,6 +1,6 @@
 # HOI4 Companion
 
-- Work on the explicitly requested milestone branch. M7 uses `feature/hoi4-platform-m7`, descended from M6.5; preserve earlier feature branches and acceptance artifacts.
+- Work on the explicitly requested milestone branch. M7.1 uses `feature/hoi4-ux-m71`, from validated M7 `0620369`; preserve earlier feature branches and acceptance artifacts. M7.1 is offline explanation/UI work, with no HOI4 launch or gameplay commands.
 - Use `.agents/skills/hoi4-game-bridge/SKILL.md` for game discovery, bridge work and native testing. Read `docs/hoi4-bridge/STATUS.md` before repeating an investigation.
 - Extend the existing Node service, parser and SQLite infrastructure. Preserve release gates and the unresolved obligations in `QA-LEDGER.md`.
 - Never write installed game files, personal saves or a regular playset. Use explicit disposable data directories for tests. Do not attach experimental controllers to an unrelated game.
