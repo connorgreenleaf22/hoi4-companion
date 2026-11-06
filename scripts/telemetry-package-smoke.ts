@@ -52,7 +52,7 @@ async function main(){
    const connection=page.getByLabel('Game integration connection');await connection.locator(':scope > summary').click();
    const log=path.join(run.sourceFixtures,'game.log');
    fs.writeFileSync(log,['1936.01.01.24','1936.01.02.24'].map(date=>`[${date}] HC_BRIDGE|v2|state|producer=fixture|manifest=ger-m65-1|tag=GER|n=2,0.81,0.35,4,35,28,10|f=0,0|t=1,0,0|r=0,1,0|END`).join('\n')+'\n');
-   await connection.getByLabel('Observation source',{exact:true}).selectOption('log');await connection.getByLabel('Observation source path').fill(log);await connection.getByRole('button',{name:'Connect read-only observations',exact:true}).click();
+   await connection.getByRole('combobox',{name:'Observation source',exact:true}).selectOption('log');await connection.getByLabel('Observation source path').fill(log);await connection.getByRole('button',{name:'Connect read-only observations',exact:true}).click();
    await expect(connection.locator(':scope > summary')).toContainText('log-monitoring');
    if(!savePath)throw Error('Supply HOI4_PLATFORM_SAVE: existing disposable plaintext save');
    await connection.getByLabel('Plaintext save path').fill(savePath);await connection.getByRole('button',{name:'Inspect save read-only'}).click();
@@ -87,6 +87,7 @@ async function main(){
   if(errors.length)throw Error(errors.join('\n'));
   run.finish({executable,recordingSHA256:fileHash(recording),nativeGameLaunched:false,packagedElectronLaunched:true});console.log(run.output);
  }finally{
+  if(app&&run.results.some(result=>result.status==='failed')){try{const page=await app.firstWindow();run.write('failure-accessibility.json',await page.locator('body').ariaSnapshot());await page.screenshot({path:path.join(run.output,'failure.png'),fullPage:true});}catch{/* Preserve the original failure if the renderer exited. */}}
   try{await client?.close();await transport?.close();await app?.close();}finally{const logs=path.join(run.dataDirectory,'diagnostics');if(fs.existsSync(logs))for(const file of fs.readdirSync(logs))fs.copyFileSync(path.join(logs,file),path.join(run.output,file));run.finish();run.cleanup();}
  }
 }

@@ -1,13 +1,16 @@
 # HOI4 bridge status
 
-## Milestone 7 — platform implemented, packaged qualification in progress (2026-11-06)
+## Milestone 7 — read-only platform and Windows acceptance delivered (2026-11-06)
 
 - Branch feature/hoi4-platform-m7 from 67d7d05. M6.5 already contains M6.1; no merge/history rewrite. Earlier branches/builds preserved.
 - Shared typed platform, read-only connection/monitoring, plaintext save inspector, 15-tool authenticated stdio MCP adapter, one existing gateway/receipt store, UI connection diagnostics and persistent stop implemented. No gameplay execution tool. See MILESTONE-7.md and PLATFORM-CONTRACT.md.
 - 39 distinct focused tests, affected rerun, TypeScript/build pass. Independent synthetic Windows watchdog/identity tests pass; no HOI4 native shutdown claim. Efficient batch ownership and rollback rejection implemented; same-date loaded-save lifecycle remains unqualified.
 - Real archived M6.5 autosave parsed read-only: one completed focus, 55 positive-level technologies and four serialized research slots. Every save mapping remains parsed-unqualified; no current token despite progress=10, so current focus/progress unavailable. Binary/compressed saves unsupported. No new native launch or mod export expansion.
 - Updated skill/frontmatter, source MCP startup-documentation probe, telemetry inventory, roadmap, future native plan and M7.5 feasibility brief. PyYAML validator unavailable; installed js-yaml validates frontmatter. Existing packaging-chain moderate audit findings retained without forced upgrades.
-- Current work: isolated commit-identified Windows package and actual UI/MCP/save/restart acceptance. No package success claimed yet. Exact next step: commit validated source, package outside Git, test fresh extraction with retained historical recording and disposable save, append evidence, audit and push only M7 branch.
+- Runtime artifact M7-4905ba234a16: ZIP outside Git, all 77 extracted files equal, three actual packaged checks pass (retained history, UI/save/MCP/shared stop, service restart/persistence). Evidence artifacts/qa/platform-package-2026-11-06T20-49-42-511Z-ac6ab07b/. Original save hash unchanged, screenshots reviewed, owned processes stopped. Exact paths/hash/run instructions in MILESTONE-7.md; bundled START-HERE.md. Normal user build profile remains fresh.
+- First packaged attempt failed on an exact-label test selector after successful historical display. Minimal HTML reproduction identified it; role/name selector corrected, subsequent complete run passed. Default headless browser missing; installed Edge used for the tiny reproduction. No runtime rebuild, unchanged retry or native game launch. Failed evidence retained.
+- Repository audit: no secret-pattern/suspicious/large findings, only prior icons; private origin verified. M6.1/M6.5 ZIP hashes and prior branches preserved. Final documentation/test-harness commit and normal push target only M7; remote-equality receipt stays ignored locally. No merge/release.
+- Active implementation: none after final audited checkpoint. Exact next step: user desktop acceptance using bundled walkthrough; then review M7-NATIVE-PLAN.md before a fresh bounded laptop qualification of save fields/load behavior. Do not repeat completed platform research/tests without a new change or failure.
 - Native work is a proposal only: M7-NATIVE-PLAN.md (one launch/eight actions/twenty minutes). M6.5 overrun/stopped budget preserved. No M7 memory/injection/control work; M7.5-FEASIBILITY.md is research.
 
 ## Milestone 6.5 — read-only telemetry and packaged review delivered (2026-11-06)
