@@ -22,6 +22,8 @@ import {BridgePlatform} from './bridge/platform';
 import {callBridgeTool} from './bridge/tools';
 import {McpConnection} from './bridge/mcp-connection';
 import {explorePaths,compareStrategies,planningSources} from './planner/strategy';
+import {reviewPlanCoverage,reviewProposal} from './planner/coverage';
+import {evaluatePlanner} from './planner/evaluate';
 import {evaluateRequirements,plannerDlcFacts} from './planner/requirements';
 import type {BridgeMode} from '../src/bridge-types';
 
@@ -171,20 +173,30 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
           return send(res,200,trees.filter(t=>!country||t.data.countries.includes(country)||t.id==='generic_focus').map(t=>({...t,data:{...t.data,script:undefined}})));
         }
         if(route==='tree'&&req.method==='GET'){const result=getTree(url.searchParams.get('uid')||'');return send(res,200,{...result,tree:summary(result.tree),focuses:result.focuses.map(summary)});}
-        if((route==='strategy/paths'||route==='strategy/compare')&&req.method==='POST'){
+        if((route==='strategy/paths'||route==='strategy/compare'||route==='strategy/review')&&req.method==='POST'){
           const input=await body(req),profile=validateProfile(input.profile),meta=store.getSetting<Meta|null>('meta',null);
           if(input.indexRevision!==(meta?.indexRevision||'legacy'))throw new PlanConflict('reference-conflict','References changed; refresh the planner before exploring.');
           const sources=planningSources(meta,bridge.environment());
+          if(route==='strategy/review'){
+            const saved=store.profile(profile.id);if(saved&&saved.revision!==profile.revision)throw new PlanConflict('profile-conflict','Campaign changed; reload before reviewing this draft.');
+            if(input.schemaVersion!==1||!['provisional','rank','optimize'].includes(input.intent))throw Error('Choose a version-1 proposal and supported review intent.');
+            if(!Array.isArray(input.supportingReferences)||input.supportingReferences.length>50||input.supportingReferences.some((r:unknown)=>typeof r!=='string'||r.length>800))throw Error('Supply at most fifty supporting decision/technology references.');
+            const {plan}=preparePlanDraft(profile,input.plan),{tree,focuses}=getTree(plan.tree);
+            const supporting=input.supportingReferences.map((ref:string)=>{const e=store.entry(ref);if(!e||!['decision','technology','formable'].includes(e.kind))throw Error('Supporting reference missing, ambiguous or unsupported: '+ref);return e;});
+            const report=evaluatePlanner(profile,plan,focuses,{tree,dlcs:meta?.dlcs||[],indexRevision:sources.indexRevision});
+            const result=reviewProposal(input.intent,reviewPlanCoverage(profile,plan,focuses,tree,report,sources,supporting,store.entry));
+            return send(res,result.allowed?200:422,result);
+          }
           if(route==='strategy/paths'){
             if(typeof input.goal!=='string'||input.goal.length>800)throw Error('Choose a valid focus objective.');
             const {plan}=preparePlanDraft(profile,input.plan),{tree,focuses}=getTree(plan.tree);
-            return send(res,200,explorePaths(profile,plan,input.goal,focuses,tree,meta,sources));
+            return send(res,200,explorePaths(profile,plan,input.goal,focuses,tree,meta,sources,store.entry));
           }
           if(!Array.isArray(input.planIds)||input.planIds.length<2||input.planIds.length>4)throw Error('Choose two to four saved plans.');
           const saved=store.profile(profile.id);
           if(!saved||saved.revision!==profile.revision)throw new PlanConflict('profile-conflict','Saved campaign changed; reload before comparing.');
           const plans=input.planIds.map((id:unknown)=>{const p=saved.planner?.plans.find(p=>p.id===id);if(!p)throw Error('Saved alternative missing.');return p;});
-          return send(res,200,compareStrategies(saved,plans,getTree,meta,sources));
+          return send(res,200,compareStrategies(saved,plans,getTree,meta,sources,store.entry));
         }
         if(route==='strategy/references'&&req.method==='GET'){
           const kind=url.searchParams.get('kind');if(!['decision','technology'].includes(kind||''))throw Error('Choose decisions or technologies.');

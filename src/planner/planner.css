@@ -149,3 +149,8 @@
 .planning-reference-card .requirement-preview { font-size:.88rem; line-height:1.6; }
 .planning-reference-card details { border:0; padding:0; margin:5px 0; }
 .planning-reference-card > .mechanics-compact { margin-top:10px; }
+
+/* Coverage is a readable document, not the horizontal notice action bar. */
+.planning-coverage { display: block; overflow-wrap: anywhere; }
+.planning-coverage > strong { display: block; }
+.planning-coverage details { min-width: 0; }

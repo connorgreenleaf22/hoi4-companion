@@ -19,3 +19,9 @@ Please record the search/identifier, expected versus actual wording, source vers
 If startup fails, retain this build's `diagnostics` folder under its isolated data directory. A missing installation is a Sources & settings problem; do not repeatedly launch HOI4. For source developers, `npm run browser` uses the same renderer/service but your system browser and checkout environment rather than this bundled Electron runtime and isolated build profile. The packaged app requires neither Node nor npm on the desktop.
 
 This review does not qualify live telemetry, save mappings, gameplay control, full accessibility or all game mechanics. No HOI4 launch is needed.
+
+## Risk-weighted planning follow-up
+
+In a disposable Portugal planning workspace, search `POR_the_kingdom_reunited` and explore its route. On 1.19.4.2 it has eight focus steps with two prerequisite arms. It must say **Provisional plan — not a validated strategy**, despite valid sequence structure. Expand **Coverage gaps and source evidence**: event choices, civil-war allocation, campaign conditions and dynamic mechanics remain unresolved. In Restoration of the Monarchy, the explanation should show the below-40% stability civil-war condition and the separate otherwise stability loss. This is extracted scripting, not a promise of a safe monarchy transition.
+
+Draft the route, edit it and use **Review current draft coverage**. Removing a required ancestor or combining excluded branches must show **Plan needs correction**. Corrections remain editable. Save using the existing reviewed-plan flow and reopen; invoke coverage review again. A review does not modify completion history. Also explore `GER_autarky_achieved` and `GER_oppose_hitler`: dynamic economy and event consequences prevent confident ranking. No AI provider, generated complete strategy, rank or optimize button is offered by this build.

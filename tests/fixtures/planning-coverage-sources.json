@@ -1,0 +1,13 @@
+{
+  "version": "1.19.4.2",
+  "files": [
+    {
+      "source": "common/national_focus/portugal.txt",
+      "hash": "f2ab08a2667a665a58c7c92f812045dc5406a4747bb2f54d702dc15f15088180"
+    },
+    {
+      "source": "common/national_focus/germany.txt",
+      "hash": "ac730be5ccc9095fb400e58b2f7d44501288a94186beb148dbbb0b32cf8ea03c"
+    }
+  ]
+}

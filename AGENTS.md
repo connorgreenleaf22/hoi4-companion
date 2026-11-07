@@ -11,3 +11,5 @@
 - Major application milestones require an isolated, milestone/commit-identified runnable Windows development build plus a packaged launch/service/resource check. Use `npm run package:development -- M5` (substitute the milestone); never overwrite older builds or publish implicitly.
 
 - M7 platform: one application-owned bridge/gateway/receipt store; MCP is a thin authenticated loopback adapter. Keep save-derived, historical, live-qualified and manual planning state distinct. Gameplay execution is not exposed. Native test plans require independent deadline supervision and retained evidence.
+
+- Planning recommendations must use the server risk gate (`server/planner/coverage.ts`, `POST strategy/review`). Unknown critical mechanics cannot be converted into confident rankings by provider prose. Keep provisional plans editable; see `docs/application/PLANNING-COVERAGE-GATE.md`.

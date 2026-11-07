@@ -18,6 +18,7 @@ export async function createAndCompareStrategies(p:Page,output:string){
   await work.getByRole('button',{name:`Draft route ${i+1} as new alternative`}).click();await p.getByLabel('Plan name').fill(name);
   await expect(p.getByRole('button',{name:'Apply reviewed plan'})).toBeEnabled();await p.getByRole('button',{name:'Apply reviewed plan'}).click();await expect(p.getByText('Reviewed plan applied. Actual completion history is unchanged.')).toBeVisible();
  }
+ await work.getByRole('button',{name:'Review current draft coverage'}).click();await expect(work.getByRole('region',{name:'Planning coverage review'}).first()).toContainText('Provisional plan');
  await verifyStrategyComparison(p);
  const refs=work.getByRole('region',{name:'Decision and research references'});await refs.getByText('Look up decisions and technologies',{exact:true}).click();await expect(refs.locator('.strategy-reference-list article').first()).toBeVisible();
  await refs.getByLabel('Planning reference type').selectOption('technology');await refs.getByLabel('Search planning references').fill('basic_machine_tools');await expect(refs.getByRole('button',{name:'Basic Machine Tools',exact:true})).toBeVisible();

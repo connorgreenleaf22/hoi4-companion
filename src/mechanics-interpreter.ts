@@ -47,6 +47,7 @@ export function explainConditions(nodes:Node[],lookup:NameLookup=id=>id,c=defaul
   if(['state','is_core_of','is_fully_controlled_by','is_controlled_by'].includes(k)&&c.current.kind!=='state')return missingScope(n);
   if(['has_completed_focus','has_tech','has_government','has_idea','has_war','is_subject','has_war_with','is_in_faction_with','has_full_control_of_state','is_subject_of'].includes(k)&&c.current.kind!=='country')return missingScope(n);
   const amount=literal(v),comparison:Record<string,string>={'=':'at least','>':'more than','<':'less than','>=':'at least','<=':'at most'};
+  if(k==='has_stability'&&c.current.kind==='country'&&amount!==null&&amount>=0&&amount<=1&&comparison[n.op||'='])return condition(n,`${c.current.label} must have ${comparison[n.op||'=']} ${number(amount*100)}% stability.`);
   const amounts:Record<string,string>={political_power:'political power',command_power:'command power',num_of_civilian_factories_available_for_projects:'civilian factories available for projects'};
   if(amounts[k]&&amount!==null&&comparison[n.op||'='])return condition(n,`${c.current.label} needs ${comparison[n.op||'=']} ${number(amount)} ${amounts[k]}.`);
   if(n.op&&n.op!=='=')return unresolved(n);
@@ -73,13 +74,14 @@ export function explainModifiers(nodes:Node[],lookup:NameLookup=id=>id):Explanat
 function idea(n:Node,id:string,lookup:NameLookup,c:ExplainContext,duration=''):Explanation{
  const linked=c.ideas?.[id];if(linked?.ambiguous)return unresolved(n,'ambiguous-scope','Multiple idea definitions match; no modifier values are chosen.');
  const result=namedItem(n,`Add national spirit / idea ${name(id,lookup)} to ${c.current.label}${duration}.`,id,lookup);
- result.children=linked?explainModifiers(linked.modifiers||[],lookup):[unresolved(n,'unsupported','The idea’s modifiers are not resolved in this reference snapshot.')];return result;
+ result.children=linked?explainModifiers(linked.modifiers||[],lookup).map(x=>({...x,evidence:proof({...linked,line:x.line||linked.line})})):[unresolved(n,'unsupported','The idea’s modifiers are not resolved in this reference snapshot.')];return result;
 }
 export function explainEffects(nodes:Node[],lookup:NameLookup=id=>id,depth=0,c=defaultContext()):Explanation[]{
  if(depth>16)return [unresolved(nodes[0]||{key:'depth',value:'',line:0},'parser-limitation','Effect nesting exceeds the explanation limit.')];
  return nodes.flatMap((n,index):Explanation[]=>{
   if(c.budget&&--c.budget.remaining<0)return c.budget.remaining===-1?[unresolved(n,'parser-limitation','Explanation work limit reached; remaining effects are not interpreted.')]:[];
   const k=n.key.toLowerCase();if(n.op&&n.op!=='=')return [unresolved(n)];
+  if(k==='effect_tooltip'&&Array.isArray(n.value))return [item(n,'Game tooltip describes effects; those effects are not executed by this tooltip block. Inspect the advanced source for its display content.','explained','tooltip')];
   const script=c.scripts?.[n.key];if(script){
    if(script.ambiguous)return [unresolved(n,'ambiguous-scope','Multiple scripted-effect definitions match; no expansion chosen.')];
    if(script.limited)return [unresolved(n,'parser-limitation','Scripted-effect source exceeds the bounded reference context; expansion refused.')];
@@ -90,6 +92,12 @@ export function explainEffects(nodes:Node[],lookup:NameLookup=id=>id,depth=0,c=d
   }
   if(Array.isArray(n.value)){
    const ns=n.value,get=(key:string)=>scalar(ns,key);
+   if(k==='start_civil_war'&&c.current.kind==='country'&&get('ideology')&&!/[\[\]$?]/.test(get('ideology'))){
+    // Installed effect documentation confirms the consequence, not runtime force allocation or victory.
+    return [item(n,`Start a ${name(get('ideology'),lookup)} civil war in ${c.current.label}. Force allocation and outcome remain unresolved.`,'conditional','effect',[
+     unresolved(n,'unsupported','Civil-war strength, territorial allocation, leaders and subsequent outcomes are not evaluated; do not treat this path as a safe transition.')
+    ])];
+   }
    if(['if','else_if','else'].includes(k)){
     const previous=nodes[index-1]?.key.toLowerCase();if(k!=='if'&&!['if','else_if'].includes(previous))return [unresolved(n,'parser-limitation','Conditional branch has no matching predecessor.')];
     const limits=ns.filter(x=>x.key==='limit');if(limits.length>1||limits.some(x=>!Array.isArray(x.value)))return [unresolved(n,'parser-limitation','Conditional limit is malformed or ambiguous.')];
@@ -124,7 +132,7 @@ export function explainEffects(nodes:Node[],lookup:NameLookup=id=>id,depth=0,c=d
    return [unresolved(n)];
   }
   const v=n.value,amount=literal(v);
-  if(['custom_effect_tooltip','event_option_tooltip','effect_tooltip'].includes(k))return [item(n,`Game tooltip: ${name(v,lookup)}. Descriptive text only; not an independently interpreted outcome.`,'explained','tooltip')];
+  if(['custom_effect_tooltip','event_option_tooltip','effect_tooltip','show_ideas_tooltip','unlock_decision_tooltip'].includes(k))return [item(n,`Game tooltip: ${name(v,lookup)}. Descriptive text only; not an independently interpreted outcome or unlock.`,'explained','tooltip')];
   if(['set_country_flag','clr_country_flag','set_global_flag','clr_global_flag','set_state_flag','clr_state_flag'].includes(k))return [item(n,`${k.startsWith('set')?'Set':'Clear'} a ${k.includes('global')?'global':k.includes('state')?'state':'country'} script flag. This is bookkeeping, not a quantified reward.`,'explained','administrative')];
   if(k==='add_core_of'&&c.current.kind==='state'){const who=entity(v,lookup,c);return who?.kind==='country'?[item(n,`${c.current.label} becomes a core of ${who.label}.`)]:[missingScope(n)];}
   if(c.current.kind!=='country')return [missingScope(n)];
@@ -144,7 +152,7 @@ export function explanationPreview(items:Explanation[],limit=3):Explanation[]{
   if(e.children?.length){const conditions=e.children.filter(x=>x.role==='condition'||x.status==='state-unknown');const other=e.children.filter(x=>!conditions.includes(x));
    const label=conditions.length?{...e,text:e.text.replace(', only where all these conditions hold:', ' where:')+' '+conditions.map(x=>conditionSentence(x)).join(' ')}:e;
    // An idea award is itself meaningful even when its modifier definitions remain unsupported.
-   if(e.code==='add_timed_idea'||e.code==='add_ideas'||e.code==='add_dynamic_modifier'||e.code==='swap_ideas'){paths.push({...e,text:[...parents.map(p=>p.text),e.text,...other.filter(x=>!x.unknown&&!x.children).map(x=>x.text)].join(' '),status:parents.some(p=>p.status==='conditional')?'conditional':e.status,children:undefined});return;}
+   if(e.code==='add_timed_idea'||e.code==='add_ideas'||e.code==='add_dynamic_modifier'||e.code==='swap_ideas'||e.code==='start_civil_war'){paths.push({...e,text:[...parents.map(p=>p.text),e.text,...other.filter(x=>!x.unknown&&!x.children).map(x=>x.text)].join(' '),status:parents.some(p=>p.status==='conditional')?'conditional':e.status,children:undefined});return;}
    for(const child of other)visit(child,e.code==='hidden_effect'||e.text==='Source-defined scripted rewards:'?parents:[...parents,label]);
   }else if(!e.unknown&&e.role!=='cost'&&e.role!=='timing')paths.push({...e,text:[...parents.map(p=>p.text),e.text].join(' '),status:parents.some(p=>p.status==='conditional')?'conditional':e.status,children:undefined});};
  for(const e of items)visit(e,[]);return paths.slice(0,limit);

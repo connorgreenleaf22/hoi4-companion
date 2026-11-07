@@ -1,5 +1,15 @@
 # HOI4 bridge status
 
+## Risk-weighted planning gate — implemented; final Windows acceptance in progress (2026-11-07)
+
+- Authorized M7.3 groundwork stays on `feature/hoi4-ux-m71`; existing application/service/planner/index reused. Added provider-neutral proposal types, server review/policy, route/comparison/draft coverage UI and source-backed risk triage. No provider, complete AI strategy generation, native testing or gameplay controls.
+- Three real 1.19.4.2 paths (Portugal monarchist union, German Autarky, Oppose Hitler) have supported ordering but remain provisional. Rank/optimize requests reject; invalid/contradictory sequences need correction; drafts stay editable. Costs, requirements, exclusions, rewards, downstream events and source scope are reviewed separately. See `../application/PLANNING-COVERAGE-GATE.md` for ranked gaps, contract and limits.
+- Fixed empty root-prerequisite routing for Portugal; explain its low-stability civil-war risk with explicit unknown allocation/outcomes; tooltip declarations no longer imply execution; linked idea evidence retains correct source. No native behavior claims.
+- 31 focused tests and final 10-test overlapping coverage rerun pass; TypeScript/build and installed-source HTTP audit pass. Audit covers 20 submitted definitions and verifies 12 cited source files. Source UI check passed; screenshot review identified and corrected horizontal notice layout before packaging. Earlier test/harness failures and corrections are retained in the report.
+- Active work: final isolated M7.1 Windows package and actual packaged workflow/restart verification, then documentation checkpoint. M7.1 user acceptance and existing QA-LEDGER gates remain open. Exact next operation: commit validated implementation, create a new commit-identified package, check packaged risk-gate display and draft editing without HOI4.
+- Next development after this deliverable: bounded Portugal event-choice closure and civil-war/decision qualification; no confident/optimal strategy claims while critical mechanics or the whole-strategy model remain unresolved.
+
+
 ## M7.1 acceptance follow-up — validated candidate published; acceptance pending (2026-11-07)
 
 - **M7.1 is not accepted.** User finding reproduced on 1.19.4.2 at baseline 9105ae7: 70-day focus with zero specific outcomes. Main scripted helper directory was not indexed; direct idea swap was also unsupported. Earlier twelve-decision success did not establish focus-wide coverage.
