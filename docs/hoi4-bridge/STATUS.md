@@ -1,6 +1,6 @@
 # HOI4 bridge status
 
-## M7.1 acceptance follow-up — validated candidate; publication held (2026-11-07)
+## M7.1 acceptance follow-up — validated candidate published; acceptance pending (2026-11-07)
 
 - **M7.1 is not accepted.** User finding reproduced on 1.19.4.2 at baseline 9105ae7: 70-day focus with zero specific outcomes. Main scripted helper directory was not indexed; direct idea swap was also unsupported. Earlier twelve-decision success did not establish focus-wide coverage.
 - Implemented bounded same-index parameterless scripted-effect expansion, source evidence, dynamic-modifier removal, idea replacement/name overrides, core-state conditions and literal modifier-variable bindings. Preserve scope/guards and independently understood siblings; unsupported formulas/requirements stay explicit. No AI provider or native integration changes. See `../application/M71-AUTARKY-REGRESSION.md` for current coverage and limitations.
@@ -8,8 +8,8 @@
 - Roadmap adds **Milestone 7.3 — AI-Assisted Strategic Planning MVP**, with editable whole strategies and source validation. It is planned only; reuse seams documented without implementing the AI milestone.
 - Final runtime/artifact M7.1-7b797e04d7c6: all 76 extracted files equal; actual Autarky/reference/search/planning/history/shutdown/restart checks pass, cold window/index 29.3s and restart 6.1s. Evidence artifacts/qa/development-package-2026-11-07T06-35-01-756Z-3449b643/. Source unchanged during run; screenshots reviewed; owned processes absent. Exact ZIP/hash in follow-up report. Older M7.1 hash unchanged.
 - Earlier candidate f262049 first startup exceeded 60 seconds before service ready. Its instrumented bounded follow-up passed; initial delay cause remains unproven. Empty-container output false positives were fixed and tested before the final rebuild; before/after counts use the same corrected exclusion.
-- Publication blocker: GitHub metadata on 2026-11-07 reports `private: false` for the unchanged origin, unlike earlier private-repository instructions. No push or visibility change performed. Local source, package and validation are complete; publication requires clarification of the changed visibility.
-- Active implementation: none. Exact next step: user reviews the new isolated package and confirms whether pushing to the now-public repository is intended. Do not launch HOI4, start M7.3, repeat completed tests or change visibility automatically. Keep desktop acceptance and broad QA gates open.
+- Publication hold resolved: user explicitly authorized pushing M7.1 to the now-public repository. The three validated follow-up commits through 7434acd were pushed normally to feature/hoi4-ux-m71 and remote equality verified. Other remote branches and repository visibility were unchanged. The earlier hold in the investigation report records the pre-authorization checkpoint; it is no longer active.
+- Active implementation: none. Exact next step: user reviews the new isolated package, especially Autarky Achieved and the documented explanation limitations. Do not launch HOI4, start M7.3, repeat completed tests or change visibility automatically. Keep desktop acceptance and broad QA gates open.
 
 ## Milestone 7.1 — explanations and Windows acceptance delivered (2026-11-06)
 
