@@ -1,12 +1,13 @@
 # HOI4 bridge status
 
-## Risk-weighted planning gate — implemented; final Windows acceptance in progress (2026-11-07)
+## Risk-weighted planning gate — validated build delivered; user acceptance open (2026-11-07)
 
 - Authorized M7.3 groundwork stays on `feature/hoi4-ux-m71`; existing application/service/planner/index reused. Added provider-neutral proposal types, server review/policy, route/comparison/draft coverage UI and source-backed risk triage. No provider, complete AI strategy generation, native testing or gameplay controls.
 - Three real 1.19.4.2 paths (Portugal monarchist union, German Autarky, Oppose Hitler) have supported ordering but remain provisional. Rank/optimize requests reject; invalid/contradictory sequences need correction; drafts stay editable. Costs, requirements, exclusions, rewards, downstream events and source scope are reviewed separately. See `../application/PLANNING-COVERAGE-GATE.md` for ranked gaps, contract and limits.
 - Fixed empty root-prerequisite routing for Portugal; explain its low-stability civil-war risk with explicit unknown allocation/outcomes; tooltip declarations no longer imply execution; linked idea evidence retains correct source. No native behavior claims.
 - 31 focused tests and final 10-test overlapping coverage rerun pass; TypeScript/build and installed-source HTTP audit pass. Audit covers 20 submitted definitions and verifies 12 cited source files. Source UI check passed; screenshot review identified and corrected horizontal notice layout before packaging. Earlier test/harness failures and corrections are retained in the report.
-- Active work: final isolated M7.1 Windows package and actual packaged workflow/restart verification, then documentation checkpoint. M7.1 user acceptance and existing QA-LEDGER gates remain open. Exact next operation: commit validated implementation, create a new commit-identified package, check packaged risk-gate display and draft editing without HOI4.
+- Runtime/artifact M7.1-2fefb1911533: 76 extracted files match; three actual Electron startup/source/service/coverage/draft/search/history/restart checks pass (32.0s / 36.8s / 6.3s). Evidence `artifacts/qa/development-package-2026-11-07T07-10-21-305Z-7cbe46cc/`; screenshot reviewed, source unchanged, owned processes absent. Exact ZIP/hash in the report. Global CSS order required a specificity correction; intermediate 027a056 is superseded. Prior M7.1 ZIP hash unchanged.
+- Active implementation: none. Exact next step: user evaluates the new isolated package using START-HERE.md and the planning-coverage follow-up. M7.1 acceptance and existing QA-LEDGER gates remain open. This checkpoint is authorized for the existing public M7.1 branch only; no merge, release, visibility or native-game changes.
 - Next development after this deliverable: bounded Portugal event-choice closure and civil-war/decision qualification; no confident/optimal strategy claims while critical mechanics or the whole-strategy model remain unresolved.
 
 
