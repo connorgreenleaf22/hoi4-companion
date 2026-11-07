@@ -1,13 +1,14 @@
 # HOI4 bridge status
 
-## M7.2 — native gate blocked; offline repair and packaging (2026-11-07)
+## M7.2 — local checkpoint/build delivered; native gate blocked (2026-11-07)
 
 - Isolated `feature/hoi4-native-m72` from exact M7 `0620369`. M7.1 remains at `46b0206`; no planning/explanation merge or confidence promotion.
 - One authorized launch used, zero gameplay actions/UI inputs. Backup supervisor terminated the exact owned HOI4 process after about 7.3 seconds (`invalid-budget`), before a usable window/campaign. No new native-qualified fields, save/UI comparisons or reload observations. Timed native deadline behavior remains unverified. See MILESTONE-7.2.md and M72-FIELD-QUALIFICATION.md.
 - Native evidence `.bridge-local/native-6Ne9oj`; profile archived and original absence restored; game/supervisors stopped. M72 budget remains stopped at one launch; M6.5 overrun unchanged. Do not relaunch under this budget.
 - Offline two-process reproduction found EPERM replacing a heartbeat file; likely cause, original trigger exception unavailable. Append-only heartbeats, bounded shared-budget writes and retained trigger diagnostics implemented. Eight focused watchdog/heartbeat tests pass, including real concurrent processes and independent Windows stop/peer-loss/identity protection.
 - Ten save/platform/release-census tests and TypeScript pass. Save raw values, exact source paths, persisted freshness and unverified session binding reach UI/MCP; no fields promoted. Final-release 100% contract and source-obligation tracking added separately from M7.1 risk weighting. Installed candidate census: 4,101,663 conservative obligations, zero semantic reviews in this new ledger; not a count of distinct mechanics or existing explanation-engine coverage.
-- 118 existing ownership/history/planner checks and build also pass; final census CLI and package-release refusal pass. Active work: isolated M7.2 packaged acceptance and evidence checkpoint. Exact next task: commit validated source, package, then run historical/save/MCP/restart smoke test. No further HOI4 launch.
+- 137 distinct focused cases, TypeScript/build and expected final-release refusal passed. Isolated M7.2-5b3dce131821 ZIP delivered outside Git; all 76 extracted files match. Three actual packaged historical/save/MCP/shared-stop/restart checks passed on the first attempt; screenshot reviewed, original save unchanged, owned app processes closed. Evidence `artifacts/qa/platform-package-2026-11-07T07-46-43-039Z-52f0e672/`; exact artifact/hash/walkthrough in MILESTONE-7.2.md.
+- Active implementation: none after checkpoint; native acceptance remains incomplete. Exact next step: user reviews this isolated build; a separately reviewed native session must first qualify the repaired watchdog and one research transition with matching UI/save/log evidence. Preserve the exhausted M72 budget. Do not automatically launch again or merge M7.1.
 - GitHub connector verified origin visibility public on 2026-11-07. M7.2 explicitly forbids push unless private; commits stay local, no push attempted.
 
 ## Milestone 7 — read-only platform and Windows acceptance delivered (2026-11-06)

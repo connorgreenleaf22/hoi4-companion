@@ -43,7 +43,7 @@ M7.5 remains a separate read-only native feasibility review. Save inspection cou
 
 ## Validation and delivery
 
-Evidence and package results are recorded below after the final focused checks. Prior QA-LEDGER obligations and user desktop acceptance remain open. No merge, release or push is implied; M7.2 requires verified private origin before any push.
+Evidence and package results are recorded below. Prior QA-LEDGER obligations and user desktop acceptance remain open. No merge, release or push is implied; M7.2 requires verified private origin before any push.
 
 ### Offline evidence checkpoint
 
@@ -55,3 +55,23 @@ Evidence and package results are recorded below after the final focused checks. 
 - GitHub connector metadata on 2026-11-07 reports `visibility: public` for connorgreenleaf22/hoi4-companion. Per the explicit M7.2 instruction, all M7.2 commits stay local; no push attempted despite older M7.1 public-push authorization.
 
 The retained M6.5 save used for packaged compatibility is raw version 1.19.4.2, full save label `Operation Postern v1.19.4.2.2da5 (24df)`. The parser does not independently qualify checksum/DLC equivalence; source version matching is not evidence of the current campaign.
+
+### Windows acceptance delivered
+
+Runtime source commit **5b3dce131821**; later checkpoint changes are documentation only. Build:
+
+`C:/Users/conno/Documents/HOI4 Companion Development Builds/M7.2-5b3dce131821/M7.2-5b3dce131821-windows-x64.zip`
+
+ZIP SHA256 `f6c05073b6063903a56ac5c70ee517bf4d3dd9b44ac0f6fafef8903cfd827089`. All **76** extracted files match. Locally runnable verified executable:
+
+`C:/Users/conno/Documents/HOI4 Companion Development Builds/M7.2-5b3dce131821/acceptance-extracted/win-unpacked/HOI4 Companion M7.2-5b3dce131821.exe`
+
+Extract the whole ZIP into a new folder on the desktop and run its similarly named executable. Do not replace an older installation. Follow bundled START-HERE.md (source: ../application/MILESTONE-7.2-ACCEPTANCE.md). The bundled M65-HISTORICAL-OBSERVATIONS.jsonl provides eight historical snapshots without launching the game or creating JSON manually. App storage uses the commit-specific development profile; smoke tests used a separate temporary profile, leaving the normal build profile fresh. Optional external MCP needs compatible Node; the packaged app embeds its own Node service and resources. `npm run browser` uses the same service in a browser with development configuration/storage.
+
+All three actual packaged checks passed on the first M7.2 attempt: historical import/display, connection + retained save inspection + external 15-tool MCP/shared stop, and service shutdown/restart/persistence. The new raw/persisted/unverified provenance labels were asserted. Evidence: `artifacts/qa/platform-package-2026-11-07T07-46-43-039Z-52f0e672/`. Runtime/source archive hashes matched; sourceUnchangedDuringRun=true; save/diagnostics screenshot reviewed. Owned app processes and services were closed. No new HOI4 launch occurred during packaging. The retained M6.5 autosave SHA256 remains `eeb9eb34019e17fdc147970b740bca3639a7339ce09fef791a4cc541c31b8efa`.
+
+Across the distinct focused suites, **137 cases passed**, plus the three packaged checks, TypeScript/build, and expected final-release refusal. This is developer acceptance, not user desktop acceptance or a broad final-release QA pass. Reused the existing Node/SQLite/parser, telemetry mod, Electron packaging, MCP SDK and test infrastructure; no new community/native component was introduced.
+
+### Exact next step
+
+Stop M7.2 development at this local checkpoint. User can review the isolated build now. The next engineering session should review the retained watchdog I/O failure and passing repair tests, then approve a **new separately identified bounded native session** to qualify one research assignment with matching paused UI/save/log evidence and actual timed shutdown. Never reset/reuse the exhausted M72 budget or relabel its early termination as deadline qualification. Reload/world identity remains a subsequent target if that session's budget permits. M7.1 integration requires an explicit common-baseline decision; no planning confidence is changed by this checkpoint.
