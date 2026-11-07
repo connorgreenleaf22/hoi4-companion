@@ -1,5 +1,7 @@
 # Milestone 7.1 — explanation quality and reference browsing
 
+**Acceptance remains pending.** The 2026-11-07 Autarky Achieved finding exposed a focus-reward gap outside the original twelve-decision sample. See [follow-up investigation and current coverage](M71-AUTARKY-REGRESSION.md). The original build/results below remain historical evidence; they do not establish planner-wide explanation completeness.
+
 Branch `feature/hoi4-ux-m71` starts at validated M7 `0620369`. This milestone extends the existing importer, ordered parser, SQLite index, search and shared mechanics renderer. It does not change dependencies, schemas, native adapters, telemetry qualification, MCP permissions or gameplay execution. No HOI4 launch or gameplay input is used.
 
 ## Root causes and source evidence

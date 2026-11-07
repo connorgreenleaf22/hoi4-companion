@@ -1,5 +1,13 @@
 # HOI4 bridge status
 
+## M7.1 acceptance follow-up — Autarky Achieved (2026-11-07)
+
+- **M7.1 is not accepted.** User finding reproduced on 1.19.4.2 at baseline 9105ae7: 70-day focus with zero specific outcomes. Main scripted helper directory was not indexed; direct idea swap was also unsupported. Earlier twelve-decision success did not establish focus-wide coverage.
+- Implemented bounded same-index parameterless scripted-effect expansion, source evidence, dynamic-modifier removal, idea replacement/name overrides, core-state conditions and literal modifier-variable bindings. Preserve scope/guards and independently understood siblings; unsupported formulas/requirements stay explicit. No AI provider or native integration changes. See `../application/M71-AUTARKY-REGRESSION.md` for current coverage and limitations.
+- 31 focused tests, TypeScript/build, twelve-decision audit, new installed Autarky regression and rendered focus/reference journey pass. Evidence `.bridge-local/m71-autarky-*` and `artifacts/qa/explanation-browser-2026-11-07T06-23-11-945Z-788e2ee8/`; screenshots reviewed. No native HOI4 session. Ordinary focus output screening improves 5,844 to 6,638 of 10,341, but 9,559 still contain explicit unresolved portions; this is not complete semantic coverage.
+- Roadmap adds **Milestone 7.3 — AI-Assisted Strategic Planning MVP**, with editable whole strategies and source validation. It is planned only; reuse seams documented without implementing the AI milestone.
+- Exact next step: commit the validated follow-up and produce a new isolated M7.1 Windows package, test its actual Autarky/reference/history/planning/restart workflow, then record artifact/evidence and push only the existing M7.1 branch. Preserve old builds; keep desktop acceptance and broad QA gates open.
+
 ## Milestone 7.1 — explanations and Windows acceptance delivered (2026-11-06)
 
 - Isolated branch `feature/hoi4-ux-m71` from M7 `0620369`; no native launch/input, dependencies, telemetry qualification or MCP permission changes.

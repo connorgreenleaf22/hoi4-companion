@@ -1,5 +1,11 @@
 import {expect,type Page} from '@playwright/test';import path from 'node:path';
 export async function verifyReferenceExplanations(p:Page,output:string){
+ const work=p.getByRole('region',{name:'Strategy workbench'}),objective=work.getByRole('combobox',{name:'Find an objective'});
+ await objective.fill('GER_autarky_achieved');await expect(work.getByRole('option',{name:/Autarky Achieved/})).toBeVisible();await objective.press('ArrowDown');await objective.press('Enter');
+ const selected=work.getByRole('region',{name:'Selected objective'});await expect(selected).toContainText('70 nominal days');await expect(selected).toContainText('Wirtschaftswunder');await expect(selected.getByText(/No reliable outcome summary yet/)).toHaveCount(0);
+ const effects=selected.locator('details').filter({has:p.getByText('Effect details and conditions',{exact:true})});
+ await selected.getByText('Effect details and conditions',{exact:true}).click();await expect(effects).toContainText('factory output contribution for the acting country by +5 percentage points');await expect(effects).toContainText('Replacement idea values (not net changes)');await selected.scrollIntoViewIfNeeded();await selected.screenshot({path:path.join(output,'m71-autarky-explained.png')});await selected.getByText('Effect details and conditions',{exact:true}).click();
+ await selected.getByText('Linked reward sources and provenance',{exact:true}).click();await expect(selected).toContainText('GER_autarky_achieved_effects');await selected.getByText('Linked reward sources and provenance',{exact:true}).click();
  const refs=p.getByRole('region',{name:'Decision and research references'});if(await refs.getAttribute('open')===null)await refs.getByText('Look up decisions and technologies',{exact:true}).click();
  await refs.getByLabel('Planning reference type').selectOption('decision');await refs.getByLabel('Decision scope').selectOption('all');const search=refs.getByLabel('Search planning references');await search.fill('BEL_EU_');
  const cards=refs.locator('.strategy-reference-list article');await expect(cards.first()).toBeVisible();await expect(cards.first()).toContainText('annexes');await expect(cards.first()).toContainText('becomes a core');await expect(refs.getByText(/Needs review:/)).toHaveCount(0);

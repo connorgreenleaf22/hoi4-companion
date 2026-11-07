@@ -1,6 +1,7 @@
 import type {Entry,RequirementResult} from './types';
 import {entryMechanics,requirementExplanation,explanationPreview,type Explanation,type NameLookup,type ExplanationStatus} from './mechanics';
 import {conditionSentence} from './mechanics-interpreter';
+import {formatScript} from '../server/parser';
 import {conditionState,conditionText} from './planner/condition-state';
 export const explanationLabels:Record<ExplanationStatus,string>={explained:'Explained',conditional:'Conditional outcome','state-unknown':'Current condition unknown','missing-localization':'Name unavailable',unsupported:'Scripting not supported','ambiguous-scope':'Target unclear','parser-limitation':'Parser limitation'};
 export function ExplanationList({items}:{items:Explanation[]}){return <ul className="mechanics-list">{items.map((item,i)=><li key={i} className={item.unknown?'mechanics-unknown':''}>{item.text}{item.children?.length?<ExplanationList items={item.children}/>:null}</li>)}</ul>;}
@@ -17,6 +18,7 @@ export function MechanicsView({entry,lookup,compact=false}:{entry:Entry;lookup?:
   {!!value.requirements.length&&<><h4>What it requires</h4><p className="requirement-preview">{conditionSentence(value.requirements.find(e=>e.code==='allowed')||value.requirements[0])}</p><p className="muted">Source rules only — current campaign conditions are not checked. Full eligibility, visibility and target rules are in details.</p></>}
   {compact?<details className="compact-mechanics-details"><summary>More effects, requirements and limitations</summary><MechanicsDetails value={value} problems={problems} all={all}/></details>:<MechanicsDetails value={value} problems={problems} all={all}/>}
   {!compact&&<p className="muted">Installed source definitions; campaign modifiers and final outcomes are not simulated.</p>}
+  {(Object.keys(entry.data.mechanicScripts||{}).length>0||Object.keys(entry.data.mechanicDynamicModifiers||{}).length>0)&&<details><summary>Linked reward sources and provenance</summary>{Object.entries({...entry.data.mechanicScripts,...entry.data.mechanicDynamicModifiers}).map(([id,s]:[string,any])=><details key={id}><summary>{entry.data.mechanicNames?.[id]||id}</summary><p>{id} · {s.source}:{s.line} · HOI4 {s.version} · SHA256 {s.hash}</p>{s.ambiguous||s.recovered||s.limited?<p>Ambiguous, recovered or bounded-out source; expansion unavailable.</p>:<pre>{formatScript(s.nodes||[])}</pre>}</details>)}</details>}
  </section>;
 }
 

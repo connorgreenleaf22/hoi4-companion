@@ -5,7 +5,7 @@ export type {Explanation,NameLookup,ExplanationStatus} from './mechanics-interpr
 const named=(id:string,lookup:NameLookup)=>lookup(id)||id;
 export function entryMechanics(entry:Entry,lookup:NameLookup=id=>entry.data.mechanicNames?.[id]||id){
  const nodes=(entry.data.nodes||[]) as Node[],focus=['focus','shared_focus','joint_focus'].includes(entry.kind),decision=entry.kind==='decision'||entry.data.subtype==='decision';
- const ctx:ExplainContext={...defaultContext(),ideas:entry.data.mechanicIdeas};
+ const ctx:ExplainContext={...defaultContext(),ideas:entry.data.mechanicIdeas,scripts:entry.data.mechanicScripts,dynamicModifiers:entry.data.mechanicDynamicModifiers};
  if(nodes.some(n=>n.key==='state_target'))ctx.from={kind:'state',label:'the selected state (campaign target unknown)'};
  else if(nodes.some(n=>['targets','target_array','target_root_trigger'].includes(n.key)))ctx.from={kind:'country',label:'the selected country (campaign target unknown)'};
  const summary:Explanation[]=[],requirements:Explanation[]=[];

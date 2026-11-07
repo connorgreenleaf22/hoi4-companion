@@ -6,6 +6,7 @@ import type { Node, Entry, Meta, Coverage, CoverageItem, DLCState } from '../src
 import type { Store } from './store';
 import {mechanics} from './content';
 import {buildRelationships,buildCategoryEntries} from './knowledge';
+import {attachScriptContext} from './mechanic-context';
 import {discoverRecords,reconcileRecords} from './coverage';
 import {sourceNotes,applySourceNotes} from './source-notes';
 import guideContent from './discovery-content.json';
@@ -26,8 +27,8 @@ const safeJSON=(p:string)=>{try{return JSON.parse(fs.readFileSync(p,'utf8'));}ca
 const wrapped=(nodes:Node[],key:string):Node[]=>children(nodes,key).flatMap(n=>Array.isArray(n.value)?n.value:[]);
 const blocks=(nodes:Node[])=>nodes.filter((n):n is Node&{value:Node[]}=>Array.isArray(n.value)&&!n.key.startsWith('@'));
 const conditionKeys=new Set(['limit','allowed','available','allow','visible','trigger','enable','potential','allow_branch','bypass','cancel','target_trigger']);
-export const supportedRoots=['common/country_tags','common/national_focus','common/continuous_focus','common/technologies','common/ideas','common/idea_tags','common/doctrines','common/units','common/terrain','common/decisions','common/characters','common/country_leader','common/unit_leader','common/buildings','common/military_industrial_organization','common/special_projects','common/combat_tactics.txt','history/countries','events','dlc_metadata/dlc_info','dlc','integrated_dlc','localisation/english','common/defines','documentation'];
-const RULES='knowledge-foundation-v5.6.2-mechanic-context';
+export const supportedRoots=['common/scripted_effects','common/dynamic_modifiers','common/country_tags','common/national_focus','common/continuous_focus','common/technologies','common/ideas','common/idea_tags','common/doctrines','common/units','common/terrain','common/decisions','common/characters','common/country_leader','common/unit_leader','common/buildings','common/military_industrial_organization','common/special_projects','common/combat_tactics.txt','history/countries','events','dlc_metadata/dlc_info','dlc','integrated_dlc','localisation/english','common/defines','documentation'];
+const RULES='knowledge-foundation-v5.7-scripted-rewards';
 
 /** Publish a whole coherent reference snapshot or retain the preceding snapshot on failure. */
 export function indexGame(store:Store,root:string,onProgress?:(source:string,completed:number,total:number)=>void):Meta{
@@ -115,7 +116,8 @@ export function indexGame(store:Store,root:string,onProgress?:(source:string,com
       }else{
         try{nodes=parseScript(file.text,{recover:true,warnings:parseWarnings});}catch(e){throw new Error(`${source}: fatal parse failure; previous index retained. ${String(e)}`);}
         warnings.push(...parseWarnings.map(w=>`${source}: ${w}`));constants=new Map(nodes.filter(n=>n.key.startsWith('@')&&typeof n.value==='string').map(n=>[n.key,n.value as string]));
-        if(source.includes('/country_tags/')){for(const n of nodes)if(typeof n.value==='string'&&/^[A-Z0-9]{3}$/.test(n.key))add('country',n.key,[n],n.line,{tag:n.key,aliases:[path.basename(n.value,'.txt'),...(countryAliases.get(n.key)||[]).map(a=>a.name)],nameAliases:countryAliases.get(n.key)||[]},n.key,localization.has(n.key)?loc(n.key):path.basename(n.value,'.txt'));else omit(n,'Not a country tag definition.');}
+        if(source.includes('/scripted_effects/')||source.includes('/dynamic_modifiers/')){for(const n of blocks(nodes))structured(n,source.includes('/scripted_effects/')?'scripted_effect':'dynamic_modifier');for(const n of nodes)if(!Array.isArray(n.value))omit(n,'Script metadata/local constant retained in source.');}
+        else if(source.includes('/country_tags/')){for(const n of nodes)if(typeof n.value==='string'&&/^[A-Z0-9]{3}$/.test(n.key))add('country',n.key,[n],n.line,{tag:n.key,aliases:[path.basename(n.value,'.txt'),...(countryAliases.get(n.key)||[]).map(a=>a.name)],nameAliases:countryAliases.get(n.key)||[]},n.key,localization.has(n.key)?loc(n.key):path.basename(n.value,'.txt'));else omit(n,'Not a country tag definition.');}
         else if(source.startsWith('history/countries/')){const tag=path.basename(source).slice(0,3);add('country_history',tag,nodes,1,{tag,countries:[tag],semanticScope:tag,sourceScope:[`history:${tag}`]},tag,`${loc(tag)} starting history`);}
         else if(source.includes('/national_focus/')||source.includes('/continuous_focus/')){
           for(const tree of nodes){
@@ -195,12 +197,13 @@ export function indexGame(store:Store,root:string,onProgress?:(source:string,com
     const categories=new Map(allEntries.filter(e=>e.kind==='idea_category').map(e=>[e.id,e]));
     for(const idea of allEntries.filter(e=>e.kind==='idea')){const category=categories.get(idea.data.group);if(category){idea.data.ideaCategory={id:category.id,type:category.data.type,declaredBaseCost:category.data.stats?.cost,source:category.source,line:category.line,hash:category.hash};store.db.prepare('UPDATE entries SET payload=? WHERE uid=?').run(JSON.stringify(idea),idea.uid);}}
     // Attach bounded, uniquely resolved idea modifiers and event names from this same reference snapshot.
+    attachScriptContext(allEntries,localization);
     const related=new Map<string,Entry[]>();for(const e of allEntries)if(['idea','event','decision_category'].includes(e.kind)){const key=e.kind+':'+e.id;related.set(key,[...(related.get(key)||[]),e]);}
     for(const e of allEntries)if(['focus','shared_focus','joint_focus','decision','formable','technology'].includes(e.kind)){
-      const ids=[...new Set(['idea','add_ideas','remove_ideas'].flatMap(key=>collect(e.data.nodes||[],key)))];
-      const links:Record<string,any>={};for(const id of ids.slice(0,64)){const found=related.get('idea:'+id)||[];if(found.length===1){const idea=found[0];links[id]={title:idea.title,modifiers:block(idea.data.nodes||[],'modifier'),source:idea.source,line:idea.line,hash:idea.hash,version:idea.version};}else if(found.length>1)links[id]={ambiguous:true};}
+      const ids=[...new Set(['idea','add_ideas','remove_ideas','add_idea','remove_idea'].flatMap(key=>collect([...(e.data.nodes||[]),...Object.values(e.data.mechanicScripts||{}).flatMap((s:any)=>s.nodes||[])],key)))];
+      const links:Record<string,any>={};for(const id of ids.slice(0,64)){const found=related.get('idea:'+id)||[];if(found.length===1){const idea=found[0];const titleKey=scalar(idea.data.nodes||[],'name',idea.id);const ideaTitle=localization.has(titleKey)?loc(titleKey):idea.title;e.data.mechanicNames[id]=ideaTitle;e.data.mechanicNameEvidence[id]=localization.evidence(titleKey);links[id]={title:ideaTitle,modifiers:block(idea.data.nodes||[],'modifier'),source:idea.source,line:idea.line,hash:idea.hash,version:idea.version};}else if(found.length>1)links[id]={ambiguous:true};}
       e.data.mechanicIdeas=links;
-      for(const id of collect(e.data.nodes||[],'id')){const events=related.get('event:'+id)||[];if(events.length===1)e.data.mechanicNames[id]=events[0].title;}
+      for(const id of collect([...(e.data.nodes||[]),...Object.values(e.data.mechanicScripts||{}).flatMap((s:any)=>s.nodes||[])],'id')){const events=related.get('event:'+id)||[];if(events.length===1)e.data.mechanicNames[id]=events[0].title;}
       const category=related.get('decision_category:'+e.data.category)||[];if(category.length===1){const c=category[0];e.data.categoryTitle=c.title;e.data.categoryConditions=(c.data.nodes||[]).filter((n:Node)=>['allowed','visible','available'].includes(n.key));e.data.categoryEvidence={source:c.source,line:c.line,hash:c.hash,version:c.version};}
       store.db.prepare('UPDATE entries SET payload=? WHERE uid=?').run(JSON.stringify(e),e.uid);
     }
