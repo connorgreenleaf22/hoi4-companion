@@ -9,6 +9,9 @@ import {createAndCompareStrategies,verifyStrategyComparison,verifyUniversalSearc
 async function main(){
  const executable=path.resolve(process.argv[2]||'');if(!fs.existsSync(executable)||!executable.endsWith('.exe'))throw Error('Supply the newly packaged development executable.');
  const run=createQaRun('development-package','compiled-runtime');
+ const startupTimeout=Number(process.env.HOI4_PACKAGE_STARTUP_TIMEOUT_MS||60000);if(!Number.isInteger(startupTimeout)||startupTimeout<60000||startupTimeout>120000)throw Error('Startup diagnostic timeout must be 60000–120000 ms.');
+ const startupProgress:{at:string;files:{name:string;bytes:number;modified:string}[]}[]=[];
+ const startupTimer=setInterval(()=>{startupProgress.push({at:new Date().toISOString(),files:['companion.sqlite','companion.sqlite-wal'].flatMap(name=>{try{const s=fs.statSync(path.join(run.dataDirectory,name));return [{name,bytes:s.size,modified:s.mtime.toISOString()}];}catch{return [];}})});run.write('startup-progress.json',startupProgress);},5000);
  const env={...process.env,HOI4_DATA_DIR:run.dataDirectory};delete env.ELECTRON_RUN_AS_NODE;delete env.NODE_PATH;delete env.NODE_OPTIONS;
  if(process.env.HOI4_STRATEGY_SMOKE==='1')env.PATH=`${process.env.SystemRoot}\\System32;${process.env.SystemRoot}`;
  let app:Awaited<ReturnType<typeof _electron.launch>>|undefined;
@@ -22,7 +25,7 @@ async function main(){
   }
   app=await _electron.launch({executablePath:executable,cwd:path.dirname(executable),env,timeout:60000});run.ownedProcesses.push({pid:app.process().pid!,kind:'Owned unpacked Electron development build'});
   app.process().stdout?.on('data',bytes=>fs.appendFileSync(path.join(run.output,'electron-stdout.txt'),bytes));app.process().stderr?.on('data',bytes=>fs.appendFileSync(path.join(run.output,'electron-stderr.txt'),bytes));
-  let p!:Awaited<ReturnType<typeof app.firstWindow>>;await run.check('packaged first window appears',['M6.1-STARTUP'],async()=>{p=await app!.firstWindow({timeout:60000});});const errors:string[]=[];p.on('pageerror',e=>errors.push(e.message));
+  let p!:Awaited<ReturnType<typeof app.firstWindow>>;await run.check('packaged first window appears',['M6.1-STARTUP'],async()=>{p=await app!.firstWindow({timeout:startupTimeout});});clearInterval(startupTimer);const errors:string[]=[];p.on('pageerror',e=>errors.push(e.message));
   let recordingId='';
   await run.check('packaged renderer, embedded API and installed references load',['M5-PACKAGE'],async()=>{
    await expect(p.getByRole('heading',{name:'Command center',exact:true})).toBeVisible({timeout:60000});
@@ -54,6 +57,6 @@ async function main(){
   });
   if(errors.length)throw Error(errors.join('\n'));const diagnostics=path.join(run.dataDirectory,'diagnostics');if(fs.existsSync(diagnostics))for(const name of fs.readdirSync(diagnostics))fs.copyFileSync(path.join(diagnostics,name),path.join(run.output,name));
   run.finish({executable,executableSHA256:fileHash(executable),nativeGameLaunched:false,packagedElectronLaunched:true});console.log(run.output);
- }catch(error){const page=app?.windows()[0];if(page){await page.screenshot({path:path.join(run.output,'failure.png')}).catch(()=>{});await page.locator('body').ariaSnapshot().then(value=>fs.writeFileSync(path.join(run.output,'failure-aria.txt'),value)).catch(()=>{});}throw error;}finally{try{await app?.close();}finally{retainDiagnostics();run.finish();run.cleanup();}}
+ }catch(error){const page=app?.windows()[0];if(page){await page.screenshot({path:path.join(run.output,'failure.png')}).catch(()=>{});await page.locator('body').ariaSnapshot().then(value=>fs.writeFileSync(path.join(run.output,'failure-aria.txt'),value)).catch(()=>{});}throw error;}finally{clearInterval(startupTimer);try{await app?.close();}finally{retainDiagnostics();run.finish();run.cleanup();}}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

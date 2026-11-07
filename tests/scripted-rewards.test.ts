@@ -5,6 +5,10 @@ import {defaultContext,explainEffects,type ScriptDefinition} from '../src/mechan
 import {openStore} from '../server/store';import {indexGame} from '../server/importer';
 const flat=(xs:any[]):any[]=>xs.flatMap(x=>[x,...flat(x.children||[])]);
 const definition=(script:string):ScriptDefinition=>({nodes:parseScript(script),source:'synthetic/helper.txt',line:1,hash:'synthetic',version:'fixture'});
+test('empty helpers and scope wrappers never count as specific outcomes',()=>{
+ const value=explainEffects(parseScript('empty=yes ITA={} hidden_effect={} if={} add_ideas=known'),x=>x,0,{...defaultContext(),scripts:{empty:definition('')},ideas:{known:{modifiers:[]}}});
+ const preview=explanationPreview(value,20);assert.equal(preview.length,1);assert.match(preview[0].text,/Add national spirit/);
+});
 test('scripted rewards preserve caller scope, guards, provenance and understood siblings beside unsupported effects',()=>{
  const context={...defaultContext(),scripts:{helper:definition('if={limit={has_war=yes} add_stability=0.05} unsupported_command=yes 9={add_core_of=ROOT}')}};
  const value=explainEffects(parseScript('ITA={helper=yes}'),x=>({ITA:'Italy',STATE_9:'Bohemia'}[x]||x),0,context);

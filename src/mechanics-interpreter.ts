@@ -13,7 +13,7 @@ export const number=(n:number)=>new Intl.NumberFormat('en-US',{maximumFractionDi
 const scalar=(ns:Node[],key:string)=>{const found=ns.filter(n=>n.key===key);return found.length===1&&typeof found[0].value==='string'?found[0].value:'';};
 const valid=(ns:Node[],keys:string[])=>ns.every(n=>keys.includes(n.key))&&new Set(ns.map(n=>n.key)).size===ns.length;
 export const unresolved=(n:Node,status:ExplanationStatus='unsupported',text='This script is not yet interpreted. No outcome is assumed.'):Explanation=>({text,status,unknown:true,code:n.key,line:n.line});
-const item=(n:Node,text:string,status:ExplanationStatus='explained',role:Explanation['role']='effect',children?:Explanation[]):Explanation=>({text,status,role,code:n.key,line:n.line,...(children?.length?{children}:{})});
+const item=(n:Node,text:string,status:ExplanationStatus='explained',role:Explanation['role']='effect',children?:Explanation[]):Explanation=>({text,status,role,code:n.key,line:n.line,...(children?{children}:{})});
 function entity(id:string,lookup:NameLookup,context:ExplainContext):Scope|undefined{
  if(id==='ROOT')return context.root;if(id==='THIS')return context.current;if(id==='PREV')return context.previous;if(id==='FROM')return context.from;
  if(/^[A-Z0-9]{3}$/.test(id)&&!/^\d+$/.test(id))return {label:lookup(id)||id,kind:'country'};
@@ -140,6 +140,7 @@ export function explainEffects(nodes:Node[],lookup:NameLookup=id=>id,depth=0,c=d
 export function explanationPreview(items:Explanation[],limit=3):Explanation[]{
  const paths:Explanation[]=[];
  const visit=(e:Explanation,parents:Explanation[])=>{if(e.role==='administrative'||e.role==='tooltip'||e.role==='condition')return;
+  if(e.children?.length===0&&!['add_ideas','add_timed_idea','swap_ideas','add_dynamic_modifier'].includes(e.code||''))return;
   if(e.children?.length){const conditions=e.children.filter(x=>x.role==='condition'||x.status==='state-unknown');const other=e.children.filter(x=>!conditions.includes(x));
    const label=conditions.length?{...e,text:e.text.replace(', only where all these conditions hold:', ' where:')+' '+conditions.map(x=>conditionSentence(x)).join(' ')}:e;
    // An idea award is itself meaningful even when its modifier definitions remain unsupported.

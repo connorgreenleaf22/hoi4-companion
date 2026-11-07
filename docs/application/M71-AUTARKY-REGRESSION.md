@@ -33,23 +33,27 @@ An automated scan over the **same installed definitions** before and after the f
 
 | Definition kind | Total | Specific outcome before → after | At least one unresolved part after |
 |---|---:|---:|---:|
-| Ordinary focuses | 10,341 | 5,844 → 6,638 | 9,559 |
+| Ordinary focuses | 10,341 | 5,839 → 6,635 | 9,559 |
 | Shared focuses | 335 | 183 → 188 | 308 |
-| Joint focuses | 280 | 124 → 124 | 215 |
-| Decisions | 3,931 | 2,877 → 2,989 | 3,794 |
-| Formables / related decisions | 255 | 231 → 233 | 247 |
+| Joint focuses | 280 | 26 → 26 | 215 |
+| Decisions | 3,931 | 2,694 → 2,860 | 3,794 |
+| Formables / related decisions | 255 | 223 → 226 | 247 |
 | Technologies | 552 | 241 → 242 | 536 |
 
-This is **output screening, not independently verified semantic coverage**. A recognized outcome can coexist with many unknowns; absence of a diagnostic does not prove every source construct was modeled. Most ordinary focuses still have at least one explicit gap, and 3,703 ordinary focuses still have no specific outcome. Broader counts must not be presented as native parity or success rates. Relevant evidence: `.bridge-local/m71-engine-before-census.json`, `m71-engine-after-census.json`, `m71-autarky-before.json`, `m71-autarky-after.json`; exact dependency hashes are retained in the latter.
+An initial scan counted empty effect containers as outcomes, particularly empty joint-focus rewards. A fifth regression now excludes empty helpers/scopes/phases while retaining an actual idea award with no modifiers. The table recomputes both sides with that same exclusion using the original 9105ae7 semantic rules for the baseline; older raw scan logs are retained, not used as the corrected metric. Definitions with no intended direct reward can legitimately have no specific output.
+
+This is **output screening, not independently verified semantic coverage**. A recognized outcome can coexist with many unknowns; absence of a diagnostic does not prove every source construct was modeled. Most ordinary focuses still have at least one explicit gap, and 3,706 ordinary focuses still have no specific outcome. Broader counts must not be presented as native parity or success rates. Relevant evidence: `.bridge-local/m71-engine-before-normalized-census.json`, `m71-engine-after-census.json`, `m71-autarky-before.json`, `m71-autarky-after.json`; exact dependency hashes are retained in the latter.
 
 Remaining Autarky gaps: resource-collection predicates; variable comparisons and nonliteral penalty corrections; unmapped intelligence-contribution variables; trade-law export, lend-lease tension and faction trade-opinion modifier semantics. General limits include scripted triggers, parameterized helpers, random rewards/unit templates, runtime names, downstream event consequences, effective mod merging, source/campaign mismatches and total economic simulation. Core-state control requirements have known meaning but unknown current truth.
 
 ## Validation and acceptance checkpoint
 
-31 focused tests pass (scripted rewards, existing explanations, importer, knowledge store, strategy and usability); four new cases cover partial siblings, source scopes/evidence, bounded rejection, variable bindings, name overrides and dependency invalidation. TypeScript/build pass. Original twelve-decision audit passes; the new installed Autarky regression verifies its important interpreted effects and required unresolved parts. The expanded source UI journey passes and screenshots were reviewed: `artifacts/qa/explanation-browser-2026-11-07T06-23-11-945Z-788e2ee8/`.
+32 distinct focused tests pass (scripted rewards, existing explanations, importer, knowledge store, strategy and usability); five new cases cover partial siblings, source scopes/evidence, bounded rejection, variable bindings, name overrides dependency invalidation and empty-container false positives. TypeScript/build pass. Original twelve-decision audit passes; the new installed Autarky regression verifies its important interpreted effects and required unresolved parts. The expanded source UI journey passes and screenshots were reviewed: `artifacts/qa/explanation-browser-2026-11-07T06-23-11-945Z-788e2ee8/`.
 
 Reproduce with `node --import tsx --test tests/scripted-rewards.test.ts`, `node --import tsx scripts/explanation-focus-audit.ts`, and the existing `scripts/explanation-ui.ts` / packaged explanation journey. Installed audits use the isolated `.bridge-local/m71-audit-db`; a changed focus hash/version requires a new matched baseline. Raw installed definitions and generated databases remain ignored.
 
-An updated, commit-identified Windows build and its packaged verification will be recorded below after completion. Older M7.1 and M7 builds remain intact. No HOI4 launch, gameplay command, mod/save/playset edit or AI implementation is needed.
+The first candidate package (`f2620498fef4`) exceeded the 60-second first-window limit while waiting for service startup. Its diagnostics contain no renderer crash. One instrumented attempt with a bounded 120-second limit then passed startup, installed-source Autarky/reference/planning/history and restart, with index-file progress captured. This does not establish the cause of the first delay; startup reliability remains an open issue. Evidence: `artifacts/qa/development-package-2026-11-07T06-27-40-459Z-1068af15/` (failed) and `development-package-2026-11-07T06-29-47-707Z-2965e278/` (passed). A subsequent empty-container correction requires a final rebuilt package; its identity and verification will be recorded below. Older M7.1 and M7 builds remain intact. No HOI4 launch, gameplay command, mod/save/playset edit or AI implementation is needed.
 
 The roadmap now defines **Milestone 7.3 — AI-Assisted Strategic Planning MVP** for complete editable objective plans, including monarchist Portugal. It reuses existing focus plans, path/evaluation/comparison APIs, revision-checked previews and structured explanations; a future proposal envelope holds decisions/research/preparation/dependencies. M7.3 is documented, not implemented. Explanation gaps remain visible to that future planner rather than being replaced with AI assertions.
+
+Publication checkpoint: the unchanged GitHub origin now reports `private: false` (2026-11-07 06:26:55 UTC), unlike the earlier private-repository instruction. New commits remain local pending clarification; visibility has not been changed. Reachable-history audit at f262049 found no secret-pattern, suspicious-path or large-blob findings, only existing icon binaries.
