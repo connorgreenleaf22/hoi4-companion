@@ -5,6 +5,7 @@ import {digest,replaySnapshots} from '../server/bridge/telemetry';
 import {GameBridge} from '../server/bridge/service';import {openStore} from '../server/store';
 import type {OwnedManifest} from '../server/bridge/owned-session';
 import {telemetryManifest} from '../src/telemetry-manifest';
+import {writeNativeJson} from '../server/bridge/native-files';
 /** Bounded READ-ONLY milestone lifecycle. No input/OCR/control adapter is registered or invoked. */
 async function main(){
  const [command,argument,label]=process.argv.slice(2),run=path.resolve(argument||''),base=path.resolve('.bridge-local');
@@ -14,7 +15,7 @@ async function main(){
  const budgetFile=path.resolve(plan.budgetFile||path.join(base,'m65-native-budget.json')),manifestFile=path.join(run,'observation-session.json');
  if(!budgetFile.startsWith(base+path.sep)||!['m65-native-budget.json','m7-native-budget.json','m72-native-budget.json'].includes(path.basename(budgetFile)))throw Error('Invalid milestone budget path');
  const budget=fs.existsSync(budgetFile)?JSON.parse(fs.readFileSync(budgetFile,'utf8')):{launches:0,actions:[],startedAt:null,stopped:false};
- const saveBudget=()=>fs.writeFileSync(budgetFile,JSON.stringify(budget,null,2));
+ const saveBudget=()=>writeNativeJson(budgetFile,budget);
  const withinBudget=()=>{if(typeof budget.stopped!=='boolean'||!Number.isInteger(budget.launches)||budget.launches<0||!Array.isArray(budget.actions)||budget.startedAt&&!Number.isFinite(Date.parse(budget.startedAt)))throw Error('Invalid native budget');if(budget.stopped||budget.startedAt&&Date.now()-Date.parse(budget.startedAt)>plan.limits.minutes*60000)throw Error('Native milestone budget stopped or timed out');};
  if(command==='launch'){
   withinBudget();verifyProfileLease(lease);if(fs.existsSync(manifestFile)||budget.launches>=plan.limits.launches)throw Error('Native launch limit exhausted');

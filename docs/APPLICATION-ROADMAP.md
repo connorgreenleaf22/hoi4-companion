@@ -44,3 +44,11 @@ These are user requirements for future design, not authorization to build every 
 Near-term: review M6.1 on the user's desktop and address concrete friction before a new renderer or recommendation engine. Telemetry, AI and native-control dependencies remain separate tracks with their existing verification gates.
 
 M7.5 is a separate observation-only feasibility track: see hoi4-bridge/M7.5-FEASIBILITY.md. No reviewed candidate currently clears exact Windows executable, licensing and independent field qualification gates. Preserve the M7 provider seam and shared gateway instead of creating another control system.
+
+## M7.2 / M7.3 coordination and final release
+
+M7.2 stays on the isolated M7 baseline. Its first native session ended before a campaign; the repaired observation supervisor needs a separately reviewed native session. Prioritize one independently matched research transition and save/reload identity before broad state expansion. No new save field is native-qualified. M7.5 native-access feasibility remains separate; this milestone used no memory reads, injection or hooks.
+
+M7.1's explanation/UX improvements and provider-independent risk-weighted strategy coverage remain on their own branch. M7.3 — AI-Assisted Strategic Planning MVP — will generate complete editable objective plans (beginning with monarchist Portugal and representative Germany paths), with focuses, decisions, research, economic/military preparation, dependencies, risks and source-backed explanations. Integrate M7.1's existing coverage types/gate rather than recreating them here. Critical unresolved mechanics block confident ranking/optimization; provisional plans remain clearly labeled. Independently qualified observations may eventually support reviewed condition resolution, never automatic confidence promotion or replacement of manual assertions.
+
+Final-release contract: application/EXPLANATION-COVERAGE-CONTRACT.md. Require 100% semantic explanation of the exact approved content/configuration denominator, source-backed regression evidence and zero unresolved mechanics. The new conservative census tracks obligations; diagnostic labels do not close them. No configuration has yet passed this final gate. Development packaging stays available; `npm run package` now enforces the coverage precondition in addition to existing release gates.

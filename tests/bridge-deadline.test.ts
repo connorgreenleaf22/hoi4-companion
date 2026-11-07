@@ -9,7 +9,7 @@ test('watchdog deadlines survive wall-clock rollback and stop/corrupt-state requ
  for(const scenario of ['deadline','rollback','stop','corrupt','changed']){
   let wall=1000,mono=0,kills=0,result:any;
   await superviseOwnedTest(identity,2000,{now:()=>wall,monotonic:()=>mono,sleep:async ms=>{mono+=ms;wall+=scenario==='rollback'?-ms:ms;},stopped:()=>{if(scenario==='corrupt')throw Error('Bad JSON');return scenario==='stop';},terminate:expected=>{assert.deepEqual(expected,identity);if(scenario==='changed')throw Error('Ownership changed');kills++;},finish:value=>result=value});
-  assert.ok(mono<=1000);assert.equal(kills,scenario==='changed'?0:1);assert.equal(result.outcome,scenario==='changed'?'refused':'terminated');assert.equal(result.reason,scenario==='stop'?'emergency-stop':scenario==='corrupt'?'invalid-budget':'deadline');
+  assert.ok(mono<=1000);assert.equal(kills,scenario==='changed'?0:1);assert.equal(result.outcome,scenario==='changed'?'refused':'terminated');assert.equal(result.reason,scenario==='stop'?'emergency-stop':scenario==='corrupt'?'invalid-budget':'deadline');if(scenario==='corrupt')assert.match(result.triggerDetail,/Bad JSON/);
  }
 });
 test('separate watchdog process enforces a deadline without further parent input', {skip:process.platform!=='win32',timeout:20000},async()=>{

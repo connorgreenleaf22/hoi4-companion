@@ -5,6 +5,7 @@ import {terminateOwnedProcess} from '../server/bridge/process-identity';
 import type {ProcessIdentity} from '../server/bridge/owned-session';
 import {superviseOwnedTest,peerHealth} from '../server/bridge/deadline';
 import {verifyProfileLease} from '../server/bridge/native-profile';
+import {readHeartbeat,writeHeartbeat,writeNativeJson} from '../server/bridge/native-files';
 
 /** Separate process: a stalled agent must not leave its disposable game running past budget. */
 export function expireOwnedTest(expected:ProcessIdentity,probe:(pid:number)=>ProcessIdentity,terminate:(pid:number)=>void){
@@ -31,13 +32,13 @@ async function main(){
  if(!Number.isFinite(deadline))throw Error('Missing deadline');
  fs.writeFileSync(path.join(run,name+'-ready.json'),JSON.stringify({pid:process.pid,deadline,sessionId:manifest.sessionId}));
  let sequence=0;
- const healthy=m72?peerHealth(()=>{const peer=path.join(run,(backup?'watchdog':'backup')+'-heartbeat.json');return fs.existsSync(peer)?JSON.parse(fs.readFileSync(peer,'utf8')):null;},manifest.sessionId,()=>performance.now()):undefined;
+ const healthy=m72?peerHealth(()=>readHeartbeat(path.join(run,(backup?'watchdog':'backup')+'-heartbeat.jsonl')),manifest.sessionId,()=>performance.now()):undefined;
  await superviseOwnedTest(manifest.identity,deadline,{
   now:Date.now,monotonic:()=>performance.now(),sleep:ms=>new Promise(resolve=>setTimeout(resolve,ms)),
   healthy,
-  stopped:()=>{if(m72){const file=path.join(run,name+'-heartbeat.json');fs.writeFileSync(file+'.tmp',JSON.stringify({sessionId:manifest.sessionId,sequence:sequence++}));fs.renameSync(file+'.tmp',file);}const current=JSON.parse(fs.readFileSync(budgetFile,'utf8'));if(current.startedAt!==initial.startedAt||typeof current.stopped!=='boolean')throw Error('Budget changed');return current.stopped;},
+  stopped:()=>{if(m72)writeHeartbeat(path.join(run,name+'-heartbeat.jsonl'),manifest.sessionId,sequence++);const current=JSON.parse(fs.readFileSync(budgetFile,'utf8'));if(current.startedAt!==initial.startedAt||typeof current.stopped!=='boolean')throw Error('Budget changed');return current.stopped;},
   terminate:expected=>{if(path.basename(expected.executable_path).toLowerCase()!=='hoi4.exe')throw Error('Expected owned game executable');terminateOwnedProcess(expected);},
-  finish:result=>{fs.writeFileSync(path.join(run,backup?'backup-deadline-receipt.json':'deadline-receipt.json'),JSON.stringify({at:new Date().toISOString(),deadline:new Date(deadline).toISOString(),sessionId:manifest.sessionId,identity:manifest.identity,...result},null,2));try{const budget=JSON.parse(fs.readFileSync(budgetFile,'utf8'));budget.stopped=true;fs.writeFileSync(budgetFile,JSON.stringify(budget,null,2));}catch{/* Receipt survives an unavailable budget file. */}}
+  finish:result=>{fs.writeFileSync(path.join(run,backup?'backup-deadline-receipt.json':'deadline-receipt.json'),JSON.stringify({at:new Date().toISOString(),deadline:new Date(deadline).toISOString(),sessionId:manifest.sessionId,identity:manifest.identity,...result},null,2));try{const budget=JSON.parse(fs.readFileSync(budgetFile,'utf8'));budget.stopped=true;writeNativeJson(budgetFile,budget);}catch{/* Receipt survives an unavailable budget file. */}}
  });
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{console.error(error);process.exitCode=1;});
