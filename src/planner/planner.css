@@ -151,6 +151,6 @@
 .planning-reference-card > .mechanics-compact { margin-top:10px; }
 
 /* Coverage is a readable document, not the horizontal notice action bar. */
-.planning-coverage { display: block; overflow-wrap: anywhere; }
+.notice.planning-coverage { display: block; overflow-wrap: anywhere; }
 .planning-coverage > strong { display: block; }
 .planning-coverage details { min-width: 0; }

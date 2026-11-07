@@ -9,6 +9,7 @@ export async function verifyReferenceExplanations(p:Page,output:string){
  await work.getByRole('button',{name:'Explore prerequisite routes'}).click();
  const route=work.getByRole('region',{name:'Route 1',exact:true}),coverage=route.getByRole('region',{name:'Planning coverage review'});
  await expect(coverage).toContainText('Provisional plan');await expect(coverage).toContainText('Confident ranking and numerical optimization are unavailable');
+ await expect(coverage).toHaveCSS('display','block');
  await coverage.getByText('Coverage gaps and source evidence',{exact:true}).click();await expect(coverage).toContainText('Dynamic economy and variable formulas');await coverage.scrollIntoViewIfNeeded();await p.screenshot({path:path.join(output,'planning-coverage-gate.png')});await coverage.getByText('Coverage gaps and source evidence',{exact:true}).click();
  await expect(route.getByRole('button',{name:'Draft route 1 as new alternative'})).toBeEnabled();
  const refs=p.getByRole('region',{name:'Decision and research references'});if(await refs.getAttribute('open')===null)await refs.getByText('Look up decisions and technologies',{exact:true}).click();
