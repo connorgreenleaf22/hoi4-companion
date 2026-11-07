@@ -1,5 +1,14 @@
 # HOI4 bridge status
 
+## M7.2 — native preflight complete, one session pending (2026-11-07)
+
+- Isolated `feature/hoi4-native-m72` worktree from exact M7 `0620369`; M7.1 remains at `46b0206` with its separate risk gate, no merge/import.
+- Prepared `.bridge-local/native-6Ne9oj` using an exclusively leased previously absent laptop profile. Exact executable 1.19.4.2 hash in M72-NATIVE-PLAN.md; no launch yet. New m72 budget only; old M6.5 overrun retained.
+- Save fixtures, exact process identity, independent deadline/stop and supervisor-loss checks pass. Added paired monotonic heartbeat watchdogs, source-date validation, raw stored progress and optional provenance. Matrix: M72-FIELD-QUALIFICATION.md. All save fields still unqualified.
+- Next exact operation: one supervised disposable GER campaign per M72-NATIVE-PLAN.md, target empty-to-assigned research plus matching saves. Eight gameplay operations, ten-minute planned shutdown, twenty-minute hard cap. No control adapters or memory methods.
+- Origin was public in M7.1. New M7.2 instructions forbid pushing unless private is verified; preserve local commits on public/unknown visibility.
+
+
 ## Milestone 7 — read-only platform and Windows acceptance delivered (2026-11-06)
 
 - Branch feature/hoi4-platform-m7 from 67d7d05. M6.5 already contains M6.1; no merge/history rewrite. Earlier branches/builds preserved.

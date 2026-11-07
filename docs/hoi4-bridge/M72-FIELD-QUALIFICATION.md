@@ -1,0 +1,21 @@
+# M7.2 field qualification matrix
+
+Scope: HOI4 1.19.4.2 plaintext player-country saves and the existing GER telemetry subset. Save serialization is engine-private: installed script reference documentation does not establish these serialization semantics. Structural paths and observed examples are hypotheses until independently compared. Binary/compressed saves and other versions refuse. Synthetic fixtures never establish engine semantics.
+
+| Field / source path | Parser / offline status | Independent evidence needed | Native status before session | Future planning use, never automatic |
+|---|---|---|---|---|
+| `player` | Header extracted, repeated paths reject; explicit field | Same paused screenshot of controlled country + save hash + owned session | Pending | Candidate country identity; selected tree still separate |
+| `date` | Calendar validity and exact header path | Same paused UI date/hour and completed save write | Pending | Historical scenario date, never freshness by itself |
+| `countries/GER/focus/current` | Explicit token only; missing/none not treated as confirmed idle | No-focus UI versus selected-focus UI at matching save dates | Pending | Current-focus candidate; not completion credit |
+| `focus/progress` | Active-pair field plus separate raw stored value; no inferred selection | Selection and measured advancement; cancellation/completion persistence; verified unit conversion | Pending | Cannot estimate finish time until units and modifiers qualified |
+| `focus/completed` | Repeated positive IDs preserved/deduplicated | Same-state UI completion of each claimed ID; inventory completeness separately tested | Pending | Candidate `has_completed_focus` positive only, never an absence-based negative |
+| `technology/slots` | Repeated empty slots preserved; serialized positions only | Research UI before/after assignment and same-state save; UI slot identity separately | Pending | Active research candidate; cannot imply available research slots from positions |
+| `technology/technologies/*/research_points` | Raw numbers only | Multiple independently comparable progress states and unit/formula verification | Pending | No progress percentages or duration optimization |
+| `technology/technologies/*/level` | Positive levels listed | Same-state known-technology UI for each ID; full inventory separate | Pending | Candidate `has_tech` positive only; no completion-event assertion |
+| `research_slot` | Raw total, bounded integer | UI total research slots at matching save | Pending | Candidate slot capacity, not free slots |
+| Telemetry basic_machine_tools active flag, war support, slots/factory counts | Existing M6.5 version-specific qualification retained | Same-session current UI, recent log evidence and exact process/version ownership | Prior M6.5 subset only | Candidate facts only; not confidence promotion |
+| Save load / world identity | Rollback/changed process/log quarantine offline-tested; same-date ambiguity explicit | Actual reload and independently distinguishing log/engine marker | Unqualified | A matching process/date cannot prove a planning world's identity |
+
+Every promoted field needs an evidence receipt naming source bytes/hash, game/executable version, country/date, capture timestamp, session ID and comparison screenshot. A qualified mapping is not authenticity verification for arbitrary user-provided bytes. Historical copies remain historical/save-derived; file modification time cannot establish live freshness. No receipt promotes an entire inventory from one matching member.
+
+M7.1 reconciliation: `src/planning-coverage-types.ts` and `server/planner/coverage.ts` exist only on its separate branch. M7.2 does not import or edit them. A future adapter may offer qualified facts to an unresolved campaign-state condition after country/version/world/freshness checks and user review. Semantic gaps, costs, event consequences and optimization-model qualification remain separate. Manual conditions are never overwritten. New optional provenance/raw/evidence fields in the shared observation contract require reconciliation; schema-1 recordings stay readable.
