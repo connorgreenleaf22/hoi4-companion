@@ -1,14 +1,15 @@
 # HOI4 bridge status
 
-## M7.1 acceptance follow-up — Autarky Achieved (2026-11-07)
+## M7.1 acceptance follow-up — validated candidate; publication held (2026-11-07)
 
 - **M7.1 is not accepted.** User finding reproduced on 1.19.4.2 at baseline 9105ae7: 70-day focus with zero specific outcomes. Main scripted helper directory was not indexed; direct idea swap was also unsupported. Earlier twelve-decision success did not establish focus-wide coverage.
 - Implemented bounded same-index parameterless scripted-effect expansion, source evidence, dynamic-modifier removal, idea replacement/name overrides, core-state conditions and literal modifier-variable bindings. Preserve scope/guards and independently understood siblings; unsupported formulas/requirements stay explicit. No AI provider or native integration changes. See `../application/M71-AUTARKY-REGRESSION.md` for current coverage and limitations.
 - 32 distinct focused tests, TypeScript/build, twelve-decision audit, new installed Autarky regression and rendered focus/reference journey pass. Evidence `.bridge-local/m71-autarky-*` and `artifacts/qa/explanation-browser-2026-11-07T06-23-11-945Z-788e2ee8/`; screenshots reviewed. No native HOI4 session. Ordinary focus output screening improves 5,839 to 6,635 of 10,341, but 9,559 still contain explicit unresolved portions; this is not complete semantic coverage.
 - Roadmap adds **Milestone 7.3 — AI-Assisted Strategic Planning MVP**, with editable whole strategies and source validation. It is planned only; reuse seams documented without implementing the AI milestone.
-- Candidate runtime f2620498fef4 packaged with all 76 extracted files equal. First startup exceeded 60 seconds before service ready; an instrumented bounded 120-second attempt passed the complete workflow with index progress. Exact initial delay cause remains unproven. Empty-container output correction is now tested; final package follows. Older M7.1 ZIP hash unchanged.
-- Publication blocker: GitHub metadata on 2026-11-07 reports `private: false` for the unchanged origin, unlike earlier private-repository instructions. No push or visibility change performed. Complete the local deliverable before asking whether public publication is intended.
-- Exact next step: finish the packaged Autarky/reference/history/planning/restart check, record evidence and commit documentation, then request clarification about repository visibility. Keep desktop acceptance and broad QA gates open.
+- Final runtime/artifact M7.1-7b797e04d7c6: all 76 extracted files equal; actual Autarky/reference/search/planning/history/shutdown/restart checks pass, cold window/index 29.3s and restart 6.1s. Evidence artifacts/qa/development-package-2026-11-07T06-35-01-756Z-3449b643/. Source unchanged during run; screenshots reviewed; owned processes absent. Exact ZIP/hash in follow-up report. Older M7.1 hash unchanged.
+- Earlier candidate f262049 first startup exceeded 60 seconds before service ready. Its instrumented bounded follow-up passed; initial delay cause remains unproven. Empty-container output false positives were fixed and tested before the final rebuild; before/after counts use the same corrected exclusion.
+- Publication blocker: GitHub metadata on 2026-11-07 reports `private: false` for the unchanged origin, unlike earlier private-repository instructions. No push or visibility change performed. Local source, package and validation are complete; publication requires clarification of the changed visibility.
+- Active implementation: none. Exact next step: user reviews the new isolated package and confirms whether pushing to the now-public repository is intended. Do not launch HOI4, start M7.3, repeat completed tests or change visibility automatically. Keep desktop acceptance and broad QA gates open.
 
 ## Milestone 7.1 — explanations and Windows acceptance delivered (2026-11-06)
 
