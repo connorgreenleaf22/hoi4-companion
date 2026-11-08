@@ -1,0 +1,55 @@
+// Installed sources + deterministic provider fixture. Never evidence of real-model or native-game success.
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {DatabaseSync} from 'node:sqlite';
+import {chromium,expect} from '@playwright/test';import {startServer,validateProfile} from '../server/api';
+import {createQaRun,browserOptions,fileHash} from './qa/fixture';import type {StrategyContent} from '../src/ai-planning-types';import type {Entry} from '../src/types';
+async function main(){
+ const source=process.env.HOI4_UI_REFERENCE_DB;if(!source)throw Error('Supply retained installed reference database.');
+ const run=createQaRun('ai-planning','headless-renderer');let proposal!:StrategyContent;let calls=0;
+ const options={dataDir:run.dataDirectory,port:0,autoIndex:false,staticDir:path.resolve('dist'),aiProvider:{name:'deterministic-fixture-not-a-model',async generate(){calls++;return {content:proposal,usage:{input:123,output:456}};}}};
+ let app=await startServer(options);let browser:Awaited<ReturnType<typeof chromium.launch>>|undefined;
+ const post=async(route:string,input:unknown)=>{const r=await fetch(app.url+'/api/v1/'+route,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input)});const value=await r.json();assert.equal(r.status,200,JSON.stringify(value));return value;};
+ try{
+  browser=await chromium.launch(browserOptions());
+  const db=new DatabaseSync(source,{readOnly:true});const meta=JSON.parse(String(db.prepare("SELECT value FROM settings WHERE key='meta'").get()!.value));assert.equal(meta.version,'1.19.4.2');
+  const entries=db.prepare("SELECT payload FROM entries WHERE source IN ('common/national_focus/portugal.txt','common/national_focus/germany.txt') OR kind IN ('country','decision','technology','event','event_option')").all().map(r=>JSON.parse(String(r.payload)) as Entry);db.close();
+  app.store.db.exec('BEGIN');for(const e of entries)app.store.insert(e);app.store.setSetting('meta',meta);app.store.db.exec('COMMIT');
+  const goal=entries.find(e=>e.id==='POR_the_kingdom_reunited'&&e.kind==='focus')!,tree=entries.find(e=>e.id===goal.data.treeId&&e.kind==='focus_tree')!;
+  const profile=app.store.saveProfile(validateProfile({id:'m73-portugal',name:'M73 Portugal fixture evaluation',country:'POR',tree:'definition:'+tree.uid,startDate:'1936-01-01'})).saved!;app.store.setSetting('selectedProfileId',profile.id);
+  const plan={id:'test-route',name:'Portugal',tree:profile.tree,items:[],startDate:profile.startDate,assumptions:[]};
+  const paths=await post('strategy/paths',{profile,plan,goal:'definition:'+goal.uid,indexRevision:meta.indexRevision});assert.equal(paths.paths[0].coverage.structuralValidity,'valid');
+  proposal={name:'Portugal fixture proposal',secondaryObjectives:['Economic preparation'],focusIds:paths.paths[0].items.map((i:any)=>i.legacyId),recommendations:[
+   {category:'decision',text:'Consider monarchist support decisions only after checking their conditions and cost.',references:['POR_stir_monarchist_sentiment_in_brazil','POR_stir_monarchist_sentiment_in_portugal'],conditions:['Eligibility and support thresholds need campaign verification']},
+   {category:'research',text:'Consider Basic Machine Tools as an industrial priority; current completion is unknown.',references:['basic_machine_tools'],conditions:['Confirm research slots and prerequisites']},
+   {category:'economy',text:'Develop civilian capacity while preserving resources for political decisions.',references:[],conditions:['Strategic heuristic; no numerical optimization']},
+   {category:'military',text:'Review equipment stockpiles and civil-war exposure before committing forces.',references:[],conditions:['No current force inventory available']},
+   {category:'event',text:'Brazil acceptance and refusal have different consequences; inspect both options.',references:['lar_portugal_promote_monarchist_cause.2'],conditions:['Event recipient and political conditions must be verified']}
+  ],assumptions:['1936 base-game scenario; DLC entitlement not verified'],risks:['Conditional civil war and downstream Brazil choices remain unresolved'],milestones:['Sequential focus timing only, before delays'],alternatives:['Compare economic preparation before pursuing the political branch; no ranking'],unknowns:['Current stability, support, Brazil government, event-choice probabilities and civil-war allocation']};
+  const p=await browser.newPage({viewport:{width:1440,height:1050}});const errors:string[]=[];p.on('pageerror',e=>errors.push(e.message));await p.goto(app.url);await p.getByRole('button',{name:'Campaign planner',exact:true}).click();
+  const panel=p.getByRole('region',{name:'AI strategy planner'});
+  await run.check('installed Portugal objective generates through explicitly labeled fixture provider and deterministic gate',['M73-FIXTURE'],async()=>{
+   await expect(panel).toContainText('AI generation is unconfigured');await panel.getByLabel('Strategy objective').fill('Create a strategy for monarchist Portugal, economic and military preparation and Brazil opportunities.');
+   await panel.getByText('AI provider configuration · unconfigured',{exact:true}).click();await panel.getByLabel('AI API key',{exact:true}).fill('fixture-key-not-secret');await panel.getByLabel('AI model',{exact:true}).fill('fixture-not-a-real-model');await panel.getByRole('button',{name:'Use key for this session'}).click();await expect(panel.getByLabel('AI API key',{exact:true})).toHaveValue('');
+   await panel.getByRole('button',{name:'Preview AI source bundle'}).click();await expect(panel.getByRole('region',{name:'Outgoing AI context'})).toBeVisible();
+   await panel.getByLabel('Approve AI data transmission').check();await panel.getByRole('button',{name:'Generate provisional strategy'}).click();await expect(panel.getByLabel('AI strategy name')).toHaveValue(proposal.name);
+   await expect(panel.getByRole('region',{name:'Planning coverage review'})).toContainText('Sequence structure: valid');await expect(panel).toContainText('Confident ranking and numerical optimization are unavailable');assert.equal(calls,1);
+   await panel.getByRole('button',{name:'Save and recheck strategy'}).click();await expect(panel.getByRole('status')).toContainText('Strategy saved and reviewed');
+   const saved=app.store.db.prepare('SELECT payload FROM ai_strategies').get();const record=JSON.parse(String(saved!.payload));run.write('evaluation.json',{verification:'deterministic fixture, installed sources; not real AI or native gameplay',record});
+   assert.ok(record.review.coverage.gaps.some((g:any)=>g.code==='start_civil_war'));assert.ok(record.review.coverage.events.some((e:any)=>e.id==='lar_portugal_promote_monarchist_cause.2'));
+   for(const proof of record.review.coverage.references.flatMap((r:any)=>r.evidence))assert.equal(fileHash(path.join(meta.root,proof.source)),proof.hash);
+   await panel.scrollIntoViewIfNeeded();await p.screenshot({path:path.join(run.output,'proposal.png'),fullPage:true});
+  });
+  await run.check('editing, reordering rejection, revision generation and unranked saved comparison',['M73-EDIT'],async()=>{
+   await panel.getByLabel('Move AI focus 1 down').click();await panel.getByRole('button',{name:'Save and recheck strategy'}).click();await expect(panel.getByRole('region',{name:'Planning coverage review'})).toContainText('Plan needs correction');await expect(panel.getByRole('button',{name:'Draft focus sequence as alternative'})).toBeDisabled();
+   await panel.getByLabel('Move AI focus 1 down').click();await panel.getByLabel('AI strategy name').fill('Portugal edited fixture');await panel.getByLabel('Recommendation 4 advice').fill('User edit: inspect stockpiles before committing forces.');await panel.getByRole('button',{name:'Save and recheck strategy'}).click();await expect(panel.getByRole('region',{name:'Planning coverage review'})).toContainText('Sequence structure: valid');
+   await panel.getByLabel('AI revision instructions').fill('Retain the route and clarify military preparation.');proposal={...proposal,name:'Portugal revised fixture'};await panel.getByRole('button',{name:'Preview AI source bundle'}).click();await panel.getByLabel('Approve AI data transmission').check();await panel.getByRole('button',{name:'Generate provisional strategy'}).click();await expect(panel.getByLabel('AI strategy name')).toHaveValue(proposal.name);await panel.getByRole('button',{name:'Save and recheck strategy'}).click();await expect(panel.getByRole('status')).toContainText('Strategy saved and reviewed');assert.equal(calls,2);
+   await panel.getByLabel('Compare whole strategy Portugal edited fixture').check();await panel.getByLabel('Compare whole strategy Portugal revised fixture').check();await expect(panel).toContainText('comparison is unranked');
+   await p.setViewportSize({width:390,height:844});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await p.screenshot({path:path.join(run.output,'mobile.png'),fullPage:true});
+  });
+  await app.close();app=await startServer(options);await p.setViewportSize({width:1440,height:1050});await p.goto(app.url);await p.getByRole('button',{name:'Campaign planner',exact:true}).click();
+  await run.check('service restart forgets key, preserves whole strategy revisions and leaves actual history alone',['M73-REOPEN'],async()=>{
+   await expect(panel).toContainText('AI generation is unconfigured');await panel.getByRole('button',{name:'Portugal edited fixture · revision 3',exact:true}).click();await expect(panel.getByLabel('Recommendation 4 advice')).toHaveValue('User edit: inspect stockpiles before committing forces.');assert.equal(app.store.profile(profile.id)!.completed.length,0);assert.equal(app.store.profile(profile.id)!.queue.length,0);await p.screenshot({path:path.join(run.output,'reopened.png'),fullPage:true});
+  });
+  assert.deepEqual(errors,[]);run.finish({nativeGameLaunched:false,realProviderCalled:false,fixtureProviderCalls:calls});console.log(run.output);
+ }catch(error){run.write('failure-evaluations.json',app.store.db.prepare('SELECT payload FROM ai_evaluations').all().map(r=>JSON.parse(String(r.payload))));const page=browser?.contexts()[0]?.pages()[0];if(page){await page.screenshot({path:path.join(run.output,'failure.png'),fullPage:true});fs.writeFileSync(path.join(run.output,'failure-aria.txt'),await page.locator('body').ariaSnapshot());}throw error;}finally{await browser?.close();await app.close();run.finish();run.cleanup();}
+}
+main().catch(e=>{console.error(e);process.exitCode=1;});

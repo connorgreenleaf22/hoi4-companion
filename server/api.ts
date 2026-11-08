@@ -23,6 +23,8 @@ import {callBridgeTool} from './bridge/tools';
 import {McpConnection} from './bridge/mcp-connection';
 import {explorePaths,compareStrategies,planningSources} from './planner/strategy';
 import {reviewPlanCoverage,reviewProposal} from './planner/coverage';
+import {AiPlanningService} from './planner/ai';
+import type {PlanningProvider} from './planner/ai-provider';
 import {evaluatePlanner} from './planner/evaluate';
 import {evaluateRequirements,plannerDlcFacts} from './planner/requirements';
 import type {BridgeMode} from '../src/bridge-types';
@@ -52,7 +54,7 @@ export function validateProfile(input:any):Profile {
   return profile.planner?mirrorPlanner(profile):profile;
 }
 
-export async function startServer(options:{dataDir?:string;port?:number;staticDir?:string;autoIndex?:boolean;indexWorkerPath?:string;testRemoteHost?:'127.0.0.1';bridge?:{mode?:BridgeMode;gameRoot?:string;userRoot?:string;logPath?:string}}={}) {
+export async function startServer(options:{dataDir?:string;port?:number;staticDir?:string;autoIndex?:boolean;aiProvider?:PlanningProvider;indexWorkerPath?:string;testRemoteHost?:'127.0.0.1';bridge?:{mode?:BridgeMode;gameRoot?:string;userRoot?:string;logPath?:string}}={}) {
   // Internal test seam changes only listener binding. Pairing and all authorization remain active.
   if(options.testRemoteHost!==undefined){
     const fixture=options.dataDir&&path.resolve(options.dataDir),temporary=path.resolve(os.tmpdir());
@@ -66,6 +68,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
   let indexingError='';
   let root=store.getSetting('gameRoot','') || discoverGame();
   if(options.autoIndex!==false && root)try{meta=options.indexWorkerPath?await indexInBackground(options.indexWorkerPath,store.directory,root):indexGame(store,root);}catch(e){indexingError=String(e);}
+  const ai=new AiPlanningService(store,()=>planningSources(store.getSetting<Meta|null>('meta',null),bridge.environment()),options.aiProvider);
   let port=options.port??39436;
   let lan:http.Server|undefined;let lanPort=0;let pairingCode='';
   const sessions=new Map<string,number>();const attempts=new Map<string,{count:number;reset:number}>();
@@ -97,6 +100,27 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
           res.setHeader('Set-Cookie',`hoi4_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=86400`);return send(res,200,{paired:true});
         }
         if(remote&&!authenticated(req))return send(res,401,{error:'Enter the pairing code shown in the desktop app.',pairing:true});
+        if(route.startsWith('ai/')){
+          if(remote)return send(res,403,{error:'AI planning and credentials are local-only.'});
+          if(req.method==='GET'){
+            if(route==='ai/config')return send(res,200,ai.status());
+            if(route==='ai/strategies')return send(res,200,ai.list(url.searchParams.get('profile')||''));
+            if(route==='ai/evaluations')return send(res,200,ai.evaluations(url.searchParams.get('profile')||''));
+          }
+          if(req.method==='POST'){
+            if(!req.headers['content-type']?.startsWith('application/json'))return send(res,415,{error:'AI operations require JSON.'});
+            const input=await body(req);
+            if(route==='ai/config')return send(res,200,ai.configure(input));
+            if(route==='ai/clear')return send(res,200,ai.clear());
+            if(route==='ai/cancel')return send(res,200,ai.cancel());
+            const profile=validateProfile(input.profile);
+            if(route==='ai/context')return send(res,200,ai.context(profile,input));
+            if(route==='ai/generate')return send(res,200,await ai.generate(profile,input));
+            if(route==='ai/save')return send(res,200,ai.save(profile,input));
+            if(route==='ai/review')return send(res,200,ai.review(profile,input.content,input));
+          }
+          return send(res,404,{error:'Unknown AI planning operation.'});
+        }
         if(route.startsWith('bridge/')){
           if(remote)return send(res,403,{error:'Game bridge interfaces are local-only.'});
           if(route==='bridge/mcp'&&req.method==='POST'){
@@ -322,5 +346,5 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
   await new Promise<void>((resolve,reject)=>{server.once('error',reject);server.listen(port,'127.0.0.1',()=>resolve());});
   port=(server.address() as any).port;
   mcpConnection.publish(port);
-  return {port,url:`http://127.0.0.1:${port}`,store,close:async()=>{platform.close();mcpConnection.close();if(lan){lan.closeAllConnections();await new Promise<void>(r=>lan!.close(()=>r()));}server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));bridge.close();store.db.close();}};
+  return {port,url:`http://127.0.0.1:${port}`,store,close:async()=>{ai.close();platform.close();mcpConnection.close();if(lan){lan.closeAllConnections();await new Promise<void>(r=>lan!.close(()=>r()));}server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));bridge.close();store.db.close();}};
 }

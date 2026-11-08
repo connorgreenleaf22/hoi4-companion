@@ -154,3 +154,12 @@
 .notice.planning-coverage { display: block; overflow-wrap: anywhere; }
 .planning-coverage > strong { display: block; }
 .planning-coverage details { min-width: 0; }
+
+.ai-planner {border-bottom:1px solid var(--border);margin-bottom:2rem;padding-bottom:2rem;min-width:0}
+.ai-planner label:not(.strategy-check) {display:block;margin:0.7rem 0}
+.ai-planner textarea {display:block;width:100%;min-height:72px;resize:vertical;box-sizing:border-box}
+.ai-planner fieldset {min-width:0;margin:1rem 0;padding:1rem}
+.ai-planner pre {max-height:320px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+.ai-planner article,.ai-planner li,.ai-planner p {overflow-wrap:anywhere}
+.ai-planner .text-link {max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.ai-planner .notice {display:block}

@@ -11,6 +11,23 @@ export function entryMechanics(entry:Entry,lookup:NameLookup=id=>entry.data.mech
  const summary:Explanation[]=[],requirements:Explanation[]=[];
  const atom=(n:Node,text:string,role:Explanation['role']='timing'):Explanation=>({text,status:'explained',code:n.key,line:n.line,role});
  const val=(key:string)=>nodes.find(n=>n.key===key)?.value;
+ if(entry.kind==='event'){
+  ctx.root=ctx.current={kind:entry.data.eventType==='state_event'?'state':['country_event','news_event'].includes(entry.data.eventType)?'country':'unknown',label:'the event recipient (campaign identity unknown)'};
+  const metadata=new Set(['name','ai_chance','trigger','highlighted','default','original_tag','fire_only_once']);
+  let option=0;
+  for(const n of nodes){
+   if(n.key==='trigger'&&Array.isArray(n.value))requirements.push({text:'Event trigger (delivery context still required):',status:'state-unknown',role:'condition',children:explainConditions(n.value,lookup,ctx)});
+   if(!['immediate','option','after'].includes(n.key))continue;
+   if(!Array.isArray(n.value)){summary.push(unresolved(n));continue;}
+   const body=n.value,choice=n.key==='option',name=body.find(x=>x.key==='name')?.value;
+   const label=choice?`Option ${++option}${typeof name==='string'&&lookup(name)!==name?': '+lookup(name):' (option localization unresolved)'}`:n.key==='immediate'?'On event delivery':'After the event';
+   summary.push({text:label+'. Effects are conditional on this event/choice occurring.',status:'conditional',code:n.key,line:n.line,children:[
+    ...body.filter(x=>x.key==='trigger').flatMap(x=>Array.isArray(x.value)?explainConditions(x.value,lookup,ctx):[unresolved(x)]),
+    ...explainEffects(choice?body.filter(x=>!metadata.has(x.key)):body,lookup,0,ctx),
+    ...(choice&&body.some(x=>x.key==='ai_chance')?[{text:'AI choice weights are not qualified probabilities. No chance of acceptance is inferred.',status:'unsupported' as const,unknown:true,code:'ai_chance'}]:[])
+   ]});
+  }
+ }
  if(focus)summary.push(typeof entry.data.days==='number'?{text:`${number(entry.data.days)} nominal days to complete, before stored progress, bypasses or delays.`,status:'explained',role:'timing'}:unresolved({key:'cost',value:'',line:entry.line},'unsupported','Completion time is not known from the indexed source.'));
  if(decision){
   const cost=nodes.find(n=>n.key==='cost');if(cost)summary.push(literal(cost.value)!==null&&Number(cost.value)>=0?atom(cost,`${number(Number(cost.value))} political power (base cost).`,'cost'):unresolved(cost,'unsupported','Political-power cost uses a dynamic formula; the payable amount is unknown.'));

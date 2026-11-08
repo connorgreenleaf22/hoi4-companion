@@ -1,10 +1,14 @@
 # HOI4 bridge status
 
-## M7.3 — integration baseline in progress (2026-11-08)
+## M7.3 — implementation validated; Windows delivery in progress (2026-11-08)
 
 - New feature/hoi4-ai-m73 from M7.1 46b0206; integrating M7.2.1 f39f96d with common ancestor 0620369. Local/remote M7.1 and M7 tips match; M7.2.1 is local only. Original worktrees clean and preserved.
 - Only AGENTS, roadmap and STATUS conflicted; retained both histories and updated active instructions. No code conflicts. Existing coverage gate, explanation/localization code, save provenance and scoped native evidence coexist.
-- Baseline verification: 32 focused coverage/explanation/save/MCP/history/release-census tests passed; TypeScript and production build passed. Next: commit the integration and run isolated packaged baseline smoke before AI implementation. No HOI4 launch.
+- Phase 0 passed on merge cf8a31bf4843: 32 focused tests, production build, packaged explanation/strategy/history restart and save/UI/external MCP checks. Evidence: artifacts/qa/development-package-2026-11-08T08-08-25-064Z-f3ddc1be and platform-package-2026-11-08T08-09-44-531Z-e787835c. Initial journey used the wrong M65 recording; corrected to its documented M3 recording, no application change. No HOI4 launch.
+- Implemented optional session-memory OpenAI configuration/transport, bounded source preview, typed proposals, deterministic review, canonical references, revisioned SQLite documents/evaluations and editable planner UI. Event choices expose understood conditional effects without claiming probabilities/closure.
+- Verified: 42 focused tests; TypeScript/build; three installed-Portugal UI fixture journeys including edit/revision/comparison/restart. Evidence artifacts/qa/ai-planning-2026-11-08T08-20-45-739Z-a35b0536. Two fixture calls, zero real-provider/native calls. Eight-focus route valid structurally with 104 explicit checks; confidence/rank/optimize remain blocked.
+- Failures resolved: documented Chrome override instead of missing Playwright download; balanced research retrieval after Basic Machine Tools was omitted. Community event inspector transport closed; retained installed index/source fallback used. See ../application/MILESTONE-7.3.md and M73-AI-PROVIDERS.md.
+- Active: final focused checks, audited commit, isolated Windows ZIP/fresh-extraction acceptance, then intended-branch publication. Exact next step: build the clean committed candidate and run scripts/ai-package-smoke.ts. Real-provider and user strategic-quality acceptance remain open by configure-later choice.
 - User chose configure-later; deliver real configurable provider transport and honest unconfigured behavior, plus current multi-provider cost/pro/con report. Real-provider generation will need credentials and cannot be claimed from fixtures.
 - Audited source pushes to the intended public M7.3 branch are explicitly authorized; no release/main/develop merge.
 
