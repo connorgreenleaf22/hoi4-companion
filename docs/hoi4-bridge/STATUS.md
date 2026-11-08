@@ -1,6 +1,6 @@
 # HOI4 bridge status
 
-## M7.3 — implementation validated; Windows delivery in progress (2026-11-08)
+## M7.3 — packaged implementation candidate; provider acceptance open (2026-11-08)
 
 - New feature/hoi4-ai-m73 from M7.1 46b0206; integrating M7.2.1 f39f96d with common ancestor 0620369. Local/remote M7.1 and M7 tips match; M7.2.1 is local only. Original worktrees clean and preserved.
 - Only AGENTS, roadmap and STATUS conflicted; retained both histories and updated active instructions. No code conflicts. Existing coverage gate, explanation/localization code, save provenance and scoped native evidence coexist.
@@ -8,7 +8,9 @@
 - Implemented optional session-memory OpenAI configuration/transport, bounded source preview, typed proposals, deterministic review, canonical references, revisioned SQLite documents/evaluations and editable planner UI. Event choices expose understood conditional effects without claiming probabilities/closure.
 - Verified: 42 focused tests; TypeScript/build; three installed-Portugal UI fixture journeys including edit/revision/comparison/restart. Evidence artifacts/qa/ai-planning-2026-11-08T08-20-45-739Z-a35b0536. Two fixture calls, zero real-provider/native calls. Eight-focus route valid structurally with 104 explicit checks; confidence/rank/optimize remain blocked.
 - Failures resolved: documented Chrome override instead of missing Playwright download; balanced research retrieval after Basic Machine Tools was omitted. Community event inspector transport closed; retained installed index/source fallback used. See ../application/MILESTONE-7.3.md and M73-AI-PROVIDERS.md.
-- Active: final focused checks, audited commit, isolated Windows ZIP/fresh-extraction acceptance, then intended-branch publication. Exact next step: build the clean committed candidate and run scripts/ai-package-smoke.ts. Real-provider and user strategic-quality acceptance remain open by configure-later choice.
+- Windows runtime M7.3-66a1a388dcce delivered: 76 files equal after extraction; three actual Electron configuration/offline editor/save/comparison/restart checks passed. Evidence artifacts/qa/ai-package-2026-11-08T08-29-41-583Z-bed74b62; source unchanged, screenshots reviewed, owned processes absent. ZIP SHA256 b32b921478fbdc64c236781116c76e765e2bdcd63f5aed5a063c9a5e5aa5bd1e. See ../application/M73-VERIFICATION.json. Package lives outside Git in Documents/HOI4 Companion Development Builds/M7.3-66a1a388dcce.
+- Test-only package harness __name failure corrected; no application defect or repeated native session. Final source audit confirms conditional annexation/core interpretation but refusal war goal, scalar/random-delay event calls, character transfers and choice probabilities remain unsupported.
+- Active implementation: none after delivery evidence/publication checkpoint. Exact next step: user runs the isolated package offline, then chooses/configures a provider and evaluates actual Portugal generation using START-HERE.md. Real-provider generation, model quality, user desktop acceptance and final-release explanation gates remain open. Do not claim this milestone fully accepted or start native/optimization work automatically.
 - User chose configure-later; deliver real configurable provider transport and honest unconfigured behavior, plus current multi-provider cost/pro/con report. Real-provider generation will need credentials and cannot be claimed from fixtures.
 - Audited source pushes to the intended public M7.3 branch are explicitly authorized; no release/main/develop merge.
 
