@@ -15,3 +15,5 @@
 - Do not merge/reimplement M7.1 planning coverage here. Observations cannot automatically change manual assumptions, plan confidence or ranking eligibility. M7.2 commits stay local if origin is public or visibility unverified.
 
 - M7.2.1 recovery has a separately authorized `m721-native-budget.json`: one launch, four gameplay actions, twelve wall-clock minutes, paired deadline at 540 seconds, at most sixty recorded setup/inspection inputs and no unchanged-failure retry. Require production-lifecycle offline tests before launch; preserve all older stopped budgets. No package unless application-facing behavior changes.
+
+- M7.2.1 native recovery is complete: its one launch/four actions are exhausted and stopped. See MILESTONE-7.2.1.md before any follow-up; no further launch without a separately authorized budget.

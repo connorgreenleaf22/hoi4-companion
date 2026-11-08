@@ -21,3 +21,19 @@ Every promoted field needs an evidence receipt naming source bytes/hash, game/ex
 M7.1 reconciliation: `src/planning-coverage-types.ts` and `server/planner/coverage.ts` exist only on its separate branch. M7.2 does not import or edit them. A future adapter may offer qualified facts to an unresolved campaign-state condition after country/version/world/freshness checks and user review. Semantic gaps, costs, event consequences and optimization-model qualification remain separate. Manual conditions are never overwritten. New optional provenance/raw/evidence fields in the shared observation contract require reconciliation; schema-1 recordings stay readable.
 
 M7.2 outcome: one launch ended before a campaign, zero gameplay/UI actions. No row was promoted. Failure-triggered exact-process termination was observed; deadline-triggered termination and the repaired watchdog remain native-unqualified. The exhausted budget and archived profile are retained in `.bridge-local/native-6Ne9oj`; see MILESTONE-7.2.md.
+
+## M7.2.1 capture-specific qualification (2026-11-08)
+
+The table above records the earlier M7.2 attempt. Recovery evidence now independently qualifies **positive Basic Machine Tools research membership in one source-hashed GER save**, and reconfirms the existing telemetry false-to-true flag. See MILESTONE-7.2.1.md and M721-RESEARCH-EVIDENCE.json. Save SHA256 `3a69b4bd645a8299905503b39492c211504dfba92b26c56c77e34944ed627c8c`; paused UI/save date `1936.1.2.8`; session `b6658acf-cad8-4c3a-a9c3-251a96f9cb0a`; exact executable/version pinned in the receipt.
+
+| Dimension | Recovery status |
+|---|---|
+| Captured `technology/slots/basic_machine_tools` positive membership | Native-verified for this capture only; independently visible in UI before/after save |
+| `technologyResearching.basic_machine_tools` telemetry | Native-reconfirmed false → true; daily record precedes paused save by eight game hours |
+| Serialized positions / research points | Still unqualified; position 0 is not UI identity, 2.02 is not a percentage |
+| Other technologies / complete inventory / completion events | Unqualified; no promotion from this one member |
+| Player/date/total slots | Corroborate this comparison; no generalized mechanism qualification added |
+| Save load / world identity | Not exercised; remains unqualified |
+| Watchdog timed termination | Native-verified for exact owned recovery process; backup confirmed termination after configured deadline, primary refusal retained |
+
+Generic mixed-field save output remains parsed-unqualified; scoped qualification is recorded separately. The historical receipt cannot create live freshness, prove a world after reload, overwrite a manual condition or elevate plan ranking. Future M7.1 reconciliation should consume the positive fact with explicit source/version/session/time checks, never promote the entire researchAssignments array. No application interface changed in this recovery.

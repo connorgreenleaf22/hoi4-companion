@@ -1,11 +1,13 @@
 # HOI4 bridge status
 
-## M7.2.1 — recovery preflight passed; native session pending (2026-11-08)
+## M7.2.1 — native recovery verified; local checkpoint (2026-11-08)
 
-- Clean recovery baseline e5e02d8 on the existing feature/hoi4-native-m72 branch. M7.1, prior packages and stopped M72 budget preserved.
-- Shared production supervisor I/O lifecycle extracted for end-to-end testing, without changing app observation semantics. All 13 safety tests pass, including paired readiness, concurrent heartbeats/shared budgets, deadline/stop/peer-loss, unrelated lifetime refusal and retained corruption details. Evidence `.bridge-local/m721-supervisor-preflight.txt` and five retained `supervisor-e2e-*` directories. TypeScript passes.
-- Exact installed 1.19.4.2 executable hash unchanged; no game process, default laptop profile absent, Windows desktop accessible. Plan M721-NATIVE-PLAN.md defines separate 1-launch/4-gameplay/12-minute budget and 540-second supervision; 60 recorded UI inputs maximum, stop inputs by minute eight.
-- Next operation: prepare exclusively leased disposable profile with --telemetry-m721, then one supervised native attempt. No new field is qualified yet; no native deadline result claimed.
+- Existing feature/hoi4-native-m72 from e5e02d8; preflight source df988c1. Full paired-supervisor I/O lifecycle shared with native watchdog and tested against disposable Windows processes. 13 safety tests and TypeScript passed before launch; seven focused save/MCP/HTTP compatibility tests passed afterward.
+- One owned 1936 GER campaign on exact 1.19.4.2 executable. Basic Machine Tools went from empty/unassigned to researching in independently read UI and owned telemetry; one matching plaintext save confirms this captured positive membership. No broad inventory/progress/slot-index promotion. M721-RESEARCH-EVIDENCE.json and MILESTONE-7.2.1.md retain exact hashes, session and comparisons.
+- Native deadline verified: scheduled 07:42:16.677 UTC, backup confirmed exact-process termination 07:42:20.295. Primary concurrent attempt recorded refusal; both receipts preserved. Total 543.618 seconds (9m 3.618s), under 12-minute hard cap. One launch/four gameplay actions; 18 total UI inputs (14 setup/inspection), 25 captures; no unchanged retry.
+- Evidence `.bridge-local/native-lCPDJC`. Two snapshots replay exactly after exit; source/screenshot/save hashes match. Game/supervisors gone, profile archived and original absence restored. M721 budget stopped; earlier budgets/evidence unchanged. Generic shared observations remain conservative; new scoped qualification is documentary/evidence-bound.
+- No application-facing change, new package, M7.1 merge, AI/coverage-engine development or memory work. Prior M7.2 build remains available. GitHub rechecked public on 2026-11-08; recovery commits remain local, no push.
+- Active work: none after evidence checkpoint. Exact next major task: explicitly choose the common M7.1/M7.2 baseline for M7.3, reconcile scoped observation evidence with its existing risk gate, then implement editable source-backed strategic plans. Do not relaunch using exhausted M721 budget. Reload/world identity and broader mappings need separately justified bounded qualification.
 
 ## M7.2 — local checkpoint/build delivered; native gate blocked (2026-11-07)
 
