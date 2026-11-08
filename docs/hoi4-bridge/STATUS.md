@@ -1,5 +1,12 @@
 # HOI4 bridge status
 
+## M7.2.1 — recovery preflight passed; native session pending (2026-11-08)
+
+- Clean recovery baseline e5e02d8 on the existing feature/hoi4-native-m72 branch. M7.1, prior packages and stopped M72 budget preserved.
+- Shared production supervisor I/O lifecycle extracted for end-to-end testing, without changing app observation semantics. All 13 safety tests pass, including paired readiness, concurrent heartbeats/shared budgets, deadline/stop/peer-loss, unrelated lifetime refusal and retained corruption details. Evidence `.bridge-local/m721-supervisor-preflight.txt` and five retained `supervisor-e2e-*` directories. TypeScript passes.
+- Exact installed 1.19.4.2 executable hash unchanged; no game process, default laptop profile absent, Windows desktop accessible. Plan M721-NATIVE-PLAN.md defines separate 1-launch/4-gameplay/12-minute budget and 540-second supervision; 60 recorded UI inputs maximum, stop inputs by minute eight.
+- Next operation: prepare exclusively leased disposable profile with --telemetry-m721, then one supervised native attempt. No new field is qualified yet; no native deadline result claimed.
+
 ## M7.2 — local checkpoint/build delivered; native gate blocked (2026-11-07)
 
 - Isolated `feature/hoi4-native-m72` from exact M7 `0620369`. M7.1 remains at `46b0206`; no planning/explanation merge or confidence promotion.

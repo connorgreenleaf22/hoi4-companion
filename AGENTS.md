@@ -13,3 +13,5 @@
 - M7 platform: one application-owned bridge/gateway/receipt store; MCP is a thin authenticated loopback adapter. Keep save-derived, historical, live-qualified and manual planning state distinct. Gameplay execution is not exposed. Native test plans require independent deadline supervision and retained evidence.
 
 - Do not merge/reimplement M7.1 planning coverage here. Observations cannot automatically change manual assumptions, plan confidence or ranking eligibility. M7.2 commits stay local if origin is public or visibility unverified.
+
+- M7.2.1 recovery has a separately authorized `m721-native-budget.json`: one launch, four gameplay actions, twelve wall-clock minutes, paired deadline at 540 seconds, at most sixty recorded setup/inspection inputs and no unchanged-failure retry. Require production-lifecycle offline tests before launch; preserve all older stopped budgets. No package unless application-facing behavior changes.
