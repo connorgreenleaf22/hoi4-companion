@@ -1,5 +1,13 @@
 # HOI4 bridge status
 
+## M7.3 — integration baseline in progress (2026-11-08)
+
+- New feature/hoi4-ai-m73 from M7.1 46b0206; integrating M7.2.1 f39f96d with common ancestor 0620369. Local/remote M7.1 and M7 tips match; M7.2.1 is local only. Original worktrees clean and preserved.
+- Only AGENTS, roadmap and STATUS conflicted; retained both histories and updated active instructions. No code conflicts. Existing coverage gate, explanation/localization code, save provenance and scoped native evidence coexist.
+- Baseline verification: 32 focused coverage/explanation/save/MCP/history/release-census tests passed; TypeScript and production build passed. Next: commit the integration and run isolated packaged baseline smoke before AI implementation. No HOI4 launch.
+- User chose configure-later; deliver real configurable provider transport and honest unconfigured behavior, plus current multi-provider cost/pro/con report. Real-provider generation will need credentials and cannot be claimed from fixtures.
+- Audited source pushes to the intended public M7.3 branch are explicitly authorized; no release/main/develop merge.
+
 ## Risk-weighted planning gate — validated build delivered; user acceptance open (2026-11-07)
 
 - Authorized M7.3 groundwork stays on `feature/hoi4-ux-m71`; existing application/service/planner/index reused. Added provider-neutral proposal types, server review/policy, route/comparison/draft coverage UI and source-backed risk triage. No provider, complete AI strategy generation, native testing or gameplay controls.
@@ -32,6 +40,26 @@
 - Two packaged failures were harness defects: duplicate preview/detail text selector, then an empty boolean open-attribute incorrectly toggled an already-open panel. Focused reproductions and corrections preceded the complete successful run; no runtime rebuild. Failed evidence retained; failure screenshots/accessibility capture added. These are not native game failures.
 - Repository history audit has no secret-pattern/suspicious/large findings; existing icon binaries only. Private origin verified; final documentation/harness commit is the normal push target only for M7.1. Preserve prior branches, releases and all package folders. Remote-equality receipt stays ignored locally.
 - Active implementation: none after the final checkpoint. Exact next step: user desktop acceptance with bundled START-HERE.md, beginning Sources & settings then BEL_EU_ and AUS_industrial_coaxing_decision. After feedback, the next reference milestone should qualify bounded scripted-helper/dynamic-modifier interpretation. Do not restart HOI4 or repeat completed research/tests.
+
+## M7.2.1 — native recovery verified; local checkpoint (2026-11-08)
+
+- Existing feature/hoi4-native-m72 from e5e02d8; preflight source df988c1. Full paired-supervisor I/O lifecycle shared with native watchdog and tested against disposable Windows processes. 13 safety tests and TypeScript passed before launch; seven focused save/MCP/HTTP compatibility tests passed afterward.
+- One owned 1936 GER campaign on exact 1.19.4.2 executable. Basic Machine Tools went from empty/unassigned to researching in independently read UI and owned telemetry; one matching plaintext save confirms this captured positive membership. No broad inventory/progress/slot-index promotion. M721-RESEARCH-EVIDENCE.json and MILESTONE-7.2.1.md retain exact hashes, session and comparisons.
+- Native deadline verified: scheduled 07:42:16.677 UTC, backup confirmed exact-process termination 07:42:20.295. Primary concurrent attempt recorded refusal; both receipts preserved. Total 543.618 seconds (9m 3.618s), under 12-minute hard cap. One launch/four gameplay actions; 18 total UI inputs (14 setup/inspection), 25 captures; no unchanged retry.
+- Evidence `.bridge-local/native-lCPDJC`. Two snapshots replay exactly after exit; source/screenshot/save hashes match. Game/supervisors gone, profile archived and original absence restored. M721 budget stopped; earlier budgets/evidence unchanged. Generic shared observations remain conservative; new scoped qualification is documentary/evidence-bound.
+- No application-facing change, new package, M7.1 merge, AI/coverage-engine development or memory work. Prior M7.2 build remains available. GitHub rechecked public on 2026-11-08; recovery commits remain local, no push.
+- Active work: none after evidence checkpoint. Exact next major task: explicitly choose the common M7.1/M7.2 baseline for M7.3, reconcile scoped observation evidence with its existing risk gate, then implement editable source-backed strategic plans. Do not relaunch using exhausted M721 budget. Reload/world identity and broader mappings need separately justified bounded qualification.
+
+## M7.2 — local checkpoint/build delivered; native gate blocked (2026-11-07)
+
+- Isolated `feature/hoi4-native-m72` from exact M7 `0620369`. M7.1 remains at `46b0206`; no planning/explanation merge or confidence promotion.
+- One authorized launch used, zero gameplay actions/UI inputs. Backup supervisor terminated the exact owned HOI4 process after about 7.3 seconds (`invalid-budget`), before a usable window/campaign. No new native-qualified fields, save/UI comparisons or reload observations. Timed native deadline behavior remains unverified. See MILESTONE-7.2.md and M72-FIELD-QUALIFICATION.md.
+- Native evidence `.bridge-local/native-6Ne9oj`; profile archived and original absence restored; game/supervisors stopped. M72 budget remains stopped at one launch; M6.5 overrun unchanged. Do not relaunch under this budget.
+- Offline two-process reproduction found EPERM replacing a heartbeat file; likely cause, original trigger exception unavailable. Append-only heartbeats, bounded shared-budget writes and retained trigger diagnostics implemented. Eight focused watchdog/heartbeat tests pass, including real concurrent processes and independent Windows stop/peer-loss/identity protection.
+- Ten save/platform/release-census tests and TypeScript pass. Save raw values, exact source paths, persisted freshness and unverified session binding reach UI/MCP; no fields promoted. Final-release 100% contract and source-obligation tracking added separately from M7.1 risk weighting. Installed candidate census: 4,101,663 conservative obligations, zero semantic reviews in this new ledger; not a count of distinct mechanics or existing explanation-engine coverage.
+- 137 distinct focused cases, TypeScript/build and expected final-release refusal passed. Isolated M7.2-5b3dce131821 ZIP delivered outside Git; all 76 extracted files match. Three actual packaged historical/save/MCP/shared-stop/restart checks passed on the first attempt; screenshot reviewed, original save unchanged, owned app processes closed. Evidence `artifacts/qa/platform-package-2026-11-07T07-46-43-039Z-52f0e672/`; exact artifact/hash/walkthrough in MILESTONE-7.2.md.
+- Active implementation: none after checkpoint; native acceptance remains incomplete. Exact next step: user reviews this isolated build; a separately reviewed native session must first qualify the repaired watchdog and one research transition with matching UI/save/log evidence. Preserve the exhausted M72 budget. Do not automatically launch again or merge M7.1.
+- GitHub connector verified origin visibility public on 2026-11-07. M7.2 explicitly forbids push unless private; commits stay local, no push attempted.
 
 ## Milestone 7 — read-only platform and Windows acceptance delivered (2026-11-06)
 

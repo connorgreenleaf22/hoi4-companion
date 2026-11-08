@@ -17,6 +17,8 @@
     "bridge:prepare-native": "tsx scripts/bridge-prepare-native.ts",
     "test:ui": "tsx scripts/smoke.ts",
     "index": "tsx server/cli.ts --index-only",
+    "prepackage": "tsx scripts/release-gate.ts",
+    "coverage:inventory": "tsx scripts/release-coverage.ts",
     "package": "npm run build && electron-builder --win portable --publish never",
     "test:history": "tsx --test tests/history.test.ts",
     "test:history-ui": "tsx scripts/history-ui.ts",

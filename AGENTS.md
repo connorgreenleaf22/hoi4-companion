@@ -1,15 +1,12 @@
 # HOI4 Companion
 
-- Work on the explicitly requested milestone branch. M7.1 uses `feature/hoi4-ux-m71`, from validated M7 `0620369`; preserve earlier feature branches and acceptance artifacts. M7.1 is offline explanation/UI work, with no HOI4 launch or gameplay commands.
-- Use `.agents/skills/hoi4-game-bridge/SKILL.md` for game discovery, bridge work and native testing. Read `docs/hoi4-bridge/STATUS.md` before repeating an investigation.
-- Extend the existing Node service, parser and SQLite infrastructure. Preserve release gates and the unresolved obligations in `QA-LEDGER.md`.
-- Never write installed game files, personal saves or a regular playset. Use explicit disposable data directories for tests. Do not attach experimental controllers to an unrelated game.
-- Separate extracted declarations, fixtures, observed telemetry and independently verified native outcomes. Input dispatch is not command success; telemetry is not a control API.
-- Test the smallest affected component first. Native sessions need a written budget: at most two launches, twenty control actions, twenty minutes, and two attempts per unchanged failure. Stop and retain diagnostics at a limit.
-- Keep raw telemetry, saves, secrets, game assets and generated evidence out of Git. Commit concise evidence summaries and status at validated milestones; no release, push or merge is implied.
-
-- Major application milestones require an isolated, milestone/commit-identified runnable Windows development build plus a packaged launch/service/resource check. Use `npm run package:development -- M5` (substitute the milestone); never overwrite older builds or publish implicitly.
-
-- M7 platform: one application-owned bridge/gateway/receipt store; MCP is a thin authenticated loopback adapter. Keep save-derived, historical, live-qualified and manual planning state distinct. Gameplay execution is not exposed. Native test plans require independent deadline supervision and retained evidence.
-
-- Planning recommendations must use the server risk gate (`server/planner/coverage.ts`, `POST strategy/review`). Unknown critical mechanics cannot be converted into confident rankings by provider prose. Keep provisional plans editable; see `docs/application/PLANNING-COVERAGE-GATE.md`.
+- M7.3 works on `feature/hoi4-ai-m73`, from validated M7.1 46b0206 with M7.2.1 f39f96d integrated. Preserve all older branches, evidence and builds. No HOI4 launches or gameplay/control experiments in M7.3; earlier native budgets are exhausted.
+- Use `.agents/skills/hoi4-game-bridge/SKILL.md` for game/source/bridge work. Read `docs/hoi4-bridge/STATUS.md` before repeating investigations.
+- Extend the existing Node service, ordered parser, SQLite, planner workspace and history infrastructure. Preserve existing QA-LEDGER/release gates.
+- Never modify installed game files, personal saves or regular playsets. Keep static definitions, native-qualified captured facts, parsed-unqualified saves, historical recordings and manual assumptions distinct. Freshness does not prove ownership; input dispatch is not success.
+- Recommendations must use `server/planner/coverage.ts` and `POST strategy/review`. Provider prose cannot certify mechanics, confidence, rankings or optimization. Plans stay editable/provisional; observations never overwrite assumptions automatically. Preserve the final-release explanation coverage contract.
+- Test the smallest affected component first; use deterministic fixtures, no repeated unchanged failures or broad regression loops. Record actual versus inferred/unverified results and retain useful evidence.
+- Keep credentials, raw saves/telemetry/diagnostics, personal account metadata and unnecessary game assets out of Git. The user explicitly permits audited M7.3 source pushes to the intentionally public origin. Push only the intended feature branch; no force push, main/develop merge or release.
+- Major application milestones require a commit-identified isolated Windows build, fresh extraction and launch/service/persistence checks. Never replace older builds or installed apps.
+- The model-independent AI planner must disclose provider costs/data transmission, keep raw private saves local, and work offline when unconfigured. User chose configure-later for M7.3: no real-provider success claims from test fixtures or Codex's own access.
+- Phase 0 integration must build and pass packaged smoke checks before AI implementation starts. Keep one application-owned bridge/gateway/store and the existing authenticated read-only MCP adapter.

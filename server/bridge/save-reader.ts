@@ -42,14 +42,19 @@ export function inspectSaveBytes(bytes:Buffer,sourcePath:string,modifiedAt:strin
  const version=headerValue('version'),gameVersion=version?.match(/\bv?(\d+\.\d+\.\d+\.\d+)(?:\.|\s|$)/)?.[1]??null;
  if(gameVersion!=='1.19.4.2')throw Error('Save field mapping supports only 1.19.4.2; detected '+(gameVersion||'unknown'));
  const gameDate=headerValue('date');if(!gameDate||!/^\d{4}\.\d{1,2}\.\d{1,2}\.\d{1,2}$/.test(gameDate))throw Error('Save date unavailable');
+ const [year,month,day,hour]=gameDate.split('.').map(Number);if(year<1000||month<1||month>12||day<1||day>new Date(Date.UTC(year,month,0)).getUTCDate()||hour<0||hour>23)throw Error('Invalid saved calendar date');
  const field=(value:ObservationValue,key:string,line:number,reason:string):ObservationField=>({status:'available',value,qualification:'parsed-unqualified',reason,location:{path:key,line}});
  const subtree=(key:string):{nodes:Node[];span?:Span}=>{const span=one(key);if(!span)return {nodes:[]};if(span.end-span.start>2*1024*1024)throw Error('Selected save subtree exceeds parsing limit');return {nodes:parseScript(span.raw),span};};
  const focus=subtree(root+'/focus'),technology=subtree(root+'/technology');
  const fields:Record<string,ObservationField>={};
+ fields.playerCountry=field(tag,'player',one('player')!.line,'Saved player header; independent campaign identity comparison pending');
+ fields.gameDate=field(gameDate,'date',one('date')!.line,'Saved campaign timestamp; not wall-clock freshness or live state');
  const unique=(nodes:Node[],key:string)=>{if(children(nodes,key).length>1)throw Error('Ambiguous save field '+key);return scalar(nodes,key);};
  const current=unique(focus.nodes,'current');
  fields.currentFocus=current&&current!=='none'&&identifier(current)?field(current,root+'/focus/current',focus.span!.line,'Parsed selection token; independent current-state readback pending'):missing('No explicit valid current token; stored progress is not selection proof');
  const progress=unique(focus.nodes,'progress');
+ const progressNode=children(focus.nodes,'progress')[0];
+ fields.storedFocusProgress=/^\d+(?:\.\d+)?$/.test(progress)&&Number.isFinite(Number(progress))?{...field(Number(progress),root+'/focus/progress',focus.span!.line+(progressNode?.line||1)-1,'Raw stored focus progress; may remain without an active focus. Units/remaining time unqualified.'),raw:progress}:missing('Stored focus progress absent or invalid');
  fields.focusProgress=fields.currentFocus.status==='available'&&/^\d+(?:\.\d+)?$/.test(progress)&&Number.isFinite(Number(progress))?field(Number(progress),root+'/focus/progress',focus.span!.line,'Saved raw progress; units/remaining time not independently qualified'):missing('No qualified current focus/progress pair');
  const completed=children(focus.nodes,'completed');
  fields.completedFocuses=completed.length&&completed.every(n=>typeof n.value==='string'&&identifier(n.value))?field([...new Set(completed.map(n=>n.value as string))],root+'/focus/completed',focus.span!.line,'Explicit saved completion entries; completeness not independently qualified'):missing('No explicit completion entries; absence is not an empty inventory');
@@ -62,7 +67,8 @@ export function inspectSaveBytes(bytes:Buffer,sourcePath:string,modifiedAt:strin
  const slotSpan=one(root+'/research_slot'),count=slotSpan?.raw;
  fields.researchSlots=count&&/^\d+$/.test(count)&&Number(count)<=100?field(Number(count),root+'/research_slot',slotSpan!.line,'Saved total count; independent readback pending'):missing('Research slot count absent or invalid');
  const hash=digest(bytes);
- return {schemaVersion:1,id:digest(hash+':'+tag+':save-v1'),source:{kind:'plaintext-save',path:sourcePath,hash},classification:'save-derived',sessionId:null,gameVersion,gameDate,country:tag,capturedAt:modifiedAt,fields,limitations:['Read-only persisted state, never live or session-owned','All save field mappings remain parsed-unqualified until independent qualification','No binary/compressed decoding; no completion-event inference','Missing selection does not prove no focus; raw stored progress may survive completion/cancellation']};
+ for(const [key,token] of [['currentFocus','current'],['focusProgress','progress'],['completedFocuses','completed']] as const){const node=children(focus.nodes,token)[0];if(fields[key].location&&node){fields[key].location!.line=focus.span!.line+node.line-1;if(typeof node.value==='string')fields[key].raw=node.value;}}
+ return {schemaVersion:1,id:digest(hash+':'+tag+':save-v2'),source:{kind:'plaintext-save',path:sourcePath,hash},classification:'save-derived',sessionId:null,gameVersion,gameDate,country:tag,capturedAt:modifiedAt,fields,provenance:{readAt:new Date().toISOString(),fileModifiedAt:modifiedAt,freshness:'persisted-state',sessionBinding:'unverified'},limitations:['Read-only persisted state, never live or session-owned','Save fields require independent capture-specific evidence before qualification','No binary/compressed decoding; no completion-event inference','Missing selection does not prove no focus; raw stored progress may survive completion/cancellation']};
 }
 export function inspectSaveFile(file:string,country?:string):GameObservation {
  if(typeof file!=='string'||!path.isAbsolute(file)||file.length>4096)throw Error('Supply an absolute plaintext save path');

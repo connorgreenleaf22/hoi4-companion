@@ -26,7 +26,11 @@ test('real stdio MCP and UI HTTP share observation state, receipt store and stop
   const comparison=await call('hoi4_bridge_compare',{before:history.snapshots[0].id,after:history.snapshots[1].id});assert.match(comparison.interpretation,/not completion events/);
   fs.appendFileSync(log,wire('1936.01.03.24'));await new Promise(resolve=>setTimeout(resolve,5300));assert.equal((await call('hoi4_bridge_history')).snapshots.length,3);
   const save=path.join(root,'disposable.hoi4');fs.copyFileSync(new URL('./fixtures/bridge-save-1.19.4.2.txt',import.meta.url),save);
-  assert.equal((await call('hoi4_bridge_save_inspect',{path:save})).classification,'save-derived');
+  const saved=await call('hoi4_bridge_save_inspect',{path:save});
+  assert.equal(saved.classification,'save-derived');assert.equal(saved.sessionId,null);
+  assert.equal(saved.provenance.freshness,'persisted-state');assert.equal(saved.provenance.sessionBinding,'unverified');
+  assert.equal(saved.fields.storedFocusProgress.raw,'10');assert.equal(saved.fields.playerCountry.qualification,'parsed-unqualified');
+  assert.ok(Object.values(saved.fields).every((field:any)=>field.qualification!=='native-verified'));
   assert.equal((await call('hoi4_bridge_focus_research')).find((s:any)=>s.source.kind==='plaintext-save').fields.currentFocus.status,'unavailable');
   const action={schemaVersion:1,requestId:'dry-run',sessionId:'not-live',command:'focus.select',mode:'control'};
   assert.equal((await call('hoi4_bridge_action_validate',{action})).allowed,false);assert.equal(await call('hoi4_bridge_receipt',{requestId:'dry-run'}),null);

@@ -4,12 +4,15 @@ export interface ObservationField {
  status:'available'|'unavailable';value:ObservationValue;
  qualification:'native-verified'|'parsed-unqualified'|'unsupported';reason:string;
  location?:{path:string;line:number};
+ raw?:string;
+ qualificationEvidence?:{id:string;report:string;scope:string};
 }
 export interface GameObservation {
  schemaVersion:1;id:string;source:{kind:'telemetry'|'plaintext-save'|'native-readonly';path:string;hash:string};
  classification:'verified-live'|'historical'|'save-derived';
  sessionId:string|null;gameVersion:string|null;gameDate:string|null;country:string|null;capturedAt:string;
  fields:Record<string,ObservationField>;limitations:string[];
+ provenance?:{readAt:string;fileModifiedAt:string;freshness:'persisted-state';sessionBinding:'unverified'|'independently-captured';captureId?:string};
 }
 /** Future observation adapters implement this contract, not a separate command gateway. */
 export interface ObservationProvider {id:string;read():Promise<GameObservation|null>}

@@ -25,3 +25,21 @@ test('selected save is read-only and provenance hashes original bytes',()=>{
   assert.equal(s.source.hash,hash);assert.equal(digest(fs.readFileSync(file)),hash);assert.equal(fs.statSync(file).mtimeMs,before.mtimeMs);
  }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
+
+// Controlled declarations exercise extraction only; none is native evidence.
+test('controlled focus and research transitions remain parsed-unqualified, including reload duplicates',()=>{
+ const empty=inspect(saveFixture.replace('focus={completed="GER_prioritize_economic_growth" progress=10}','focus={current=none progress=10}'));
+ assert.equal(empty.fields.currentFocus.status,'unavailable');assert.equal(empty.fields.storedFocusProgress.value,10);
+ const selected=inspect(saveFixture.replace('focus={','focus={current=GER_the_four_year_plan '));
+ const later=inspect(saveFixture.replace('focus={','focus={current=GER_the_four_year_plan ').replace('progress=10','progress=11.5'));
+ assert.equal(selected.fields.currentFocus.value,later.fields.currentFocus.value);assert.equal(later.fields.focusProgress.value,11.5);assert.equal(later.fields.focusProgress.raw,'11.5');
+ assert.equal(inspect(saveFixture).id,inspect(saveFixture).id);assert.equal(selected.provenance!.freshness,'persisted-state');assert.equal(selected.provenance!.sessionBinding,'unverified');
+ assert.equal(selected.fields.playerCountry.value,'GER');assert.equal(selected.fields.gameDate.value,'1936.4.1.1');
+ const assignments=selected.fields.researchAssignments.value as any[];assert.equal(assignments[0].technology,'basic_machine_tools');assert.equal(assignments.filter(x=>x.technology===null).length,3);
+ for(const x of [empty,selected,later])assert.ok(Object.values(x.fields).every(f=>f.qualification!=='native-verified'));
+ const line=selected.fields.currentFocus.location!.line;assert.match((saveFixture.replace('focus={','focus={current=GER_the_four_year_plan ')).split('\n')[line-1],/current=/);
+});
+test('malformed date, repeated selection/technology and incomplete saves are not observations',()=>{
+ for(const text of [saveFixture.replace('1936.4.1.1','1936.13.1.1'),saveFixture.replace('1936.4.1.1','1936.2.31.1'),saveFixture.replace('focus={','focus={current=A current=B '),saveFixture.replace('level=1','level=1 level=2'),saveFixture.replace('technologies={','technologies={infantry_weapons={level=1} ')])assert.throws(()=>inspect(text));
+ const badProgress=inspect(saveFixture.replace('focus={','focus={current=A ').replace('progress=10','progress=nan'));assert.equal(badProgress.fields.focusProgress.status,'unavailable');assert.equal(badProgress.fields.storedFocusProgress.status,'unavailable');
+});

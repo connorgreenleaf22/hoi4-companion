@@ -58,3 +58,11 @@ These are **source-supported candidates**, not tested exports. The primary refer
 4. Broaden country coverage only with an explicit player/scope policy and tested new-game/load/restart behavior. Avoid scanning every country/focus every tick. Add versioned producer capabilities, field scope, export completeness and performance bounds first.
 
 Recommended telemetry milestone: qualify manpower/war support plus a tiny known-ID completion/research manifest in two real snapshots, including missing/false/cancelled cases. Keep this one-way and separate from command adapters. It could remove important planner unknowns before any game-control work. No DLL injection, executable changes or achievement claims are implied.
+
+## M7.2 qualification outcome
+
+Mod source and exports are unchanged from M6.5/M7. The temporary laptop profile contained only the dedicated test mod; it was archived after the one failed startup and the prior absent profile restored. There is no new regular-playset enablement. M7.2 produced no new state capture or field qualification; prior version-specific M6.5 claims remain bounded to their original evidence. Save extraction now exposes raw/persisted provenance without native promotion. Same-date load identity, complete focus/research inventories, units of raw research/focus progress and broad country/mod coverage remain unqualified. Consult M72-FIELD-QUALIFICATION.md before offering a value to any planning condition. No additional memory/interface need was empirically eliminated by this attempt.
+
+## M7.2.1 recovery
+
+No exporter expansion. On the same supported 1.19.4.2 executable, a fresh owned GER campaign reconfirmed Basic Machine Tools not researching → researching against the live UI. A matching source-hashed plaintext save independently confirms only that captured research membership. Two records replay exactly after exit and remain historical. See MILESTONE-7.2.1.md and M721-RESEARCH-EVIDENCE.json; generic mixed save fields and all other previously unqualified groups remain unchanged. The dedicated copied mod/profile was archived after native deadline shutdown; it is not enabled in a regular playset.

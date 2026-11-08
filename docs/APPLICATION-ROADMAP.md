@@ -1,5 +1,7 @@
 # HOI4 Companion roadmap
 
+M7.3 active integration note (2026-11-08): the branch separation/status statements below are historical. The user now authorizes a common M7.1 + M7.2.1 baseline and provider-independent AI generation/revision in the existing planner, with no native game work. Risk gating, scoped observation evidence and final-release mechanics coverage remain independent safeguards. Credentials will be configured later; provide an honest offline workflow and provider comparison.
+
 Updated for Milestone 7.1 explanation and reference usability; desktop acceptance remains pending. Deliver useful app features on the existing renderer/service/index. Native control is a separate qualification track, not a prerequisite for read-only planning improvements. No release or native test is authorized by this roadmap itself. M6 implements bounded objective routes, saved comparisons and decision/research references. M6.1 adds categorized alias search, immediate objective suggestions and readable mechanics. Fresh-extraction Windows workflow/restart and missing-path checks passed on the laptop; formal user acceptance and main-desktop compatibility remain pending. See application/MILESTONE-6.1-ACCEPTANCE.md.
 
 | Track / next feature | Priority | Dependencies and current feasibility | Measurable outcome |
@@ -65,3 +67,15 @@ Reuse and extension seams:
 - Configure provider, credentials, data disclosure and request/cost bounds explicitly in that milestone. Keep secrets outside Git. Offline browsing/manual planning must continue working when AI is unavailable. No gameplay command permission is implied by generating or accepting a plan.
 
 Acceptance: one end-to-end monarchist Portugal proposal covers all requested planning dimensions with resolvable citations; invalid IDs, contradictory branches and unsupported outcomes are rejected or identified; user edits and provenance survive restart; changed-source and missing-campaign-state cases remain honest; a fresh isolated Windows package supports personal review. Test with deterministic provider fixtures before live-provider evaluation. Broader country coverage and automatic gameplay remain later work.
+
+## M7.2 / M7.3 coordination and final release
+
+M7.2 stays on the isolated M7 baseline. Its first native session ended before a campaign; the repaired observation supervisor needs a separately reviewed native session. Prioritize one independently matched research transition and save/reload identity before broad state expansion. No new save field is native-qualified. M7.5 native-access feasibility remains separate; this milestone used no memory reads, injection or hooks.
+
+M7.1's explanation/UX improvements and provider-independent risk-weighted strategy coverage remain on their own branch. M7.3 — AI-Assisted Strategic Planning MVP — will generate complete editable objective plans (beginning with monarchist Portugal and representative Germany paths), with focuses, decisions, research, economic/military preparation, dependencies, risks and source-backed explanations. Integrate M7.1's existing coverage types/gate rather than recreating them here. Critical unresolved mechanics block confident ranking/optimization; provisional plans remain clearly labeled. Independently qualified observations may eventually support reviewed condition resolution, never automatic confidence promotion or replacement of manual assertions.
+
+Final-release contract: application/EXPLANATION-COVERAGE-CONTRACT.md. Require 100% semantic explanation of the exact approved content/configuration denominator, source-backed regression evidence and zero unresolved mechanics. The new conservative census tracks obligations; diagnostic labels do not close them. No configuration has yet passed this final gate. Development packaging stays available; `npm run package` now enforces the coverage precondition in addition to existing release gates.
+
+### M7.2.1 recovery completed — 2026-11-08
+
+Native paired-watchdog deadline shutdown and one Basic Machine Tools research transition are now independently verified on the pinned 1.19.4.2 GER capture; see hoi4-bridge/MILESTONE-7.2.1.md. The matching save establishes positive membership only, not slots/progress/inventory completeness. M7.3 is the next major user-facing objective: choose the common baseline explicitly and reconcile this scoped evidence with M7.1's existing risk-weighted planning gate. Historical/parsed/manual state stays separate and confidence cannot rise automatically. The final-release coverage contract and separate M7.5 native-memory track are unchanged. No additional native session is authorized by this roadmap.

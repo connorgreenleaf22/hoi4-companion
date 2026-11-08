@@ -1,0 +1,17 @@
+# M7.2 isolated Windows review
+
+This is the M7 native-observation development branch, not the separate M7.1 UX/planning build. No new save field was native-qualified: the one M7.2 game session stopped before a campaign was available. The build tests provenance and read-only integration without claiming a live connection.
+
+1. Extract the entire ZIP to a **new** desktop folder. Keep `resources`, DLLs and all other files together. Run `HOI4 Companion M7.2-COMMIT.exe` from `win-unpacked`; do not copy it over an existing application. The executable filename identifies the source commit; BUILD.json beside the archive also records it. This unsigned development build does not install, update or replace the regular companion.
+2. The build creates an isolated `%APPDATA%/HOI4 Companion Development/M7.2-COMMIT` data profile. First open Sources & settings and check the detected HOI4 installation. Indexing reads game files; it does not launch HOI4 or change saves/mods. Do not change your regular playset for this review.
+3. In Command center, open **Connect game observations**. It should start disconnected, with command execution unavailable. A detected log path alone is not verified live state. Leave it disconnected during this historical review.
+4. In **Your observed campaign**, import bundled `M65-HISTORICAL-OBSERVATIONS.jsonl`. Eight retained M6.5 snapshots should appear. Compare Basic Machine Tools not researching/researching. These are historical captures from the laptop, not your desktop campaign. Do not manually create JSON to represent verified live state.
+5. Optional: use **Plaintext save path** with an existing disposable uncompressed HOI4 1.19.4.2 save. The reader never modifies the original. Compressed/binary/different-version saves intentionally reject; do not convert or overwrite personal saves. Expand the observation: values must say parsed-unqualified, show source hash/paths, raw stored focus progress where present, read time, persisted-state freshness and unverified session binding. No current focus may be inferred from stored progress.
+6. Close/reopen the build. Imported recording and inspected save should persist in this build's isolated storage. They must not become live observations or overwrite manual planning conditions.
+7. Optional final check: **Emergency stop integration** stops monitoring and latches dispatch prevention across restart. It does not close HOI4 or undo anything. It intentionally cannot be cleared through the UI; do not test it until other connection checks are complete.
+
+Report the build label, screen, exact message, whether the source was a log/save/recording, and expected versus actual behavior. Keep credential tokens and personal save contents private. No game launch is needed to diagnose parser/UI errors.
+
+Unlike `npm run browser`, this build contains Electron, the Node service, renderer and resources and needs no developer Node installation for the app. The optional external stdio MCP client does require compatible Node and its matching local connection descriptor. Both modes use the same service logic. The packaged development profile is isolated; a browser checkout uses its configured development data directory. Neither starts or controls HOI4 automatically.
+
+Final-release mechanics coverage remains blocked; incomplete explanations are development behavior. M7.1 improvements and its risk-weighted planning gate will require explicit integration into a common baseline later.

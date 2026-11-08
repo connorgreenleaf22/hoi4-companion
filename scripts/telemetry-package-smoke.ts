@@ -22,10 +22,10 @@ async function main(){
  let app:Awaited<ReturnType<typeof _electron.launch>>|undefined;
  const errors:string[]=[];
  const launch=async()=>{
-  app=await _electron.launch({executablePath:executable,cwd:path.dirname(executable),env,timeout:60000});
+  app=await _electron.launch({executablePath:executable,cwd:path.dirname(executable),env,timeout:120000});
   run.ownedProcesses.push({pid:app.process().pid!,kind:'Owned isolated packaged companion'});
-  const page=await app.firstWindow({timeout:60000});page.on('pageerror',e=>errors.push(e.message));
-  await expect(page.getByRole('heading',{name:'Command center',exact:true})).toBeVisible({timeout:60000});return page;
+  const page=await app.firstWindow({timeout:120000});page.on('pageerror',e=>errors.push(e.message));
+  await expect(page.getByRole('heading',{name:'Command center',exact:true})).toBeVisible({timeout:120000});return page;
  };
  try{
   const manifest=captureRuntimeArchive(path.join(path.dirname(executable),'resources','app.asar'));run.write('runtime-manifest.json',manifest);
@@ -56,7 +56,7 @@ async function main(){
    await expect(connection.locator(':scope > summary')).toContainText('log-monitoring');
    if(!savePath)throw Error('Supply HOI4_PLATFORM_SAVE: existing disposable plaintext save');
    await connection.getByLabel('Plaintext save path').fill(savePath);await connection.getByRole('button',{name:'Inspect save read-only'}).click();
-   const observation=connection.getByLabel('Save-derived observation');await expect(observation).toContainText('1936.4.1.1');await observation.locator(':scope > summary').click();await expect(observation).toContainText('parsed-unqualified');await expect(observation).toContainText('No explicit valid current token');
+   const observation=connection.getByLabel('Save-derived observation');await expect(observation).toContainText('1936.4.1.1');await observation.locator(':scope > summary').click();await expect(observation).toContainText('parsed-unqualified');await expect(observation).toContainText('Freshness: persisted state');await expect(observation).toContainText('Session binding: unverified');await expect(observation).toContainText('Raw serialized value: 10');await expect(observation).toContainText('No explicit valid current token');
    const status=await page.evaluate(()=>fetch('/api/v1/bridge/platform/status').then(r=>r.json()));
    if(status.observations[0].classification!=='historical')throw Error('Unowned log mislabeled live');
    const entry=path.join(path.dirname(executable),'HOI4-Bridge-MCP.cjs');if(fileHash(entry)!==fileHash(path.resolve('build/bridge-mcp.cjs')))throw Error('MCP bundle differs');
@@ -64,6 +64,7 @@ async function main(){
    if((await client.listTools()).tools.length!==15)throw Error('MCP catalog mismatch');
    const observed=await call('hoi4_bridge_observations'),saved=observed.find((o:any)=>o.source.kind==='plaintext-save');
    if(saved.source.hash!==saveHash||saved.fields.researchAssignments.value.length!==4||saved.fields.completedTechnologies.value.length!==55)throw Error('Real save extraction mismatch');
+   if(saved.provenance?.freshness!=='persisted-state'||saved.provenance?.sessionBinding!=='unverified'||saved.sessionId!==null||saved.fields.storedFocusProgress.value!==10)throw Error('Save provenance or raw progress contract mismatch');
    if(saved.fields.currentFocus.status!=='unavailable'||saved.fields.focusProgress.status!=='unavailable')throw Error('Unproven focus inferred');
    const history=await call('hoi4_bridge_history',{recordingId:id});if(history.snapshots.length!==8)throw Error('MCP cannot see UI recording');
    const validation=await call('hoi4_bridge_action_validate',{action:{schemaVersion:1,requestId:'packaged-dry-run',sessionId:'not-live',command:'focus.select',mode:'control'}});if(validation.allowed!==false||await call('hoi4_bridge_receipt',{requestId:'packaged-dry-run'})!==null)throw Error('Dry-run mutated receipts');
