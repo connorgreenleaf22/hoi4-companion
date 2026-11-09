@@ -1,0 +1,55 @@
+# M7.3.1 — generation reliability and spending safeguards
+
+Status: offline implementation verified; packaged and real-provider acceptance are separate gates. No paid API request or HOI4 launch was made during development. Branch: `feature/hoi4-ai-m731`, based on M7.3 `fc60182`. Previous worktrees, builds, application data, saves and mods are preserved.
+
+## Exact failure
+
+The retained M7.3 evaluation confirms the reported `POR_estado_novo` error. Installed HOI4 1.19.4.2 defines both a focus and an idea with that ID. The disclosed bundle contains one compatible Portugal focus, but the later untyped global resolver treats the focus/idea collision as ambiguous. This was an application inconsistency, not evidence of model fabrication or a bad index.
+
+The pre-fix reproduction is retained locally in `.bridge-local/m731-reproduction.json`. Focus source: `common/national_focus/portugal.txt`, SHA256 `f2ab08a2667a665a58c7c92f812045dc5406a4747bb2f54d702dc15f15088180`; idea source: `common/ideas/portugal.txt`, SHA256 `3701f33a49146dc3f682c16d5a04d10b5de199d23a39f890afb73f360c635ad3`. The original response content and usage were not saved by M7.3. They cannot be recovered or used to reconstruct the user-reported approximately $0.14 from local records. User AppData was inspected read-only; no provider retrieval was attempted.
+
+## Implementation and interfaces
+
+- `server/planner/ai-resolution.ts`: one canonical/raw-ID contract for generation, review and save. Canonical `definition:<uid>` identifies an exact definition. Raw IDs normalize only after compatible-kind and selected-focus-tree filtering produces one candidate; disclosure cannot hide ambiguity. Names/aliases never guess. Generated proposals must match the original disclosed reference hash/version. Errors include reference position, reason and candidates. Global resolution is unchanged.
+- `server/planner/ai.ts`: SQLite schema-2 attempt records preserve valid structured output, exact context/source revision, request identity, metadata and cost before local review. Failed review becomes `needs-correction`; malformed output remains `failed` with available accounting. Recovery uses the ordinary deterministic coverage gate, revision conflict checks and original allowlist. Existing saved documents are never silently overwritten. Provider attempts and edited strategy revisions remain distinct records.
+- `server/planner/ai-provider.ts`: fixed OpenAI Responses transport, no automatic retry, bounded response, no raw error-body echo, optional usage counters, sanitized request/response IDs, model/tier/status capture before output decoding. Incomplete/refused output retains available accounting. Stable instructions/schema/source prefix precedes variable user text; cache hits are not promised. API keys remain memory-only, and known credential strings are redacted from returned content and persisted attempt diagnostics.
+- `server/planner/ai-cost.ts`: versioned USD estimates, conservative reservations and unknown-usage handling. This table qualifies GPT-6.1 Sol standard/default tier only; unpriced requested models cannot dispatch, and unexpected returned models/tiers retain their reservation. The provider/model seam remains configurable; extending qualified pricing requires a reviewed table and tests.
+- `server/planner/ai-context.ts`: objective-matched focus seeds, required OR ancestors, exclusion alternatives, relevant country decisions, selected foundational/objective research and bounded explicit event closure. Saved proposal citations and user-added canonical references expand context. Ambiguous dependencies, event bounds and omissions remain explicit. Hidden scripted helpers and complete consequence closure remain unresolved, subject to the existing coverage gate.
+- `src/ai-planning-types.ts`, `src/planner/AiPlanner.tsx`: typed cost settings, previews, request history, token breakdown, session totals, local draft recovery and reference editing. Provider advice stays editable and provisional; rank/optimize remain blocked. Existing application service, SQLite, mechanics interpreter and planning gate are reused. No new dependency or third-party runtime is installed.
+- `POST /api/v1/ai/settings` saves non-secret settings. `GET ai/config` adds the persistent budget. `POST ai/context` adds cost preview and quote fingerprint. `POST ai/generate` requires current context/quote fingerprints, transmission approval and above-threshold approval when applicable; returns `{attempt,strategy?}`. Consumers must inspect attempt status instead of treating HTTP 200 as accepted strategy output. `GET ai/evaluations?profile=...` includes schema-2 attempts. `POST ai/save` with the original request ID recovers a draft locally; stale-source recovery refuses instead of silently reinterpreting it. Reference errors have `code: strategy-reference` and structured `problems`.
+- Packaging validators now accept three-component milestone names such as M7.3.1. Output remains commit-isolated outside the repository; no release/update/install action is added.
+
+## Spending policy and limitations
+
+Defaults: 3,000 output tokens, low reasoning effort, $0.50 local session budget, $0.15 request ceiling, $0.05 confirmation threshold. Session identity, settings and accounting persist through restart/forget-key. To authorize more spending, explicitly change the budget; reopening the app does not reset it. All campaigns sharing this app data directory share this budget. Older M7.3 requests without usage are unavailable and are not retrospectively counted as zero-cost requests.
+
+Before dispatch, an estimate uses serialized request UTF-8 bytes / 3.5. A larger reservation uses bytes + 512 input tokens, full output cap, no cache-read discount and the qualified cache-write rate. The ceiling and remaining budget must cover that reservation. Above-threshold reservation requires explicit approval bound to a fresh quote. Input byte estimates are not a tokenizer or a final billing cap; account controls remain necessary. Identical request IDs and identical context/model/output/effort attempts are blocked across new UUIDs and restarts. A different paid revision requires explicit changed objective/instructions and a fresh approval; there is no automatic retry.
+
+Usage pricing version `openai-sol-2026-11-09-v1`: standard rates per million tokens are $2 input, $0.10 cache read, $2.50 default 30-minute cache write, $10 output. Input beyond 272K uses the documented long-context multipliers. Cache-read/write counters are subsets of input; reasoning is a subset of output and is not charged again. Missing cache detail uses conservative write pricing. Missing/inconsistent usage or unknown tier/model leaves the full reservation held. Estimates exclude tax, credits, discounts and billing adjustments. Sources: [model pricing](https://developers.openai.com/api/docs/models/gpt-6.1-sol), [cache accounting](https://developers.openai.com/api/docs/guides/prompt-caching), [reasoning/output limits](https://developers.openai.com/api/docs/guides/reasoning).
+
+Cancellation stops local waiting; it cannot reverse provider work or charges. A crash can leave an attempt pending with a held reservation. Review its request ID and provider account usage; do not retry blindly. The application does not query billing accounts or release uncertain reservations automatically. The single application-owned service prevents concurrent dispatch; cross-process/shared-database controllers are outside the supported deployment.
+
+## Evidence and bounded QA
+
+- 50 focused tests passed: AI contracts/transport/recovery/accounting/budgets, API, planning service/coverage, explanations, plaintext save qualification and final-release gates. A subsequent ten-test AI run added restart persistence for unknown-usage holds and passed. TypeScript and production build passed.
+- Actual installed-source fixture journey: `artifacts/qa/ai-planning-2026-11-09T23-54-26-024Z-a5540a59`. Three checks passed: partially invalid proposal recovery using the real focus/idea collision; editing/reordering rejection/revision/comparison; restart persistence without credentials or campaign-history mutation. Two injected fixture calls, zero real-provider calls. The recovered eight-focus route remains structurally valid and mechanically provisional, with the existing unresolved consequence gate intact.
+- This objective selects 65 definitions. Initial context is about 42KB including local metadata; request estimate 13,454 input tokens, $0.063635 with full output cap, $0.14900251 conservative reservation. These are estimates, not measured model usage. `retrieval.json` records exact bundle statistics, omissions and canonical normalization. Broader objectives/manual expansion can cost more.
+- First UI run stopped when the revised request correctly exceeded the default $0.15 ceiling ($0.1557 reservation). The fixture was corrected to explicitly raise its ceiling to $0.20. This was a working protection, not a provider failure. Initial unit fixtures lacked an objective-matched non-root focus; the fixture title was corrected instead of adding irrelevant retrieval filler. No repeated game launches or paid tests.
+- Original M7.3 response loss is irrecoverable locally. Whole-strategy usefulness, actual GPT-6.1 Sol output length/quality, provider tier/model response behavior, invoice comparison and user desktop acceptance remain open. A 3,000-token cap may produce incomplete reasoning output; retain it and stop, rather than automatically buying a retry.
+
+Commands (Node on PATH):
+
+```powershell
+node --import tsx --test tests/ai-planning.test.ts tests/ai-reliability.test.ts
+npm run build
+# Installed-source UI uses a read-only retained 1.19.4.2 index:
+$env:HOI4_UI_REFERENCE_DB='<absolute retained companion.sqlite>'
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:/Program Files/Google/Chrome/Application/chrome.exe'
+node --import tsx scripts/ai-planning-smoke.ts
+# Clean, committed source is required:
+node scripts/package-development.mjs M7.3.1
+node scripts/package-acceptance.mjs '<isolated build root>'
+node --import tsx scripts/ai-package-smoke.ts '<freshly extracted executable>'
+```
+
+The exact artifact identity and package evidence are recorded in `M731-VERIFICATION.json` after packaging. Follow `MILESTONE-7.3.1-ACCEPTANCE.md` for offline review and the separately user-approved single paid test. Next milestone: evaluate that one real response and reconcile observed usage/strategy quality before further AI feature expansion. No native, explanation-engine or memory-control work is part of this milestone.

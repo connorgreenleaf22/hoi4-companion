@@ -1,5 +1,15 @@
 # HOI4 bridge status
 
+## M7.3.1 — offline reliability verified; packaging in progress (2026-11-09)
+
+- Dedicated feature/hoi4-ai-m731 from fc60182. No paid/provider calls or HOI4 launches. Prior worktrees/builds and user AppData preserved.
+- Exact POR_estado_novo failure reproduced: valid selected-tree focus collided with an idea in global untyped resolution. Unified kind/tree/disclosure resolver fixes it without changing global ambiguity behavior. Old response/usage were never saved and cannot be reconstructed locally; do not buy a reproduction.
+- Implemented recoverable schema-2 attempts, usage/tier/status metadata, versioned estimates, persisted spending reservations, quote-bound warning approval, duplicate prevention, smaller output/effort controls, objective-focused source closure and local recovery UI. No planning confidence elevation or observation requalification.
+- Verified: 50 focused regressions, ten-test follow-up with unknown-usage reservation restart, TypeScript/build, three actual installed-source fixture UI journeys (two injected responses, zero provider calls). Evidence artifacts/qa/ai-planning-2026-11-09T23-54-26-024Z-a5540a59; original reproduction .bridge-local/m731-reproduction.json. Initial revised fixture hit the working $0.15 ceiling; explicit fixture-only settings change resolved it.
+- 65 definitions for the Portugal objective; original focus/idea collision, partial output correction, canonical save, coverage, revisions, costs and restart verified. Detailed report and one-request user procedure: ../application/MILESTONE-7.3.1.md and MILESTONE-7.3.1-ACCEPTANCE.md.
+- Active: audit/commit validated source, then create and launch fresh M7.3.1 Windows acceptance archive. Exact next step: complete packaged Electron smoke test, record artifact/evidence, audit and publish only the feature branch.
+- Open: actual GPT-6.1 Sol request and invoice comparison, subjective strategy quality, user desktop acceptance and existing complete-explanation release gate. User must separately approve/initiate the single paid acceptance request. No automatic retries or native work.
+
 ## M7.3 — packaged implementation candidate; provider acceptance open (2026-11-08)
 
 - New feature/hoi4-ai-m73 from M7.1 46b0206; integrating M7.2.1 f39f96d with common ancestor 0620369. Local/remote M7.1 and M7 tips match; M7.2.1 is local only. Original worktrees clean and preserved.

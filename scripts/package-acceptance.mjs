@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 const root=path.resolve(process.argv[2]||'');
 const stamp=JSON.parse(fs.readFileSync(path.join(root,'BUILD.json'),'utf8'));
-if(!/^M\d+(?:\.\d+)?-[a-f0-9]{12}$/.test(stamp.label))throw Error('Expected a development build directory containing BUILD.json.');
+if(!/^M\d+(?:\.\d+){0,2}-[a-f0-9]{12}$/.test(stamp.label))throw Error('Expected a development build directory containing BUILD.json.');
 const source=path.join(root,'win-unpacked'),zip=path.join(root,stamp.label+'-windows-x64.zip'),extracted=path.join(root,'acceptance-extracted');
 if(!fs.existsSync(source)||fs.existsSync(zip)||fs.existsSync(extracted))throw Error('Missing source or existing archive/extraction; refuse to overwrite.');
 const instructions=fs.readFileSync(`docs/application/MILESTONE-${stamp.label.split('-')[0].slice(1)}-ACCEPTANCE.md`),readme=path.join(source,'START-HERE.md');

@@ -13,6 +13,7 @@ import {universalSearch} from './universal-search';
 import {searchEntries,summary} from './search';
 import {validatePlanner} from './planner/validation';
 import {mirrorPlanner} from './planner/plans';
+import {StrategyReferenceError} from './planner/ai-resolution';
 import {preparePlanDraft,makePreview,validatePreviewContext,PlanConflict} from './planner/service';
 import {listDiscovery,getDiscovery,previewDiscovery} from './discovery';
 import {GameBridge} from './bridge/service';
@@ -111,6 +112,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
             if(!req.headers['content-type']?.startsWith('application/json'))return send(res,415,{error:'AI operations require JSON.'});
             const input=await body(req);
             if(route==='ai/config')return send(res,200,ai.configure(input));
+            if(route==='ai/settings')return send(res,200,ai.updateSettings(input));
             if(route==='ai/clear')return send(res,200,ai.clear());
             if(route==='ai/cancel')return send(res,200,ai.cancel());
             const profile=validateProfile(input.profile);
@@ -336,7 +338,8 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
       res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':'no-cache'});
       if(req.method==='HEAD')res.end();else fs.createReadStream(file).pipe(res);
     }catch(error){
-      if(error instanceof PlanConflict)send(res,409,{error:error.message,code:error.code,...error.context});
+      if(error instanceof StrategyReferenceError)send(res,400,{error:error.message,code:'strategy-reference',problems:error.problems});
+      else if(error instanceof PlanConflict)send(res,409,{error:error.message,code:error.code,...error.context});
       else if(error instanceof ProfileWriteRejected)send(res,409,{error:error.message,code:error.code,current:error.current});
       else send(res,400,{error:error instanceof Error?error.message:String(error)});
     }

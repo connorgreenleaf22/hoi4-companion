@@ -1,6 +1,7 @@
 # HOI4 Companion
 
-- M7.3 works on `feature/hoi4-ai-m73`, from validated M7.1 46b0206 with M7.2.1 f39f96d integrated. Preserve all older branches, evidence and builds. No HOI4 launches or gameplay/control experiments in M7.3; earlier native budgets are exhausted.
+- M7.3.1 works on `feature/hoi4-ai-m731`, forked from validated M7.3 fc60182. Zero paid/provider calls during implementation; the user must separately approve and initiate the one real acceptance request. Preserve user AppData read-only during diagnosis.
+- M7.3 baseline works on `feature/hoi4-ai-m73`, from validated M7.1 46b0206 with M7.2.1 f39f96d integrated. Preserve all older branches, evidence and builds. No HOI4 launches or gameplay/control experiments in M7.3; earlier native budgets are exhausted.
 - Use `.agents/skills/hoi4-game-bridge/SKILL.md` for game/source/bridge work. Read `docs/hoi4-bridge/STATUS.md` before repeating investigations.
 - Extend the existing Node service, ordered parser, SQLite, planner workspace and history infrastructure. Preserve existing QA-LEDGER/release gates.
 - Never modify installed game files, personal saves or regular playsets. Keep static definitions, native-qualified captured facts, parsed-unqualified saves, historical recordings and manual assumptions distinct. Freshness does not prove ownership; input dispatch is not success.

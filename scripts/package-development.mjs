@@ -4,7 +4,7 @@ import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {build,Platform} from 'electron-builder';
 const milestone=process.argv[2]||'M5';
-if(!/^M\d+(?:\.\d+)?$/.test(milestone))throw Error('Use a milestone such as M5.');
+if(!/^M\d+(?:\.\d+){0,2}$/.test(milestone))throw Error('Use a milestone such as M5.');
 if(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim())throw Error('Commit the validated source before packaging a development build.');
 const commit=execFileSync('git',['rev-parse','--short=12','HEAD'],{encoding:'utf8'}).trim();
 const label=`${milestone}-${commit}`;
