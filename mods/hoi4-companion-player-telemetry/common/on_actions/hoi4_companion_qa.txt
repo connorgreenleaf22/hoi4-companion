@@ -1,0 +1,5 @@
+# Early human-country guard. No every_country loop or per-ID inventory scan.
+on_actions = {
+    on_startup = { effect = { log = "HC_QA|v1|begin|p=0000000000000000|END" } }
+    on_daily = { effect = { if = { limit = { is_ai = no } hc_qa_observe = yes } } }
+}
