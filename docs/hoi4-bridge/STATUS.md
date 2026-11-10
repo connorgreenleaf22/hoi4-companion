@@ -1,5 +1,12 @@
 # HOI4 bridge status
 
+## Live campaign Q&A pilot — implementation candidate, real acceptance pending (2026-11-10)
+
+- Isolated `feature/hoi4-live-qa` from M7.3.1 49ccb29. Shared API wiring coordinated with the bridge task; legacy bridge tools, actions, save reader and telemetry contract unchanged. See `../campaign-qa/SETUP.md` and `CONTRACT.md`.
+- Added shared versioned read-only Q&A projection, six-tool stdio adapter with a separate credential, sanitized historical export, and local opt-in Start/Stop monitor with duration/read/storage limits and retained raw records. Player-country successor uses early `is_ai=no` daily guard, no explicit all-country scan or GER assumption.
+- User confirms ChatGPT offers Tunnel; no tunnel is configured. Local stdio/tool isolation, installed Portugal reference hash, synthetic UI start/read/stop and focused tests are verified. No ChatGPT tool invocation, new native session, general-country qualification, paid inference or real comparative usefulness claim.
+- Exact next gate: configure restricted Secure MCP Tunnel, user-controlled 2-minute smoke, two-country native comparison, then 30–60 minute capture and 3–5 paired questions. Preserve old native budgets and personal configuration/saves. The overall gameplay-usefulness acceptance remains open.
+
 ## M7.3.1 — Windows candidate delivered; paid acceptance open (2026-11-09)
 
 - Dedicated feature/hoi4-ai-m731 from fc60182. No paid/provider calls or HOI4 launches. Prior worktrees/builds and user AppData preserved.

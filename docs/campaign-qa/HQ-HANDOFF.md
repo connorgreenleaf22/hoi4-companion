@@ -1,0 +1,13 @@
+# HQ handoff — live campaign Q&A pilot
+
+**Status: implementation candidate; real gameplay usefulness not yet demonstrated.** Branch `feature/hoi4-live-qa`, implementation `2a11db9`, base M7.3.1 `49ccb29`. Work was coordinated with the bridge task; the concurrent GitHub QA workflow and legacy bridge core were left alone.
+
+Delivered one shared versioned Q&A interface, six-tool read-only stdio adapter with a separate credential, sanitized historical export fallback, player-country telemetry successor, and visible bounded local recording controls. The monitor keeps raw records, observation/source hashes, freshness, gaps, volume and companion CPU metrics locally. Source inspection supports an early `is_ai=no` guard; native support for two countries is not yet claimed. Full focus/research detail remains dependent on supported plaintext-save inspection; production, resources, supply and detailed diplomacy remain unavailable.
+
+Evidence: 15 focused tests, TypeScript/build, built six-tool MCP smoke, current installed Portugal source hash and fixture UI Start/read/Stop. Subsequently, official Secure MCP Tunnel discovery and an actual ChatGPT session/diagnostics request passed. ChatGPT correctly distinguished working transport from absent game observations. No new HOI4 session, direct model API call, gameplay automation, normal-profile/save edit, public game-data endpoint or raw-data publication. Detailed findings and limitations: EVIDENCE.md.
+
+Account setup: scoped tunnel and personal ChatGPT plugin connected; restricted one-day runtime key entered privately by the user. The user subsequently selected Germany on a different desktop PC. The current computer's tunnel runtime was stopped and confirmed stopped to prevent routing requests to the wrong machine; its recording stayed idle. The desktop must run its own companion/mod/client and repeat the connection test. See DESKTOP-SETUP.md. Next steps are a user-controlled 2-minute telemetry smoke, independent checks in two countries, then a 30–60 minute recording and 3–5 paired practical questions. User gameplay/credentials remain under user control.
+
+Desktop kit `c118d080f889` passed fresh-extraction hash verification and all six local MCP calls/control rejection. It contains no credentials or game data and requires Node 24. The two isolated local test services were stopped; raw evidence is preserved. The user's other desktop and real Germany session remain untested.
+
+Acceptance remains: an attributed answer based on a real campaign materially improves a practical decision versus ordinary ChatGPT advice, and the user explicitly confirms that value. A working connection or fixture answer does not pass.
