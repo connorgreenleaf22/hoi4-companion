@@ -1,5 +1,9 @@
 # HOI4 bridge status
 
+## Laptop Q&A integration — offline passed, desktop pending (2026-11-10)
+
+Verified isolated candidate `72c2a27` combines QA baseline `bdb8a488` with PR #4 `fef4efe`; application runtime unchanged. Only STATUS documentation conflicted. All four hosted QA jobs, focused fixtures, build, built six-tool MCP smoke and independent review passed. Historical records retain unavailable fields and never become current game evidence. Existing desktop ZIP/manifest and 20 inventory files verified unchanged. PR #4 remains draft/unmerged on its original branch; native and user value gates remain pending. Read [integration report](../campaign-qa/INTEGRATION-READINESS-2026-11-10.md), [scorecard/checklist](../campaign-qa/DESKTOP-ACCEPTANCE-SCORECARD.md) and [HQ handoff](../campaign-qa/READINESS-HQ-HANDOFF.md). Earlier pilot status below predates the subsequently recorded laptop tunnel connection; no tunnel was reconnected for this readiness check.
+
 Workflow update (2026-11-10): [development and independent QA procedure](../workflow/README.md); PR #3 approved and merged into `feature/hoi4-ai-m731` at `440d625`; default-branch rollout remains separately gated. Product milestone acceptance remains unchanged.
 
 ## Live campaign Q&A pilot — implementation candidate, real acceptance pending (2026-11-10)

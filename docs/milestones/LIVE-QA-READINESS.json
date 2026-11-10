@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "LIVE-QA-READINESS",
+  "status": "offline-tested",
+  "branch": "workflow/live-qa-readiness-20261110",
+  "commitSha": "72c2a27cbc03986b7b237dc08dcb8265374e9c67",
+  "testEvidence": [
+    {"kind":"typecheck","result":"passed","reference":"https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42924450500","summary":"TypeScript and production build passed locally; hosted qa-typecheck passed at the exact candidate."},
+    {"kind":"deterministic","result":"passed","reference":"https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42924450500","summary":"132 allowlisted fixtures and 3 workflow guards passed locally/hosted, including 9 Q&A tests. Separate initial 30 focused tests passed; counts overlap. Historical query rehearsal is not live evidence."},
+    {"kind":"schema","result":"passed","reference":"https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42924450500","summary":"Existing manifests validated on exact candidate; readiness manifest validated on documentation commit."},
+    {"kind":"hygiene","result":"passed","reference":"https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42924450500","summary":"Whole tracked-file heuristic scan and baseline/new-branch committed-diff whitespace checks passed; public source/report delta manually screened."},
+    {"kind":"deterministic","result":"passed","reference":"docs/campaign-qa/INTEGRATION-READINESS-2026-11-10.md","summary":"Built six-tool adapter stdio smoke passed against disposable fake-install service; control tool refused. Local-only evidence under .bridge-local/readiness and qa-smoke-2026-11-10T23-34-58.486Z. No tunnel or native test."},
+    {"kind":"review","result":"passed","reference":"docs/campaign-qa/READINESS-REVIEW-2026-11-10.md","summary":"Separate read-only independent_review agent reviewed b0e9f15 then exact 72c2a27 full SHA; six additional offline probe groups and bounded two-file re-review passed with no actionable findings. Not human approval."}
+  ],
+  "nativeQualification": {"state":"not-run","scope":"No new native evidence. Desktop engine boundary/field accuracy, two-country comparison, real recovery and performance remain pending; retained historical fixtures never close these gates.","evidence":[]},
+  "artifact": {"name":"HOI4-QA-Desktop-Pilot-c118d080f889.zip","reference":"Existing local-only staged desktop kit; no new artifact. Source c118d080f889a3bd5b833625f30b00abc2222e2a. All 20 files, adjacent manifest and unchanged archive verified; see docs/campaign-qa/INTEGRATION-READINESS-2026-11-10.md.","sha256":"3a1c055e596ddb6556a81c1dfb0cbac4d1b67df99667bfac6be4e8c1d99d232b"},
+  "blockers": [
+    {"summary":"Desktop deployment, native country/field/performance qualification, real capture and paired user acceptance remain pending. No source-level blocker found.","issue":"https://github.com/connorgreenleaf22/hoi4-companion/pull/4"},
+    {"summary":"Original PR #4 remains unchanged/draft with STATUS conflict; adopt reviewed integration/test delta through a normal branch update and check that head before merge readiness.","issue":"https://github.com/connorgreenleaf22/hoi4-companion/pull/4"}
+  ],
+  "acceptance": {"state":"pending","evidence":[]},
+  "report": "docs/campaign-qa/INTEGRATION-READINESS-2026-11-10.md",
+  "github": ["https://github.com/connorgreenleaf22/hoi4-companion/pull/4"]
+}
