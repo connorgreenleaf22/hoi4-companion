@@ -1,8 +1,11 @@
-Project HQ handoff: WORKFLOW-1
-Status: offline-tested; acceptance: pending; native: not-applicable (Workflow/docs only; no application behavior, native qualification, game launch or provider call.).
-Tested implementation: https://github.com/connorgreenleaf22/hoi4-companion/commit/e1a69c12d4ca5af20d37d6500cab6a586a30dfe6 on workflow/project-hq-qa.
-Evidence: typecheck: passed — Local npm run typecheck passed; no application source changes. (https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42893667916); deterministic: passed — 123 selected application fixtures passed; two workflow guard tests passed after schema fixes. (https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42893667916); schema: passed — Strict Ajv validation and negative qualification/acceptance cases passed. (https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42893667916); hygiene: passed — Tracked-file heuristic scan and staged whitespace check passed; public diff audited. (https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42893667916); review: passed — Independent read-only reviewer re-reviewed e1a69c12d4ca5af20d37d6500cab6a586a30dfe6 with no remaining actionable findings. (docs/workflow/WORKFLOW-1.md)
-Artifact: none produced.
-Blockers: Maintainer acceptance and merge/rollout approval pending; main protection and Codex Code Review enablement are not claimed. (https://github.com/connorgreenleaf22/hoi4-companion/issues/1).
-Manifest: https://github.com/connorgreenleaf22/hoi4-companion/blob/workflow%2Fproject-hq-qa/docs/milestones/WORKFLOW-1.json; report: https://github.com/connorgreenleaf22/hoi4-companion/blob/workflow%2Fproject-hq-qa/docs/workflow/WORKFLOW-1.md; GitHub: https://github.com/connorgreenleaf22/hoi4-companion/pull/3, https://github.com/connorgreenleaf22/hoi4-companion/issues/1.
-Apply after reading current HQ; preserve product decisions. HQ update pending; no automatic synchronization.
+# Project HQ handoff — approved GitHub QA integration
+
+PR #3 was approved by the owner and merged into feature/hoi4-ai-m731 on 2026-11-10. Exact merge: `440d62536e500ca5587fe1061b0b33076c2293d7`; approved head `25c90ffe4972f89d30007499240355a8758f7ba6` was unchanged. Four PR checks passed; independent review had no unresolved findings.
+
+Post-merge local checks passed: TypeScript, 123 portable tests, two workflow guards, schemas/hygiene and ten additional offline AI-planning tests. Application source is unchanged. A hosted new-branch run exposed a whitespace-base bug; the narrow rollout correction and its final checks/review are recorded in the integration follow-up PR. No game launch, paid call, app package or new native qualification.
+
+Operating procedure: isolated branch, bounded PR, CI, independent reviewer, versioned manifest, report separating implementation/testing/user acceptance, short HQ handoff, explicit approval before substantial merges. Preserve autonomy/native limits and public-data exclusions.
+
+Default main/develop remain old. A workflow-only main-based port is planned, not merged; protection/rulesets and Codex Code Review enablement are not claimed active. PR #4 remains draft pending native user acceptance, integration regression checks, independent review and separate approval. M7.3.1 provider/user acceptance remains open.
+
+Evidence: [PR #3](https://github.com/connorgreenleaf22/hoi4-companion/pull/3), [integration receipt](INTEGRATION-2026-11-10.md), [manifest](../milestones/WORKFLOW-1.json), [default rollout plan](DEFAULT-BRANCH-ROLLOUT.md), [Issue #1](https://github.com/connorgreenleaf22/hoi4-companion/issues/1). Read current HQ before applying; preserve product decisions. HQ Page update pending; no automatic synchronization.
