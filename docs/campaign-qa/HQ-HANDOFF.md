@@ -8,4 +8,6 @@ Evidence: 15 focused tests, TypeScript/build, built six-tool MCP smoke, current 
 
 Account setup: scoped tunnel and personal ChatGPT plugin connected; restricted one-day runtime key entered privately by the user. The user subsequently selected Germany on a different desktop PC. The current computer's tunnel runtime was stopped and confirmed stopped to prevent routing requests to the wrong machine; its recording stayed idle. The desktop must run its own companion/mod/client and repeat the connection test. See DESKTOP-SETUP.md. Next steps are a user-controlled 2-minute telemetry smoke, independent checks in two countries, then a 30–60 minute recording and 3–5 paired practical questions. User gameplay/credentials remain under user control.
 
+Desktop kit `c118d080f889` passed fresh-extraction hash verification and all six local MCP calls/control rejection. It contains no credentials or game data and requires Node 24. The two isolated local test services were stopped; raw evidence is preserved. The user's other desktop and real Germany session remain untested.
+
 Acceptance remains: an attributed answer based on a real campaign materially improves a practical decision versus ordinary ChatGPT advice, and the user explicitly confirms that value. A working connection or fixture answer does not pass.

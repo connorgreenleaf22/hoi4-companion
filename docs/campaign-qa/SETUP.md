@@ -4,6 +4,8 @@ Implementation candidate. An actual ChatGPT connection and two read-only calls p
 
 ## Start locally
 
+For a different gaming desktop, use [DESKTOP-SETUP.md](DESKTOP-SETUP.md) and the isolated transfer kit. The companion, log and tunnel runtime must be on that gaming PC. Stop the old PC's runtime before reusing the same tunnel. The source-based instructions below remain available for development checkouts.
+
 Use Node 24 and this isolated checkout. Dependencies are unchanged from M7.3.1. On a fresh checkout run `npm ci`; then:
 
 ```powershell

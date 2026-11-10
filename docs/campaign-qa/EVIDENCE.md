@@ -13,6 +13,16 @@ Implementation commit: `2a11db9a8b42b5dd7fa1f3b2145662ffeee95400`, isolated `fea
 
 This passes connectivity only. No native campaign data or practical gameplay usefulness has yet been established.
 
+## Desktop transfer kit
+
+The user will play Germany on a different desktop PC. Built an isolated transfer kit at source commit `c118d080f889`, with four bundled Node entry points, local Windows launch/key-entry helpers and the checksum-pinned official tunnel client. No runtime key, account ID, tunnel ID, observation, save or local connection descriptor is included. Node 24 is a prerequisite. The archive is `HOI4-QA-Desktop-Pilot-c118d080f889.zip`, 30,387,588 bytes, SHA256 `3a1c055e596ddb6556a81c1dfb0cbac4d1b67df99667bfac6be4e8c1d99d232b`.
+
+Fresh extraction matched all 20 files in BUILD.json. The extracted preparation tool generated a new mod only inside its own ignored storage. The extracted service indexed installed references and the extracted MCP smoke called all six tools and rejected a control tool. This validates portability to a new local path, not execution on the user's other PC. Initial indexing took roughly a minute before publishing the panel URL. The first smoke attempt preceded descriptor publication and correctly refused; the test passed after the service became ready. PowerShell syntax and generated destination-specific tunnel paths were checked; desktop private-key entry and remote connectivity must still be repeated on that PC.
+
+The builder's first archive extraction attempt failed because Windows PowerShell could not load its Archive module in the inherited environment. It now uses Windows tar with an argument array and a verified input ZIP. The incomplete package was retained separately and is not the delivered archive.
+
+The original connection-test service and extracted verification service were stopped after testing. Terminal cancellation did not remove the verification descriptors, so only those owned credential descriptors were removed after confirming the listener was unavailable; evidence databases/raw records remain. The original tunnel runtime was already confirmed stopped. No regular companion or HOI4 process was stopped. Full local evidence is retained beside the kit under `verification-extract/desktop-pilot/.bridge-local/qa-smoke-2026-11-10T21-04-13.658Z`.
+
 ## Verified
 
 - 15 distinct focused tests passed: eight new Q&A/pilot tests, two existing bridge-platform tests and five existing save-reader tests. The final eight-test rerun passed after UTF-8-safe chunk buffering, log-anchor validation, aggregate field metrics and exact game.log selection were added. These are deterministic fixtures and retained historical-record tests, not new native evidence.
