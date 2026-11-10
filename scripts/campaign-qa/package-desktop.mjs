@@ -18,9 +18,8 @@ fs.cpSync('scripts/campaign-qa/desktop',path.join(output,'desktop'),{recursive:t
 fs.copyFileSync('docs/campaign-qa/DESKTOP-SETUP.md',path.join(output,'READ-ME.md'));
 fs.copyFileSync('docs/campaign-qa/EVALUATION.md',path.join(output,'EVALUATION.md'));
 fs.mkdirSync(path.join(output,'tunnel-client'));
-// LiteralPath avoids interpreting shell metacharacters in destination paths.
-const psQuote = text => "'" + text.replaceAll("'","''") + "'";
-execFileSync('powershell.exe',['-NoProfile','-Command',`Expand-Archive -LiteralPath ${psQuote(clientZip)} -DestinationPath ${psQuote(path.join(output,'tunnel-client'))}`]);
+// Windows tar accepts ZIP archives and an argument array; no shell or PowerShell module path involved.
+execFileSync('tar.exe',['-xf',clientZip,'-C',path.join(output,'tunnel-client')]);
 const cmd = (name,commands) => fs.writeFileSync(path.join(output,name),'@echo off\r\ncd /d "%~dp0"\r\n'+commands.join('\r\n')+'\r\npause\r\n');
 const nodeCheck = 'node -e "if(process.versions.node.split(\'.\')[0] !== \'24\') { console.error(\'Install Node.js 24 LTS first.\'); process.exit(1); }"';
 cmd('Prepare Pilot Mod.cmd',[nodeCheck,'if errorlevel 1 exit /b 1','node build\\prepare-qa.cjs']);
