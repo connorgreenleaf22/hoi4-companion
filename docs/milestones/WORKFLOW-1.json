@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "milestoneId": "WORKFLOW-1",
   "status": "offline-tested",
-  "branch": "workflow/project-hq-qa",
-  "commitSha": "e1a69c12d4ca5af20d37d6500cab6a586a30dfe6",
+  "branch": "feature/hoi4-ai-m731",
+  "commitSha": "440d62536e500ca5587fe1061b0b33076c2293d7",
   "testEvidence": [
     {
       "kind": "typecheck",
@@ -34,6 +34,12 @@
       "result": "passed",
       "reference": "docs/workflow/WORKFLOW-1.md",
       "summary": "Independent read-only reviewer re-reviewed e1a69c12d4ca5af20d37d6500cab6a586a30dfe6 with no remaining actionable findings."
+    },
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/workflow/INTEGRATION-2026-11-10.md",
+      "summary": "At merge 440d625: 123 portable fixtures, two workflow guards and ten additional offline AI-planning tests passed; application code unchanged."
     }
   ],
   "nativeQualification": {
@@ -44,13 +50,16 @@
   "artifact": null,
   "blockers": [
     {
-      "summary": "Maintainer acceptance and merge/rollout approval pending; main protection and Codex Code Review enablement are not claimed.",
+      "summary": "Default-branch workflow-only port and protection/ruleset configuration remain separately approval-gated; see integration receipt for narrowly scoped new-branch hygiene correction.",
       "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/1"
     }
   ],
   "acceptance": {
-    "state": "pending",
-    "evidence": []
+    "state": "accepted",
+    "evidence": [
+      "docs/workflow/INTEGRATION-2026-11-10.md",
+      "https://github.com/connorgreenleaf22/hoi4-companion/pull/3"
+    ]
   },
   "report": "docs/workflow/WORKFLOW-1.md",
   "github": [

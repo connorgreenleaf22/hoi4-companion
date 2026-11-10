@@ -2,7 +2,7 @@
 
 Manifest: [WORKFLOW-1.json](../milestones/WORKFLOW-1.json). Review: [PR #3](https://github.com/connorgreenleaf22/hoi4-companion/pull/3). Rollout: [Issue #1](https://github.com/connorgreenleaf22/hoi4-companion/issues/1).
 
-Status: implemented, locally and hosted offline-tested, independently reviewed; maintainer approval pending. Workflow-only branch `workflow/project-hq-qa` targets `feature/hoi4-ai-m731` at `49ccb29`; main remains an older baseline. No runtime features changed, no application package produced, no native/provider work performed. Public visibility preserved.
+Status: approved by the owner and merged as PR #3; see [integration receipt](INTEGRATION-2026-11-10.md) for exact merge SHA, post-merge results and separately pending default rollout. Workflow-only branch `workflow/project-hq-qa` targets `feature/hoi4-ai-m731` at `49ccb29`; main remains an older baseline. No runtime features changed, no application package produced, no native/provider work performed. Public visibility preserved.
 
 ## Evidence and scope
 
@@ -20,4 +20,4 @@ Builder: primary Codex session. Reviewer: separate `independent_review` agent, r
 
 GitHub connector reads worked; issue/PR writes returned integration 403. Existing local Git authentication successfully published Issues #1/#2 and PR #3 without exposing credentials. HQ read succeeded and reported write access on 2026-11-10, but no Page edits were performed. Codex Code Review enablement was not verified. Main was observed unprotected; settings are not changed by workflow files.
 
-Use [HQ procedure](PROJECT-HQ.md) and `npm run hq:handoff -- docs/milestones/WORKFLOW-1.json`. A generated handoff is in [WORKFLOW-1-HANDOFF.md](WORKFLOW-1-HANDOFF.md). Preserve user decisions and pending acceptance. After human approval, integrate the workflow candidate and separately roll it into the default branch / configure required checks; no merge is authorized by this report. No Site is built; concrete future triggers are listed in the workflow guide.
+Use [HQ procedure](PROJECT-HQ.md) and `npm run hq:handoff -- docs/milestones/WORKFLOW-1.json`. A generated handoff is in [WORKFLOW-1-HANDOFF.md](WORKFLOW-1-HANDOFF.md). Preserve user decisions and pending acceptance. The owner subsequently authorized PR #3 integration; default-branch integration and administration settings remain separate approval gates. No Site is built; concrete future triggers are listed in the workflow guide.
