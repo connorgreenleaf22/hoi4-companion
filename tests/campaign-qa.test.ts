@@ -63,6 +63,44 @@ test('real historical GER recording retains provenance and does not become live 
  const observations=rows.map((row,i)=>sanitizeObservation(telemetryObservation(parseTelemetry(row,{sessionId:'historical-m65',observedAt:'2026-11-05T00:00:00Z',gameVersion:'1.19.4.2',path:'private/game.log',offset:i})!,null)));
  assert.equal(observations[0].fields.politicalPower.value,2.324);assert.equal(observations[1].fields.civilianFactories.value,37);assert.ok(observations.every(o=>o.classification==='historical'));assert.equal(observations[1].fields.researchAssignments.status,'unavailable');assert.equal(observations[1].fields.currentFocus.status,'unavailable');
 });
+
+test('shared Q&A queries compare retained historical facts while unsupported campaign fields remain unavailable',async()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'hoi4-qa-history-')),game=path.join(dir,'game'),data=path.join(dir,'data');
+ fs.mkdirSync(game);fs.writeFileSync(path.join(game,'hoi4.exe'),'fixture');fs.writeFileSync(path.join(game,'launcher-settings.json'),JSON.stringify({rawVersion:'1.19.4.2'}));
+ const app=await startServer({dataDir:data,port:0,autoIndex:false,bridge:{gameRoot:game,userRoot:path.join(dir,'profile')}}),db=new BridgeDatabase(data);
+ try{
+  const rows=fs.readFileSync(new URL('./fixtures/bridge-native-1.19.4.2.txt',import.meta.url),'utf8').trim().split(/\r?\n/);
+  const snapshots=rows.map((row,offset)=>({...parseTelemetry(row,{sessionId:'retained-historical-m65',observedAt:`2026-11-05T00:00:0${offset}Z`,gameVersion:'1.19.4.2',path:'private/game.log',offset})!,dataOrigin:'fixture' as const}));
+  for(const s of snapshots)db.db.prepare('INSERT INTO snapshots VALUES(?,?,?)').run(s.id,s.sessionId,JSON.stringify(s));
+  const connection=readQaConnection(path.join(data,'campaign-qa-connection.json'));
+  const query=async(tool:string,args:unknown={})=>{
+   const response=await fetch(connection.url,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+connection.token},body:JSON.stringify({tool,args})});
+   assert.equal(response.status,200);const result=await response.json();assert.equal(result.schemaVersion,'hoi4-campaign-qa/1');return result;
+  };
+  const observed=await query('hoi4_qa_observations',{country:'GER',limit:2}),[after,before]=observed.data.observations;
+  assert.equal(after.fields.politicalPower.value,16.268);assert.equal(before.fields.politicalPower.value,2.324);
+  assert.equal(after.fields.civilianFactories.value,37);assert.equal(before.fields.civilianFactories.value,35);
+  assert.equal(after.fields.researchSlots.value,4);assert.equal(after.fields['technologyResearching.basic_machine_tools'].value,true);
+  for(const o of [after,before]){
+   assert.equal(o.classification,'historical');assert.equal(o.freshness.status,'stale');assert.equal(o.country,'GER');
+   for(const field of ['currentFocus','completedFocuses','researchAssignments','production','resources','manpower','diplomacy','atWar','supply']){
+    assert.equal(o.fields[field].status,'unavailable',field);assert.equal(o.fields[field].value,null,field);
+   }
+  }
+  const changes=(await query('hoi4_qa_changes',{country:'GER',sessionId:after.sessionId})).data;
+  assert.equal(changes.before,before.id);assert.equal(changes.after,after.id);assert.equal(changes.classification,'historical');
+  assert.equal(changes.changes.find((c:any)=>c.field==='politicalPower').after.value,16.268);
+  assert.equal(changes.changes.find((c:any)=>c.field==='civilianFactories').before.value,35);
+  assert.equal(changes.changes.some((c:any)=>c.field==='currentFocus'),false);
+  assert.equal((await query('hoi4_qa_changes',{country:'POR'})).data.changes.length,0);
+  assert.equal((await query('hoi4_qa_changes',{sessionId:sha('other-session')})).data.changes.length,0);
+  const provenance=await query('hoi4_qa_provenance',{country:'GER',limit:2});
+  assert.equal(provenance.data.observations[0].source.hash,after.source.hash);
+  assert.doesNotMatch(JSON.stringify([observed,provenance,changes]),/private|game\.log|Bearer/);
+  const exported=await fetch(app.url+'/api/v1/campaign-qa/export',{method:'POST',headers:{'Content-Type':'application/json',Origin:app.url},body:JSON.stringify({country:'GER',limit:2})}).then(r=>r.json());
+  assert.deepEqual(exported.data.observations.map((o:any)=>[o.id,o.classification]),[[after.id,'historical'],[before.id,'historical']]);
+ }finally{db.close();await app.close();fs.rmSync(dir,{recursive:true,force:true});}
+});
 test('separate authenticated six-tool MCP refuses controls and shares sanitized HTTP/export contract',{timeout:30000},async()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'hoi4-qa-http-')),game=path.join(dir,'game');fs.mkdirSync(game);fs.writeFileSync(path.join(game,'hoi4.exe'),'fixture');fs.writeFileSync(path.join(game,'launcher-settings.json'),JSON.stringify({rawVersion:'1.19.4.2'}));
  const app=await startServer({dataDir:path.join(dir,'data'),port:0,autoIndex:false,bridge:{gameRoot:game,userRoot:path.join(dir,'profile')}});

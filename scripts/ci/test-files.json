@@ -3,5 +3,6 @@
   "tests/planner-domain.test.ts",
   "tests/explanations.test.ts",
   "tests/planning-coverage.test.ts",
-  "tests/ai-reliability.test.ts"
+  "tests/ai-reliability.test.ts",
+  "tests/campaign-qa.test.ts"
 ]
