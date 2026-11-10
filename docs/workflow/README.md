@@ -32,7 +32,7 @@ Use `schemas/milestone.schema.json` and [report template](MILESTONE-REPORT-TEMPL
 
 Implementation status, native qualification and acceptance are separate. Complete requires no blockers, passing evidence, accepted/not-applicable acceptance and qualified/not-applicable native scope. Do not mark complete to hide partial qualification. Blockers link real Issues. A workflow-only milestone can use native not-applicable; an app milestone with untested native scope remains not-run/partial as appropriate.
 
-M7.3.1 is migrated from existing evidence without rerunning or upgrading it. Older reports remain historical; migrate them when touched, never invent missing evidence or acceptance. New reports must link their manifest and an Issue/PR; schema CI enforces those links for every manifested report. For each completion run `npm run hq:handoff -- docs/milestones/<ID>.json` and include its short output in the handoff/PR.
+M7.3.1 is migrated from existing evidence without rerunning or upgrading it. Older reports remain historical; migrate them when touched, never invent missing evidence or acceptance. New reports must link their manifest and an Issue/PR; schema CI enforces those links for every manifested report. For each completion run `npm run hq:handoff -- docs/milestones/<ID>.json` and include its short output in the handoff/PR. An optional second argument selects the documentation branch when migrating an older runtime manifest (for example `workflow/project-hq-qa`).
 
 ## Public repository boundary
 
