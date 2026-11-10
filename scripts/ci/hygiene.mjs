@@ -11,6 +11,14 @@ if (process.argv[1]?.replaceAll('\\','/').endsWith('scripts/ci/hygiene.mjs')) {
   const files = execFileSync('git', ['ls-files', '-z'], {encoding: 'utf8'}).split('\0').filter(Boolean);
   const failures = files.flatMap(file => violations(file, fs.readFileSync(file, 'utf8')).map(reason => `${file}: ${reason}`));
   if (failures.length) { console.error(failures.join('\n')); process.exit(1); }
-  execFileSync('git', ['diff', '--check'], {stdio: 'inherit'});
+  const base = process.env.CI_DIFF_BASE;
+  if (base) {
+    if (!/^[a-f0-9]{40}$/.test(base)) throw new Error('Invalid CI diff base');
+    const from = /^0+$/.test(base) ? execFileSync('git', ['hash-object', '-t', 'tree', '--stdin'], {input: '', encoding: 'utf8'}).trim() : base;
+    execFileSync('git', ['diff', '--check', from, 'HEAD'], {stdio: 'inherit'});
+  } else {
+    execFileSync('git', ['diff', '--check'], {stdio: 'inherit'});
+    execFileSync('git', ['diff', '--cached', '--check'], {stdio: 'inherit'});
+  }
   console.log(`Hygiene passed for ${files.length} tracked files (heuristic scan; manual audit still required)`);
 }

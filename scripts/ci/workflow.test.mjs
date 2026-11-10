@@ -6,7 +6,7 @@ import {violations} from './hygiene.mjs';
 const fixture = () => JSON.parse(fs.readFileSync('docs/milestones/M7.3.1.json', 'utf8'));
 test('manifest rejects malformed identity, unknown fields and unearned completion', () => {
   assert.doesNotThrow(() => checkManifest(fixture()));
-  for (const patch of [{commitSha:'abc'}, {unexpected:true}, {status:'complete'}, {acceptance:{state:'accepted',evidence:[]}, status:'complete'}, {github:['https://example.com/issue/1']}]) {
+  for (const patch of [{commitSha:'abc'}, {acceptance:{state:'accepted',evidence:[]}}, {nativeQualification:{state:'qualified',scope:'Claim without proof',evidence:[]}}, {nativeQualification:{state:'partial',scope:'Claim without proof',evidence:[]}}, {unexpected:true}, {status:'complete'}, {acceptance:{state:'accepted',evidence:[]}, status:'complete'}, {github:['https://example.com/issue/1']}]) {
     assert.equal(validate({...fixture(), ...patch}), false);
   }
   const complete = {...fixture(), status:'complete', blockers:[], acceptance:{state:'not-applicable', evidence:[]}, nativeQualification:{state:'not-applicable',scope:'Workflow only',evidence:[]}};

@@ -36,7 +36,7 @@ M7.3.1 is migrated from existing evidence without rerunning or upgrading it. Old
 
 ## Public repository boundary
 
-Keep credentials, personal saves, raw telemetry/account metadata, private planning notes and licensed game assets out of source, Issues, PR bodies and Actions output. Use ignored `.bridge-local/`, `artifacts/` or `private/` locally. Hygiene checks tracked filenames and high-confidence credential patterns without printing matches. It is a heuristic, not a complete secret/history scanner; manually review the staged diff and attachments before pushing. Never publish a raw QA folder. Existing intentionally synthetic fixtures are allowed. If a real credential is discovered, stop publication, revoke it and arrange targeted history remediation; do not echo it.
+Keep credentials, personal saves, raw telemetry/account metadata, private planning notes and licensed game assets out of source, Issues, PR bodies and Actions output. Use ignored `.bridge-local/`, `artifacts/` or `private/` locally. Hosted hygiene also checks committed whitespace against the event base (full history checkout); local runs check staged and unstaged whitespace. Hygiene checks tracked filenames and high-confidence credential patterns without printing matches. It is a heuristic, not a complete secret/history scanner; manually review the staged diff and attachments before pushing. Never publish a raw QA folder. Existing intentionally synthetic fixtures are allowed. If a real credential is discovered, stop publication, revoke it and arrange targeted history remediation; do not echo it.
 
 ## When a future Site would be justified
 
