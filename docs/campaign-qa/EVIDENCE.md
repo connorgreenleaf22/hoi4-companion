@@ -1,6 +1,17 @@
 # Pilot implementation evidence — 2026-11-10
 
-Implementation commit: `2a11db9a8b42b5dd7fa1f3b2145662ffeee95400`, isolated `feature/hoi4-live-qa`, based on `49ccb29`. This report is a subsequent documentation checkpoint. No main/develop merge, release, personal save edit, game launch/input, injection, executable modification, public endpoint or provider inference occurred.
+Implementation commit: `2a11db9a8b42b5dd7fa1f3b2145662ffeee95400`, isolated `feature/hoi4-live-qa`, based on `49ccb29`. This report includes a later user-authorized ChatGPT connection checkpoint. No main/develop merge, release, personal save edit, game launch/input, injection, executable modification or public game-data endpoint occurred.
+
+## Actual ChatGPT connection — November 10, 2026, 15:57 EST
+
+- Official tunnel-client v0.0.20 Windows AMD64 download verified against release SHA256 `99474aaa62ece303d7b661f2f46f932dcd560b489b540f817355da25be71bcf3`. Client and setup artifacts are local and ignored by Git.
+- User approved the named tunnel/workspace association and personally entered a separate runtime key with only Tunnels Read/Use and one-day expiration. The key was entered through a hidden local prompt, passed in process environment, and never intentionally persisted or included in command arguments/chat. No admin key or model API permission was required.
+- Managed runtime reported process running, healthy and ready; MCP health subsequently reported successful discovery with exactly the six `hoi4_qa_*` tools. The target is the dedicated stdio adapter, not the legacy bridge or the app's HTTP server. Local operator listeners remain loopback-only.
+- Actual ChatGPT plugin discovery/connection succeeded. In one ChatGPT conversation, session and diagnostics calls returned successfully; the answer correctly reported idle recording, no observations, disconnected game bridge, unavailable gameplay execution and unverified live state. Diagnostics reported 14 requests and zero API failures, including preceding local smoke calls; this is not a count of 14 ChatGPT calls.
+- Local evidence: `.bridge-local/qa-tunnel/{doctor.txt,connect.json,status.json,chatgpt-discovery.json,chatgpt-smoke-answer.txt,chatgpt-smoke-answer.png}` and official client logs under the user's local tunnel-client state directory. Account IDs, runtime credentials and raw diagnostics are excluded from this report.
+- The isolated companion and user-controlled tunnel remain running for the next smoke test. Recording is idle. The initial implementation shutdown described below preceded this setup session.
+
+This passes connectivity only. No native campaign data or practical gameplay usefulness has yet been established.
 
 ## Verified
 
@@ -19,7 +30,7 @@ The first test pass found two fixture assertions (a forbidden-token regex matche
 
 ## Explicitly unverified
 
-The user reports ChatGPT's Tunnel option exists, with no configured tunnel. We did not verify Platform permissions, workspace association, a runtime key, tunnel-client health or an actual ChatGPT tool invocation. No secret was requested or read. Official setup source: [Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels).
+Platform/workspace access, restricted runtime credentials, tunnel health and actual ChatGPT calls were subsequently verified as recorded above. Official setup source: [Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels).
 
 General player-country scripting is source-backed **candidate** code. Trigger validation passed syntax/kind/scope; effect argument blocks remain unresolved (`valid: null`, `parametersChecked: false`). GER and POR were tested as parser fixtures only. Native country detection, numeric units/precision, actual daily-hook scope, startup marker timing, production/resources/supply/diplomatic detail, game CPU/FPS impact and compatibility outside the stated version remain unverified or unavailable.
 

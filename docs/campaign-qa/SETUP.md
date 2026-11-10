@@ -1,6 +1,6 @@
 # Read-only campaign Q&A pilot
 
-Implementation candidate. Gameplay usefulness, general country support and an actual ChatGPT tool call are **not accepted yet**. No new HOI4 launch or provider inference was performed during implementation.
+Implementation candidate. An actual ChatGPT connection and two read-only calls passed on November 10, 2026; see EVIDENCE.md. Gameplay usefulness and general country support are **not accepted yet**. No new HOI4 launch was performed during implementation or connection setup.
 
 ## Start locally
 
@@ -20,7 +20,7 @@ The monitor requires an existing dedicated-profile `game.log`, exact installed v
 
 ## Secure ChatGPT connection
 
-Account status: the user confirmed that **Tunnel is available**, with no tunnel configured. Platform permissions, workspace association, runtime credentials and end-to-end discovery remain unverified. The initial in-app browser was signed out; native browser inspection was inconsistent, so no account setting was changed.
+Account status: the user-approved **HOI4 Campaign Q&A** tunnel is associated with the intended workspace and connected as a personal ChatGPT plugin. Official tunnel-client v0.0.20 discovered exactly six read-only tools, and ChatGPT successfully called session/diagnostics. The initial runtime key is restricted to Tunnels Read/Use and expires after one day; renewal is user-controlled. Local ignored setup artifacts contain the machine-specific profile and helper. Do not publish them.
 
 Use [Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels) with the official [latest tunnel-client](https://github.com/openai/tunnel-client/releases/latest). Create a tunnel in [Platform settings](https://platform.openai.com/settings/organization/tunnels), associate the intended ChatGPT workspace, and provision the restricted runtime key locally. Creation needs Read/Manage; use needs Read/Use. Do not paste credentials into chat or command arguments.
 
