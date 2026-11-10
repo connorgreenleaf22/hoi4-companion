@@ -10,6 +10,8 @@ playwright-report/
 .bridge-local/
 .codex/config.toml
 **/bridge-connection.json
+**/campaign-qa-connection.json
+**/qa-pilots/
 *.tsbuildinfo
 
 # Local QA captures and archived candidate packages (retain separately)

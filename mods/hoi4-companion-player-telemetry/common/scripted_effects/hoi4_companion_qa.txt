@@ -1,0 +1,14 @@
+# Generated player-country observation candidate. No gameplay effects.
+hc_qa_observe = {
+    set_temp_variable = { hcqa0 = political_power }
+    set_temp_variable = { hcqa1 = stability }
+    set_temp_variable = { hcqa2 = has_war_support }
+    set_temp_variable = { hcqa3 = amount_research_slots }
+    set_temp_variable = { hcqa4 = num_of_civilian_factories }
+    set_temp_variable = { hcqa5 = num_of_military_factories }
+    set_temp_variable = { hcqa6 = num_of_naval_factories }
+    set_temp_variable = { hcqa7 = has_manpower }
+    set_temp_variable = { hcqawar = 0 }
+    if = { limit = { has_war = yes } set_temp_variable = { hcqawar = 1 } }
+    log = "HC_QA|v1|state|p=0000000000000000|m=player-country-1|tag=[THIS.GetTag]|n=[?hcqa0],[?hcqa1],[?hcqa2],[?hcqa3],[?hcqa4],[?hcqa5],[?hcqa6],[?hcqa7]|war=[?hcqawar]|END"
+}

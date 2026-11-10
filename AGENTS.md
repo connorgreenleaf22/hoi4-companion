@@ -1,5 +1,7 @@
 # HOI4 Companion
 
+- Live campaign Q&A pilot works on `feature/hoi4-live-qa` from 49ccb29. Read `docs/campaign-qa/SETUP.md` and `CONTRACT.md`. Keep the six-tool Q&A credential/catalog separate from the legacy 15-tool bridge; never tunnel the whole app or expose controls. Dedicated modded playset is approved, but launches/recording remain user-controlled. No normal profile/save changes, paid calls or general-country/live-usefulness claims from fixtures. Coordinate shared `server/api.ts` wiring and leave bridge core/QA workflow ownership intact.
+
 - M7.3.1 works on `feature/hoi4-ai-m731`, forked from validated M7.3 fc60182. Zero paid/provider calls during implementation; the user must separately approve and initiate the one real acceptance request. Preserve user AppData read-only during diagnosis.
 - M7.3 baseline works on `feature/hoi4-ai-m73`, from validated M7.1 46b0206 with M7.2.1 f39f96d integrated. Preserve all older branches, evidence and builds. No HOI4 launches or gameplay/control experiments in M7.3; earlier native budgets are exhausted.
 - Use `.agents/skills/hoi4-game-bridge/SKILL.md` for game/source/bridge work. Read `docs/hoi4-bridge/STATUS.md` before repeating investigations.

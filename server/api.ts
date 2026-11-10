@@ -22,6 +22,9 @@ import {CampaignHistory} from './bridge/history';
 import {BridgePlatform} from './bridge/platform';
 import {callBridgeTool} from './bridge/tools';
 import {McpConnection} from './bridge/mcp-connection';
+import {CampaignQa} from './campaign-qa/service';
+import {QaConnection} from './campaign-qa/connection';
+import {pilotHtml,pilotJs} from './campaign-qa/panel';
 import {explorePaths,compareStrategies,planningSources} from './planner/strategy';
 import {reviewPlanCoverage,reviewProposal} from './planner/coverage';
 import {AiPlanningService} from './planner/ai';
@@ -65,6 +68,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
   const bridge=new GameBridge(store,options.bridge);
   const history=new CampaignHistory(bridge.database);
   const platform=new BridgePlatform(bridge),mcpConnection=new McpConnection(store.directory);
+  const campaignQa=new CampaignQa(platform,store.directory),qaConnection=new QaConnection(store.directory);
   let meta=store.getSetting<Meta|null>('meta',null);
   let indexingError='';
   let root=store.getSetting('gameRoot','') || discoverGame();
@@ -122,6 +126,34 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
             if(route==='ai/review')return send(res,200,ai.review(profile,input.content,input));
           }
           return send(res,404,{error:'Unknown AI planning operation.'});
+        }
+        if(route.startsWith('campaign-qa/')){
+          if(remote)return send(res,403,{error:'Campaign Q&A and pilot controls are local-only.'});
+          if(route==='campaign-qa/query'&&req.method==='POST'){
+            if(!qaConnection.accepts(req.headers.authorization))return send(res,401,{error:'Matching read-only Q&A credential required'});
+            const input=await body(req);return send(res,200,campaignQa.query(input.tool,input.args));
+          }
+          if(req.method==='GET'){
+            if(route==='campaign-qa/panel'||route==='campaign-qa/panel.js'){
+              res.writeHead(200,{'Content-Type':route.endsWith('.js')?'text/javascript; charset=utf-8':'text/html; charset=utf-8','Cache-Control':'no-store'});
+              return res.end(route.endsWith('.js')?pilotJs:pilotHtml);
+            }
+            if(route==='campaign-qa/pilot/status')return send(res,200,campaignQa.pilot.status());
+          }
+          // Browser-only local controls are deliberately absent from both Q&A MCP and its credential route.
+          if(req.method==='POST'){
+            if(req.headers.origin!==`http://${host}`||!req.headers['content-type']?.startsWith('application/json'))return send(res,403,{error:'Pilot controls require a same-origin local JSON request'});
+            const input=await body(req);
+            if(route==='campaign-qa/pilot/start')return send(res,200,campaignQa.pilot.start(input));
+            if(route==='campaign-qa/pilot/stop')return send(res,200,campaignQa.pilot.stop());
+            if(route==='campaign-qa/pilot/note')return send(res,200,campaignQa.pilot.note(input));
+            if(route==='campaign-qa/export')return send(res,200,campaignQa.export(input));
+            if(route==='campaign-qa/save'){
+              if(typeof input.path!=='string'||Object.keys(input).some(k=>k!=='path'))throw Error('Select one plaintext save copy path');
+              const observed=platform.inspectSave(input);return send(res,200,{id:observed.id,classification:observed.classification,fields:Object.keys(observed.fields),notice:'Persisted read-only state; not a live campaign binding'});
+            }
+          }
+          return send(res,404,{error:'Unknown Q&A operation'});
         }
         if(route.startsWith('bridge/')){
           if(remote)return send(res,403,{error:'Game bridge interfaces are local-only.'});
@@ -349,5 +381,6 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
   await new Promise<void>((resolve,reject)=>{server.once('error',reject);server.listen(port,'127.0.0.1',()=>resolve());});
   port=(server.address() as any).port;
   mcpConnection.publish(port);
-  return {port,url:`http://127.0.0.1:${port}`,store,close:async()=>{ai.close();platform.close();mcpConnection.close();if(lan){lan.closeAllConnections();await new Promise<void>(r=>lan!.close(()=>r()));}server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));bridge.close();store.db.close();}};
+  qaConnection.publish(port);
+  return {port,url:`http://127.0.0.1:${port}`,store,close:async()=>{ai.close();campaignQa.close();qaConnection.close();platform.close();mcpConnection.close();if(lan){lan.closeAllConnections();await new Promise<void>(r=>lan!.close(()=>r()));}server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));bridge.close();store.db.close();}};
 }
