@@ -24,7 +24,12 @@
     "test:history-ui": "tsx scripts/history-ui.ts",
     "package:development": "npm run build && node scripts/package-development.mjs",
     "package:browser-preview": "npm run build && node scripts/package-browser-preview.mjs",
-    "bridge:mcp": "node build/bridge-mcp.cjs"
+    "bridge:mcp": "node build/bridge-mcp.cjs",
+    "typecheck": "tsc --noEmit",
+    "test-ci": "node scripts/ci/test.mjs && node --test scripts/ci/workflow.test.mjs",
+    "schemas": "node scripts/ci/schemas.mjs",
+    "hygiene": "node scripts/ci/hygiene.mjs",
+    "hq:handoff": "node scripts/ci/handoff.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.4.0",
@@ -39,6 +44,7 @@
     "@types/node": "^24.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
+    "ajv": "8.20.0",
     "electron": "45.2.1",
     "electron-builder": "^26.0.12",
     "esbuild": "^0.25.0",

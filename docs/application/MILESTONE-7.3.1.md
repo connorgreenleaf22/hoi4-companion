@@ -1,5 +1,7 @@
 # M7.3.1 — generation reliability and spending safeguards
 
+Workflow evidence index: [M7.3.1.json](../milestones/M7.3.1.json). Open gates: [Issue #2](https://github.com/connorgreenleaf22/hoi4-companion/issues/2). Migration adds links only; historical qualification and acceptance are unchanged.
+
 Status: offline implementation and packaged Windows smoke tests verified; real-provider/user acceptance remains open. No paid API request or HOI4 launch was made during development. Branch: `feature/hoi4-ai-m731`, based on M7.3 `fc60182`. Previous worktrees, builds, application data, saves and mods are preserved.
 
 ## Exact failure

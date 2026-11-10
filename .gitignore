@@ -46,3 +46,11 @@ Thumbs.db
 # Python diagnostic bytecode
 __pycache__/
 *.pyc
+
+# Private coordination and raw user data
+private/
+private-planning/
+personal-saves/
+raw-telemetry/
+account-metadata*
+credentials*

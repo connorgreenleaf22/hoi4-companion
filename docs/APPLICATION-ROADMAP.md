@@ -1,5 +1,7 @@
 > M7.3 update (2026-11-08): integrated baseline and editable provider-neutral proposal workflow are implemented on feature/hoi4-ai-m73. Deterministic/installed-source tests pass; real-provider and user quality acceptance remain open (configure later). See application/MILESTONE-7.3.md. No optimization eligibility or new native qualification is implied. Next gate is actual provider evaluation of monarchist Portugal; M7.5/M8 remain separate.
 
+Workflow update (2026-11-10): [development and independent QA procedure](workflow/README.md); workflow-only branch `workflow/project-hq-qa`, review/approval pending. Product milestone acceptance remains unchanged.
+
 # HOI4 Companion roadmap
 
 M7.3 active integration note (2026-11-08): the branch separation/status statements below are historical. The user now authorizes a common M7.1 + M7.2.1 baseline and provider-independent AI generation/revision in the existing planner, with no native game work. Risk gating, scoped observation evidence and final-release mechanics coverage remain independent safeguards. Credentials will be configured later; provide an honest offline workflow and provider comparison.

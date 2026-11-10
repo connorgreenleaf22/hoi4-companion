@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "WORKFLOW-1",
+  "status": "offline-tested",
+  "branch": "workflow/project-hq-qa",
+  "commitSha": "e1a69c12d4ca5af20d37d6500cab6a586a30dfe6",
+  "testEvidence": [
+    {
+      "kind": "typecheck",
+      "result": "passed",
+      "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42893667916",
+      "summary": "Local npm run typecheck passed; no application source changes."
+    },
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42893667916",
+      "summary": "123 selected application fixtures passed; two workflow guard tests passed after schema fixes."
+    },
+    {
+      "kind": "schema",
+      "result": "passed",
+      "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42893667916",
+      "summary": "Strict Ajv validation and negative qualification/acceptance cases passed."
+    },
+    {
+      "kind": "hygiene",
+      "result": "passed",
+      "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42893667916",
+      "summary": "Tracked-file heuristic scan and staged whitespace check passed; public diff audited."
+    },
+    {
+      "kind": "review",
+      "result": "passed",
+      "reference": "docs/workflow/WORKFLOW-1.md",
+      "summary": "Independent read-only reviewer re-reviewed e1a69c12d4ca5af20d37d6500cab6a586a30dfe6 with no remaining actionable findings."
+    }
+  ],
+  "nativeQualification": {
+    "state": "not-applicable",
+    "scope": "Workflow/docs only; no application behavior, native qualification, game launch or provider call.",
+    "evidence": []
+  },
+  "artifact": null,
+  "blockers": [
+    {
+      "summary": "Maintainer acceptance and merge/rollout approval pending; main protection and Codex Code Review enablement are not claimed.",
+      "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/1"
+    }
+  ],
+  "acceptance": {
+    "state": "pending",
+    "evidence": []
+  },
+  "report": "docs/workflow/WORKFLOW-1.md",
+  "github": [
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/3",
+    "https://github.com/connorgreenleaf22/hoi4-companion/issues/1"
+  ]
+}
