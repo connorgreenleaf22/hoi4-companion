@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "M7.3.1",
+  "status": "offline-tested",
+  "branch": "feature/hoi4-ai-m731",
+  "commitSha": "4d7c04f38fd7812fda98d2ade0ac009eac231d43",
+  "testEvidence": [
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/M731-VERIFICATION.json",
+      "summary": "Historical evidence: 50 focused tests plus overlapping 10-test follow-up; not rerun by workflow migration."
+    },
+    {
+      "kind": "packaged",
+      "result": "passed",
+      "reference": "docs/application/M731-VERIFICATION.json",
+      "summary": "Historical isolated Windows package: 75 files matched; three package cases passed. Real provider acceptance remains open."
+    }
+  ],
+  "nativeQualification": {
+    "state": "not-run",
+    "scope": "No new native qualification in M7.3.1; earlier narrowly scoped native evidence is not expanded.",
+    "evidence": []
+  },
+  "artifact": {
+    "name": "M7.3.1-4d7c04f38fd7-windows-x64.zip",
+    "reference": "Local-only retained package; receipt: docs/application/M731-VERIFICATION.json",
+    "sha256": "9189d90ff15eb5c9f8f59ce452aa91ff8d223bbb6c553c2b1525a091416e599f"
+  },
+  "blockers": [
+    {
+      "summary": "Provider request/invoice, user desktop/usefulness acceptance and final release explanation coverage remain open.",
+      "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/2"
+    }
+  ],
+  "acceptance": {
+    "state": "pending",
+    "evidence": [
+      "docs/application/MILESTONE-7.3.1-ACCEPTANCE.md"
+    ]
+  },
+  "report": "docs/application/MILESTONE-7.3.1.md",
+  "github": [
+    "https://github.com/connorgreenleaf22/hoi4-companion/issues/2"
+  ]
+}

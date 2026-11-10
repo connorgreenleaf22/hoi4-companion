@@ -1,0 +1,7 @@
+[
+  "tests/domain.test.ts",
+  "tests/planner-domain.test.ts",
+  "tests/explanations.test.ts",
+  "tests/planning-coverage.test.ts",
+  "tests/ai-reliability.test.ts"
+]

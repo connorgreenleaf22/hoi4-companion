@@ -11,3 +11,10 @@
 - Major application milestones require a commit-identified isolated Windows build, fresh extraction and launch/service/persistence checks. Never replace older builds or installed apps.
 - The model-independent AI planner must disclose provider costs/data transmission, keep raw private saves local, and work offline when unconfigured. User chose configure-later for M7.3: no real-provider success claims from test fixtures or Codex's own access.
 - Phase 0 integration must build and pass packaged smoke checks before AI implementation starts. Keep one application-owned bridge/gateway/store and the existing authenticated read-only MCP adapter.
+
+## Workflow and review rules
+
+- Workflow-only work uses `workflow/project-hq-qa` from M7.3.1; this is an explicit exception to the milestone branch instructions above. Read `docs/workflow/README.md` and `PROJECT-HQ.md` there. Keep unrelated application changes out of this PR.
+- Builder and independent reviewer must be separate agents/sessions or people. Record the reviewed full SHA and findings; no merge without user/maintainer approval. Fixture CI cannot certify native behavior, complete mechanics coverage or user acceptance.
+- Review hosted CI changes for game launches, process control, provider calls, secret access and test-allowlist expansion. Hosted CI must remain fixture-only. Preserve runtime provenance and qualification boundaries.
+- Review manifests/reports for consistent SHA, evidence, artifact hash, blocker links and acceptance state. Reject promotion based solely on fresh data, dispatch success or AI assertions. Generate a Project HQ handoff at completion; verify actual Page access before claiming synchronization.

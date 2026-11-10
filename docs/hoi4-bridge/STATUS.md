@@ -1,5 +1,7 @@
 # HOI4 bridge status
 
+Workflow update (2026-11-10): [development and independent QA procedure](../workflow/README.md); workflow-only branch `workflow/project-hq-qa`, review/approval pending. Product milestone acceptance remains unchanged.
+
 ## M7.3.1 — Windows candidate delivered; paid acceptance open (2026-11-09)
 
 - Dedicated feature/hoi4-ai-m731 from fc60182. No paid/provider calls or HOI4 launches. Prior worktrees/builds and user AppData preserved.

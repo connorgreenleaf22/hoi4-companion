@@ -1,5 +1,7 @@
 # Future implementation milestones
 
+Workflow update (2026-11-10): [development and independent QA procedure](docs/workflow/README.md); workflow-only branch `workflow/project-hq-qa`, review/approval pending. Product milestone acceptance remains unchanged.
+
 The current release provides manual campaign tracking. The following are planned extensions, with separate acceptance gates.
 
 ## Read-only save analysis

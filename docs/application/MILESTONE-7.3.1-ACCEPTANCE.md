@@ -1,5 +1,7 @@
 # M7.3.1 Windows acceptance — one controlled request
 
+Workflow evidence index: [M7.3.1.json](../milestones/M7.3.1.json). Open gates: [Issue #2](https://github.com/connorgreenleaf22/hoi4-companion/issues/2). Migration adds links only; historical qualification and acceptance are unchanged.
+
 Extract the entire ZIP into a NEW folder. Run its commit-labeled HOI4 Companion executable inside win-unpacked, keeping resources/DLLs beside it. Do not replace the previous app or reuse its data directory. This unsigned isolated development build uses its own AppData profile. It does not install/update software, launch HOI4 or change saves/mods/playsets. Windows may require you to review the unsigned executable before running it.
 
 ## Offline first — no API request

@@ -1,0 +1,254 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HOI4 milestone manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "milestoneId",
+    "status",
+    "branch",
+    "commitSha",
+    "testEvidence",
+    "nativeQualification",
+    "artifact",
+    "blockers",
+    "acceptance",
+    "report",
+    "github"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "milestoneId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]*$"
+    },
+    "status": {
+      "enum": [
+        "planned",
+        "implemented",
+        "offline-tested",
+        "blocked",
+        "complete"
+      ]
+    },
+    "branch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "commitSha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "testEvidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "result",
+          "reference",
+          "summary"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "deterministic",
+              "typecheck",
+              "schema",
+              "hygiene",
+              "packaged",
+              "native",
+              "provider",
+              "review"
+            ]
+          },
+          "result": {
+            "enum": [
+              "passed",
+              "failed",
+              "blocked",
+              "not-run"
+            ]
+          },
+          "reference": {
+            "type": "string",
+            "minLength": 1
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "nativeQualification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "scope",
+        "evidence"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "not-run",
+            "not-applicable",
+            "partial",
+            "qualified",
+            "blocked"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "artifact": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "reference",
+            "sha256"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reference": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        }
+      ]
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "summary",
+          "issue"
+        ],
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "issue": {
+            "type": "string",
+            "pattern": "^https://github\\.com/connorgreenleaf22/hoi4-companion/(issues|pull)/[1-9][0-9]*$"
+          }
+        }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "evidence"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "pending",
+            "accepted",
+            "rejected",
+            "not-applicable"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "report": {
+      "type": "string",
+      "minLength": 1
+    },
+    "github": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^https://github\\.com/connorgreenleaf22/hoi4-companion/(issues|pull)/[1-9][0-9]*$"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "complete"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "blockers": {
+            "maxItems": 0,
+            "type": "array"
+          },
+          "testEvidence": {
+            "minItems": 1,
+            "type": "array"
+          },
+          "acceptance": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "accepted",
+                  "not-applicable"
+                ]
+              }
+            },
+            "type": "object"
+          },
+          "nativeQualification": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "qualified",
+                  "not-applicable"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        }
+      }
+    }
+  ]
+}
