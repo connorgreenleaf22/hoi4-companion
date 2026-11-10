@@ -2,11 +2,11 @@ import {createHash,randomUUID} from 'node:crypto';
 import {z} from 'zod';
 import type {Store} from '../store';
 import type {Entry,Meta,Profile,CampaignPlan} from '../../src/types';
-import type {AiConfiguration,AiContext,AiSource,AiStrategy,StrategyContent,AiSettings,AiAttempt,AiGeneration} from '../../src/ai-planning-types';
+import type {AiConfiguration,AiContext,AiSource,AiStrategy,StrategyContent,AiSettings,AiAttempt,AiGeneration,AiSourceGap} from '../../src/ai-planning-types';
 import type {PlanningSources} from '../../src/strategy-types';
 import {aiCampaignContext} from '../../src/ai-planning-types';
 import {treeFocuses} from '../domain';
-import {entryMechanics,explanationPreview} from '../../src/mechanics';
+import {entryMechanics,explanationPreview,type Explanation} from '../../src/mechanics';
 import {evaluatePlanner} from './evaluate';
 import {reviewPlanCoverage,reviewProposal} from './coverage';
 import {PlanConflict} from './service';
@@ -19,6 +19,21 @@ const settingsSchema=z.object({model:z.string().regex(/^[a-zA-Z0-9._:-]{1,100}$/
 const requestSchema=z.object({intent:z.literal('provisional').optional(),objective:z.string().min(3).max(3000),indexRevision:z.string().min(1).max(200),manualContext:z.string().max(4000).default(''),instruction:z.string().max(2000).default(''),parentId:z.string().max(100).optional(),additionalReferences:z.array(z.string().max(800)).max(20).default([])});
 const hash=(value:unknown)=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const reference=(e:Entry)=>'definition:'+e.uid;
+// Reward previews intentionally hide conditions/costs; never use them as the model's requirements contract.
+const explainSource=(e:Explanation):string=>`[${e.status||'explained'}${e.unknown&&e.code?': '+e.code:''}] ${e.text}${e.children?.length?' ('+e.children.map(explainSource).join('; ')+')':''}`;
+const interpretationGaps=(items:Explanation[]):AiSourceGap[]=>{
+ const groups=new Map<string,AiSourceGap>();
+ const visit=(nodes:Explanation[],inherited:Explanation['evidence']=[])=>{for(const e of nodes){
+  const proof=e.evidence?.length?e.evidence:inherited;
+  if(e.unknown||['unsupported','parser-limitation','ambiguous-scope','missing-localization'].includes(e.status||'')){
+   const status=e.status||'unsupported',code=e.code||'unknown',key=JSON.stringify([status,code,e.text]);
+   const group=groups.get(key)||{status,code,text:e.text,locations:[]};
+   for(const location of proof?.length?proof.map(p=>({...p,line:e.line??p.line})):[{line:e.line}])if(!group.locations.some(p=>JSON.stringify(p)===JSON.stringify(location)))group.locations.push(location);
+   groups.set(key,group);
+  }
+  visit(e.children||[],proof);
+ }};visit(items);return [...groups.values()];
+};
 
 /** AI drafts/evaluations are separate from applied campaign history and existing planner state. */
 export class AiPlanningService {
@@ -61,7 +76,7 @@ export class AiPlanningService {
   if(r.parentId){const parent=this.get(r.parentId,profile.id);if(!parent)throw Error('Previous strategy is missing.');if(parent.sources.indexRevision!==r.indexRevision)throw Error('Previous strategy uses stale sources. Save a current reviewed revision first.');previousProposal=parent.content;}
   const selection=selectContext(this.entries(),tree,focuses,profile,r.objective,[...r.additionalReferences,...(previousProposal?[...previousProposal.focusIds,...previousProposal.recommendations.flatMap(r=>r.references)]:[])]);
   const chosen=selection.chosen;
-  const refs:AiSource[]=chosen.map(e=>{const m=entryMechanics(e);return {reference:reference(e),id:e.id,kind:e.kind,title:e.title,source:e.source,line:e.line,hash:e.hash,version:e.version,prerequisites:e.data.prerequisites||[],exclusions:e.data.exclusive||[],summary:explanationPreview(m.summary,e.kind==='event'?40:5).map(x=>x.text),requirements:explanationPreview(m.requirements,4).map(x=>x.text)};});
+  const refs:AiSource[]=chosen.map(e=>{const m=entryMechanics(e);return {reference:reference(e),id:e.id,kind:e.kind,title:e.title,source:e.source,line:e.line,hash:e.hash,version:e.version,prerequisites:e.data.prerequisites||[],exclusions:e.data.exclusive||[],summary:explanationPreview(m.summary,e.kind==='event'?40:5).map(x=>x.text),requirements:m.requirements.map(explainSource),costsAndTiming:m.summary.filter(x=>['cost','timing'].includes(x.role||'')||['cost','research_cost','start_year'].includes(x.code||'')).map(explainSource),interpretationGaps:interpretationGaps([...m.summary,...m.requirements]),omittedOutcomeCount:Math.max(0,explanationPreview(m.summary,Number.MAX_SAFE_INTEGER).length-(e.kind==='event'?40:5))};});
   const base={schemaVersion:1 as const,country:profile.country,startDate:profile.startDate,sources:{...sources,mods:sources.mods.map(m=>m.replaceAll('\\','/').split('/').at(-1)!)},references:refs,omitted:selection.omitted,omissions:selection.omissions,disclosure:'Objective, selected country/tree definitions and derived summaries, game/index version, detected mod names and manual DLC assertions are sent. Optional campaign text is a manual assertion. Raw saves, logs, account paths and observations are not sent. Advice and event consequences remain provisional; retrieval is bounded.',manualContext:r.manualContext,dlcAssertions:Object.fromEntries(Object.entries(profile.dlcStates||{}).map(([id,v])=>[id,{owned:v.owned.value,enabled:v.enabled.value}])),objective:r.objective,revisionInstruction:r.instruction,...(previousProposal?{previousProposal}:{})};
   // No silent context-window overflow: smaller selection requires a new explicit preview.
   if(JSON.stringify(base).length>180000)throw Error('Source bundle exceeds 180,000 characters. Choose a smaller tree/objective; no provider request was sent.');

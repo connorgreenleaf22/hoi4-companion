@@ -1,5 +1,11 @@
 # HOI4 bridge status
 
+## M7.3.1 real-provider acceptance — preflight critical correction (2026-11-10)
+
+- No paid request dispatched; original quote withdrawn. Laptop artifact/index verified and 14 existing deterministic checks passed. Exact outgoing-bundle inspection found all requirement summaries and known cost/timing metadata were being discarded by the reward-preview serializer.
+- Isolated fix/hoi4-m731-context from bdb8a48 corrects serialization only; interpreter/coverage gate unchanged. New failing-then-passing regression, 16 focused tests/build and installed-source context check pass. See ../application/M731-REAL-PROVIDER-ACCEPTANCE.md.
+- Active: independent review and replacement Windows build. Next: verify packaged corrected bundle, show new quote, have user configure key in new app, and wait for explicit one-request approval. Real provider and user acceptance remain pending; no HOI4 launches.
+
 Workflow update (2026-11-10): [development and independent QA procedure](../workflow/README.md); PR #3 approved and merged into `feature/hoi4-ai-m731` at `440d625`; default-branch rollout remains separately gated. Product milestone acceptance remains unchanged.
 
 ## M7.3.1 — Windows candidate delivered; paid acceptance open (2026-11-09)
