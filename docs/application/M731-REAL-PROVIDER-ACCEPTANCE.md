@@ -24,7 +24,7 @@ Local evidence is retained under ignored `.bridge-local/m731-real-acceptance-202
 
 Runtime: `155594f9c4d27780b969b217f19b01275d3d01bf`, branch `fix/hoi4-m731-context`, [draft PR #6](https://github.com/connorgreenleaf22/hoi4-companion/pull/6). Independent reviewer `/root/review_context_fix` inspected this exact SHA against `bdb8a4887522b38f5110f3900bbf1655cc5fd600`: no blockers. Review covered the diff and whitespace check, not an independent rerun of the builder's tests. Source-location provenance is not complete call-site/condition-path provenance. Optional fields preserve old contexts; qualification and spending gates remain unchanged.
 
-Sixteen focused tests, TypeScript, production build, schema validation and hygiene passed. The replacement ZIP contains 75 byte-matched freshly extracted files; the extracted application launched and its local service returned the corrected context. This is companion application testing, not native HOI4 testing. Generated strategy persistence remains untested until the approved request produces a response.
+Sixteen focused tests, TypeScript, production build, schema validation and hygiene passed. The replacement ZIP contains 75 byte-matched freshly extracted files; the extracted application launched and its local service returned the corrected context. This is companion application testing, not native HOI4 testing. At this pre-approval checkpoint, generated-strategy persistence had not yet been tested; its later successful result is recorded below.
 
 - Artifact: `M7.3.1-155594f9c4d2-windows-x64.zip`, retained outside Git under `Documents/HOI4 Companion Development Builds/M7.3.1-155594f9c4d2/`.
 - ZIP SHA256: `3eaad6e5da22d01006d4c150fbdcc5a4c887439b3c4c31f00655a1c612e4ee6f`.
@@ -33,13 +33,13 @@ Sixteen focused tests, TypeScript, production build, schema validation and hygie
 - GPT-6.1 Sol, low reasoning, estimated 43,837 input tokens, 3,000 maximum output tokens including reasoning. Estimate $0.1395925; conservative reservation $0.41485, using 153,940 conservative input tokens and full output cap. No cache discount assumed.
 - Standard pricing per million: $2 input, $0.10 cache read, $2.50 cache write, $10 output; reservation/estimate conservatively use cache-write pricing. [Official model pricing](https://developers.openai.com/api/docs/models/gpt-6.1-sol), checked 2026-11-10. Local pricing version `openai-sol-2026-11-09-v1`. These are estimates, not invoice guarantees.
 - Disposable acceptance session budget/request ceiling $0.50, confirmation threshold $0.05; spent/held $0, remaining $0.50, $0.08515 available after reservation. This replacement quote supersedes the older $0.20 walkthrough example; changing local settings does not authorize payment.
-- New runtime has zero attempt records, no unsettled requests, and a fresh unused request ID. The old rejected M7.3 attempt was examined read-only; this is a separately authorized corrected acceptance, not a retry of its request ID.
+- Before approval, the new runtime had zero attempt records, no unsettled requests, and a fresh unused request ID. The old rejected M7.3 attempt was examined read-only; this was a separately authorized corrected acceptance, not a retry of its request ID.
 
 At the approval checkpoint the replacement app was open at its session-key form. No credentials transferred between builds. Boolean configured status proved presence only, not remote account/model authorization. No remote probe was used.
 
 ## Paid request gate
 
-Maximum one real GPT-6.1 Sol request, only after explicit user approval of the replacement quote. No retries, fallback provider calls or automatic revisions. The corrected bundle is necessarily larger than the defective one; approval of the withdrawn quote does not authorize it. Credentials must be entered again in the replacement build. Account validity cannot be proven offline; configured status verifies presence only.
+The pre-approval gate permitted a maximum of one real GPT-6.1 Sol request, only after explicit approval of the replacement quote. No retries, fallback provider calls or automatic revisions. The corrected bundle was larger than the defective one; the withdrawn quote could not authorize it. Credentials had to be entered again in the replacement build. Offline configured status verified presence only; the later approved successful request established model/account access for that request. The one-request authorization is now consumed.
 
 The user explicitly replied: “Key configured; approve one request at this quote.” Before dispatch, the harness rechecked the exact quote/context/wire fingerprints, settings, installed source hashes, key-presence boolean, unused request ID, zero prior attempt records and unchanged $0.50 remaining budget. An exclusive local dispatch marker prevents rerunning the harness. Exactly one local generate operation called the fixed OpenAI Responses endpoint; no fallback, remote probe or second generation occurred.
 

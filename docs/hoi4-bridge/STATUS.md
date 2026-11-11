@@ -1,8 +1,8 @@
 # HOI4 bridge status
 
-## M7.3.1 real-provider acceptance — preflight critical correction (2026-11-10)
+## M7.3.1 real-provider technical acceptance — user review pending (2026-11-10)
 
-- No paid request dispatched; original quote withdrawn. Laptop artifact/index verified and 14 existing deterministic checks passed. Exact outgoing-bundle inspection found all requirement summaries and known cost/timing metadata were being discarded by the reward-preview serializer.
+- Pre-approval history: original quote withdrawn before any paid request. Laptop artifact/index verified and 14 existing deterministic checks passed. Exact outgoing-bundle inspection found all requirement summaries and known cost/timing metadata were being discarded by the reward-preview serializer.
 - Isolated fix/hoi4-m731-context from bdb8a48 corrects serialization only; interpreter/coverage gate unchanged. New failing-then-passing regression, 16 focused tests/build and installed-source context check pass. See ../application/M731-REAL-PROVIDER-ACCEPTANCE.md.
 - Runtime 155594f9c4d27780b969b217f19b01275d3d01bf independently reviewed with no blockers; draft PR #6. Replacement ZIP fresh-extraction (75 matching files), actual app launch/local service and corrected bundle checks pass; 15 source hashes verified. Manifest/report retain runtime/artifact evidence separately from documentation commits.
 - After explicit replacement-quote approval, exactly one GPT-6.1 Sol request completed: 36,215 input (0 cache-read / 36,212 cache-write), 2,405 output / 0 reported reasoning; usage-based estimate $0.114586, not an invoice. All 17 unique typed references valid, no repairs. Eight focuses/six recommendations; structural route valid but 106 blocking checks keep confidence/ranking/optimization disabled.
