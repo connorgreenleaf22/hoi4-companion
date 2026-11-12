@@ -1,5 +1,13 @@
 # HOI4 bridge status
 
+## Common integration — 2026-11-12
+
+`integration/common-2026-11-12` combines reviewed base bdb8a488 with exact PRs #6 → #9 → #12 → #8 → #11, preserving both stacks. [Current report](../workflow/COMMON-INTEGRATION-2026-11-12.md) and [promotion/rollback plan](../workflow/COMMON-PROMOTION-2026-11-12.md) supersede older branch-isolation/next-action notes below for this candidate. Source reports remain historical evidence at their original SHAs. PR #4/live-Q&A remain untouched and excluded.
+
+77 focused and 21 compatibility/preservation tests pass; combined portable CI (191 fixtures + 3 workflow checks) and TypeScript/production build pass. Windows extraction/restart, final preservation comparison and independent review are pending until recorded in the current report. NAV-01 explicitly blocks release promotion; no unsaved-template fix is claimed. M7.4.2b remains blocked, five combat totals/deltas null, source inspection preserved. No new paid/game/native calls, protected merges, releases or HQ edits. No Local Goal has been started.
+
+## Historical source milestone evidence
+
 ## M7.3.1 real-provider technical acceptance — user review pending (2026-11-10)
 
 - Pre-approval history: original quote withdrawn before any paid request. Laptop artifact/index verified and 14 existing deterministic checks passed. Exact outgoing-bundle inspection found all requirement summaries and known cost/timing metadata were being discarded by the reward-preview serializer.

@@ -1,0 +1,10 @@
+{
+  "releasePromotionBlocked": true,
+  "blockers": [
+    {
+      "id": "NAV-01",
+      "summary": "Unsaved Division Lab template edits are lost on tool navigation; recovery and close accounting require a separately reviewed fix",
+      "closure": "Verify name, rows and counts survive tool navigation and campaign switching, or require an explicit keep/discard choice; cover pending saves, reload and close behavior. Preserve saved templates and regression-test the extracted Windows build."
+    }
+  ]
+}

@@ -25,12 +25,22 @@ async function main(){
    await panel.getByRole('button',{name:'Start local draft'}).click();await panel.getByLabel('AI strategy name').fill('My alternative review');await panel.getByRole('button',{name:'Save and recheck strategy'}).click();await expect(panel.getByRole('status')).toContainText('Strategy saved and reviewed');await panel.getByLabel('Compare whole strategy My Portugal review').check();await panel.getByLabel('Compare whole strategy My alternative review').check();await expect(panel).toContainText('comparison is unranked');
    await p.screenshot({path:path.join(run.output,'offline-planning.png'),fullPage:true});
   });
+  if(process.env.HOI4_INTEGRATION_SMOKE==='1')await run.check('NAV-01 release blocker reproduced: unsaved Lab template resets on navigation',['NAV-01-BLOCKED'],async()=>{
+   await p.getByRole('button',{name:'Division & production',exact:true}).click();
+   await p.getByLabel('Template name',{exact:true}).fill('Synthetic unsaved integration template');
+   await p.getByLabel('Count 1',{exact:true}).fill('7');
+   await p.getByRole('button',{name:'Command center',exact:true}).click();
+   await p.getByRole('button',{name:'Division & production',exact:true}).click();
+   await expect(p.getByLabel('Template name',{exact:true})).toHaveValue('Infantry division');
+   await expect(p.getByLabel('Count 1',{exact:true})).toHaveValue('9');
+   await p.screenshot({path:path.join(run.output,'navigation-release-blocker.png'),fullPage:true});
+  });
   const origin=new URL(p.url()).origin;await app.close();app=undefined;await assert.rejects(fetch(origin+'/api/v1/status'));
   app=await _electron.launch({executablePath:exe,cwd:path.dirname(exe),env,timeout:60000});run.ownedProcesses.push({pid:app.process().pid!,kind:'Owned M731 packaged restart'});p=await app.firstWindow({timeout:60000});await expect(p.getByRole('heading',{name:'Command center',exact:true})).toBeVisible({timeout:60000});await p.getByRole('button',{name:'Campaign planner',exact:true}).click();panel=p.getByRole('region',{name:'AI strategy planner'});
   await run.check('packaged restart retains manual proposal and keeps provider unconfigured',['M73-PACKAGE-REOPEN'],async()=>{
    await expect(panel).toContainText('AI generation is unconfigured');await panel.getByRole('button',{name:'My Portugal review · revision 1',exact:true}).click();await expect(panel.getByLabel('Recommendation 1 advice')).toHaveValue('User planning note: check available factories before construction.');await expect(panel).toContainText('Origin: manual');await p.screenshot({path:path.join(run.output,'reopened.png'),fullPage:true});
   });
-  run.finish({executable:exe,executableSHA256:fileHash(exe),packagedElectronLaunched:true,nativeGameLaunched:false,realProviderCalled:false,aiGeneration:'unconfigured; source fixture transport qualified separately'});console.log(run.output);
+  run.finish({executable:exe,executableSHA256:fileHash(exe),packagedElectronLaunched:true,nativeGameLaunched:false,realProviderCalled:false,releasePromotionBlocked:process.env.HOI4_INTEGRATION_SMOKE==='1',aiGeneration:'unconfigured; source fixture transport qualified separately'});console.log(run.output);
  }catch(e){const p=app?.windows()[0];if(p)await p.screenshot({path:path.join(run.output,'failure.png'),fullPage:true});throw e;}finally{await app?.close();run.finish();run.cleanup();}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});
