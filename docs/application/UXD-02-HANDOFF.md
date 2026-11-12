@@ -1,0 +1,11 @@
+# UXD-02 — Rook / Project HQ handoff
+
+- Delivered two local, interactive launch alternatives within the approved Adaptive Strategy Workspace: A Chat-first and B Campaign-first. No launch winner selected; owner acceptance pending.
+- Isolated branch `prototype/uxd02-adaptive`, starting from verified Rook/HQ integration baseline `bdb8a4887522b38f5110f3900bbf1655cc5fd600`; runtime/review SHA **`fb7201d15b2554f5033c9aa2e46dc9581b80e4a3`**. Later commits contain documentation only.
+- Preview: `npm --prefix prototypes/uxd02 run dev`; loopback port 4178 with `?variant=a` or `?variant=b`. Full instructions and a three-scenario walkthrough are in `prototypes/uxd02/README.md`.
+- Both variants include editable military preparation, numerical/visual/matchup composition comparisons, player override, simulated recalculation, local strategy/design revisions, conversation history and honest missing-context recovery. No live AI or evaluation engine is integrated.
+- Verification: 182 browser assertions at desktop/narrow sizes; 32 local screenshots; separate reviewer `/root/uxd02_independent_review` passed 22 targeted checks with no blocking findings. Repository typecheck and 123 fixture tests plus 3 workflow guards pass. Four review defects were corrected and independently rechecked.
+- Evidence: `artifacts/uxd02/index.html`, final capture/receipt directory `artifacts/uxd02/2026-11-12T08-19-02-734Z/`, and independent receipts under `artifacts/uxd02/independent-review/`. Local-only; no public artifact links or hosting claimed.
+- Reports: `docs/application/UXD-02.md`, `UXD-02-DESIGN.md`, `UXD-02-INTEGRATION.md`, `UXD-02-REVIEW.md`; versioned manifest `docs/milestones/UXD-02.json`. PR description prepared locally; no push or new PR. Existing PRs #4/#6/#8/#9 unchanged.
+- Recommendation: B for returning campaign play; A for exploratory/disconnected use. Remaining limits include narrow-workspace length, B's below-fold discovery and no physical-DPI/screen-reader/native/game/numerical qualification. Owner retains final choice and production authorization.
+- HQ was read successfully; it was not edited or automatically synchronized. Actual local UXD-01 report/review/captures were located, resolving HQ's missing-handoff evidence gap for this task. Preserve UXD-01's own acceptance status. No UXD-03 or production rebuild started.

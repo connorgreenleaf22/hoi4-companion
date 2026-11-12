@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "UXD-02",
+  "status": "offline-tested",
+  "branch": "prototype/uxd02-adaptive",
+  "commitSha": "fb7201d15b2554f5033c9aa2e46dc9581b80e4a3",
+  "testEvidence": [
+    {"kind":"deterministic","result":"passed","reference":"local-only: artifacts/uxd02/2026-11-12T08-19-02-734Z/results.json","summary":"182 browser assertions across both variants at 1920x1080 and 1100x900; synthetic fixtures; zero external requests or runtime errors."},
+    {"kind":"deterministic","result":"passed","reference":"docs/application/UXD-02.md","summary":"Existing required fixture allowlist: 123 tests and 3 workflow guards passed locally; no hosted CI or native claim."},
+    {"kind":"typecheck","result":"passed","reference":"docs/application/UXD-02.md","summary":"Repository typecheck and isolated prototype TypeScript/Vite build passed."},
+    {"kind":"review","result":"passed","reference":"docs/application/UXD-02-REVIEW.md","summary":"Separate reviewer inspected final runtime; 22 targeted browser assertions passed; initial four defects resolved; no blocking findings."},
+    {"kind":"deterministic","result":"passed","reference":"local-only: artifacts/uxd02/compiled-smoke.json","summary":"Four assertions on actual built static assets: A/B launch, save/reload, no runtime errors; compiled file hashes retained."},
+    {"kind":"schema","result":"passed","reference":"docs/application/UXD-02.md","summary":"Local milestone schema validation passed; baseline PR #5 link is explicitly distinguished from a new prototype PR."},
+    {"kind":"hygiene","result":"passed","reference":"docs/application/UXD-02.md","summary":"Staged tracked-file hygiene and diff whitespace check passed; screenshots remain local-only."}
+  ],
+  "nativeQualification": {"state":"not-applicable","scope":"Isolated browser prototype only. No Electron build, HOI4, live observations, game mechanics or physical-monitor qualification claimed.","evidence":[]},
+  "artifact": null,
+  "blockers": [],
+  "acceptance": {"state":"pending","evidence":[]},
+  "report": "docs/application/UXD-02.md",
+  "github": ["https://github.com/connorgreenleaf22/hoi4-companion/pull/5"]
+}
