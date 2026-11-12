@@ -7,4 +7,3 @@ Blockers: Owner usefulness acceptance and independent human GitHub merge approva
 Manifest: https://github.com/connorgreenleaf22/hoi4-companion/blob/feature%2Fhoi4-knowledge-meta-lab/docs/milestones/M7.4.2.json; report: https://github.com/connorgreenleaf22/hoi4-companion/blob/feature%2Fhoi4-knowledge-meta-lab/docs/application/MILESTONE-7.4.2.md; GitHub: https://github.com/connorgreenleaf22/hoi4-companion/pull/8.
 Apply after reading current HQ; preserve product decisions. HQ update pending; no automatic synchronization.
 Integration: use baseline bdb8a4887522b38f5110f3900bbf1655cc5fd600; PR #6 excluded; retain M7.4.1 interpreter ownership and UXD-01 read-only scope. Owner will forward this handoff to Rook; no automatic HQ sync or merge.
-
