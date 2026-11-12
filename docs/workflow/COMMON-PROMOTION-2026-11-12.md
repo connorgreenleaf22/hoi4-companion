@@ -9,11 +9,11 @@ This is a preparation record, not approval to merge or release. See [integration
 3. Before any develop merge, require current four checks (`qa-typecheck`, `qa-test-ci`, `qa-schemas`, `qa-hygiene`), independent exact-SHA review, resolved material findings and explicit owner/maintainer approval. Verify actual protection/rules instead of assuming enforcement. This task stops before this action.
 4. After a separately approved develop merge, record its actual merge SHA and ancestry. Prepare a develop-to-main PR for that reviewed snapshot; reassess only new deltas and required checks. Do not pretend the pre-merge candidate equals a future merge SHA. No main merge, tag, protected push, release or administration change is performed here.
 
-The older workflow-only rollout document describes the earlier separate rollout proposal. This owner-requested full common-candidate preparation supersedes its workflow-only copying approach for this branch; historical evidence and branch-protection requirements still apply.
+Prepared descriptions: [candidate-to-develop and future develop-to-main drafts](COMMON-PROMOTION-PR-DRAFTS.md). These are local files; no push or PR publication was performed. The older workflow-only rollout document describes the earlier separate rollout proposal. This owner-requested full common-candidate preparation supersedes its workflow-only copying approach for this branch; historical evidence and branch-protection requirements still apply.
 
 ## Release gates
 
-NAV-01 blocks promotion to a release candidate suitable for release, even if code integration checks pass. `npm run package` explicitly refuses. M7.4.2b remains partial/blocked with all five combat metrics null; do not advertise combat aggregation. Full source coverage, native/user qualification and actual repository approvals remain independent. A development ZIP is a review artifact only.
+NAV-01 blocks promotion to a release candidate suitable for release, even if code integration checks pass. `npm run package` explicitly refuses. The installed game is now 1.19.5.0, so old 1.19.4.2 source qualifications require separate revalidation; retained resource/combat audits refuse the mismatch. M7.4.2b remains partial/blocked with all five combat metrics null; do not advertise combat aggregation. Full source coverage, native/user qualification and actual repository approvals remain independent. A development ZIP is a review artifact only.
 
 ## Rollback
 

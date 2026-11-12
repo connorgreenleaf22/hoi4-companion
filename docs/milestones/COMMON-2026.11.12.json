@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "COMMON-2026.11.12",
+  "status": "blocked",
+  "branch": "integration/common-2026-11-12",
+  "commitSha": "e27e28f8ff5ddaa9d5820bceeba2073283868f0c",
+  "testEvidence": [
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/COMMON-INTEGRATION-VERIFICATION.json",
+      "summary": "77 focused +21 compatibility/preservation +2 SQLite API contract cases; 191 portable fixtures +3 workflow guards. Counts overlap across focused/portable runs; not a distinct-total claim."
+    },
+    {
+      "kind": "typecheck",
+      "result": "passed",
+      "reference": "docs/application/COMMON-INTEGRATION-VERIFICATION.json",
+      "summary": "Production build passes TypeScript, Vite and Node bundle generation. Lockfile and store/migration implementation unchanged."
+    },
+    {
+      "kind": "schema",
+      "result": "passed",
+      "reference": "docs/workflow/COMMON-INTEGRATION-2026-11-12.md",
+      "summary": "Milestone manifests validated locally; final evidence checks recorded in report."
+    },
+    {
+      "kind": "hygiene",
+      "result": "passed",
+      "reference": "docs/workflow/COMMON-INTEGRATION-2026-11-12.md",
+      "summary": "Tracked path/credential heuristic and combined whitespace pass; only sanitized source/evidence staged, raw data retained locally."
+    },
+    {
+      "kind": "packaged",
+      "result": "passed",
+      "reference": "docs/application/COMMON-INTEGRATION-VERIFICATION.json",
+      "summary": "75 files match fresh extraction. Three actual isolated Electron startup/service/offline save/restart acceptance cases pass; additional NAV-01 check reproduces the release blocker. Four ASAR API/demo bundles match; all five combat metrics/deltas null."
+    },
+    {
+      "kind": "review",
+      "result": "passed",
+      "reference": "docs/application/COMMON-INTEGRATION-VERIFICATION.json",
+      "summary": "Separate reviewer /root/review_common_candidate reviewed runtime e27e28f8ff5ddaa9d5820bceeba2073283868f0c with no blocking code findings; exact final evidence-SHA review has a local-only post-freeze receipt."
+    },
+    {
+      "kind": "deterministic",
+      "result": "blocked",
+      "reference": "docs/application/COMMON-INTEGRATION-VERIFICATION.json",
+      "summary": "Installed 1.19.5.0 differs from retained 1.19.4.2 resource/combat pins; both installed audits refuse as expected. No current-installation qualification claim."
+    }
+  ],
+  "nativeQualification": {
+    "state": "not-run",
+    "scope": "No new native gameplay/observation qualification; prior milestone evidence is inherited only at its original SHA/version.",
+    "evidence": []
+  },
+  "artifact": {
+    "name": "M7.4.2i-e27e28f8ff5d-windows-x64.zip",
+    "reference": "Local-only Documents/HOI4 Companion Development Builds/M7.4.2i-e27e28f8ff5d; never uploaded",
+    "sha256": "1086a172f6b70f1e03dae665edd016b329006809c66373ad81a3d8eece50194c"
+  },
+  "blockers": [
+    {
+      "summary": "NAV-01: unsaved Division Lab template edits lost on navigation; release promotion explicitly blocked until reviewed fix and extracted-build regression.",
+      "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/2"
+    },
+    {
+      "summary": "Current installed source 1.19.5.0 requires separate qualification; retained 1.19.4.2 fixtures are not current-installation evidence. Deeper event/campaign applicability also remains open.",
+      "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/7"
+    },
+    {
+      "summary": "M7.4.2b remains blocked: all five combat metrics and deltas null; aggregation equations not qualified.",
+      "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/10"
+    },
+    {
+      "summary": "Hosted required checks, actual protection/rules and explicit maintainer exact-SHA approval remain required before develop then main promotion.",
+      "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/1"
+    }
+  ],
+  "acceptance": {
+    "state": "pending",
+    "evidence": [
+      "docs/application/MILESTONE-7.4.2i-ACCEPTANCE.md"
+    ]
+  },
+  "report": "docs/workflow/COMMON-INTEGRATION-2026-11-12.md",
+  "github": [
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/6",
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/9",
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/12",
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/8",
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/11"
+  ]
+}

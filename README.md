@@ -12,6 +12,8 @@ See the [integration report](docs/workflow/COMMON-INTEGRATION-2026-11-12.md), [m
 
 #11 preserves source-input inspection, not qualified division combat calculations. Organization, soft attack, hard attack, defense and breakthrough remain unsupported with null values/deltas; M7.4.2b remains blocked on [Issue #10](https://github.com/connorgreenleaf22/hoi4-companion/issues/10). Strategies remain provisional, and ranking/optimization stay disabled where coverage is insufficient. The earlier authorized provider request does not authorize further calls.
 
+The current installed game is 1.19.5.0, while retained source/evaluation qualification is pinned to 1.19.4.2. Both evaluation source audits refuse this mismatch. Fixture/demo and package success do not qualify the current patch; separately reviewed source requalification remains open.
+
 ## Inherited v0.4 foundation
 
 `release/HOI4-Companion-0.4.0-r3.exe` and `release/v0.4.0-r3/` are historical artifact references, not this integration candidate. Storage remains schema 3; the integration introduces no database migration. Older builds and their evidence must be retained.
