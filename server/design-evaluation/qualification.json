@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "id": "hoi4-1.19.4.2-base-design-v1",
+  "gameVersion": "1.19.4.2",
+  "indexRevision": "844796458e9cdce9e3bd4894bff89191cc960727f59c6939c1f4d4e293b580f4",
+  "entries": [
+    {
+      "id": "infantry",
+      "kind": "unit",
+      "source": "common/units/infantry.txt",
+      "line": 7,
+      "hash": "dfc319ec6ca807fdcffdd6f3555db0f8c2aa33897706630daf55339170225a60",
+      "digest": "e375978f02ca5e776fd2f15f435aa49b33589c04616452649f234095f2f7f31c"
+    },
+    {
+      "id": "artillery_brigade",
+      "kind": "unit",
+      "source": "common/units/artillery_brigade.txt",
+      "line": 3,
+      "hash": "9826452615dfa490c2167480c3e4695283d438e2a719df85fdef06a02d8b8541",
+      "digest": "eef86d4297632bc76566616a57ac4bc0829e634375b9fe03b458d6b8427894e0"
+    },
+    {
+      "id": "motorized",
+      "kind": "unit",
+      "source": "common/units/infantry.txt",
+      "line": 410,
+      "hash": "dfc319ec6ca807fdcffdd6f3555db0f8c2aa33897706630daf55339170225a60",
+      "digest": "5fb1709a0d904191f03fc534a1ce239932a4667653bd887729413bd0d5e937ae"
+    },
+    {
+      "id": "medium_armor",
+      "kind": "unit",
+      "source": "common/units/medium_armor.txt",
+      "line": 3,
+      "hash": "6f6fa9612e07d0b37654032d4fea34b78d3daccbb0e40cb69badba942b0103b5",
+      "digest": "8d692b91fcfa5a2bd818f3a640e323345632b11218a2c92d068aa60dc2f28a37"
+    },
+    {
+      "id": "infantry_equipment",
+      "kind": "equipment",
+      "source": "common/units/equipment/infantry.txt",
+      "line": 5,
+      "hash": "0b2b15df8618b68ceb4892510c965f0d8618b365937fd8e12581a6d512e01cf1",
+      "digest": "ab9ee0e3c2a8231b0437e42f0fbf169449e68f816851f97efd32663ec1bde9aa"
+    },
+    {
+      "id": "infantry_equipment_1",
+      "kind": "equipment",
+      "source": "common/units/equipment/infantry.txt",
+      "line": 56,
+      "hash": "0b2b15df8618b68ceb4892510c965f0d8618b365937fd8e12581a6d512e01cf1",
+      "digest": "2049f78a3e6e2eda7fe2871d2f50940650ae36a1786d9add4155123d53f27cfe"
+    },
+    {
+      "id": "artillery_equipment",
+      "kind": "equipment",
+      "source": "common/units/equipment/artillery.txt",
+      "line": 3,
+      "hash": "c2288032e61a461af7b3fdb6765f72d256a502f5050567f51e25798bb690cd54",
+      "digest": "b7d3387bf1563f44b456a0a05801f29d9ce97b3d149f75aa762688acbd1e5468"
+    },
+    {
+      "id": "artillery_equipment_1",
+      "kind": "equipment",
+      "source": "common/units/equipment/artillery.txt",
+      "line": 42,
+      "hash": "c2288032e61a461af7b3fdb6765f72d256a502f5050567f51e25798bb690cd54",
+      "digest": "e721df141c5d90e744a124f0b3d8a97629636ef0c9b8e4cf386dfbb24426b962"
+    },
+    {
+      "id": "motorized_equipment",
+      "kind": "equipment",
+      "source": "common/units/equipment/motorized.txt",
+      "line": 3,
+      "hash": "b25c3797280f471b89a43da5b02e135091cf205acdf37c09d547a88df52d5128",
+      "digest": "a878c6860d43c6d410ccbfc6fe13c73401b65ab0d8d06dc72064093124b4da6b"
+    },
+    {
+      "id": "motorized_equipment_1",
+      "kind": "equipment",
+      "source": "common/units/equipment/motorized.txt",
+      "line": 47,
+      "hash": "b25c3797280f471b89a43da5b02e135091cf205acdf37c09d547a88df52d5128",
+      "digest": "f28becf879a6d7490288896b27b61ea0ee757f67073bd1d46ff8e0110c520fd1"
+    },
+    {
+      "id": "medium_tank_chassis",
+      "kind": "equipment",
+      "source": "common/units/equipment/tank_chassis.txt",
+      "line": 279,
+      "hash": "ad420e0bffc41a062a9457d67c18d59a91f0d8972ef6985e22e443eadd4983bf",
+      "digest": "d8d595170c01b33d62f4fff99004a5f9cfe0c6944acdb733c0a5b4111bde97e5"
+    },
+    {
+      "id": "medium_tank_equipment_1",
+      "kind": "equipment",
+      "source": "common/units/equipment/x_tank_chassis.txt",
+      "line": 661,
+      "hash": "847194cf28e16dbe9f08a863c0d7541ec34d8c591d54d70b3211f74ae696ca65",
+      "digest": "8ed3d2eead6ce1f4d3ddec24bd01f956dc4d7818966108df13e08558e139ca2d"
+    },
+    {
+      "id": "infantry_weapons",
+      "kind": "technology",
+      "source": "common/technologies/infantry.txt",
+      "line": 16,
+      "hash": "a131213cf401c9fe2b0f67c446adbac8d94d04e147f7491f94dfa29c47930e72",
+      "digest": "a12ba34dae49d7a020c14a43d696c3f9ec95a9bca1215fd45fd98c76c8d857f5"
+    },
+    {
+      "id": "infantry_weapons1",
+      "kind": "technology",
+      "source": "common/technologies/infantry.txt",
+      "line": 53,
+      "hash": "a131213cf401c9fe2b0f67c446adbac8d94d04e147f7491f94dfa29c47930e72",
+      "digest": "cee781a458dbc6ec94133f1dbbd3a4be1659b757bab9acf82179dea06d1d35d5"
+    },
+    {
+      "id": "gw_artillery",
+      "kind": "technology",
+      "source": "common/technologies/artillery.txt",
+      "line": 6,
+      "hash": "0c52edeb24427cb17bd1411db644c59971406ca947db60183b0cc49da0a96e86",
+      "digest": "8c139fde1008e08e4ae713bdf992ba93d2e3e625b4e11c09474de2d2d37757b3"
+    },
+    {
+      "id": "motorised_infantry",
+      "kind": "technology",
+      "source": "common/technologies/infantry.txt",
+      "line": 1962,
+      "hash": "a131213cf401c9fe2b0f67c446adbac8d94d04e147f7491f94dfa29c47930e72",
+      "digest": "38f2a8762dc4c67a527eebb2fdc84a38ce00b204e992e77d626001c24e2c01bc"
+    },
+    {
+      "id": "basic_medium_tank",
+      "kind": "technology",
+      "source": "common/technologies/armor.txt",
+      "line": 751,
+      "hash": "ab42433b2c581b96540a315f0d8df89bf82e7994e07e7eff1fc819c1325de39d",
+      "digest": "9b0c9b3ba1fa144a2e48fbd8127dc730e90b345a1ae167e5662cb82a49c58d8d"
+    }
+  ]
+}
