@@ -2,6 +2,7 @@ import {test} from 'node:test';import assert from 'node:assert/strict';import fs
 import {validateProfile,startServer} from '../server/api';import {parseScript} from '../server/parser';import {evaluatePlanner} from '../server/planner/evaluate';import {reviewPlanCoverage,rankCoverageGaps,reviewProposal} from '../server/planner/coverage';import {entryMechanics,explanationPreview} from '../src/mechanics';
 import {explorePaths} from '../server/planner/strategy';
 import {summarizePath,renderPathBrief} from '../server/planner/path-summary';
+import {treeFocuses} from '../server/domain';import {focusExclusions} from '../src/focus-structure';
 import type {Entry,CampaignPlan} from '../src/types';
 const profile=validateProfile({id:'coverage',country:'POR',tree:'tree',startDate:'1936-01-01',completed:[]});
 const tree:Entry={uid:'tree',id:'tree',title:'Fixture tree',kind:'focus_tree',source:'fixture.txt',line:1,hash:'fixture',version:'fixture',description:'',data:{countries:['POR']}};
@@ -18,6 +19,14 @@ test('source-valid simple path stays editable and provisional; coverage never qu
 test('reverse exclusions veto a proposed route even when earlier availability is unknown',()=>{
  const es=[focus('A','available={has_war=yes} mutually_exclusive={focus=B}',{exclusive:['B']}),focus('B')];
  const r=review(es);assert.equal(r.structuralValidity,'invalid');assert.equal(reviewProposal('provisional',r).allowed,false);assert.ok(r.gaps.some(g=>g.dimension==='branch-conflicts'&&g.kind==='structure'));
+});
+
+test('repeated exclusion blocks survive cached derived fields and reject both political branches',()=>{
+ const cached=[focus('A','mutually_exclusive={focus=B} mutually_exclusive={focus=C}',{exclusive:['B']}),focus('B'),focus('C','mutually_exclusive={focus=B} mutually_exclusive={focus=A}',{exclusive:['B']})];
+ const normalized=treeFocuses(tree,cached);assert.deepEqual(normalized[0].data.exclusive,['B','C']);assert.equal(review(normalized,['A','C']).structuralValidity,'invalid');assert.equal(review(normalized,['A']).structuralValidity,'valid');
+ assert.deepEqual(cached[0].data.exclusive,['B'],'read-time normalization must not mutate retained entries');assert.match(JSON.stringify(entryMechanics(cached[0]).requirements),/B, C/);
+ assert.deepEqual(focusExclusions(parseScript('mutually_exclusive={} mutually_exclusive={focus=B focus=B} wrapper={mutually_exclusive={focus=C}}')),['B']);
+ const malformed=treeFocuses(tree,[focus('A','mutually_exclusive=yes')]);assert.equal(review(malformed).structuralValidity,'unknown');
 });
 test('partial civil-war explanation preserves stability guard, scope, known siblings and explicit unknown allocation',()=>{
  const e=focus('restoration','completion_reward={if={limit={has_stability<0.4} start_civil_war={ideology=fascism size=unresolved_variable states={181}}} else={add_stability=-0.1} add_political_power=25}');

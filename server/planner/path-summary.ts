@@ -62,7 +62,7 @@ export function renderPathBrief(s:ReturnType<typeof summarizePath>):string{
  const consequential=s.branches.filter(b=>b.consequences.some(c=>['annex_country','create_wargoal','promote_character','set_politics','start_civil_war'].includes(c.code||'')));
  const shown=(consequential.length?consequential:s.branches).slice(0,4);
  lines.push('', 'Selected event choices (conditional, not predicted):');
- for(const b of shown)lines.push('- '+b.text+' ['+source(b)+']',...b.consequences.slice(0,2).map(x=>'  '+[...x.appliesWhen,x.text].join(' ')));
+ for(const b of shown)lines.push('- '+b.text+' ['+source(b)+']',...b.consequences.slice(0,2).map(x=>{const recipient=[...x.appliesWhen].reverse().find(p=>p.startsWith('For ')||/^Event .* delivered to /.test(p));return '  Only if the full source chain and its guards apply: '+(recipient?recipient+' ':'')+x.text;}));
  lines.push('', 'Next steps:',...s.recommendations.map(r=>'- [Rules-based inference] '+r.text),'',`${shown.length} event options shown here; ${s.branches.length-shown.length} more in the structured summary; ${s.omittedBranches} further options require the full coverage review. Full branches, timing, prerequisites and evidence remain in the structured summary and coverage.`,
   `Open checks: ${s.unsupported.total} semantic; ${s.unknownCampaignState.total} campaign-state. Counts are diagnostics, not a quality score.`,...s.limits.map(x=>'- '+x));return lines.join('\n')+'\n';
 }

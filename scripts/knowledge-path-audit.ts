@@ -1,6 +1,7 @@
 // Explicit opt-in installed-source audit. Reads the retained index; writes only ignored/local outputs.
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {DatabaseSync} from 'node:sqlite';
 import {startServer,validateProfile} from '../server/api';import type {Entry,Node} from '../src/types';import type {Explanation} from '../src/mechanics-interpreter';import {renderPathBrief} from '../server/planner/path-summary';
+import {focusExclusions} from '../src/focus-structure';
 const hash=(p:string)=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const flatten=(xs:Explanation[]):Explanation[]=>xs.flatMap(x=>[x,...flatten(x.children||[])]);
 const routes=[['POR','POR_the_kingdom_reunited'],['GER','GER_return_of_the_kaiser'],['HUN','HUN_proclaim_the_restoration_of_austria_hungary']];
@@ -18,7 +19,7 @@ async function main(){
  const entries=db.prepare("SELECT payload FROM entries WHERE source IN ('common/national_focus/portugal.txt','common/national_focus/germany.txt','common/national_focus/hungary.txt') OR id IN ('POR_stir_monarchist_sentiment_in_brazil','POR_stir_monarchist_sentiment_in_portugal')").all().map(r=>JSON.parse(String(r.payload)) as Entry);
  const proofs=new Map<string,string>();
  const verify=(e:Entry)=>{assert.equal(e.version,meta.version);assert.equal(hash(path.join(meta.root,e.source)),e.hash,e.source);proofs.set(e.source,e.hash);};
- for(const e of entries){verify(e);app.store.insert(e);}app.store.setSetting('meta',meta);
+ for(const e of entries){verify(e);if(['focus','shared_focus','joint_focus'].includes(e.kind))e.data.exclusive=focusExclusions(e.data.nodes,e.data.exclusive);app.store.insert(e);}app.store.setSetting('meta',meta);
  const added=new Set<string>();let budget=100000;
  const scan=(ns:Node[],depth=0)=>{assert.ok(depth<40&&budget>0,'Audit traversal bound reached');for(const n of ns){assert.ok(--budget>0);if(['effect_tooltip','custom_effect_tooltip','event_option_tooltip','show_ideas_tooltip','unlock_decision_tooltip'].includes(n.key))continue;
  if(['country_event','news_event','state_event'].includes(n.key)){const id=typeof n.value==='string'?n.value:n.value.find(v=>v.key==='id')?.value;
@@ -38,6 +39,7 @@ async function main(){
  const input={schemaVersion:1,profile,plan:{...plan,items:chosen.items},supportingReferences:supporting.map(e=>'definition:'+e.uid),indexRevision:meta.indexRevision,intent:'provisional',includePathSummary:true};
  const review=await post('strategy/review',input);assert.equal(review.status,200);const c=review.body.coverage;
  assert.equal(c.structuralValidity,'valid');assert.equal(c.policy.rankingAllowed,false);for(const intent of ['rank','optimize'])assert.equal((await post('strategy/review',{...input,intent})).status,422);
+ if(country==='HUN'){const sibling=entries.find(e=>e.kind==='focus'&&e.id==='HUN_elect_a_fascist_king')!;const conflict=await post('strategy/review',{...input,plan:{...input.plan,items:[...input.plan.items,{reference:'definition:'+sibling.uid}]}});assert.equal(conflict.status,422,'Repeated source exclusions must reject Habsburg/fascist kings');assert.equal(conflict.body.coverage.structuralValidity,'invalid');}
  const all=flatten(c.references.flatMap((r:any)=>[...r.summary,...r.requirements]));const known=(code:string)=>all.filter(x=>x.code===code&&!x.unknown);
  const frequencies=Object.entries(all.filter(x=>x.unknown).reduce((a:Record<string,number>,x)=>{a[x.code||'unknown']=(a[x.code||'unknown']||0)+1;return a;},{})).sort((a,b)=>b[1]-a[1]);
  reports.push({country,goal,title:target.title,sequence:selected.map((e:Entry)=>({id:e.id,title:e.title,days:e.data.days,prerequisites:e.data.prerequisites,exclusive:e.data.exclusive,source:e.source,line:e.line})),treeSelection:tree.data.countryScript,fields:{politicalTransitions:known('set_politics').map(x=>x.text),popularitySets:known('set_popularities').map(x=>x.text),characterPromotions:known('promote_character').map(x=>x.text),stateControlRequirements:known('controls_state').map(x=>x.text),popularityRequirements:all.filter(x=>['neutrality','fascism','democratic','communism'].includes(x.code||'')&&!x.unknown).map(x=>x.text),weightedBranches:known('weighted-branch').length,annexation:known('annex_country').map(x=>x.text),refusalWarGoals:known('create_wargoal').map(x=>x.text)},unsupported:frequencies,coverage:c,pathSummary:review.body.pathSummary});
