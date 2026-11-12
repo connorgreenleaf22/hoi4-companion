@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "UXD-01",
+  "status": "offline-tested",
+  "branch": "audit/uxd01",
+  "commitSha": "bdb8a4887522b38f5110f3900bbf1655cc5fd600",
+  "testEvidence": [
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "Local-only artifacts/uxd01/AUDIT-RECEIPT.json and journey-measurements.json",
+      "summary": "Read-only browser-equivalent inspection completed: extracted newer package renderer plus corresponding source-compiled service, disposable source-only index and synthetic campaign/observations. Reproduced unsaved strategy loss and exact Germany context-cap refusal; this is audit evidence, not a product workflow pass. Zero schema-2 provider attempts, provider calls or game launches."
+    },
+    {
+      "kind": "packaged",
+      "result": "passed",
+      "reference": "Local-only artifacts/uxd01/AUDIT-RECEIPT.json and SCREENSHOT-MANIFEST.json",
+      "summary": "Identity inspection only: PR #6 runtime 155594f9c4d27780b969b217f19b01275d3d01bf ZIP hash matches receipt, ZIP/unpacked ASAR hashes match; 31 unmodified UI captures retained. Native Electron deliberately not launched for profile isolation; no fresh full packaged-backend/startup acceptance."
+    },
+    {
+      "kind": "review",
+      "result": "passed",
+      "reference": "docs/application/UXD-01-REVIEW.md",
+      "summary": "Separate agent /root/uxd01_independent_review reviewed baseline bdb8a4887522b38f5110f3900bbf1655cc5fd600 source, newer package-renderer evidence, report and inventory; supports major conclusions with four minor documentation corrections applied. No independent runtime rerun, GitHub human approval or owner acceptance."
+    }
+  ],
+  "nativeQualification": {
+    "state": "not-applicable",
+    "scope": "Read-only UX audit; no new native qualification. Native Electron walkthrough deliberately skipped, with browser-equivalent evidence and explicit limits instead.",
+    "evidence": []
+  },
+  "artifact": {
+    "name": "UXD-01-evidence.zip",
+    "reference": "Local-only artifacts/UXD-01-evidence.zip; report, inventory, review, handoff, annotated gallery, 31 UI captures and audit receipts. Excludes extracted package, raw reference database, credentials and real campaign data. Final milestone manifest is external to avoid a self-referential ZIP hash.",
+    "sha256": "377f0bd801849607525c1abdeed061006bb5ccbaba5a269d313c8fbf00cdc036"
+  },
+  "blockers": [],
+  "acceptance": {
+    "state": "pending",
+    "evidence": [
+      "docs/application/UXD-01-AUDIT.md",
+      "docs/application/UXD-01-REVIEW.md"
+    ]
+  },
+  "report": "docs/application/UXD-01-AUDIT.md",
+  "github": [
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/6",
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/4"
+  ]
+}
