@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "milestoneId": "UXD-02",
-  "status": "offline-tested",
+  "status": "complete",
   "branch": "prototype/uxd02-adaptive",
   "commitSha": "fb7201d15b2554f5033c9aa2e46dc9581b80e4a3",
   "testEvidence": [
@@ -16,7 +16,7 @@
   "nativeQualification": {"state":"not-applicable","scope":"Isolated browser prototype only. No Electron build, HOI4, live observations, game mechanics or physical-monitor qualification claimed.","evidence":[]},
   "artifact": null,
   "blockers": [],
-  "acceptance": {"state":"pending","evidence":[]},
+  "acceptance": {"state":"accepted","evidence":["docs/application/UXD-02-DECISION.md — owner selected Variant B on November 12, 2026; acceptance limited to prototype launch design", "https://chatgpt.com/space/page_a834d85ae4dc8191ac72590504b1268d"]},
   "report": "docs/application/UXD-02.md",
   "github": ["https://github.com/connorgreenleaf22/hoi4-companion/pull/5"]
 }

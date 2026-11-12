@@ -1,6 +1,6 @@
 # UXD-02 — Adaptive Strategy Workspace completion report
 
-**Delivered November 12, 2026: two functional local prototypes; offline-tested and independently reviewed. Owner acceptance and launch selection pending.** [Manifest](../milestones/UXD-02.json) · [launch instructions](../../prototypes/uxd02/README.md) · [design and comparison](UXD-02-DESIGN.md) · [integration assessment](UXD-02-INTEGRATION.md) · [independent review](UXD-02-REVIEW.md) · [prepared PR](UXD-02-PR-DRAFT.md).
+**Delivered November 12, 2026: two functional local prototypes; offline-tested and independently reviewed. Owner selected Variant B — Campaign-first on November 12, 2026; launch-design acceptance recorded.** [Manifest](../milestones/UXD-02.json) · [launch instructions](../../prototypes/uxd02/README.md) · [design and comparison](UXD-02-DESIGN.md) · [integration assessment](UXD-02-INTEGRATION.md) · [independent review](UXD-02-REVIEW.md) · [prepared PR](UXD-02-PR-DRAFT.md).
 
 ## Identity and isolation
 
@@ -49,8 +49,8 @@ Early test runs are retained, not hidden. The first harness exposed initial skip
 
 ## Evaluation and remaining decisions
 
-I prefer **B for returning campaign play**, because an explicit objective and quiet intelligence feed help orient a second-monitor session while conversation remains close. A is stronger for discovery and disconnected first use, and reaches the same primary strategy equally quickly. This preference is not a selected winner or approval to rebuild production.
+I prefer **B for returning campaign play**, because an explicit objective and quiet intelligence feed help orient a second-monitor session while conversation remains close. A is stronger for discovery and disconnected first use, and reaches the same primary strategy equally quickly. This was the reviewer recommendation. The owner subsequently selected **Variant B — Campaign-first** on November 12, 2026. See the [decision and follow-through](UXD-02-DECISION.md); this accepts the launch design without qualifying production or game behavior.
 
 No technical blocker remains for local prototype exploration. Known limits are a lengthy narrow workspace, B's below-fold discovery, simplistic keyword routing and simulated recalculation, browser-local storage rather than production conflict/migration handling, and untested screen-reader/physical-DPI/native behavior. This milestone qualifies interactions, not game mechanics or actual campaign success. The separate knowledge candidates retain their own review/integration decisions.
 
-No push, public hosting, new paid service, provider call, HOI4 launch, gameplay action, process-memory access, user-save change or protected-branch merge occurred. Project HQ read access was verified, but no Page was edited or claimed synchronized. A concise [Rook/HQ handoff](UXD-02-HANDOFF.md) is supplied for the owner to pass on. No UXD-03 or production rebuild started.
+No push, public hosting, new paid service, provider call, HOI4 launch, gameplay action, process-memory access, user-save change or protected-branch merge occurred. Project HQ, the approved brief, preferences and decision register were updated and read back successfully on November 12, 2026. See the [Rook/HQ handoff](UXD-02-HANDOFF.md) and [decision record](UXD-02-DECISION.md). No UXD-03 or production rebuild started.
