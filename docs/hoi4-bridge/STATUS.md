@@ -1,5 +1,12 @@
 # HOI4 bridge status
 
+## M7.4.2 — source-backed evaluation foundation (2026-11-11 ET)
+
+- Isolated `feature/hoi4-knowledge-meta-lab` from owner-confirmed `bdb8a4887522b38f5110f3900bbf1655cc5fd600`; runtime `44549fbc5216cf1b5f2f46190c523137f45fd8ce`. [Draft PR #8](https://github.com/connorgreenleaf22/hoi4-companion/pull/8); [report](../application/MILESTONE-7.4.2.md), [manifest](../milestones/M7.4.2.json).
+- Versioned developer API reuses current template/equipment calculators and canonical index resolution. Seven 1.19.4.2 source-backed candidates produce five comparisons of base width/manpower/equipment/IC; explicit manual no-NSB/no-mod/zero-upgrade scenario, no combat ranking or optimality claims.
+- 37 focused tests, 159 portable fixture tests + 3 workflow guards, typecheck/build, installed-source readback (11 files / 17 definitions), compiled demo and runtime hosted CI pass. Separate reviewer reproduced focused tests/typecheck/source audit with no blockers. Package/final evidence details: ../application/M742-VERIFICATION.json.
+- Owner acceptance and human GitHub approval remain pending. HQ handoff generated for manual transfer; no synchronization claim. No paid provider call, game launch, personal-data change, bridge/observation/interpreter modification, merge or release. M7.4.3 and broader combat/doctrine/designer models remain future work.
+
 Workflow update (2026-11-10): [development and independent QA procedure](../workflow/README.md); PR #3 approved and merged into `feature/hoi4-ai-m731` at `440d625`; default-branch rollout remains separately gated. Product milestone acceptance remains unchanged.
 
 ## M7.3.1 — Windows candidate delivered; paid acceptance open (2026-11-09)

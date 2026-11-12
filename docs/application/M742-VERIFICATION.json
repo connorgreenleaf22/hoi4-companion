@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "M7.4.2",
+  "baselineSha": "bdb8a4887522b38f5110f3900bbf1655cc5fd600",
+  "runtimeSha": "44549fbc5216cf1b5f2f46190c523137f45fd8ce",
+  "branch": "feature/hoi4-knowledge-meta-lab",
+  "gameVersion": "1.19.4.2",
+  "importerRevision": 5,
+  "sourceConfiguration": "Indexed static base declarations; manual counterfactual No Step Back disabled, no mods/modifiers, fixed models, zero upgrades; not observed campaign state.",
+  "sourceAudit": {
+    "files": 11,
+    "definitions": 17,
+    "candidates": 7,
+    "comparisons": 5,
+    "passed": true
+  },
+  "tests": {
+    "focused": 37,
+    "portable": 159,
+    "workflowGuards": 3,
+    "typecheck": "passed",
+    "build": "passed",
+    "schemas": "passed",
+    "hygiene": "passed"
+  },
+  "hostedRuntimeCI": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43129361372",
+  "compiled": {
+    "passed": true,
+    "fullRuntimeSha": "44549fbc5216cf1b5f2f46190c523137f45fd8ce",
+    "sourceAndExtractedPackageModuleBytesEqual": true,
+    "standaloneExtractedDemoPassed": true,
+    "candidates": 7,
+    "comparisons": 5,
+    "hashes": {
+      "design-evaluation": "4bce89e14bdfbf50c5d586cbebe6a858248b0ea02658f4c184d00e699768475c",
+      "design-evaluation-demo": "91da8f02cdbe339736b254b38b3d4768162179e8ccd5e511af848b9f1a6d2059"
+    }
+  },
+  "package": {
+    "label": "M7.4.2-44549fbc5216",
+    "localDirectory": "Documents/HOI4 Companion Development Builds/M7.4.2-44549fbc5216",
+    "archive": "M7.4.2-44549fbc5216-windows-x64.zip",
+    "archiveSHA256": "fd79d39b928d15cbe272f5d33c0370db2620a97dea063cc173d762a78df2535d",
+    "extractedFilesEqual": 75,
+    "executableSHA256": "53c5f4321859ca2234056d0f3710ed3112feb41328d97a6572c4e592149661a1",
+    "actualElectronLaunchAndRestart": true,
+    "sourceUnchangedDuringRun": true,
+    "ownedProcessesAbsent": true,
+    "localOnlyEvidence": "artifacts/qa/ai-package-2026-11-12T00-46-30-034Z-9ce2125b/run-record.json",
+    "cases": [
+      {
+        "name": "fresh packaged app loads installed sources and optional session-only provider configuration",
+        "status": "passed",
+        "ms": 236
+      },
+      {
+        "name": "offline manual strategy supports source preview, editing, validation and saved comparison",
+        "status": "passed",
+        "ms": 10867
+      },
+      {
+        "name": "packaged restart retains manual proposal and keeps provider unconfigured",
+        "status": "passed",
+        "ms": 798
+      }
+    ],
+    "screenshotInspected": "reopened.png; existing frontend, provider unconfigured, manual strategy reopened",
+    "scope": "Existing packaged app/service/offline strategy/save/restart regression. New evaluation modules additionally byte-matched from ASAR and extracted demo executed; no new evaluation UI or HTTP route."
+  },
+  "independentReview": {
+    "reviewer": "/root/review_m742",
+    "runtimeSha": "44549fbc5216cf1b5f2f46190c523137f45fd8ce",
+    "findings": [],
+    "validation": "Independently passed 37 focused tests, typecheck and installed-source audit; checked arithmetic, fixed-model distinction, provenance and hosted fixture-only imports.",
+    "finalEvidenceReview": "pending",
+    "notHumanGitHubApproval": true
+  },
+  "nativeGameLaunched": false,
+  "paidProviderCalled": false,
+  "acceptance": "pending",
+  "limitations": [
+    "Static base resource arithmetic only; no measured combat results, optimality or campaign eligibility.",
+    "Only qualified line units/fixed models; no supports, designers, doctrines or country/MIO/variant modifiers.",
+    "Source freshness relies on index refresh or explicit audit; M7.4.3 not implemented."
+  ],
+  "harnessCorrection": "The first local compiled-module check used top-level await under a CJS tsx context and failed before execution. Switched the ignored harness to require; the corrected check passed with no product change or repeated package run."
+}
