@@ -25,7 +25,7 @@ test('decision phases, custom requirements and target roles do not fabricate ava
 });
 test('event delay is separate from event outcomes; invalid parameters and dynamic values reject',()=>{
  const e=explainEffects(parseScript('ITA={country_event={id=event.1 days=1 hours=12}}'),lookup);assert.match(e[0].children![0].text,/Help arrives.*Italy after 12 hours \+ 1 days/);assert.match(e[0].children![0].text,/later outcomes are separate/);
- for(const s of ['add_timed_idea={idea=spirit days=variable}','country_event={id=event.1 random_days=5}','add_resource={type=steel amount=5 state=9 new_parameter=yes}','add_stability=variable'])assert.equal(explainEffects(parseScript(s),lookup)[0].unknown,true);
+ for(const s of ['add_timed_idea={idea=spirit days=variable}','country_event={id=event.1 random_days=variable}','add_resource={type=steel amount=5 state=9 new_parameter=yes}','add_stability=variable'])assert.equal(explainEffects(parseScript(s),lookup)[0].unknown,true);
 });
 test('missing localization, source recovery and explicit targets remain distinguishable',()=>{
  const m=entryMechanics(entry('complete_effect={add_timed_idea={idea=untranslated days=90}}',{importWarnings:['recovered'],localizationEvidence:[{status:'unresolved'}]}));assert.ok(flat(m.summary).some(x=>x.status==='missing-localization'));assert.ok(flat(m.summary).some(x=>x.status==='parser-limitation'));
@@ -43,4 +43,54 @@ test('indexed explanations resolve same-snapshot names and unique idea modifiers
 });
 test('technology completion conditions remain attached to rewards and unsupported dependency syntax is retained',()=>{
  const e=entry('on_research_complete_limit={has_completed_focus=A} on_research_complete={add_political_power=50} dependencies={tech=1}');e.kind='technology';const value=entryMechanics(e,lookup),preview=explanationPreview(value.summary);assert.match(preview[0].text,/Complete Known focus/);assert.match(preview[0].text,/Gain 50 political power/);assert.ok(flat(value.summary).some(x=>x.code==='dependencies'&&x.status==='unsupported'));
+});
+
+import {defaultContext,type EventDefinition} from '../src/mechanics-interpreter';
+const eventFixture=JSON.parse(fs.readFileSync('tests/fixtures/mechanics-events-m741.json','utf8'));
+const eventDefinition=(id:string):EventDefinition|undefined=>eventFixture.events[id]?{nodes:parseScript(eventFixture.events[id]),source:'synthetic/events.txt',line:1,hash:'synthetic-events',version:eventFixture.version,eventType:id==='news.1'?'news_event':'country_event'}:undefined;
+const eventContext=()=>({...defaultContext(),version:eventFixture.version,resolveEvent:eventDefinition});
+const eventLookup=(id:string)=>({POR:'Portugal',BRA:'Brazil',accept:'Accept union',refuse:'Refuse union',noted:'Noted'}[id]||lookup(id));
+
+test('bounded event closure binds recipient ROOT and keeps accept/refuse paths, triggers, stages and evidence separate',()=>{
+ const result=explainEffects(parseScript('BRA={country_event={id=union.10 hours=6}}'),eventLookup,0,eventContext());
+ const all=flat(result),preview=explanationPreview(result,30).map(x=>x.text).join('\n');
+ assert.match(preview,/Accept union.*is_core_of|Accept union.*core of Brazil/);
+ assert.match(preview,/Accept union.*Portugal annexes Brazil and receives its troops/);
+ assert.match(preview,/Refuse union.*Portugal gains an annexation war goal against Brazil/);
+ assert.ok(!/Refuse union[^\n]*annexes/.test(preview));
+ assert.match(preview,/On event delivery.*2 political power/);assert.match(preview,/After the selected option.*1 percentage points/);
+ assert.ok(all.some(x=>x.code==='has_government'&&x.status==='state-unknown'));
+ assert.ok(all.some(x=>x.code==='ai_chance'&&x.unknown));assert.ok(all.some(x=>x.code==='unhandled_character'&&x.unknown));
+ assert.ok(all.some(x=>x.evidence?.[0]?.source==='synthetic/events.txt'&&x.evidence[0].hash==='synthetic-events'));
+ assert.equal(all.filter(x=>x.code==='create_wargoal'&&!x.unknown).length,1);
+ assert.ok(!JSON.stringify(result).includes('tooltip.99'));
+ assert.ok(all.some(x=>x.text.includes('union.11')&&x.text.includes('Portugal')));
+ assert.ok(all.some(x=>x.text.includes('union.12')&&x.text.includes('Portugal')));
+});
+
+test('event dispatch literal and random timing follows installed documented hour bounds; no probabilities inferred',()=>{
+ const result=explainEffects(parseScript('news_event={id=news.1 hours=2 days=3 months=1 random_hours=7 random_days=2 random=5}'),lookup,0,eventContext());
+ assert.match(result[0].text,/2 hours \+ 3 days \+ 1 months \(30 days each\)/);
+ assert.match(result[0].text,/0 up to 60 hours \(upper bound excluded/);assert.match(result[0].text,/not a uniform probability/);
+ assert.equal(result[0].unknown,undefined);
+ assert.match(explainEffects(parseScript('country_event=union.11'),lookup,0,eventContext())[0].text,/immediately/);
+ for(const script of ['country_event={id=union.10 id=union.11}','country_event={id=union.10 random={chance=50 add_stability=1}}','country_event={id=union.10 days=-1}','country_event={id=union.10 days=1.5}','country_event={id=$EVENT$}','country_event={id=union.10 new_parameter=yes}'])assert.ok(explainEffects(parseScript(script),lookup,0,eventContext())[0].unknown,script);
+});
+
+test('event cycles, parser recovery, ambiguity, patch/type mismatch and work limits retain unknowns without fabricated outcomes',()=>{
+ for(const change of [undefined,{ambiguous:true},{recovered:true},{limited:true},{version:'new-patch'},{eventType:'state_event'}]){
+  const context={...eventContext(),resolveEvent:()=>change===undefined?undefined:{...eventDefinition('union.10')!,...change}};
+  const result=explainEffects(parseScript('country_event=union.10 add_political_power=3'),lookup,0,context),all=flat(result);
+  assert.ok(all.some(x=>x.unknown));assert.ok(!JSON.stringify(result).includes('annexes'));assert.ok(all.some(x=>x.text==='Gain 3 political power.'));
+ }
+ assert.ok(flat(explainEffects(parseScript('country_event=cycle.1'),lookup,0,eventContext())).some(x=>x.status==='parser-limitation'));
+ assert.ok(flat(explainEffects(parseScript('country_event=union.10'),lookup,0,{...eventContext(),budget:{remaining:3}})).some(x=>x.status==='parser-limitation'));
+ const opaque=flat(explainEffects(parseScript('country_event=opaque.1'),lookup,0,eventContext()));assert.ok(opaque.some(x=>x.code==='new_delivery_rule'&&x.unknown));assert.ok(opaque.some(x=>x.code==='trigger'&&x.unknown));
+});
+
+test('war goals require literal supported types and country targets; unresolved event scopes stay explicit',()=>{
+ for(const script of ['create_wargoal={target=FROM type=annex_everything}','create_wargoal={target=9 type=annex_everything}','create_wargoal={target=BRA type=puppet}','create_wargoal={target=BRA type=annex_everything days=10}'])assert.ok(explainEffects(parseScript(script),lookup)[0].unknown,script);
+ const result=explainEffects(parseScript('create_wargoal={target=BRA type=annex_everything}'),eventLookup);assert.match(result[0].text,/does not declare war or annex territory/);
+ const context={...eventContext(),from:{kind:'country' as const,label:'caller FROM must not leak'},previous:{kind:'country' as const,label:'caller PREV must not leak'},resolveEvent:()=>({...eventDefinition('union.11')!,nodes:parseScript('option={FROM={add_political_power=99} PREV={add_political_power=99} ROOT={add_stability=0.01}}')})};
+ const result2=explainEffects(parseScript('BRA={country_event=union.11}'),eventLookup,0,context);assert.ok(!JSON.stringify(result2).includes('Gain 99'));assert.ok(flat(result2).filter(x=>x.status==='ambiguous-scope').length>=2);assert.match(explanationPreview(result2,10).map(x=>x.text).join(' '),/Brazil.*1 percentage points/);
 });
