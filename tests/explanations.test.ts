@@ -69,10 +69,12 @@ test('bounded event closure binds recipient ROOT and keeps accept/refuse paths, 
 });
 
 test('event dispatch literal and random timing follows installed documented hour bounds; no probabilities inferred',()=>{
- const result=explainEffects(parseScript('news_event={id=news.1 hours=2 days=3 months=1 random_hours=7 random_days=2 random=5}'),lookup,0,eventContext());
+ const result=explainEffects(parseScript('news_event={id=news.1 hours=2 days=3 months=1 random_hours=7 random_days=2}'),lookup,0,eventContext());
  assert.match(result[0].text,/2 hours \+ 3 days \+ 1 months \(30 days each\)/);
- assert.match(result[0].text,/0 up to 60 hours \(upper bound excluded/);assert.match(result[0].text,/not a uniform probability/);
+ assert.match(result[0].text,/0 up to 55 hours \(upper bound excluded/);assert.match(result[0].text,/not a uniform probability/);
  assert.equal(result[0].unknown,undefined);
+ assert.match(explainEffects(parseScript('country_event={id=union.11 random=5 random_days=2}'),lookup,0,eventContext())[0].text,/0 up to 53 hours/);
+ assert.ok(explainEffects(parseScript('country_event={id=union.11 random=5 random_hours=7}'),lookup,0,eventContext())[0].unknown);
  assert.match(explainEffects(parseScript('country_event=union.11'),lookup,0,eventContext())[0].text,/immediately/);
  for(const script of ['country_event={id=union.10 id=union.11}','country_event={id=union.10 random={chance=50 add_stability=1}}','country_event={id=union.10 days=-1}','country_event={id=union.10 days=1.5}','country_event={id=$EVENT$}','country_event={id=union.10 new_parameter=yes}'])assert.ok(explainEffects(parseScript(script),lookup,0,eventContext())[0].unknown,script);
 });
@@ -93,4 +95,25 @@ test('war goals require literal supported types and country targets; unresolved 
  const result=explainEffects(parseScript('create_wargoal={target=BRA type=annex_everything}'),eventLookup);assert.match(result[0].text,/does not declare war or annex territory/);
  const context={...eventContext(),from:{kind:'country' as const,label:'caller FROM must not leak'},previous:{kind:'country' as const,label:'caller PREV must not leak'},resolveEvent:()=>({...eventDefinition('union.11')!,nodes:parseScript('option={FROM={add_political_power=99} PREV={add_political_power=99} ROOT={add_stability=0.01}}')})};
  const result2=explainEffects(parseScript('BRA={country_event=union.11}'),eventLookup,0,context);assert.ok(!JSON.stringify(result2).includes('Gain 99'));assert.ok(flat(result2).filter(x=>x.status==='ambiguous-scope').length>=2);assert.match(explanationPreview(result2,10).map(x=>x.text).join(' '),/Brazil.*1 percentage points/);
+});
+
+
+test('wide AI weights and condition/control blocks share the event work budget',()=>{
+ for(const script of [
+  'option={ai_chance={'+('factor=1 '.repeat(5000))+'}}',
+  'option={'+('trigger={always=yes} '.repeat(5000))+'}',
+  'option={ai_chance={modifier={factor=1 '+('has_war=yes '.repeat(5000))+'}}}',
+  'option={'+('default=yes '.repeat(5000))+'}'
+ ]){
+  const ctx={...eventContext(),budget:{remaining:8},resolveEvent:()=>({...eventDefinition('union.11')!,nodes:parseScript(script)})};
+  const all=flat(explainEffects(parseScript('country_event=union.11'),lookup,0,ctx));
+  assert.ok(all.some(x=>x.status==='parser-limitation'));assert.ok(all.length<40,`Expected bounded output, got ${all.length}`);
+ }
+});
+
+test('top-level event trigger applicability remains uncertain and cannot imply refusal of an immediate dispatch',()=>{
+ const ctx={...eventContext(),resolveEvent:()=>({...eventDefinition('union.11')!,nodes:parseScript('trigger={always=no} option={add_political_power=7}')})};
+ const result=explainEffects(parseScript('country_event=union.11'),lookup,0,ctx),all=flat(result);
+ assert.ok(all.some(x=>x.code==='trigger'&&x.unknown&&x.text.includes('applicability')));
+ const preview=explanationPreview(result,20).map(x=>x.text).join(' ');assert.match(preview,/Gain 7 political power/);assert.ok(!preview.includes('prevents availability'));
 });

@@ -30,6 +30,11 @@ const name=(id:string,lookup:NameLookup)=>localizedName(id,lookup).replace(/\[[^
 const namedItem=(n:Node,text:string,id:string,lookup:NameLookup,role:Explanation['role']='effect')=>item(n,text,localizedName(id,lookup)===id||/[\[\]$]/.test(localizedName(id,lookup))?'missing-localization':'explained',role);
 const condition=(n:Node,text:string)=>item(n,text,'state-unknown','condition');
 const namedCondition=(n:Node,text:string,id:string,lookup:NameLookup)=>({...namedItem(n,text,id,lookup,'condition'),status:localizedName(id,lookup)===id||/[\[\]$]/.test(localizedName(id,lookup))?'missing-localization' as const:'state-unknown' as const});
+function boundedMap(nodes:Node[],c:ExplainContext,explain:(n:Node)=>Explanation):Explanation[]{
+ const out:Explanation[]=[];
+ for(const n of nodes){if(c.budget&&c.budget.remaining--<=0){out.push(unresolved(n,'parser-limitation','Explanation work limit reached; remaining rules are not interpreted.'));break;}out.push(explain(n));}
+ return out;
+}
 /** Interpret choices in an explicit delivery context. Never evaluate which choice occurs. */
 export function explainEvent(nodes:Node[],lookup:NameLookup,c:ExplainContext,depth=0):{summary:Explanation[];requirements:Explanation[]}{
  const summary:Explanation[]=[],requirements:Explanation[]=[];
@@ -41,7 +46,7 @@ export function explainEvent(nodes:Node[],lookup:NameLookup,c:ExplainContext,dep
   if(n.op&&n.op!=='='){summary.push(unresolved(n,'parser-limitation'));continue;}
   if(n.key==='is_triggered_only'&&['yes','no'].includes(String(n.value))){summary.push(item(n,n.value==='yes'?'This event is triggered externally; its presence does not establish delivery.':'This event permits automatic trigger checks; polling and delivery are not simulated.','explained','timing'));continue;}
   if(n.key==='trigger'){
-   requirements.push(item(n,'Event trigger; delivery and current campaign state are not established:','state-unknown','condition',Array.isArray(n.value)?explainConditions(n.value,lookup,c,depth+1):[unresolved(n,'parser-limitation')]));continue;
+   requirements.push({...unresolved(n,'unsupported','Source event trigger; applicability to immediate, delayed or automatic delivery is not qualified. These rules are not an evaluated delivery gate.'),role:'administrative',children:Array.isArray(n.value)?explainConditions(n.value,lookup,c,depth+1):[unresolved(n,'parser-limitation')]});continue;
   }
   if(['immediate','option','after'].includes(n.key)){
    if(!Array.isArray(n.value)||n.op&&n.op!=='='){summary.push(unresolved(n,'parser-limitation'));continue;}
@@ -49,19 +54,19 @@ export function explainEvent(nodes:Node[],lookup:NameLookup,c:ExplainContext,dep
    const children:Explanation[]=[];
    if(choice){
     for(const key of optionMetadata)if(body.filter(n=>n.key===key).length>1)children.push(unresolved(body.find(n=>n.key===key)!,'parser-limitation','Repeated option control field; its engine precedence is unresolved.'));
-    for(const gate of body.filter(x=>x.key==='trigger'))children.push(item(gate,'This option is available only if:','state-unknown','condition',Array.isArray(gate.value)?explainConditions(gate.value,lookup,c,depth+1):[unresolved(gate,'parser-limitation')]));
-    for(const x of body.filter(x=>optionMetadata.has(x.key)&&!['name','trigger'].includes(x.key))){
+    children.push(...boundedMap(body.filter(x=>x.key==='trigger'),c,gate=>item(gate,'This option is available only if:','state-unknown','condition',Array.isArray(gate.value)?explainConditions(gate.value,lookup,c,depth+1):[unresolved(gate,'parser-limitation')])));
+    children.push(...boundedMap(body.filter(x=>optionMetadata.has(x.key)&&!['name','trigger'].includes(x.key)),c,x=>{
      const rule=unresolved(x,'unsupported',x.key==='ai_chance'?'AI choice weights and their modifiers are not qualified probabilities; no acceptance chance is inferred.':'This option-selection rule is not interpreted.');
-     if(x.key==='ai_chance'&&Array.isArray(x.value))rule.children=x.value.map(weight=>{
+     if(x.key==='ai_chance'&&Array.isArray(x.value))rule.children=boundedMap(x.value,c,weight=>{
       if(weight.key==='factor'&&literal(weight.value)!==null)return item(weight,`Source AI weight factor: ${weight.value}; not a percentage or evaluated chance.`,'explained','administrative');
       if(weight.key==='modifier'&&Array.isArray(weight.value))return item(weight,'Conditional AI weight modifier; applicability and resulting weight are not evaluated:','conditional','administrative',[
-       ...weight.value.filter(v=>v.key==='factor').map(v=>literal(v.value)!==null?item(v,`Source multiplier: ${v.value}; no probability is calculated.`,'explained','administrative'):unresolved(v)),
+       ...boundedMap(weight.value.filter(v=>v.key==='factor'),c,v=>literal(v.value)!==null?item(v,`Source multiplier: ${v.value}; no probability is calculated.`,'explained','administrative'):unresolved(v)),
        ...explainConditions(weight.value.filter(v=>v.key!=='factor'),lookup,c,depth+1)
       ]);
       return unresolved(weight);
      });
-     children.push(rule);
-    }
+     return rule;
+    }));
    }
    children.push(...explainEffects(choice?body.filter(x=>!optionMetadata.has(x.key)):body,lookup,depth+1,c));
    const label=choice?`Option ${++option}${id?': '+name(id,lookup):' (name unresolved)'}`:n.key==='immediate'?'On event delivery':'After the selected option';
@@ -78,6 +83,7 @@ function eventCall(n:Node,lookup:NameLookup,c:ExplainContext,depth:number):Expla
  if(c.current.kind!=='country')return missingScope(n);
  const ns=typeof n.value==='string'?[{key:'id',value:n.value,line:n.line}]:n.value;
  const id=scalar(ns,'id'),units=['hours','days','months','random_hours','random_days','random'];
+ if(ns.some(x=>x.key==='random')&&ns.some(x=>x.key==='random_hours'))return unresolved(n,'unsupported','Both legacy random and random_hours are present; alias precedence/additivity is unqualified.');
  if(!valid(ns,['id','tooltip',...units])||!id||!/^\w+\.\d+$/.test(id)||ns.some(x=>typeof x.value!=='string')||units.some(k=>ns.some(x=>x.key===k)&&(literal(scalar(ns,k))===null||Number(scalar(ns,k))<0||!Number.isInteger(Number(scalar(ns,k))))))return unresolved(n,'unsupported','Event ID, delay or parameters are dynamic, duplicated or unsupported; no dispatch or outcome is assumed.');
  const base=Number(scalar(ns,'hours'))+24*Number(scalar(ns,'days'))+720*Number(scalar(ns,'months'));
  const random=Number(scalar(ns,'random_hours'))+24*Number(scalar(ns,'random_days'))+Number(scalar(ns,'random'));
@@ -103,7 +109,7 @@ function eventCall(n:Node,lookup:NameLookup,c:ExplainContext,depth:number):Expla
 }
 export function explainConditions(nodes:Node[],lookup:NameLookup=id=>id,c=defaultContext(),depth=0):Explanation[]{
  if(depth>16)return [unresolved(nodes[0]||{key:'depth',value:'',line:0},'parser-limitation','Condition nesting exceeds the explanation limit.')];
- return nodes.map<Explanation>(n=>{
+ return boundedMap(nodes,c,n=>{
   const k=n.key.toLowerCase();if(Array.isArray(n.value)){
    if(n.op&&n.op!=='=')return unresolved(n);
    if(['and','or','not'].includes(k))return {...condition(n,k==='or'?'At least one of these conditions must hold:':k==='not'?'None of these conditions may hold:':'All of these conditions must hold:'),children:explainConditions(n.value,lookup,c,depth+1)};
