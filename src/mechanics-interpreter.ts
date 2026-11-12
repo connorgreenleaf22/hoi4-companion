@@ -2,10 +2,11 @@ import type {Node} from './types';
 export type ExplanationStatus='explained'|'conditional'|'state-unknown'|'missing-localization'|'unsupported'|'ambiguous-scope'|'parser-limitation';
 export type ExplanationEvidence={source:string;line:number;hash:string;version:string};
 export type ScriptDefinition={nodes:Node[];source?:string;line?:number;hash?:string;version?:string;title?:string;ambiguous?:boolean;recovered?:boolean;limited?:boolean};
+export type EventDefinition=ScriptDefinition&{eventType?:string};
 export type Explanation={text:string;status?:ExplanationStatus;unknown?:boolean;children?:Explanation[];code?:string;line?:number;evidence?:ExplanationEvidence[];role?:'effect'|'condition'|'administrative'|'tooltip'|'cost'|'timing'|'modifier';};
 export type NameLookup=(id:string)=>string;
 type Scope={label:string;kind:'country'|'state'|'unknown'};
-export type ExplainContext={current:Scope;root:Scope;from?:Scope;previous?:Scope;ideas?:Record<string,any>;scripts?:Record<string,ScriptDefinition>;dynamicModifiers?:Record<string,ScriptDefinition>;scriptStack?:string[];budget?:{remaining:number}};
+export type ExplainContext={current:Scope;root:Scope;from?:Scope;previous?:Scope;ideas?:Record<string,any>;scripts?:Record<string,ScriptDefinition>;dynamicModifiers?:Record<string,ScriptDefinition>;scriptStack?:string[];budget?:{remaining:number};version?:string;resolveEvent?:(id:string)=>EventDefinition|undefined;eventStack?:string[]};
 export const defaultContext=():ExplainContext=>({current:{label:'the acting country',kind:'country'},root:{label:'the acting country',kind:'country'},budget:{remaining:4096}});
 const proof=(s:ScriptDefinition):ExplanationEvidence[]=>s.source&&s.hash&&s.version?[{source:s.source,line:s.line||1,hash:s.hash,version:s.version}]:[];
 export const literal=(v:unknown):number|null=>typeof v==='string'&&/^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(v)&&Number.isFinite(Number(v))?Number(v):null;
@@ -29,9 +30,86 @@ const name=(id:string,lookup:NameLookup)=>localizedName(id,lookup).replace(/\[[^
 const namedItem=(n:Node,text:string,id:string,lookup:NameLookup,role:Explanation['role']='effect')=>item(n,text,localizedName(id,lookup)===id||/[\[\]$]/.test(localizedName(id,lookup))?'missing-localization':'explained',role);
 const condition=(n:Node,text:string)=>item(n,text,'state-unknown','condition');
 const namedCondition=(n:Node,text:string,id:string,lookup:NameLookup)=>({...namedItem(n,text,id,lookup,'condition'),status:localizedName(id,lookup)===id||/[\[\]$]/.test(localizedName(id,lookup))?'missing-localization' as const:'state-unknown' as const});
+function boundedMap(nodes:Node[],c:ExplainContext,explain:(n:Node)=>Explanation):Explanation[]{
+ const out:Explanation[]=[];
+ for(const n of nodes){if(c.budget&&c.budget.remaining--<=0){out.push(unresolved(n,'parser-limitation','Explanation work limit reached; remaining rules are not interpreted.'));break;}out.push(explain(n));}
+ return out;
+}
+/** Interpret choices in an explicit delivery context. Never evaluate which choice occurs. */
+export function explainEvent(nodes:Node[],lookup:NameLookup,c:ExplainContext,depth=0):{summary:Explanation[];requirements:Explanation[]}{
+ const summary:Explanation[]=[],requirements:Explanation[]=[];
+ const metadata=new Set(['id','title','desc','picture']);
+ const optionMetadata=new Set(['name','ai_chance','trigger','highlighted','default','original_tag','fire_only_once']);let option=0;
+ for(const key of ['id','is_triggered_only','trigger','immediate','after'])if(nodes.filter(n=>n.key===key).length>1)summary.push(unresolved(nodes.find(n=>n.key===key)!,'parser-limitation','Repeated event control field; its engine precedence is unresolved.'));
+ for(const n of nodes){
+  if(c.budget&&--c.budget.remaining<0){summary.push(unresolved(n,'parser-limitation','Event explanation work limit reached; remaining stages are unresolved.'));break;}
+  if(n.op&&n.op!=='='){summary.push(unresolved(n,'parser-limitation'));continue;}
+  if(n.key==='is_triggered_only'&&['yes','no'].includes(String(n.value))){summary.push(item(n,n.value==='yes'?'This event is triggered externally; its presence does not establish delivery.':'This event permits automatic trigger checks; polling and delivery are not simulated.','explained','timing'));continue;}
+  if(n.key==='trigger'){
+   requirements.push({...unresolved(n,'unsupported','Source event trigger; applicability to immediate, delayed or automatic delivery is not qualified. These rules are not an evaluated delivery gate.'),role:'administrative',children:Array.isArray(n.value)?explainConditions(n.value,lookup,c,depth+1):[unresolved(n,'parser-limitation')]});continue;
+  }
+  if(['immediate','option','after'].includes(n.key)){
+   if(!Array.isArray(n.value)||n.op&&n.op!=='='){summary.push(unresolved(n,'parser-limitation'));continue;}
+   const body=n.value,choice=n.key==='option',id=scalar(body,'name');
+   const children:Explanation[]=[];
+   if(choice){
+    for(const key of optionMetadata)if(body.filter(n=>n.key===key).length>1)children.push(unresolved(body.find(n=>n.key===key)!,'parser-limitation','Repeated option control field; its engine precedence is unresolved.'));
+    children.push(...boundedMap(body.filter(x=>x.key==='trigger'),c,gate=>item(gate,'This option is available only if:','state-unknown','condition',Array.isArray(gate.value)?explainConditions(gate.value,lookup,c,depth+1):[unresolved(gate,'parser-limitation')])));
+    children.push(...boundedMap(body.filter(x=>optionMetadata.has(x.key)&&!['name','trigger'].includes(x.key)),c,x=>{
+     const rule=unresolved(x,'unsupported',x.key==='ai_chance'?'AI choice weights and their modifiers are not qualified probabilities; no acceptance chance is inferred.':'This option-selection rule is not interpreted.');
+     if(x.key==='ai_chance'&&Array.isArray(x.value))rule.children=boundedMap(x.value,c,weight=>{
+      if(weight.key==='factor'&&literal(weight.value)!==null)return item(weight,`Source AI weight factor: ${weight.value}; not a percentage or evaluated chance.`,'explained','administrative');
+      if(weight.key==='modifier'&&Array.isArray(weight.value))return item(weight,'Conditional AI weight modifier; applicability and resulting weight are not evaluated:','conditional','administrative',[
+       ...boundedMap(weight.value.filter(v=>v.key==='factor'),c,v=>literal(v.value)!==null?item(v,`Source multiplier: ${v.value}; no probability is calculated.`,'explained','administrative'):unresolved(v)),
+       ...explainConditions(weight.value.filter(v=>v.key!=='factor'),lookup,c,depth+1)
+      ]);
+      return unresolved(weight);
+     });
+     return rule;
+    }));
+   }
+   children.push(...explainEffects(choice?body.filter(x=>!optionMetadata.has(x.key)):body,lookup,depth+1,c));
+   const label=choice?`Option ${++option}${id?': '+name(id,lookup):' (name unresolved)'}`:n.key==='immediate'?'On event delivery':'After the selected option';
+   summary.push(item(n,label+'. Effects apply only if this event/stage/choice occurs.','conditional','effect',children));continue;
+  }
+  // Unknown event-level mechanics must not disappear behind metadata handling.
+  if(!metadata.has(n.key))summary.push(unresolved(n,'unsupported','This event-level declaration is not interpreted; delivery behavior remains uncertain.'));
+ }
+ if(!nodes.some(n=>n.key==='option'))summary.push(unresolved({key:'event-options',value:'',line:nodes[0]?.line||0},'unsupported','No event options are present; terminal behavior is not established.'));
+ return {summary,requirements};
+}
+
+function eventCall(n:Node,lookup:NameLookup,c:ExplainContext,depth:number):Explanation{
+ if(c.current.kind!=='country')return missingScope(n);
+ const ns=typeof n.value==='string'?[{key:'id',value:n.value,line:n.line}]:n.value;
+ const id=scalar(ns,'id'),units=['hours','days','months','random_hours','random_days','random'];
+ if(ns.some(x=>x.key==='random')&&ns.some(x=>x.key==='random_hours'))return unresolved(n,'unsupported','Both legacy random and random_hours are present; alias precedence/additivity is unqualified.');
+ if(!valid(ns,['id','tooltip',...units])||!id||!/^\w+\.\d+$/.test(id)||ns.some(x=>typeof x.value!=='string')||units.some(k=>ns.some(x=>x.key===k)&&(literal(scalar(ns,k))===null||Number(scalar(ns,k))<0||!Number.isInteger(Number(scalar(ns,k))))))return unresolved(n,'unsupported','Event ID, delay or parameters are dynamic, duplicated or unsupported; no dispatch or outcome is assumed.');
+ const base=Number(scalar(ns,'hours'))+24*Number(scalar(ns,'days'))+720*Number(scalar(ns,'months'));
+ const random=Number(scalar(ns,'random_hours'))+24*Number(scalar(ns,'random_days'))+Number(scalar(ns,'random'));
+ if(!Number.isSafeInteger(base+random))return unresolved(n);
+ const baseText=['hours','days','months'].filter(k=>scalar(ns,k)).map(k=>`${scalar(ns,k)} ${k}${k==='months'?' (30 days each)':''}`).join(' + ');
+ const timing=random?` after ${baseText||'0 hours'} plus a random delay from 0 up to ${number(random)} hours (upper bound excluded; conservative combined bound that may exceed the reachable range, not a uniform probability)`:(baseText?` after ${baseText}`:' immediately');
+ const result=item(n,`Trigger ${n.key==='news_event'?'news ':''}event “${name(id,lookup)}” for ${c.current.label}${timing}. Event choices and later outcomes are separate; delivery remains conditional.`,'conditional');
+ if(!c.resolveEvent)return result;
+ const linked=c.resolveEvent(id),fail=(status:ExplanationStatus,text:string)=>{result.children=[unresolved(n,status,text)];return result;};
+ if(!linked)return fail('unsupported','Event definition is missing or ambiguous in this index; downstream outcomes remain unknown.');
+ if(linked.ambiguous)return fail('ambiguous-scope','Multiple event definitions match; no branch is chosen.');
+ if(linked.recovered||linked.limited||!linked.source||!linked.hash||!linked.version||!linked.nodes.length)return fail('parser-limitation','Event source is absent, recovered or bounded; expansion refused.');
+ if(c.version&&linked.version!==c.version)return fail('unsupported','Event source version differs from the caller; patch-mismatched outcomes are not interpreted.');
+ if(linked.eventType!==n.key)return fail('unsupported','Event type differs from the dispatch command; no delivery semantics are assumed.');
+ if(linked.nodes.some(n=>n.key==='id')&&scalar(linked.nodes,'id')!==id)return fail('ambiguous-scope','Event identity is duplicated or differs from the requested ID; expansion refused.');
+ if(depth>=16||(c.eventStack||[]).includes(id)||(c.eventStack||[]).length>=8)return fail('parser-limitation','Recursive or bounded event chain; remaining outcomes are unknown.');
+ // ROOT is the scoped recipient of this call. Do not inherit PREV or invent FROM chains.
+ // Event helpers/ideas need their own linked context; caller-local bindings cannot certify them.
+ const eventContext:ExplainContext={...c,root:c.current,previous:undefined,from:undefined,ideas:undefined,scripts:undefined,dynamicModifiers:undefined,eventStack:[...(c.eventStack||[]),id]};
+ const body=explainEvent(linked.nodes,lookup,eventContext,depth+1);
+ result.children=[{text:`Event ${id} delivered to ${c.current.label}; ROOT denotes this recipient. FROM and deeper event scopes remain unresolved.`,status:'conditional',role:'effect',evidence:proof(linked),children:[...body.requirements,...body.summary]}];
+ return result;
+}
 export function explainConditions(nodes:Node[],lookup:NameLookup=id=>id,c=defaultContext(),depth=0):Explanation[]{
  if(depth>16)return [unresolved(nodes[0]||{key:'depth',value:'',line:0},'parser-limitation','Condition nesting exceeds the explanation limit.')];
- return nodes.map<Explanation>(n=>{
+ return boundedMap(nodes,c,n=>{
   const k=n.key.toLowerCase();if(Array.isArray(n.value)){
    if(n.op&&n.op!=='=')return unresolved(n);
    if(['and','or','not'].includes(k))return {...condition(n,k==='or'?'At least one of these conditions must hold:':k==='not'?'None of these conditions may hold:':'All of these conditions must hold:'),children:explainConditions(n.value,lookup,c,depth+1)};
@@ -81,6 +159,7 @@ export function explainEffects(nodes:Node[],lookup:NameLookup=id=>id,depth=0,c=d
  return nodes.flatMap((n,index):Explanation[]=>{
   if(c.budget&&--c.budget.remaining<0)return c.budget.remaining===-1?[unresolved(n,'parser-limitation','Explanation work limit reached; remaining effects are not interpreted.')]:[];
   const k=n.key.toLowerCase();if(n.op&&n.op!=='=')return [unresolved(n)];
+  if(['country_event','news_event'].includes(k))return [eventCall(n,lookup,c,depth)];
   if(k==='effect_tooltip'&&Array.isArray(n.value))return [item(n,'Game tooltip describes effects; those effects are not executed by this tooltip block. Inspect the advanced source for its display content.','explained','tooltip')];
   const script=c.scripts?.[n.key];if(script){
    if(script.ambiguous)return [unresolved(n,'ambiguous-scope','Multiple scripted-effect definitions match; no expansion chosen.')];
@@ -125,7 +204,9 @@ export function explainEffects(nodes:Node[],lookup:NameLookup=id=>id,depth=0,c=d
    if(k==='add_dynamic_modifier'&&valid(ns,['modifier','days','scope'])&&get('modifier')){if(get('days')&&(literal(get('days'))===null||Number(get('days'))<0))return [unresolved(n)];if(get('scope')&&!target(get('scope'),lookup,c))return [missingScope(n)];return [namedItem(n,`Add modifier ${name(get('modifier'),lookup)} to ${c.current.label}${get('scope')?', applying only to '+target(get('scope'),lookup,c):''}${get('days')?' for '+number(Number(get('days')))+' days':''}. Its dynamic values are not evaluated.`,get('modifier'),lookup)];}
    if(k==='add_autonomy_score'&&c.current.kind==='country'&&valid(ns,['value','localization'])&&literal(get('value'))!==null)return [item(n,`Change ${c.current.label}’s autonomy score by ${Number(get('value'))>=0?'+':''}${number(Number(get('value')))}.`)];
    if(k==='add_popularity'&&c.current.kind==='country'&&valid(ns,['ideology','popularity'])&&get('ideology')&&literal(get('popularity'))!==null)return [item(n,`Change ${name(get('ideology'),lookup)} popularity in ${c.current.label} by ${Number(get('popularity'))>=0?'+':''}${number(Number(get('popularity'))*100)} percentage points.`)];
-   if(k==='country_event'&&c.current.kind==='country'&&valid(ns,['id','hours','days','months','tooltip'])&&get('id')){const units=['hours','days','months'].filter(x=>get(x));if(units.some(x=>literal(get(x))===null||Number(get(x))<0))return [unresolved(n)];return [namedItem(n,`Trigger event “${name(get('id'),lookup)}” for ${c.current.label}${units.length?' after '+units.map(x=>get(x)+' '+x+(x==='months'?' (30 days each)':'')).join(' + '):' immediately'}. Event choices and later outcomes are separate.`,get('id'),lookup)];}
+   if(k==='create_wargoal'&&c.current.kind==='country'&&valid(ns,['target','type'])&&get('type')==='annex_everything'){
+    const who=entity(get('target'),lookup,c);return who?.kind==='country'?[item(n,`${c.current.label} gains an annexation war goal against ${who.label}. This does not declare war or annex territory.`)]:[missingScope(n)];
+   }
    if(k==='annex_country'&&c.current.kind==='country'&&valid(ns,['target','transfer_troops'])&&target(get('target'),lookup,c)&&['','yes','no'].includes(get('transfer_troops')))return [item(n,`${c.current.label} annexes ${target(get('target'),lookup,c)}${get('transfer_troops')==='yes'?' and receives its troops':get('transfer_troops')==='no'?' without transferring its troops':''}.`)];
    if(k==='add_resource'&&valid(ns,['type','amount','state','days','show_state_in_tooltip'])&&get('type')&&literal(get('amount'))!==null){const state=get('state')?entity(get('state'),lookup,c):c.current;if(!state||state.kind!=='state')return [missingScope(n)];if(get('days')&&(literal(get('days'))===null||Number(get('days'))<0))return [unresolved(n)];return [item(n,`Change ${name(get('type'),lookup)} production in ${state.label} by ${Number(get('amount'))>=0?'+':''}${number(Number(get('amount')))}${get('days')?' for '+get('days')+' days':''}.`)];}
    if(k==='add_building_construction'&&c.current.kind==='state'&&valid(ns,['type','level','instant_build'])&&get('type')&&literal(get('level'))!==null&&Number.isInteger(Number(get('level')))&&Number(get('level'))>0&&['','yes','no'].includes(get('instant_build')))return [item(n,`${get('instant_build')==='yes'?'Instantly add':'Begin construction of'} ${get('level')} level(s) of ${name(get('type'),lookup)} in ${c.current.label}.`)];
