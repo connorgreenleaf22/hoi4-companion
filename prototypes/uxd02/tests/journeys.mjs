@@ -70,6 +70,15 @@ for(const variant of ['a','b'])for(const size of [{width:1920,height:1080},{widt
  await nav('Saved Strategies & Designs');
  await page.getByRole('button',{name:'Reopen strategy',exact:true}).last().click();
  await check(tag+' reopening earlier saved revision',()=>expect(page.getByLabel('Planning notes')).toHaveValue('Preserve this draft across navigation.'));
+ await page.getByLabel('Planning notes').fill('Unsaved work must survive reopening a revision.');
+ await nav('Saved Strategies & Designs');await page.getByRole('button',{name:'Reopen strategy',exact:true}).last().click();
+ await page.getByRole('button',{name:'Recover working draft'}).click();
+ await check(tag+' unsaved draft recovered after saved reopen',()=>expect(page.getByLabel('Planning notes')).toHaveValue('Unsaved work must survive reopening a revision.'));
+ await page.getByLabel('Planning notes').fill('x'.repeat(4001));
+ await check(tag+' notes respect persistence limit',async()=>expect((await page.getByLabel('Planning notes').inputValue()).length).toBe(4000));
+ await page.reload();await nav('Tools');await page.getByRole('button',{name:/Military design comparison/}).click();
+ await check(tag+' maximum notes persist without corrupting collection',async()=>expect((await page.getByLabel('Planning notes').inputValue()).length).toBe(4000));
+ await page.getByLabel('Planning notes').fill('Recovered and retained.');
  await page.getByRole('button',{name:'Ask about this plan'}).click();
  await check(tag+' advisor access focuses composer',()=>expect(page.getByLabel('Keep planning with your advisor')).toBeFocused());
  const input=page.getByLabel('Keep planning with your advisor');
@@ -103,6 +112,8 @@ for(const variant of ['a','b'])for(const size of [{width:1920,height:1080},{widt
  await page.locator('.context-panel').scrollIntoViewIfNeeded();await snap('missing-context');
  await check(tag+' player facts stay separate',()=>expect(page.getByText(/Your statement \(unverified\)/)).toContainText('France in 1938'));
  await page.getByRole('button',{name:'Use this context'}).click();
+ await check(tag+' manual statement acknowledged',()=>expect(page.locator('.answer').last()).toContainText('France in 1938; defense is my objective'));
+ await check(tag+' no duplicate element IDs',async()=>expect(await page.evaluate(()=>{const ids=[...document.querySelectorAll('[id]')].map(e=>e.id);return ids.filter((id,i)=>ids.indexOf(id)!==i);})).toEqual([]));
  await check(tag+' manual input persists',()=>expect(page.getByLabel('Supply missing context').last()).toHaveValue('I am playing France in 1938; defense is my objective.'));
  await page.reload();await nav('AI Chat');
  await check(tag+' conversation history reload',()=>expect(page.locator('.exchange')).toHaveCount(5));
