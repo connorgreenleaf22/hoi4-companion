@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "M7.4.2b",
+  "status": "blocked",
+  "branch": "feature/hoi4-combat-evaluation-m742b",
+  "commitSha": "23c49ee9752262f7c583dce43fc68d52f937da96",
+  "testEvidence": [
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/M742B-VERIFICATION.json",
+      "summary": "57 focused tests (20 new +37 resource); 178 portable +3 guards; 15 source-input projections /11 files and actual raw-index integration. Zero combat metrics qualified."
+    },
+    {
+      "kind": "typecheck",
+      "result": "passed",
+      "reference": "docs/application/M742B-VERIFICATION.json",
+      "summary": "TypeScript, build and extracted partial JSON demo pass."
+    },
+    {
+      "kind": "schema",
+      "result": "passed",
+      "reference": "docs/milestones/M7.4.2b.json",
+      "summary": "Strict Ajv milestone validation passes; blocked/pending scope retained."
+    },
+    {
+      "kind": "hygiene",
+      "result": "passed",
+      "reference": "docs/application/M742B-VERIFICATION.json",
+      "summary": "Manual diff audit and tracked hygiene; only minimal source facts/context, no raw game files or personal data."
+    },
+    {
+      "kind": "packaged",
+      "result": "passed",
+      "reference": "docs/application/M742B-VERIFICATION.json",
+      "summary": "75 extracted files match; three actual Electron app/service/offline save/restart cases pass. Four API/demo modules match ASAR/source bytes; base API unchanged. Three partial comparisons, no combat totals."
+    },
+    {
+      "kind": "review",
+      "result": "passed",
+      "reference": "https://github.com/connorgreenleaf22/hoi4-companion/pull/11",
+      "summary": "Separate reviewer /root/review_m742 independently checked formulas/runtime and evidence at 3614691b33b3f1e837cefb13a67588b082d6aa1b, including package hashes/file equality and extracted partial demo; no blocking code/evidence findings. Formula qualification remains unresolved."
+    }
+  ],
+  "nativeQualification": {
+    "state": "not-applicable",
+    "scope": "Static input/refusal-contract slice; no new game observation, engine rule or combat-performance qualification. Prior native boundaries remain unchanged.",
+    "evidence": []
+  },
+  "artifact": {
+    "name": "M7.4.2-23c49ee97522-windows-x64.zip",
+    "reference": "Local-only M7.4.2b runtime package under Documents/HOI4 Companion Development Builds/M7.4.2-23c49ee97522; numeric helper label retained; receipt docs/application/M742B-VERIFICATION.json",
+    "sha256": "141c1c4910912726e37215a4ac72e8e4841d1950ac5327fa41e27683bbce4285"
+  },
+  "blockers": [
+    {
+      "summary": "Independent patch-matched organization, equipment normalization, essential/support/modifier ordering and division combat aggregation equations remain unqualified. All five totals/deltas are null; work order partial.",
+      "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/10"
+    }
+  ],
+  "acceptance": {
+    "state": "pending",
+    "evidence": [
+      "docs/application/MILESTONE-7.4.2b-ACCEPTANCE.md"
+    ]
+  },
+  "report": "docs/application/MILESTONE-7.4.2b.md",
+  "github": [
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/11",
+    "https://github.com/connorgreenleaf22/hoi4-companion/issues/10"
+  ]
+}

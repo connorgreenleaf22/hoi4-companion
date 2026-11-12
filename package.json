@@ -28,6 +28,8 @@
     "typecheck": "tsc --noEmit",
     "design:demo": "tsx scripts/design-evaluation-demo.ts",
     "design:audit": "tsx scripts/design-evaluation-audit.ts",
+    "combat:demo": "tsx scripts/combat-evaluation-demo.ts",
+    "combat:audit": "tsx scripts/combat-input-audit.ts",
     "test-ci": "node scripts/ci/test.mjs && node --test scripts/ci/workflow.test.mjs",
     "schemas": "node scripts/ci/schemas.mjs",
     "hygiene": "node scripts/ci/hygiene.mjs",

@@ -1,5 +1,7 @@
 # HOI4 Companion
 
+- M7.4.2b uses `feature/hoi4-combat-evaluation-m742b` in a new worktree, stacked on reviewed PR #8 head `1fdf0a9af79b0afcaf465ccad33ee2a048591db8` (integration ancestor `bdb8a4887522b38f5110f3900bbf1655cc5fd600`). Preserve the M7.4.2 resource API/fixtures and M7.4.1 interpreter. Read `docs/application/COMBAT-EVALUATION.md`; source inputs are qualified separately from aggregation rules. No division combat metric is qualified by this partial slice. No native game/provider calls, personal-data changes, production UI or merges.
+
 - M7.4.2 uses `feature/hoi4-knowledge-meta-lab` from owner-confirmed `bdb8a4887522b38f5110f3900bbf1655cc5fd600`. Own `server/design-evaluation`, its versioned types, source fixtures, developer demo and validation documentation. Preserve M7.4.1 interpreter ownership and UXD-01 read-only audit scope; PR #6 remains excluded. No provider/game calls, frontend rewrite, observation changes or merges. Read `docs/application/DESIGN-EVALUATION.md` before widening qualification.
 
 - M7.3.1 works on `feature/hoi4-ai-m731`, forked from validated M7.3 fc60182. Zero paid/provider calls during implementation; the user must separately approve and initiate the one real acceptance request. Preserve user AppData read-only during diagnosis.
