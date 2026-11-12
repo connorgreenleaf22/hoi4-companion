@@ -39,7 +39,7 @@
       "kind": "review",
       "result": "passed",
       "reference": "https://github.com/connorgreenleaf22/hoi4-companion/pull/11",
-      "summary": "Separate reviewer /root/review_m742 independently checked formulas and runtime SHA; no blocking code findings. Formula qualification remains unresolved."
+      "summary": "Separate reviewer /root/review_m742 independently checked formulas/runtime and evidence at 3614691b33b3f1e837cefb13a67588b082d6aa1b, including package hashes/file equality and extracted partial demo; no blocking code/evidence findings. Formula qualification remains unresolved."
     }
   ],
   "nativeQualification": {

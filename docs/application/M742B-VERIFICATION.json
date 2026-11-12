@@ -92,7 +92,10 @@
     "findings": [],
     "independentlyRun": "57 focused tests, typecheck, installed combat-input audit; reviewed strict/null/stale/support/CI boundaries and preserved resource files.",
     "formulaAudit": "No sufficiently established primary division aggregation equation found in the bounded investigation; all five metrics must remain null/unsupported.",
-    "finalEvidenceReview": "pending",
+    "finalEvidenceReview": {
+      "reviewedDocumentationSha": "3614691b33b3f1e837cefb13a67588b082d6aa1b",
+      "disposition": "No blocking findings. Independently recomputed ZIP/EXE hashes, matched all 75 extracted files and four source/ASAR modules, ran extracted demo (3 partial comparisons /0 qualified metrics), checked three Electron case records, unchanged source identity, absent owned PIDs, raw-index data, screenshot, schema, runtime CI and blocked/pending status. Did not rerun UI."
+    },
     "notHumanGitHubApproval": true
   },
   "nativeGameLaunched": false,
