@@ -17,7 +17,7 @@ export function rankCoverageGaps(reviews:Pick<PlanCoverage,'planId'|'gaps'>[]):C
  return [...groups].map(([category,v])=>({category,severity:v.severity,affectedDefinitions:v.definitions.size,affectedPlans:v.plans.size,unresolvedSemanticsDefinitions:v.semantics.size,campaignStateDefinitions:v.campaign.size,priority:weights[v.severity]*v.definitions.size,codes:[...v.codes].sort()})).sort((a,b)=>weights[b.severity]-weights[a.severity]||b.priority-a.priority||b.affectedPlans-a.affectedPlans||a.category.localeCompare(b.category));
 }
 const category=(code:string,dimension:CoverageDimension):[string,CoverageGap['severity']]=>{
- if(/^(start_civil_war|declare_war_on|annex_country|puppet|set_autonomy|transfer_state|white_peace|create_faction|add_to_faction)$/.test(code))return ['War, territory and diplomatic consequences','critical'];
+ if(/^(start_civil_war|create_wargoal|declare_war_on|annex_country|puppet|set_autonomy|transfer_state|white_peace|create_faction|add_to_faction)$/.test(code))return ['War, territory and diplomatic consequences','critical'];
  if(/event/.test(code))return ['Event choices and downstream consequences','critical'];
  if(dimension==='costs')return ['Costs and duration','critical'];
  if(dimension==='prerequisites'||dimension==='branch-conflicts')return ['Eligibility and branch conditions','critical'];
@@ -53,7 +53,8 @@ export function reviewPlanCoverage(profile:Profile,plan:CampaignPlan,focuses:Ent
  for(const step of report.steps)for(const r of step.requirements){if(r.role==='outcome'||r.truth==='yes')continue;const dim:CoverageDimension=r.role==='exclusion'?'branch-conflicts':'prerequisites';add(step.resolvedReference||step.reference,dim,r.key,r.reason,r.source?[{source:r.source.source,line:r.source.line||1,hash:r.source.hash,version:r.source.gameVersion}]:[],[],r.truth==='no'?'structure':'campaign-state');if(r.truth==='no'&&['availability','branch','prerequisite','exclusion'].includes(r.role))structuralValidity='invalid';}
  const entries=[...new Map([...selected,...supporting].map(e=>[e.uid,e])).values()];
  for(const e of entries){
-  const ref='definition:'+e.uid,m=entryMechanics(e),base=evidence(e),ns=e.data.nodes as Node[]|undefined;
+  const ref='definition:'+e.uid,base=evidence(e),ns=e.data.nodes as Node[]|undefined;
+  const m=entryMechanics(e,undefined,{resolveEvent:resolve?id=>{const target=resolve(id);return target?.kind==='event'?{nodes:target.data.nodes||[],eventType:target.data.eventType,source:target.source,line:target.line,hash:target.hash,version:target.version,recovered:!!target.data.importWarnings?.length,ambiguous:target.data.definitionVariant>1}:undefined;}:undefined});
   references.push({reference:ref,title:e.title,evidence:base,summary:m.summary,requirements:m.requirements});
   const walk=(items:Explanation[],dimension:CoverageDimension,parents:string[]=[],proof=base)=>{for(const x of items){
    const p=x.evidence?.length?x.evidence:proof.map(v=>({...v,line:x.line||v.line})),code=x.code||'unresolved',dim=x.role==='cost'||x.role==='timing'||/cost|days_remove|days_re_enable|days_mission_timeout/.test(code)?'costs':x.role==='condition'?'prerequisites':dimension;
@@ -87,8 +88,14 @@ export function reviewPlanCoverage(profile:Profile,plan:CampaignPlan,focuses:Ent
      const id=typeof n.value==='string'?n.value:n.value.find(x=>x.key==='id'&&typeof x.value==='string')?.value;
      const target=typeof id==='string'?resolve?.(id):undefined;
      const targetProof=target?.kind==='event'?evidence(target):[];
-     add(ref,'downstream-events',n.key,`Event ${typeof id==='string'?id:'(dynamic ID)'}: choices, response probabilities and downstream consequences remain unqualified.`,[...p,...targetProof],context);
+     add(ref,'downstream-events',n.key,`Event ${typeof id==='string'?id:'(dynamic ID)'}: source branches may be explained, but delivery, choice probabilities and complete downstream consequences remain unqualified.`,[...p,...targetProof],context);
      if(typeof id==='string'&&!events.some(x=>x.id===id))events.push({id,reference:target?.kind==='event'?'definition:'+target.uid:undefined,title:target?.title,evidence:targetProof,consequences:'unresolved'});
+     if(target?.kind==='event'){
+      const key='event:'+target.uid;
+      if(stack.includes(key))add(ref,'downstream-events','recursive-event','Recursive event dependency; complete closure is not established.',[...p,...targetProof],context);
+      else if(target.version!==e.version||target.data.importWarnings?.length)add(ref,'downstream-events','event-source','Changed-version or parser-recovered event source; dependency expansion refused.',[...p,...targetProof],context);
+      else scan(target.data.nodes||[],targetProof,[...context,'event '+id],depth+1,[...stack,key]);
+     }
     }
     const helper=e.data.mechanicScripts?.[n.key];if(helper&&!helper.ambiguous){if(stack.includes(n.key))add(ref,'downstream-events','recursive-helper','Recursive dependency; event closure not established.',p,context);else scan(helper.nodes||[],helper.source?[{source:helper.source,line:helper.line,hash:helper.hash,version:helper.version}]:p,[...context,'scripted effect '+n.key],depth+1,[...stack,n.key]);}
     if(Array.isArray(n.value)){const guard=n.value.find(x=>x.key==='limit');const guards=guard&&Array.isArray(guard.value)?['Source guard: '+formatScript(guard.value)]:[];scan(n.value,p,[...context,n.key,...guards],depth+1,stack);}
@@ -101,7 +108,7 @@ export function reviewPlanCoverage(profile:Profile,plan:CampaignPlan,focuses:Ent
  add('definition:'+tree.uid,'source-context','whole-strategy-scope','Review covers the submitted focuses and explicit supporting references. Required decisions, research, military preparation and external event chains may still be omitted.',evidence(tree),[],'semantics',['Whole-strategy completeness','high']);
  const dimensions=Object.fromEntries((['costs','prerequisites','branch-conflicts','rewards','downstream-events','source-context'] as CoverageDimension[]).map(d=>[d,gaps.some(g=>g.dimension===d&&g.severity!=='low')?'incomplete':'reviewed'])) as PlanCoverage['dimensions'];
  const blockingGapCount=gaps.filter(g=>g.severity!=='low').length;
- const result:PlanCoverage={schemaVersion:1,policyVersion:'risk-gate-v1',reviewFingerprint:createHash('sha256').update(JSON.stringify({policy:'risk-gate-v1',profile,plan,sources,definitions:[tree,...entries].map(e=>[e.uid,e.hash])})).digest('hex'),planId:plan.id,structuralValidity,label:structuralValidity==='invalid'?'needs-correction':'provisional',editable:true,sources,assumptions:[...new Set([...plan.assumptions,...report.assumptions])],dimensions,gaps,priorities:[],references,events,policy:{provisionalAllowed:structuralValidity!=='invalid',confidentRecommendationAllowed:false,rankingAllowed:false,optimizationAllowed:false,blockingGapCount,reasons:[...(blockingGapCount?['Strategy-critical interpretation or campaign-state gaps remain.']:[]),'No qualified objective/utility model or whole-campaign simulator exists. A coverage review is not an optimality proof.']}};
+ const result:PlanCoverage={schemaVersion:1,policyVersion:'risk-gate-v1',reviewFingerprint:createHash('sha256').update(JSON.stringify({policy:'risk-gate-v1',interpreter:'bounded-events-v1',profile,plan,sources,definitions:[tree,...entries].map(e=>[e.uid,e.hash]),dependencies:events.map(e=>[e.id,e.reference,e.evidence])})).digest('hex'),planId:plan.id,structuralValidity,label:structuralValidity==='invalid'?'needs-correction':'provisional',editable:true,sources,assumptions:[...new Set([...plan.assumptions,...report.assumptions])],dimensions,gaps,priorities:[],references,events,policy:{provisionalAllowed:structuralValidity!=='invalid',confidentRecommendationAllowed:false,rankingAllowed:false,optimizationAllowed:false,blockingGapCount,reasons:[...(blockingGapCount?['Strategy-critical interpretation or campaign-state gaps remain.']:[]),'No qualified objective/utility model or whole-campaign simulator exists. A coverage review is not an optimality proof.']}};
  result.priorities=rankCoverageGaps([result]);return result;
 }
 export function reviewProposal(intent:PlanningProposal['intent'],coverage:PlanCoverage):ProposalReview{

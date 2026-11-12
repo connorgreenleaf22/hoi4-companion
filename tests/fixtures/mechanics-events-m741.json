@@ -1,0 +1,12 @@
+{
+  "description": "Original synthetic scripts for bounded event semantics. Not copied installed game assets or a native recording.",
+  "version": "synthetic-1",
+  "events": {
+    "union.10": "is_triggered_only=yes trigger={BRA={exists=yes}} immediate={add_political_power=2} option={name=accept trigger={has_government=neutrality} ai_chance={factor=99 modifier={factor=0 NOT={has_government=neutrality}}} hidden_effect={every_state={limit={is_core_of=BRA} add_core_of=POR}} POR={country_event=union.11 ROOT={unhandled_character={set_nationality=FROM}} annex_country={target=ROOT transfer_troops=yes}}} option={name=refuse ai_chance={factor=1} POR={create_wargoal={target=ROOT type=annex_everything} hidden_effect={country_event=union.12}}} after={add_stability=-0.01}",
+    "union.11": "is_triggered_only=yes option={name=noted}",
+    "union.12": "is_triggered_only=yes option={name=noted effect_tooltip={create_wargoal={target=BRA type=annex_everything} country_event=tooltip.99}}",
+    "cycle.1": "option={country_event=cycle.1}",
+    "opaque.1": "new_delivery_rule={country_event=unknown.1} option={trigger=dynamic new_effect=yes}",
+    "news.1": "is_triggered_only=yes option={name=noted}"
+  }
+}

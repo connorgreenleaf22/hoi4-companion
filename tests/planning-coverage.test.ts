@@ -70,3 +70,28 @@ test('idea modifier gaps retain the idea source instead of borrowing the focus s
  const e=focus('A','completion_reward={add_ideas=test}',{mechanicIdeas:{test:{source:'ideas/test.txt',hash:'ideaHash',version:'fixture',line:30,modifiers:parseScript('unknown_modifier=0.1')}}});
  const gap=review([e]).gaps.find(g=>g.code==='unknown_modifier')!;assert.equal(gap.evidence[0].source,'ideas/test.txt');assert.equal(gap.evidence[0].hash,'ideaHash');
 });
+
+test('HTTP coverage exposes caller-bound event branches and invalidates downstream source changes without upgrading strategy confidence',async()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'hoi4-event-coverage-'));const app=await startServer({dataDir:dir,port:0,autoIndex:false});
+ const fixture=JSON.parse(fs.readFileSync('tests/fixtures/mechanics-events-m741.json','utf8'));
+ const eventEntries=Object.entries(fixture.events).map(([id,script])=>({...tree,uid:'event-'+id,id,kind:'event',version:'fixture',source:'synthetic/events.txt',hash:'event-original',data:{nodes:parseScript(String(script)),eventType:id==='news.1'?'news_event':'country_event'}}));
+ const post=async(data:unknown)=>{const r=await fetch(app.url+'/api/v1/strategy/review',{method:'POST',body:JSON.stringify(data)});return {status:r.status,value:await r.json()};};
+ try{
+  app.store.insert(tree);app.store.insert(focus('A','completion_reward={if={limit={has_dlc="Fixture DLC"} BRA={country_event={id=union.10 hours=6}}} else={BRA={country_event=union.11}}}'));
+  eventEntries.forEach(e=>app.store.insert(e));app.store.setSetting('meta',{version:'fixture',indexRevision:'fixture',mods:[],dlcs:[]});
+  const input={schemaVersion:1,profile,plan:plan(['A']),supportingReferences:[],indexRevision:'fixture',intent:'provisional'};
+  const first=await post(input);assert.equal(first.status,200);const c=first.value.coverage;
+  const text=JSON.stringify(c.references);assert.match(text,/annexes BRA and receives its troops/);assert.match(text,/annexation war goal against BRA/);assert.match(text,/Requires Fixture DLC/);assert.match(text,/Otherwise/);
+  assert.ok(c.events.some((e:any)=>e.id==='union.12'&&e.reference));assert.ok(!c.events.some((e:any)=>e.id==='tooltip.99'));
+  assert.ok(c.gaps.some((g:any)=>g.code==='ai_chance'&&g.evidence[0].source==='synthetic/events.txt'));
+  assert.ok(c.gaps.some((g:any)=>g.code==='unhandled_character'&&g.context.some((x:string)=>x.includes('Option 1'))));
+  assert.equal(c.policy.confidentRecommendationAllowed,false);assert.equal(c.policy.rankingAllowed,false);
+  const next=eventEntries.find(e=>e.id==='union.12')!;app.store.insert({...next,hash:'event-changed'});
+  const changed=await post(input);assert.notEqual(changed.value.coverage.reviewFingerprint,c.reviewFingerprint);
+  const union=eventEntries.find(e=>e.id==='union.10')!;app.store.insert({...union,version:'changed-patch'});
+  const mismatch=await post(input);assert.match(JSON.stringify(mismatch.value.coverage.references),/patch-mismatched/);assert.ok(!JSON.stringify(mismatch.value.coverage.references).includes('annexes'));
+  assert.equal((await post({...input,intent:'optimize'})).status,422);
+  app.store.insert({...union,uid:'event-duplicate'});
+  const ambiguous=await post(input);assert.match(JSON.stringify(ambiguous.value.coverage.references),/missing or ambiguous/);assert.ok(!JSON.stringify(ambiguous.value.coverage.references).includes('annexes'));
+ }finally{await app.close();fs.rmSync(dir,{recursive:true,force:true});}
+});
