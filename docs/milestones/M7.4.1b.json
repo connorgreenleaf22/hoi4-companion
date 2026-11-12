@@ -3,7 +3,7 @@
   "milestoneId": "M7.4.1b",
   "status": "offline-tested",
   "branch": "feature/hoi4-knowledge-paths-m741b",
-  "commitSha": "f4b7449e7c0a524025ebf015321b2806f161ff01",
+  "commitSha": "32be74d09a98b542fbd41ba514637b5485288581",
   "testEvidence": [
     {
       "kind": "deterministic",
@@ -14,20 +14,20 @@
     {
       "kind": "typecheck",
       "result": "passed",
-      "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43180782000",
+      "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43181823337",
       "summary": "All four runtime CI jobs pass;local production build/typecheck pass."
     },
     {
       "kind": "review",
       "result": "passed",
       "reference": "https://github.com/connorgreenleaf22/hoi4-companion/pull/12",
-      "summary": "Separate reviewer checked exact runtime,42 tests,TypeScript,20 pins and original cached Hungary conflict;no remaining blocking runtime findings."
+      "summary": "Separate reviewer checked final runtime; backend-identical42-test run, strict shell delta, TypeScript,20 pins and cached Hungary API negative; no blocking runtime findings."
     },
     {
       "kind": "packaged",
-      "result": "not-run",
+      "result": "passed",
       "reference": "docs/application/M741B-VERIFICATION.json",
-      "summary": "Fresh-extraction Companion smoke pending; no native HOI4 qualification."
+      "summary": "75 extracted files equal;3 actual Companion startup/API/resource/persistence/restart checks pass;source unchanged;screenshots inspected;owned processes absent. No HOI4 qualification."
     }
   ],
   "nativeQualification": {
@@ -36,9 +36,9 @@
     "evidence": []
   },
   "artifact": {
-    "name": "M7.4.1b-f4b7449e7c0a-windows-x64.zip",
+    "name": "M7.4.1b-32be74d09a98-windows-x64.zip",
     "reference": "Local-only retained build; docs/application/M741B-VERIFICATION.json",
-    "sha256": "914e569be4a243109016d219764be02795d5914a231865740a4ce8bd82846fab"
+    "sha256": "9dc5e04777b347169638a17c1f4cc5199d409197b8ed800522377640651c9531"
   },
   "blockers": [
     {

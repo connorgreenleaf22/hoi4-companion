@@ -4,7 +4,7 @@
   "date": "2026-11-12",
   "branch": "feature/hoi4-knowledge-paths-m741b",
   "baseline": "895ef1cc16da27887d535165b8ea866476d148a4",
-  "runtime": "f4b7449e7c0a524025ebf015321b2806f161ff01",
+  "runtime": "32be74d09a98b542fbd41ba514637b5485288581",
   "pr": "https://github.com/connorgreenleaf22/hoi4-companion/pull/12",
   "source": {
     "version": "1.19.4.2",
@@ -391,8 +391,8 @@
     "build": {
       "passed": true,
       "command": "npm run package:development -- M7.4.1b",
-      "output": ".bridge-local/m741b-package-reviewed.txt",
-      "sha256": "c5442e8d72fb82bb0abc7f9705f8844be3851903a8533aa0a456d92de1d61223"
+      "output": ".bridge-local/m741b-package-shell-fixed.txt",
+      "sha256": "aad6f55e38dc14238496e1fe9e7045894b1b73c02e1558e41ab5249637670b50"
     },
     "installed": {
       "passed": true,
@@ -402,8 +402,8 @@
       "check": "Three routes, source pins, policy restrictions and Hungary incompatible sequence; no indexing/native/provider run"
     },
     "hostedCI": {
-      "runtime": "f4b7449e7c0a524025ebf015321b2806f161ff01",
-      "url": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43180782000",
+      "runtime": "32be74d09a98b542fbd41ba514637b5485288581",
+      "url": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43181823337",
       "jobs": [
         "qa-typecheck",
         "qa-test-ci",
@@ -416,8 +416,8 @@
   },
   "review": {
     "reviewer": "/root/review_m741b",
-    "reviewedRuntime": "f4b7449e7c0a524025ebf015321b2806f161ff01",
-    "status": "no remaining blocking runtime findings",
+    "reviewedRuntime": "32be74d09a98b542fbd41ba514637b5485288581",
+    "status": "No remaining blocking runtime findings",
     "independentChecks": [
       "42 focused tests",
       "TypeScript",
@@ -430,11 +430,78 @@
       "Unresolved guards failed to propagate",
       "Repeated focus exclusion blocks lost by existing importer"
     ],
-    "evidenceReview": "pending"
+    "evidenceReview": "Runtime/source/field evidence reviewed; final exact documentation-head disposition will be recorded on PR #12.",
+    "testScope": "42 focused tests independently rerun at backend-identical f4b7449; shell-only regex delta and TypeScript independently reviewed at32be74d; all four hosted checks pass at32be74d."
   },
   "package": {
-    "status": "pending smoke completion",
-    "archiveReceipt": ".bridge-local/m741b-archive-reviewed.json"
+    "status": "passed",
+    "label": "M7.4.1b-32be74d09a98",
+    "runtime": "32be74d09a98b542fbd41ba514637b5485288581",
+    "reference": "Local-only: Documents/HOI4 Companion Development Builds/M7.4.1b-32be74d09a98",
+    "zipName": "M7.4.1b-32be74d09a98-windows-x64.zip",
+    "zipSHA256": "9dc5e04777b347169638a17c1f4cc5199d409197b8ed800522377640651c9531",
+    "extractedFiles": 75,
+    "archiveReceipt": ".bridge-local/m741b-archive-shell-fixed.json",
+    "archiveReceiptSHA256": "3cf574e7d81c5899f3726a2cd2045538106a57bc2ba3256da2f68fb06c38542b",
+    "smoke": {
+      "reference": "artifacts/qa/development-package-2026-11-12T08-20-20-828Z-ed79e02f",
+      "recordSHA256": "4dd17858ee9691e8b7e30217f71895ddb095afe5847df253ebc6dd7db64482a9",
+      "sourceUnchangedDuringRun": true,
+      "results": [
+        {
+          "name": "packaged first window appears",
+          "status": "passed",
+          "ms": 31165
+        },
+        {
+          "name": "packaged renderer, embedded API and installed references load",
+          "status": "passed",
+          "ms": 33493
+        },
+        {
+          "name": "closed packaged service stops and recording survives packaged restart",
+          "status": "passed",
+          "ms": 6606
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "packaged-command-center.png",
+          "sha256": "9792e29d16cd93b38772375540697ae2a200843c42a41d0c0dae94eb5e8b06cc",
+          "inspected": true
+        },
+        {
+          "file": "packaged-reopened.png",
+          "sha256": "02cb400d29046fba2a35d03183673d5bc47986b44cb1acaa1e87d0a9b1c74bd7",
+          "inspected": true
+        }
+      ],
+      "ownedProcessIds": [
+        19852,
+        53520,
+        53904
+      ],
+      "allOwnedProcessesAbsent": true,
+      "scope": "Actual freshly extracted Companion launch, embedded API/resources, historical recording/plan persistence and restart; no native HOI4 or new path-summary production UI."
+    },
+    "failedAttempt": {
+      "runtime": "f4b7449e7c0a524025ebf015321b2806f161ff01",
+      "reference": "artifacts/qa/development-package-2026-11-12T08-14-41-937Z-cc335539",
+      "recordSHA256": "b5609071f930541ddbaadadf1a00775406fef8dfe087ea0552e1b14879665097",
+      "failure": "First-window timeout at 60000ms before database/diagnostic creation.",
+      "diagnosis": "Source-level diagnosis: Electron development identity regex rejected M7.4.1b suffix before startup diagnostics. Pre-diagnostic exception text was not captured. One-line strict suffix correction; changed candidate passed.",
+      "ownedProcessIds": [
+        9840,
+        20160
+      ],
+      "allOwnedProcessesAbsent": true
+    },
+    "supersededPackages": [
+      "M7.4.1b-b1444a79bc72",
+      "M7.4.1b-4ace07d28caf",
+      "M7.4.1b-f4b7449e7c0a"
+    ],
+    "nativeQualification": false
   },
   "qualification": {
     "nativeHOI4": "not-run",

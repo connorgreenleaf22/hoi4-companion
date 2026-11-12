@@ -2,7 +2,7 @@
 
 **Candidate, not owner-accepted.** Adds source-qualified political explanations and reusable path summaries for exactly three scenarios: Portugal monarchy/Brazil union, legacy Germany Oppose Hitler/Kaiser, and legacy Hungary Habsburg restoration. The largest concrete prerequisite correction preserves repeated focus exclusions: a Habsburg-plus-fascist king plan that previously passed now rejects. No complete engine-parity or native qualification claim.
 
-Branch `feature/hoi4-knowledge-paths-m741b`; runtime **f4b7449e7c0a524025ebf015321b2806f161ff01**. Explicit owner-approved stacked baseline **895ef1cc16da27887d535165b8ea866476d148a4** from [PR #9](https://github.com/connorgreenleaf22/hoi4-companion/pull/9), unchanged and unmerged. This fresh decision supersedes the older HQ bdb8 baseline for this task only. [Draft stacked PR #12](https://github.com/connorgreenleaf22/hoi4-companion/pull/12) targets PR #9’s feature branch. [Manifest](../milestones/M7.4.1b.json) · [verification receipt](M741B-VERIFICATION.json) · [three player briefs](M741B-PLAYER-BRIEFS.md) · [acceptance procedure](MILESTONE-7.4.1b-ACCEPTANCE.md) · [remaining gaps, Issue #7](https://github.com/connorgreenleaf22/hoi4-companion/issues/7).
+Branch `feature/hoi4-knowledge-paths-m741b`; runtime **32be74d09a98b542fbd41ba514637b5485288581**. Explicit owner-approved stacked baseline **895ef1cc16da27887d535165b8ea866476d148a4** from [PR #9](https://github.com/connorgreenleaf22/hoi4-companion/pull/9), unchanged and unmerged. This fresh decision supersedes the older HQ bdb8 baseline for this task only. [Draft stacked PR #12](https://github.com/connorgreenleaf22/hoi4-companion/pull/12) targets PR #9’s feature branch. [Manifest](../milestones/M7.4.1b.json) · [verification receipt](M741B-VERIFICATION.json) · [three player briefs](M741B-PLAYER-BRIEFS.md) · [acceptance procedure](MILESTONE-7.4.1b-ACCEPTANCE.md) · [remaining gaps, Issue #7](https://github.com/connorgreenleaf22/hoi4-companion/issues/7).
 
 ## 1. Audit and priorities
 
@@ -63,11 +63,24 @@ Diagnostic blockers are **196→189 Portugal, 511→511 Germany, 225→225 Hunga
 
 The enabled developer event inspector reported partial German event tracing (four events, truncated boundary), not engine verification. It exposed both legacy and `_ww` roots; the Companion reuses its own existing AST/index for backend explanations. Source mechanics were checked against installed effect/trigger documentation (`set_politics`, `set_popularities`, `promote_character`, ideology-support and state-control primitives). No external strategy knowledge was needed.
 
-Validation: **42 focused tests** including original interpreter/planning/importer tests and new negative/duplicate/malformed/scope/ambiguity/patch fixtures; TypeScript/build; installed-source HTTP three-route audit and incompatible Hungary negative. Runtime hosted CI [run 43180782000](https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43180782000) succeeds. CI is fixture-only; no allowlist expansion. Full command/output hashes, separate review and isolated package receipt are recorded in `M741B-VERIFICATION.json`.
+Validation: **42 focused tests** including original interpreter/planning/importer tests and new negative/duplicate/malformed/scope/ambiguity/patch fixtures; TypeScript/build; installed-source HTTP three-route audit and incompatible Hungary negative. Runtime hosted CI [run 43181823337](https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43181823337) succeeds. CI is fixture-only; no allowlist expansion. Full command/output hashes, separate review and isolated package receipt are recorded in `M741B-VERIFICATION.json`.
 
-Independent reviewer `/root/review_m741b` identified three material issues: readable export omitted gates and selected verbose nested effects; unknown guard context was not propagated; repeated exclusion blocks were lost by the existing importer. Fixes and regression evidence are retained; exact final review and package results are recorded in the receipt. Earlier b1444a7 and 4ace07d isolated ZIPs are retained as superseded, with no Companion or HOI4 launch on those candidates.
+Reproduce the affected checks without a game/provider run:
 
-Final isolated Windows build is commit-identified in the receipt. Fresh ZIP extraction, byte equality, actual Companion launch/service/persistence and screenshot inspection are distinct from native HOI4 qualification. **No HOI4 launch, paid inference, gameplay action, personal save/playset edit, memory access/injection, protected merge, release or Page mutation occurred.** Owner usefulness and native acceptance remain pending.
+```powershell
+node --import tsx --test tests/explanations.test.ts tests/planning-coverage.test.ts tests/scripted-rewards.test.ts tests/importer.test.ts tests/knowledge-importer.test.ts
+npm run test-ci
+npm run build
+$env:HOI4_REFERENCE_DB = '<retained read-only companion.sqlite>'
+$env:HOI4_PATH_AUDIT_OUTPUT = '.bridge-local/m741b-after.json'
+node --import tsx scripts/knowledge-path-audit.ts
+npm run schemas
+npm run hygiene
+```
+
+Independent reviewer `/root/review_m741b` identified three material issues: readable export omitted gates and selected verbose nested effects; unknown guard context was not propagated; repeated exclusion blocks were lost by the existing importer. Fixes and regression evidence are retained. Reviewer independently passed 42 focused tests and TypeScript on backend runtime f4b7449, then checked the shell-only suffix delta and TypeScript at final runtime 32be74d09a98b542fbd41ba514637b5485288581; no remaining blocking code findings. Final documentation/evidence disposition is recorded on PR #12. Earlier b1444a7 and 4ace07d isolated ZIPs are retained as superseded, with no Companion or HOI4 launch on those candidates.
+
+Final isolated Windows build **M7.4.1b-32be74d09a98** is retained under `Documents/HOI4 Companion Development Builds/M7.4.1b-32be74d09a98/`; ZIP SHA256 **9dc5e04777b347169638a17c1f4cc5199d409197b8ed800522377640651c9531**. All **75** freshly extracted files match. Three actual Companion checks pass: window 31.2s, renderer/API/resources 33.5s, service shutdown/restart/historical-recording and plan persistence 6.6s. Source stayed unchanged, screenshots were inspected, and all QA-owned processes are absent. These checks do not render a new path-summary UI or qualify native HOI4 behavior. The earlier f4b7449 smoke timed out before a window/database/diagnostics; source inspection found the Electron label regex still rejected the b suffix. The strict one-line correction was separately reviewed and the changed candidate passed; the failed evidence and superseded build remain retained. No unchanged native or Companion retry was used. **No HOI4 launch, paid inference, gameplay action, personal save/playset edit, memory access/injection, protected merge, release or Page mutation occurred.** Owner usefulness and native acceptance remain pending.
 
 ## Significant remaining gaps and integration
 
