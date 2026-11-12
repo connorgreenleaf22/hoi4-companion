@@ -29,6 +29,7 @@ const localizedName=(id:string,lookup:NameLookup)=>(lookup(id)||id).replace(/\[(
 const name=(id:string,lookup:NameLookup)=>localizedName(id,lookup).replace(/\[[^\]]+\]/g,'[name depends on campaign]');
 const namedItem=(n:Node,text:string,id:string,lookup:NameLookup,role:Explanation['role']='effect')=>item(n,text,localizedName(id,lookup)===id||/[\[\]$]/.test(localizedName(id,lookup))?'missing-localization':'explained',role);
 const condition=(n:Node,text:string)=>item(n,text,'state-unknown','condition');
+const characterGap=(n:Node)=>unresolved(n,'unsupported','Character existence, nationality and country-leader role eligibility are unresolved; no actual leader transition is certified.');
 const namedCondition=(n:Node,text:string,id:string,lookup:NameLookup)=>({...namedItem(n,text,id,lookup,'condition'),status:localizedName(id,lookup)===id||/[\[\]$]/.test(localizedName(id,lookup))?'missing-localization' as const:'state-unknown' as const});
 function boundedMap(nodes:Node[],c:ExplainContext,explain:(n:Node)=>Explanation):Explanation[]{
  const out:Explanation[]=[];
@@ -125,6 +126,7 @@ export function explainConditions(nodes:Node[],lookup:NameLookup=id=>id,c=defaul
   if(['state','is_core_of','is_fully_controlled_by','is_controlled_by'].includes(k)&&c.current.kind!=='state')return missingScope(n);
   if(['has_completed_focus','has_tech','has_government','has_idea','has_war','is_subject','has_war_with','is_in_faction_with','has_full_control_of_state','is_subject_of'].includes(k)&&c.current.kind!=='country')return missingScope(n);
   const amount=literal(v),comparison:Record<string,string>={'=':'at least','>':'more than','<':'less than','>=':'at least','<=':'at most'};
+  if(['neutrality','democratic','fascism','communism'].includes(k)&&c.current.kind==='country'&&amount!==null&&amount>=0&&amount<=1&&comparison[n.op||'='])return condition(n,`${c.current.label} must have ${comparison[n.op||'=']} ${number(amount*100)}% ${name(k,lookup)} popularity.`);
   if(k==='has_stability'&&c.current.kind==='country'&&amount!==null&&amount>=0&&amount<=1&&comparison[n.op||'='])return condition(n,`${c.current.label} must have ${comparison[n.op||'=']} ${number(amount*100)}% stability.`);
   const amounts:Record<string,string>={political_power:'political power',command_power:'command power',num_of_civilian_factories_available_for_projects:'civilian factories available for projects'};
   if(amounts[k]&&amount!==null&&comparison[n.op||'='])return condition(n,`${c.current.label} needs ${comparison[n.op||'=']} ${number(amount)} ${amounts[k]}.`);
@@ -140,6 +142,7 @@ export function explainConditions(nodes:Node[],lookup:NameLookup=id=>id,c=defaul
   const relations:Record<string,string>={is_subject_of:'be a subject of',has_war_with:'be at war with',is_in_faction_with:'share a faction with',is_core_of:'be a core of',is_fully_controlled_by:'be fully controlled by',is_controlled_by:'be controlled by',has_full_control_of_state:'fully control'};
   if(relations[k]){const who=target(v,lookup,c);return who?condition(n,`${c.current.label} must ${relations[k]} ${who}.`):missingScope(n);}
   if(k==='country_exists'){const who=target(v,lookup,c);return who?condition(n,`${who} must exist.`):missingScope(n);}
+  if(['owns_state','controls_state'].includes(k)&&c.current.kind==='country'&&/^\d+$/.test(v))return condition(n,`${c.current.label} must ${k==='owns_state'?'own':'control'} ${entity(v,lookup,c)!.label}. Ownership and control are separate requirements.`);
   if(k==='has_government')return condition(n,`Government must match ${target(v,lookup,c)||name(v,lookup)}.`);
   if(k==='has_idea')return namedCondition(n,`Must have national spirit / idea: ${name(v,lookup)}.`,v,lookup);
   if(k==='has_active_mission')return namedCondition(n,`Mission must be active: ${name(v,lookup)}.`,v,lookup);
@@ -171,6 +174,9 @@ export function explainEffects(nodes:Node[],lookup:NameLookup=id=>id,depth=0,c=d
   }
   if(Array.isArray(n.value)){
    const ns=n.value,get=(key:string)=>scalar(ns,key);
+   if(k==='set_politics'&&c.current.kind==='country'&&valid(ns,['ruling_party','elections_allowed','long_name','name'])&&ns.every(x=>typeof x.value==='string'&&(!x.op||x.op==='='))&&['neutrality','democratic','fascism','communism'].includes(get('ruling_party'))&&['','yes','no'].includes(get('elections_allowed'))&&!ns.some(x=>/[\[\]$?]/.test(String(x.value))))return [item(n,`Set ${c.current.label}’s ruling party to ${name(get('ruling_party'),lookup)}${get('elections_allowed')?`; ${get('elections_allowed')==='yes'?'allow':'disallow'} elections`:''}. This does not set party popularity or identify the country leader.`)];
+   if(k==='set_popularities'&&c.current.kind==='country'&&valid(ns,['neutrality','democratic','fascism','communism'])&&ns.length&&ns.every(x=>(!x.op||x.op==='=')&&literal(x.value)!==null&&Number(x.value)>=0&&Number(x.value)<=100)&&Math.abs(ns.reduce((sum,x)=>sum+Number(x.value),0)-100)<1e-9)return [item(n,`Set party popularities in ${c.current.label}: ${ns.map(x=>`${name(x.key,lookup)} ${number(Number(x.value))}%`).join(', ')}; omitted ideologies become 0%. These are assigned shares, not percentage-point changes.`)];
+   if(k==='promote_character'&&c.current.kind==='country'&&valid(ns,['character','ideology'])&&ns.every(x=>!x.op||x.op==='=')&&get('character')&&get('ideology')&&/^[A-Za-z0-9_]+$/.test(get('character'))&&/^[A-Za-z0-9_]+$/.test(get('ideology')))return [item(n,`Promote ${name(get('character'),lookup)} to head of the ${name(get('ideology'),lookup)} party in ${c.current.label}; becomes country leader only if that party rules and the character has the required role. Role eligibility and current leadership are not evaluated.`,'conditional','effect',[characterGap(n)])];
    if(k==='start_civil_war'&&c.current.kind==='country'&&get('ideology')&&!/[\[\]$?]/.test(get('ideology'))){
     // Installed effect documentation confirms the consequence, not runtime force allocation or victory.
     return [item(n,`Start a ${name(get('ideology'),lookup)} civil war in ${c.current.label}. Force allocation and outcome remain unresolved.`,'conditional','effect',[
@@ -217,6 +223,7 @@ export function explainEffects(nodes:Node[],lookup:NameLookup=id=>id,depth=0,c=d
   if(['set_country_flag','clr_country_flag','set_global_flag','clr_global_flag','set_state_flag','clr_state_flag'].includes(k))return [item(n,`${k.startsWith('set')?'Set':'Clear'} a ${k.includes('global')?'global':k.includes('state')?'state':'country'} script flag. This is bookkeeping, not a quantified reward.`,'explained','administrative')];
   if(k==='add_core_of'&&c.current.kind==='state'){const who=entity(v,lookup,c);return who?.kind==='country'?[item(n,`${c.current.label} becomes a core of ${who.label}.`)]:[missingScope(n)];}
   if(c.current.kind!=='country')return [missingScope(n)];
+  if(k==='promote_character'&&/^[A-Za-z0-9_]+$/.test(v))return [item(n,`Promote ${name(v,lookup)} to head of their political party in ${c.current.label}; becomes country leader only if that party rules. Multiple leader roles require an explicit ideology; character eligibility and current leadership are not evaluated.`,'conditional','effect',[characterGap(n)])];
   const units:Record<string,string>={add_political_power:'political power',add_manpower:'manpower',add_command_power:'command power',army_experience:'army experience',navy_experience:'naval experience',air_experience:'air experience'};
   if(units[k]&&amount!==null)return [item(n,`${amount<0?'Lose':'Gain'} ${number(Math.abs(amount))} ${units[k]}.`)];
   if(['add_stability','add_war_support'].includes(k)&&amount!==null)return [item(n,`${amount<0?'Decrease':'Increase'} ${k==='add_stability'?'stability':'war support'} by ${number(Math.abs(amount)*100)} percentage points.`)];

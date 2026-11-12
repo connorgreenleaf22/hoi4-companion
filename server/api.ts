@@ -24,6 +24,8 @@ import {callBridgeTool} from './bridge/tools';
 import {McpConnection} from './bridge/mcp-connection';
 import {explorePaths,compareStrategies,planningSources} from './planner/strategy';
 import {reviewPlanCoverage,reviewProposal} from './planner/coverage';
+import {summarizePath} from './planner/path-summary';
+import {resolveFocus} from './planner/projection';
 import {AiPlanningService} from './planner/ai';
 import type {PlanningProvider} from './planner/ai-provider';
 import {evaluatePlanner} from './planner/evaluate';
@@ -204,6 +206,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
           if(input.indexRevision!==(meta?.indexRevision||'legacy'))throw new PlanConflict('reference-conflict','References changed; refresh the planner before exploring.');
           const sources=planningSources(meta,bridge.environment());
           if(route==='strategy/review'){
+            if(input.includePathSummary!==undefined&&typeof input.includePathSummary!=='boolean')throw Error('includePathSummary must be a boolean.');
             const saved=store.profile(profile.id);if(saved&&saved.revision!==profile.revision)throw new PlanConflict('profile-conflict','Campaign changed; reload before reviewing this draft.');
             if(input.schemaVersion!==1||!['provisional','rank','optimize'].includes(input.intent))throw Error('Choose a version-1 proposal and supported review intent.');
             if(!Array.isArray(input.supportingReferences)||input.supportingReferences.length>50||input.supportingReferences.some((r:unknown)=>typeof r!=='string'||r.length>800))throw Error('Supply at most fifty supporting decision/technology references.');
@@ -211,7 +214,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
             const supporting=input.supportingReferences.map((ref:string)=>{const e=store.entry(ref);if(!e||!['decision','technology','formable'].includes(e.kind))throw Error('Supporting reference missing, ambiguous or unsupported: '+ref);return e;});
             const report=evaluatePlanner(profile,plan,focuses,{tree,dlcs:meta?.dlcs||[],indexRevision:sources.indexRevision});
             const result=reviewProposal(input.intent,reviewPlanCoverage(profile,plan,focuses,tree,report,sources,supporting,store.entry));
-            return send(res,result.allowed?200:422,result);
+            return send(res,result.allowed?200:422,input.includePathSummary?{...result,pathSummary:summarizePath(result.coverage,plan.items.flatMap(i=>{const e=resolveFocus(i.reference,focuses).entry;return e?[e]:[];}),tree)}:result);
           }
           if(route==='strategy/paths'){
             if(typeof input.goal!=='string'||input.goal.length>800)throw Error('Choose a valid focus objective.');
