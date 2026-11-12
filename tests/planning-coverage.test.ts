@@ -70,6 +70,13 @@ test('path summary preserves scoped choice guards and exact nested evidence with
  const unsupported=review([focus('B','completion_reward={set_popularities={neutrality=variable} start_civil_war={ideology=fascism size=unknown}}')]);const u=summarizePath(unsupported,[focus('B')],tree);assert.ok(u.unsupported.total>0);assert.equal(u.policy.confidentRecommendationAllowed,false);assert.ok(u.recommendations.some(r=>r.text.includes('civil-war')));
 });
 
+test('briefs render prerequisite gates and propagate nested unknown guards and administrative flags',()=>{
+ const es=[focus('A','available={neutrality>0.4 controls_state=9} completion_reward={if={limit={has_country_flag=test unknown_trigger=yes} add_political_power=12}}')];
+ const s=summarizePath(review(es),es,tree),fact=s.milestones[0].consequences[0];
+ assert.equal(fact.unresolvedContext,true);assert.match(fact.appliesWhen.join(' '),/script flag must be set/);assert.match(fact.appliesWhen.join(' '),/condition is not interpreted/);
+ const rendered=renderPathBrief(s);assert.match(rendered,/more than 40%/);assert.match(rendered,/control state 9/);assert.match(rendered,/Source: fixture.txt/);
+});
+
 test('empty root prerequisite blocks match the importer and permit structural route exploration',()=>{
  const root=focus('A','prerequisite={} mutually_exclusive={}');const result=explorePaths(profile,plan([]),'A',[root],tree,null,sources);
  assert.equal(result.paths.length,1);assert.equal(result.paths[0].coverage.structuralValidity,'valid');
@@ -92,7 +99,7 @@ test('HTTP coverage exposes caller-bound event branches and invalidates downstre
  try{
   app.store.insert(tree);app.store.insert(focus('A','completion_reward={if={limit={has_dlc="Fixture DLC"} BRA={country_event={id=union.10 hours=6}}} else={BRA={country_event=union.11}}}'));
   eventEntries.forEach(e=>app.store.insert(e));app.store.setSetting('meta',{version:'fixture',indexRevision:'fixture',mods:[],dlcs:[]});
-  const input={schemaVersion:1,profile,plan:plan(['A']),supportingReferences:[],indexRevision:'fixture',intent:'provisional'};
+  const input={schemaVersion:1,profile,plan:plan(['A']),supportingReferences:[],indexRevision:'fixture',intent:'provisional',includePathSummary:true};
   const first=await post(input);assert.equal(first.status,200);const c=first.value.coverage;
   const text=JSON.stringify(c.references);assert.match(text,/annexes BRA and receives its troops/);assert.match(text,/annexation war goal against BRA/);assert.match(text,/Requires Fixture DLC/);assert.match(text,/Otherwise/);
   assert.ok(c.events.some((e:any)=>e.id==='union.12'&&e.reference));assert.ok(!c.events.some((e:any)=>e.id==='tooltip.99'));
@@ -103,8 +110,10 @@ test('HTTP coverage exposes caller-bound event branches and invalidates downstre
   const changed=await post(input);assert.notEqual(changed.value.coverage.reviewFingerprint,c.reviewFingerprint);
   const union=eventEntries.find(e=>e.id==='union.10')!;app.store.insert({...union,version:'changed-patch'});
   const mismatch=await post(input);assert.match(JSON.stringify(mismatch.value.coverage.references),/patch-mismatched/);assert.ok(!JSON.stringify(mismatch.value.coverage.references).includes('annexes'));
+  assert.ok(!JSON.stringify(mismatch.value.pathSummary.milestones).includes('annexes'));assert.equal(mismatch.value.pathSummary.policy.rankingAllowed,false);
   assert.equal((await post({...input,intent:'optimize'})).status,422);
   app.store.insert({...union,uid:'event-duplicate'});
   const ambiguous=await post(input);assert.match(JSON.stringify(ambiguous.value.coverage.references),/missing or ambiguous/);assert.ok(!JSON.stringify(ambiguous.value.coverage.references).includes('annexes'));
+  assert.ok(!JSON.stringify(ambiguous.value.pathSummary.branches).includes('annexes'));
  }finally{await app.close();fs.rmSync(dir,{recursive:true,force:true});}
 });
