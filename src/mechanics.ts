@@ -1,4 +1,5 @@
 import type {Entry,Node,RequirementResult} from './types';
+import {focusExclusions} from './focus-structure';
 import {explainConditions,explainEffects,explainModifiers,explainEvent,defaultContext,literal,number,unresolved,type Explanation,type NameLookup,type ExplainContext} from './mechanics-interpreter';
 export {explainConditions,explainEffects,explanationPreview} from './mechanics-interpreter';
 export type {Explanation,NameLookup,ExplanationStatus} from './mechanics-interpreter';
@@ -34,7 +35,8 @@ export function entryMechanics(entry:Entry,lookup:NameLookup=id=>entry.data.mech
  }
  requirements.push(...(entry.data.prerequisites||[]).map((g:string[],i:number)=>({text:`Requirement ${i+1} — ${g.length>1?'complete at least one of':'complete'}: ${g.map(id=>named(id,lookup)).join(' OR ')}.`,status:'state-unknown' as const,role:'condition' as const})));
  if(requirements.length>1)requirements.unshift({text:'Every numbered requirement below is required (AND).',status:'state-unknown',role:'condition'});
- if(entry.data.exclusive?.length)requirements.push({text:`Choose a different branch if already completed: ${entry.data.exclusive.map((id:string)=>named(id,lookup)).join(', ')}. These focuses are mutually exclusive.`,status:'state-unknown',role:'condition'});
+ const exclusions=focus?focusExclusions(entry.data.nodes,entry.data.exclusive):entry.data.exclusive;
+ if(exclusions?.length)requirements.push({text:`Choose a different branch if already completed: ${exclusions.map((id:string)=>named(id,lookup)).join(', ')}. These focuses are mutually exclusive.`,status:'state-unknown',role:'condition'});
  const labels:Record<string,string>={available:'To start',allowed:'Eligibility',allow:'Eligibility',visible:'To appear',activation:'Mission activation',allow_branch:'For this branch to appear',bypass:'May be skipped if',cancel:'May be cancelled if',cancel_trigger:'Cancelled when',target_trigger:'Target requirements',custom_cost_trigger:'Additional resource requirement'};
  const addRequirements=(ns:Node[],prefix='')=>{for(const n of ns)if(labels[n.key]&&Array.isArray(n.value)&&n.value.length)requirements.push({text:prefix+labels[n.key]+':',status:'state-unknown',role:'condition',code:n.key,line:n.line,children:explainConditions(n.value,lookup,ctx)});};
  addRequirements(nodes);addRequirements(entry.data.inheritedConditions||[],'Category: ');addRequirements(entry.data.categoryConditions||[],'Category: ');

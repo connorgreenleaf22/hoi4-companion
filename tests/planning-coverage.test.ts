@@ -1,6 +1,8 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
 import {validateProfile,startServer} from '../server/api';import {parseScript} from '../server/parser';import {evaluatePlanner} from '../server/planner/evaluate';import {reviewPlanCoverage,rankCoverageGaps,reviewProposal} from '../server/planner/coverage';import {entryMechanics,explanationPreview} from '../src/mechanics';
 import {explorePaths} from '../server/planner/strategy';
+import {summarizePath,renderPathBrief} from '../server/planner/path-summary';
+import {treeFocuses} from '../server/domain';import {focusExclusions} from '../src/focus-structure';
 import type {Entry,CampaignPlan} from '../src/types';
 const profile=validateProfile({id:'coverage',country:'POR',tree:'tree',startDate:'1936-01-01',completed:[]});
 const tree:Entry={uid:'tree',id:'tree',title:'Fixture tree',kind:'focus_tree',source:'fixture.txt',line:1,hash:'fixture',version:'fixture',description:'',data:{countries:['POR']}};
@@ -17,6 +19,14 @@ test('source-valid simple path stays editable and provisional; coverage never qu
 test('reverse exclusions veto a proposed route even when earlier availability is unknown',()=>{
  const es=[focus('A','available={has_war=yes} mutually_exclusive={focus=B}',{exclusive:['B']}),focus('B')];
  const r=review(es);assert.equal(r.structuralValidity,'invalid');assert.equal(reviewProposal('provisional',r).allowed,false);assert.ok(r.gaps.some(g=>g.dimension==='branch-conflicts'&&g.kind==='structure'));
+});
+
+test('repeated exclusion blocks survive cached derived fields and reject both political branches',()=>{
+ const cached=[focus('A','mutually_exclusive={focus=B} mutually_exclusive={focus=C}',{exclusive:['B']}),focus('B'),focus('C','mutually_exclusive={focus=B} mutually_exclusive={focus=A}',{exclusive:['B']})];
+ const normalized=treeFocuses(tree,cached);assert.deepEqual(normalized[0].data.exclusive,['B','C']);assert.equal(review(normalized,['A','C']).structuralValidity,'invalid');assert.equal(review(normalized,['A']).structuralValidity,'valid');
+ assert.deepEqual(cached[0].data.exclusive,['B'],'read-time normalization must not mutate retained entries');assert.match(JSON.stringify(entryMechanics(cached[0]).requirements),/B, C/);
+ assert.deepEqual(focusExclusions(parseScript('mutually_exclusive={} mutually_exclusive={focus=B focus=B} wrapper={mutually_exclusive={focus=C}}')),['B']);
+ const malformed=treeFocuses(tree,[focus('A','mutually_exclusive=yes')]);assert.equal(review(malformed).structuralValidity,'unknown');
 });
 test('partial civil-war explanation preserves stability guard, scope, known siblings and explicit unknown allocation',()=>{
  const e=focus('restoration','completion_reward={if={limit={has_stability<0.4} start_civil_war={ideology=fascism size=unresolved_variable states={181}}} else={add_stability=-0.1} add_political_power=25}');
@@ -49,12 +59,31 @@ test('HTTP proposal boundary rejects forged confidence, stale references and opt
   app.store.insert(tree);app.store.insert(focus('A','completion_reward={add_political_power=5}'));app.store.insert(focus('B','prerequisite={focus=A}',{prerequisites:[['A']]}));app.store.setSetting('meta',{version:'fixture',indexRevision:'fixture',mods:[],dlcs:[]});
   const input={schemaVersion:1,profile,plan:plan(['A','B']),supportingReferences:[],indexRevision:'fixture',intent:'provisional'};
   const ok=await post(input);assert.equal(ok.status,200);assert.equal(ok.value.coverage.structuralValidity,'valid');assert.equal(ok.value.coverage.references.length,2);
+  assert.equal(ok.value.pathSummary,undefined);
+  const summary=await post({...input,includePathSummary:true});assert.equal(summary.status,200);assert.equal(summary.value.pathSummary.milestones.length,2);assert.deepEqual(summary.value.pathSummary.policy,summary.value.coverage.policy);assert.equal(summary.value.pathSummary.reviewFingerprint,summary.value.coverage.reviewFingerprint);assert.equal(summary.value.pathSummary.documentedExternalStrategy.length,0);
+  const restricted=await post({...input,includePathSummary:true,intent:'optimize'});assert.equal(restricted.status,422);assert.equal(restricted.value.allowed,false);assert.equal(restricted.value.pathSummary.policy.optimizationAllowed,false);
+  assert.equal((await post({...input,includePathSummary:'yes'})).status,400);
   for(const intent of ['rank','optimize']){const bad=await post({...input,intent,coverage:{rankingAllowed:true},confidence:1});assert.equal(bad.status,422);assert.equal(bad.value.allowed,false);assert.equal(bad.value.coverage.policy.rankingAllowed,false);}
   assert.equal((await post({...input,plan:plan(['B','A'])})).status,422);assert.equal((await post({...input,indexRevision:'stale'})).status,409);assert.equal((await post({...input,supportingReferences:['not-a-reference']})).status,400);
   assert.equal(app.store.profile('coverage'),null);assert.deepEqual(input.plan.items.map(x=>x.reference),['A','B']);
   const changed=await post({...input,plan:{...input.plan,assumptions:['Changed scenario']}});assert.notEqual(changed.value.coverage.reviewFingerprint,ok.value.coverage.reviewFingerprint);
   app.store.saveProfile(profile,{semanticApply:true});assert.equal((await post({...input,profile:{...profile,revision:99}})).status,409);
  }finally{await app.close();fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('path summary preserves scoped choice guards and exact nested evidence with visible bounds',()=>{
+ const es=[focus('A','completion_reward={add_political_power=10}')],c=review(es);
+ c.references[0].summary=[{text:'Only if source condition holds',status:'conditional',children:[{text:'Option: accept',code:'option',status:'conditional',evidence:[{source:'events/fixture.txt',line:22,hash:'eventhash',version:'fixture'}],children:[{text:'Recipient annexes target',code:'annex_country',role:'effect',line:25}]}]}];
+ const s=summarizePath(c,es,tree);assert.deepEqual(s.policy,c.policy);assert.equal(s.verification,'source-only');assert.equal(s.milestones[0].consequences[0].evidence[0].source,'events/fixture.txt');assert.equal(s.milestones[0].consequences[0].evidence[0].line,25);assert.ok(s.milestones[0].consequences[0].appliesWhen.includes('Only if source condition holds'));assert.match(renderPathBrief(s),/Option: accept/);assert.ok(s.recommendations.every(r=>r.classification==='rules-based-inference'));
+ c.references[0].summary=Array.from({length:100},()=>({text:'Option',code:'option',status:'conditional'}));const bounded=summarizePath(c,es,tree);assert.equal(bounded.branches.length,16);assert.equal(bounded.omittedBranches,84);
+ const unsupported=review([focus('B','completion_reward={set_popularities={neutrality=variable} start_civil_war={ideology=fascism size=unknown}}')]);const u=summarizePath(unsupported,[focus('B')],tree);assert.ok(u.unsupported.total>0);assert.equal(u.policy.confidentRecommendationAllowed,false);assert.ok(u.recommendations.some(r=>r.text.includes('civil-war')));
+});
+
+test('briefs render prerequisite gates and propagate nested unknown guards and administrative flags',()=>{
+ const es=[focus('A','available={neutrality>0.4 controls_state=9} completion_reward={if={limit={has_country_flag=test unknown_trigger=yes} add_political_power=12}}')];
+ const s=summarizePath(review(es),es,tree),fact=s.milestones[0].consequences[0];
+ assert.equal(fact.unresolvedContext,true);assert.match(fact.appliesWhen.join(' '),/script flag must be set/);assert.match(fact.appliesWhen.join(' '),/condition is not interpreted/);
+ const rendered=renderPathBrief(s);assert.match(rendered,/more than 40%/);assert.match(rendered,/control state 9/);assert.match(rendered,/Source: fixture.txt/);
 });
 
 test('empty root prerequisite blocks match the importer and permit structural route exploration',()=>{
@@ -79,7 +108,7 @@ test('HTTP coverage exposes caller-bound event branches and invalidates downstre
  try{
   app.store.insert(tree);app.store.insert(focus('A','completion_reward={if={limit={has_dlc="Fixture DLC"} BRA={country_event={id=union.10 hours=6}}} else={BRA={country_event=union.11}}}'));
   eventEntries.forEach(e=>app.store.insert(e));app.store.setSetting('meta',{version:'fixture',indexRevision:'fixture',mods:[],dlcs:[]});
-  const input={schemaVersion:1,profile,plan:plan(['A']),supportingReferences:[],indexRevision:'fixture',intent:'provisional'};
+  const input={schemaVersion:1,profile,plan:plan(['A']),supportingReferences:[],indexRevision:'fixture',intent:'provisional',includePathSummary:true};
   const first=await post(input);assert.equal(first.status,200);const c=first.value.coverage;
   const text=JSON.stringify(c.references);assert.match(text,/annexes BRA and receives its troops/);assert.match(text,/annexation war goal against BRA/);assert.match(text,/Requires Fixture DLC/);assert.match(text,/Otherwise/);
   assert.ok(c.events.some((e:any)=>e.id==='union.12'&&e.reference));assert.ok(!c.events.some((e:any)=>e.id==='tooltip.99'));
@@ -90,8 +119,10 @@ test('HTTP coverage exposes caller-bound event branches and invalidates downstre
   const changed=await post(input);assert.notEqual(changed.value.coverage.reviewFingerprint,c.reviewFingerprint);
   const union=eventEntries.find(e=>e.id==='union.10')!;app.store.insert({...union,version:'changed-patch'});
   const mismatch=await post(input);assert.match(JSON.stringify(mismatch.value.coverage.references),/patch-mismatched/);assert.ok(!JSON.stringify(mismatch.value.coverage.references).includes('annexes'));
+  assert.ok(!JSON.stringify(mismatch.value.pathSummary.milestones).includes('annexes'));assert.equal(mismatch.value.pathSummary.policy.rankingAllowed,false);
   assert.equal((await post({...input,intent:'optimize'})).status,422);
   app.store.insert({...union,uid:'event-duplicate'});
   const ambiguous=await post(input);assert.match(JSON.stringify(ambiguous.value.coverage.references),/missing or ambiguous/);assert.ok(!JSON.stringify(ambiguous.value.coverage.references).includes('annexes'));
+  assert.ok(!JSON.stringify(ambiguous.value.pathSummary.branches).includes('annexes'));
  }finally{await app.close();fs.rmSync(dir,{recursive:true,force:true});}
 });

@@ -2,6 +2,24 @@ import {test} from 'node:test';import assert from 'node:assert/strict';import {p
 const entry=(script:string,data:any={}):Entry=>({uid:'fixture',id:'test',kind:'decision',title:'Fixture',description:'',source:'synthetic',line:1,hash:'fixture',version:'fixture',data:{nodes:parseScript(script),...data}});
 const names:Record<string,string>={GER:'Germany',ITA:'Italy',BEL:'Belgium',STATE_9:'Bohemia',spirit:'Emergency Measures',A:'Known focus',tech:'Known technology','event.1':'Help arrives'};const lookup=(id:string)=>names[id]||id;
 const flat=(xs:any[]):any[]=>xs.flatMap(e=>[e,...flat(e.children||[])]);
+
+test('literal government assignment and popularity shares have distinct units and scope',()=>{
+ const xs=explainEffects(parseScript('set_politics={ruling_party=neutrality elections_allowed=no} set_popularities={neutrality=70 democratic=30}'),lookup);
+ assert.match(xs[0].text,/ruling party to neutrality; disallow elections/);assert.match(xs[0].text,/does not set party popularity/);
+ assert.match(xs[1].text,/neutrality 70%, democratic 30%; omitted ideologies become 0%/);assert.ok(xs.every(x=>x.status==='explained'));
+ for(const script of ['set_politics={ruling_party=variable elections_allowed=no}','set_politics={ruling_party=neutrality elections_allowed=perhaps}','set_politics={ruling_party=neutrality ruling_party=fascism}','set_politics={ruling_party>neutrality}','set_popularities={neutrality=1}','set_popularities={neutrality=101 democratic=-1}','set_popularities={neutrality=dynamic}','set_popularities={neutrality=50 neutrality=50}','set_popularities={neutrality=100 extra=0}'])assert.equal(explainEffects(parseScript(script))[0].unknown,true,script);
+ assert.equal(explainEffects(parseScript('9={set_popularities={neutrality=100}}'))[0].children![0].unknown,true);
+});
+test('popularity, ownership and control requirements remain campaign unknowns and respect comparison operators',()=>{
+ const xs=explainConditions(parseScript('neutrality>0.3 fascism=0.4 owns_state=9 controls_state=9'),lookup);
+ assert.match(xs[0].text,/more than 30% neutrality popularity/);assert.match(xs[1].text,/at least 40%/);assert.match(xs[2].text,/own Bohemia/);assert.match(xs[3].text,/control Bohemia/);assert.ok(xs.every(x=>x.status==='state-unknown'&&!x.unknown));
+ for(const script of ['neutrality>30','neutrality=dynamic','owns_state=FROM','controls_state>9','9={neutrality>0.3}'])assert.ok(flat(explainConditions(parseScript(script))).some(x=>x.unknown),script);
+});
+test('character promotion is conditional on roles and ruling party and never asserts a known leader',()=>{
+ const xs=explainEffects(parseScript('promote_character=TEST_person promote_character={character=TEST_other ideology=despotism}'),lookup);
+ assert.ok(xs.every(x=>x.status==='conditional'));assert.match(xs[0].text,/only if that party rules/);assert.match(xs[0].text,/Multiple leader roles require an explicit ideology/);assert.match(xs[1].text,/eligibility and current leadership are not evaluated/);
+ for(const script of ['promote_character=event_target:person','promote_character={character=TEST_person}','promote_character={character=TEST_person ideology=x extra=yes}','9={promote_character=TEST_person}'])assert.ok(flat(explainEffects(parseScript(script))).some(x=>x.unknown),script);
+});
 test('timed spirit preserves recipient duration and every linked modifier in compact preview',()=>{
  const e=entry('cost=100 complete_effect={ ITA={add_timed_idea={idea=spirit days=180}}}',{mechanicIdeas:{spirit:{modifiers:parseScript('industrial_capacity_factory=0.25 production_speed_arms_factory_factor=-0.15 production_speed_industrial_complex_factor=-0.15')}}});
  const m=entryMechanics(e,lookup),preview=explanationPreview(m.summary);assert.equal(preview.length,1);assert.match(preview[0].text,/Italy/);assert.match(preview[0].text,/180 days/);assert.match(preview[0].text,/Factory output: \+25%/);assert.match(preview[0].text,/Military factory construction speed: -15%/);assert.match(preview[0].text,/Civilian factory construction speed: -15%/);assert.equal(m.summary[0].text,'100 political power (base cost).');
