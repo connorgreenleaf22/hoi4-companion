@@ -115,3 +115,26 @@ test('unknown usage holds reservation and prevents spending the remaining sessio
   input.instruction='Different request';ctx=(await post('ai/context',input)).value;const next=await post('ai/generate',{...input,contextFingerprint:ctx.fingerprint,quoteFingerprint:ctx.quoteFingerprint,overThresholdApproved:true,requestId:randomUUID(),disclosureAccepted:true});assert.match(next.value.error,/Session budget/);assert.equal(calls,1);
  });
 });
+
+
+test('outgoing context preserves source requirements, costs, years and explicit interpretation gaps',async()=>{
+ await fixture({name:'offline-never-called',async generate(){throw Error('Provider must not be called');}},async({post,input,app})=>{
+  app.store.insert(focus('B','available={has_government=neutrality OR={has_stability>0.4 has_war_support>0.5}} completion_reward={add_stability=0.1 unsupported_reward=yes\n unsupported_reward=no}',{prerequisites:[['A']]}));
+  app.store.insert({...tree,uid:'decision',id:'POR_monarchist_fixture',title:'Monarchist fixture',kind:'decision',data:{nodes:parseScript('cost=25 available={has_government=neutrality} complete_effect={add_political_power=5}')}});
+  const ctx=(await post('ai/context',input)).value;
+  const b=ctx.references.find((r:any)=>r.id==='B'),tech=ctx.references.find((r:any)=>r.id==='tools'),decision=ctx.references.find((r:any)=>r.id==='POR_monarchist_fixture');
+  assert.match(JSON.stringify(b.requirements),/Government must match/);assert.match(JSON.stringify(b.requirements),/At least one|Any of/i);assert.match(JSON.stringify(b.requirements),/40%|40 percent/);assert.match(JSON.stringify(b.requirements),/unsupported: has_war_support/);
+  assert.match(JSON.stringify(b.costsAndTiming),/70 nominal days/);assert.match(JSON.stringify(tech.costsAndTiming),/1,936/);assert.match(JSON.stringify(decision.costsAndTiming),/25 political power/);
+  assert.match(JSON.stringify(b.interpretationGaps),/unsupported_reward/);assert.equal(b.interpretationGaps.find((g:any)=>g.code==='unsupported_reward').locations.length,2);assert.match(JSON.stringify(b.summary),/10 percentage points/);
+ });
+});
+
+
+test('outgoing uncertainty locations retain helper provenance and nearer idea provenance',async()=>{
+ await fixture({name:'offline-never-called',async generate(){throw Error('Provider must not be called');}},async({post,input,app})=>{
+  app.store.insert(focus('B','completion_reward={fixture_helper=yes}',{mechanicScripts:{fixture_helper:{nodes:parseScript('unsupported_reward=yes add_ideas=fixture_spirit'),source:'common/scripted_effects/fixture.txt',line:11,hash:'helper-hash',version:'helper-version'}},mechanicIdeas:{fixture_spirit:{modifiers:parseScript('unsupported_modifier=0.1'),source:'common/ideas/fixture.txt',line:21,hash:'idea-hash',version:'idea-version'}}}));
+  const ctx=(await post('ai/context',input)).value,b=ctx.references.find((r:any)=>r.id==='B');
+  assert.deepEqual(b.interpretationGaps.find((g:any)=>g.code==='unsupported_reward').locations,[{source:'common/scripted_effects/fixture.txt',line:1,hash:'helper-hash',version:'helper-version'}]);
+  assert.deepEqual(b.interpretationGaps.find((g:any)=>g.code==='unsupported_modifier').locations,[{source:'common/ideas/fixture.txt',line:1,hash:'idea-hash',version:'idea-version'}]);
+ });
+});
