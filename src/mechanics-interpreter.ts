@@ -89,7 +89,7 @@ function eventCall(n:Node,lookup:NameLookup,c:ExplainContext,depth:number):Expla
  const random=Number(scalar(ns,'random_hours'))+24*Number(scalar(ns,'random_days'))+Number(scalar(ns,'random'));
  if(!Number.isSafeInteger(base+random))return unresolved(n);
  const baseText=['hours','days','months'].filter(k=>scalar(ns,k)).map(k=>`${scalar(ns,k)} ${k}${k==='months'?' (30 days each)':''}`).join(' + ');
- const timing=random?` after ${baseText||'0 hours'} plus a random delay from 0 up to ${number(random)} hours (upper bound excluded; combined range, not a uniform probability)`:(baseText?` after ${baseText}`:' immediately');
+ const timing=random?` after ${baseText||'0 hours'} plus a random delay from 0 up to ${number(random)} hours (upper bound excluded; conservative combined bound that may exceed the reachable range, not a uniform probability)`:(baseText?` after ${baseText}`:' immediately');
  const result=item(n,`Trigger ${n.key==='news_event'?'news ':''}event “${name(id,lookup)}” for ${c.current.label}${timing}. Event choices and later outcomes are separate; delivery remains conditional.`,'conditional');
  if(!c.resolveEvent)return result;
  const linked=c.resolveEvent(id),fail=(status:ExplanationStatus,text:string)=>{result.children=[unresolved(n,status,text)];return result;};

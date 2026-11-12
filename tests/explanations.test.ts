@@ -71,7 +71,7 @@ test('bounded event closure binds recipient ROOT and keeps accept/refuse paths, 
 test('event dispatch literal and random timing follows installed documented hour bounds; no probabilities inferred',()=>{
  const result=explainEffects(parseScript('news_event={id=news.1 hours=2 days=3 months=1 random_hours=7 random_days=2}'),lookup,0,eventContext());
  assert.match(result[0].text,/2 hours \+ 3 days \+ 1 months \(30 days each\)/);
- assert.match(result[0].text,/0 up to 55 hours \(upper bound excluded/);assert.match(result[0].text,/not a uniform probability/);
+ assert.match(result[0].text,/0 up to 55 hours \(upper bound excluded/);assert.match(result[0].text,/conservative combined bound that may exceed the reachable range/);assert.match(result[0].text,/not a uniform probability/);
  assert.equal(result[0].unknown,undefined);
  assert.match(explainEffects(parseScript('country_event={id=union.11 random=5 random_days=2}'),lookup,0,eventContext())[0].text,/0 up to 53 hours/);
  assert.ok(explainEffects(parseScript('country_event={id=union.11 random=5 random_hours=7}'),lookup,0,eventContext())[0].unknown);
