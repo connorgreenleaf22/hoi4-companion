@@ -1,5 +1,7 @@
 # HOI4 bridge status
 
+M7.4.1 (2026-11-11): bounded mechanical-knowledge candidate on `feature/hoi4-knowledge-mechanics`, runtime `1d58eb7b79f756620225998bed04ded9e5d16c74`, [draft PR #9](https://github.com/connorgreenleaf22/hoi4-companion/pull/9). Existing structured strategy review now expands conditional Portugal event branches with recipient ROOT, literal follow-ups/random timing and refusal war goals. Eight targeted route-output fields pass; Portugal blockers 104 to 197 from newly visible downstream uncertainty, not a coverage percentage. Source snapshot 1.19.4.2, 19 exact file pins/15 cited files verified; source-only independent review has no remaining blockers. Portable CI, build and fresh-extraction Companion launch/service/persistence pass; no native HOI4/provider run. Plans remain provisional, full event closure and owner acceptance open. See [report](../application/MILESTONE-7.4.1.md), [manifest](../milestones/M7.4.1.json), [remaining gaps #7](https://github.com/connorgreenleaf22/hoi4-companion/issues/7). PR #6/live-Q&A/UX work remain separate; no merge/release or HQ Page edit.
+
 Workflow update (2026-11-10): [development and independent QA procedure](../workflow/README.md); PR #3 approved and merged into `feature/hoi4-ai-m731` at `440d625`; default-branch rollout remains separately gated. Product milestone acceptance remains unchanged.
 
 ## M7.3.1 — Windows candidate delivered; paid acceptance open (2026-11-09)
