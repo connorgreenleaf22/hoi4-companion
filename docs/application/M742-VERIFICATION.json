@@ -14,6 +14,11 @@
     "comparisons": 5,
     "passed": true
   },
+  "fullInstalledIndexCheck": {
+    "passed": true,
+    "candidates": 7,
+    "scope": "Actual full disposable installed-source index via indexedDesignSource and existing SQLite resolver; no reindex or game/provider operation."
+  },
   "tests": {
     "focused": 37,
     "portable": 159,
@@ -72,7 +77,10 @@
     "runtimeSha": "44549fbc5216cf1b5f2f46190c523137f45fd8ce",
     "findings": [],
     "validation": "Independently passed 37 focused tests, typecheck and installed-source audit; checked arithmetic, fixed-model distinction, provenance and hosted fixture-only imports.",
-    "finalEvidenceReview": "pending",
+    "finalEvidenceReview": {
+      "reviewedDocumentationSha": "2c0cdc4cdd6e2276e17bf99dfd09dcbb9505f17c",
+      "disposition": "No blocking findings. Independently recomputed ZIP/EXE hashes, matched all 75 original/extracted files, both source/ASAR module hashes, extracted demo (7 candidates / 5 pairs), three Electron case records, source identity and absent owned processes. Inspected screenshot, validated schema and both hosted CI runs. Did not rerun UI."
+    },
     "notHumanGitHubApproval": true
   },
   "nativeGameLaunched": false,
