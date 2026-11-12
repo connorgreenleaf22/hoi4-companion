@@ -1,0 +1,753 @@
+{
+  "schemaVersion": 1,
+  "origin": "Numeric declarations and minimal dependency context from the retained isolated installed-source index, not computed division stats or observations.",
+  "entries": [
+    {
+      "uid": "unit:common/units/infantry.txt:infantry",
+      "id": "infantry",
+      "kind": "unit",
+      "title": "infantry",
+      "description": "",
+      "source": "common/units/infantry.txt",
+      "line": 7,
+      "version": "1.19.4.2",
+      "hash": "dfc319ec6ca807fdcffdd6f3555db0f8c2aa33897706630daf55339170225a60",
+      "data": {
+        "stats": {
+          "max_organisation": 60,
+          "supply_consumption": 0.06,
+          "combat_width": 2,
+          "manpower": 1000
+        },
+        "need": {
+          "infantry_equipment": 100
+        },
+        "group": "infantry",
+        "context": [
+          {
+            "key": "type",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "infantry",
+                "line": 17
+              }
+            ],
+            "line": 16
+          },
+          {
+            "key": "categories",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "category_front_line",
+                "line": 26
+              },
+              {
+                "key": "",
+                "value": "category_light_infantry",
+                "line": 27
+              },
+              {
+                "key": "",
+                "value": "category_all_infantry",
+                "line": 28
+              },
+              {
+                "key": "",
+                "value": "category_army",
+                "line": 29
+              },
+              {
+                "key": "",
+                "value": "category_infantry_and_bicycle",
+                "line": 30
+              }
+            ],
+            "line": 25
+          }
+        ]
+      }
+    },
+    {
+      "uid": "unit:common/units/artillery_brigade.txt:artillery_brigade",
+      "id": "artillery_brigade",
+      "kind": "unit",
+      "title": "artillery_brigade",
+      "description": "",
+      "source": "common/units/artillery_brigade.txt",
+      "line": 3,
+      "version": "1.19.4.2",
+      "hash": "9826452615dfa490c2167480c3e4695283d438e2a719df85fdef06a02d8b8541",
+      "data": {
+        "stats": {
+          "max_organisation": 0,
+          "supply_consumption": 0.21,
+          "combat_width": 3,
+          "manpower": 500
+        },
+        "need": {
+          "artillery_equipment": 24
+        },
+        "group": "combat_support",
+        "context": [
+          {
+            "key": "type",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "infantry",
+                "line": 13
+              },
+              {
+                "key": "",
+                "value": "artillery",
+                "line": 14
+              }
+            ],
+            "line": 12
+          },
+          {
+            "key": "categories",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "category_army",
+                "line": 20
+              },
+              {
+                "key": "",
+                "value": "category_line_artillery",
+                "line": 21
+              },
+              {
+                "key": "",
+                "value": "category_artillery",
+                "line": 22
+              }
+            ],
+            "line": 19
+          }
+        ]
+      }
+    },
+    {
+      "uid": "unit:common/units/infantry.txt:motorized",
+      "id": "motorized",
+      "kind": "unit",
+      "title": "motorized",
+      "description": "",
+      "source": "common/units/infantry.txt",
+      "line": 410,
+      "version": "1.19.4.2",
+      "hash": "dfc319ec6ca807fdcffdd6f3555db0f8c2aa33897706630daf55339170225a60",
+      "data": {
+        "stats": {
+          "max_organisation": 60,
+          "supply_consumption": 0.065,
+          "combat_width": 2,
+          "manpower": 1200
+        },
+        "need": {
+          "infantry_equipment": 100,
+          "motorized_equipment": 35
+        },
+        "transport": "motorized_equipment",
+        "group": "mobile",
+        "context": [
+          {
+            "key": "type",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "motorized",
+                "line": 420
+              }
+            ],
+            "line": 419
+          },
+          {
+            "key": "categories",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "category_front_line",
+                "line": 426
+              },
+              {
+                "key": "",
+                "value": "category_all_infantry",
+                "line": 427
+              },
+              {
+                "key": "",
+                "value": "category_army",
+                "line": 428
+              },
+              {
+                "key": "",
+                "value": "category_vehicle_infantry",
+                "line": 429
+              },
+              {
+                "key": "",
+                "value": "category_mobile_and_mobile_combat_sup",
+                "line": 430
+              }
+            ],
+            "line": 425
+          }
+        ]
+      }
+    },
+    {
+      "uid": "unit:common/units/medium_armor.txt:medium_armor",
+      "id": "medium_armor",
+      "kind": "unit",
+      "title": "medium_armor",
+      "description": "",
+      "source": "common/units/medium_armor.txt",
+      "line": 3,
+      "version": "1.19.4.2",
+      "hash": "6f6fa9612e07d0b37654032d4fea34b78d3daccbb0e40cb69badba942b0103b5",
+      "data": {
+        "stats": {
+          "max_organisation": 10,
+          "breakthrough": 0.15,
+          "supply_consumption": 0.25,
+          "combat_width": 2,
+          "manpower": 500
+        },
+        "need": {
+          "medium_tank_chassis": 50
+        },
+        "group": "armor",
+        "context": [
+          {
+            "key": "type",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "armor",
+                "line": 12
+              }
+            ],
+            "line": 11
+          },
+          {
+            "key": "categories",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "category_tanks",
+                "line": 18
+              },
+              {
+                "key": "",
+                "value": "category_front_line",
+                "line": 19
+              },
+              {
+                "key": "",
+                "value": "category_all_armor",
+                "line": 20
+              },
+              {
+                "key": "",
+                "value": "category_army",
+                "line": 21
+              }
+            ],
+            "line": 17
+          }
+        ]
+      }
+    },
+    {
+      "uid": "equipment:common/units/equipment/infantry.txt:infantry_equipment",
+      "id": "infantry_equipment",
+      "kind": "equipment",
+      "title": "infantry_equipment",
+      "description": "",
+      "source": "common/units/equipment/infantry.txt",
+      "line": 5,
+      "version": "1.19.4.2",
+      "hash": "0b2b15df8618b68ceb4892510c965f0d8618b365937fd8e12581a6d512e01cf1",
+      "data": {
+        "stats": {
+          "soft_attack": 3,
+          "hard_attack": 0.5,
+          "defense": 20,
+          "breakthrough": 2,
+          "armor_value": 0,
+          "ap_attack": 1,
+          "hardness": 0,
+          "maximum_speed": 4,
+          "build_cost_ic": 0.43
+        }
+      }
+    },
+    {
+      "uid": "equipment:common/units/equipment/infantry.txt:infantry_equipment_1",
+      "id": "infantry_equipment_1",
+      "kind": "equipment",
+      "title": "infantry_equipment_1",
+      "description": "",
+      "source": "common/units/equipment/infantry.txt",
+      "line": 56,
+      "version": "1.19.4.2",
+      "hash": "0b2b15df8618b68ceb4892510c965f0d8618b365937fd8e12581a6d512e01cf1",
+      "data": {
+        "stats": {
+          "soft_attack": 6,
+          "hard_attack": 1,
+          "defense": 22,
+          "breakthrough": 3,
+          "ap_attack": 4,
+          "build_cost_ic": 0.5
+        },
+        "archetype": "infantry_equipment",
+        "parent": "infantry_equipment_0"
+      }
+    },
+    {
+      "uid": "equipment:common/units/equipment/artillery.txt:artillery_equipment",
+      "id": "artillery_equipment",
+      "kind": "equipment",
+      "title": "artillery_equipment",
+      "description": "",
+      "source": "common/units/equipment/artillery.txt",
+      "line": 3,
+      "version": "1.19.4.2",
+      "hash": "c2288032e61a461af7b3fdb6765f72d256a502f5050567f51e25798bb690cd54",
+      "data": {
+        "stats": {
+          "soft_attack": 26,
+          "hard_attack": 2,
+          "defense": 11,
+          "breakthrough": 10,
+          "armor_value": 0,
+          "ap_attack": 5,
+          "hardness": 0,
+          "maximum_speed": 4,
+          "build_cost_ic": 3.5
+        }
+      }
+    },
+    {
+      "uid": "equipment:common/units/equipment/artillery.txt:artillery_equipment_1",
+      "id": "artillery_equipment_1",
+      "kind": "equipment",
+      "title": "artillery_equipment_1",
+      "description": "",
+      "source": "common/units/equipment/artillery.txt",
+      "line": 42,
+      "version": "1.19.4.2",
+      "hash": "c2288032e61a461af7b3fdb6765f72d256a502f5050567f51e25798bb690cd54",
+      "data": {
+        "stats": {},
+        "archetype": "artillery_equipment"
+      }
+    },
+    {
+      "uid": "equipment:common/units/equipment/motorized.txt:motorized_equipment",
+      "id": "motorized_equipment",
+      "kind": "equipment",
+      "title": "motorized_equipment",
+      "description": "",
+      "source": "common/units/equipment/motorized.txt",
+      "line": 3,
+      "version": "1.19.4.2",
+      "hash": "b25c3797280f471b89a43da5b02e135091cf205acdf37c09d547a88df52d5128",
+      "data": {
+        "stats": {
+          "breakthrough": 5,
+          "hardness": 0.1,
+          "maximum_speed": 12,
+          "fuel_consumption": 1.2,
+          "build_cost_ic": 2.5
+        }
+      }
+    },
+    {
+      "uid": "equipment:common/units/equipment/motorized.txt:motorized_equipment_1",
+      "id": "motorized_equipment_1",
+      "kind": "equipment",
+      "title": "motorized_equipment_1",
+      "description": "",
+      "source": "common/units/equipment/motorized.txt",
+      "line": 47,
+      "version": "1.19.4.2",
+      "hash": "b25c3797280f471b89a43da5b02e135091cf205acdf37c09d547a88df52d5128",
+      "data": {
+        "stats": {},
+        "archetype": "motorized_equipment",
+        "parent": "motorized_equipment_0"
+      }
+    },
+    {
+      "uid": "equipment:common/units/equipment/tank_chassis.txt:medium_tank_chassis",
+      "id": "medium_tank_chassis",
+      "kind": "equipment",
+      "title": "medium_tank_chassis",
+      "description": "",
+      "source": "common/units/equipment/tank_chassis.txt",
+      "line": 279,
+      "version": "1.19.4.2",
+      "hash": "ad420e0bffc41a062a9457d67c18d59a91f0d8972ef6985e22e443eadd4983bf",
+      "data": {
+        "stats": {
+          "armor_value": 20,
+          "hardness": 0.85,
+          "maximum_speed": 4,
+          "fuel_consumption": 0,
+          "manpower": 2,
+          "build_cost_ic": 2
+        }
+      }
+    },
+    {
+      "uid": "equipment:common/units/equipment/x_tank_chassis.txt:medium_tank_equipment_1",
+      "id": "medium_tank_equipment_1",
+      "kind": "equipment",
+      "title": "medium_tank_equipment_1",
+      "description": "",
+      "source": "common/units/equipment/x_tank_chassis.txt",
+      "line": 661,
+      "version": "1.19.4.2",
+      "hash": "847194cf28e16dbe9f08a863c0d7541ec34d8c591d54d70b3211f74ae696ca65",
+      "data": {
+        "stats": {
+          "soft_attack": 19,
+          "hard_attack": 14,
+          "defense": 5,
+          "breakthrough": 36,
+          "armor_value": 60,
+          "ap_attack": 61,
+          "hardness": 0.9,
+          "maximum_speed": 8,
+          "fuel_consumption": 3.6,
+          "build_cost_ic": 12
+        },
+        "archetype": "medium_tank_chassis"
+      }
+    },
+    {
+      "uid": "unit:common/units/artillery.txt:artillery",
+      "id": "artillery",
+      "kind": "unit",
+      "title": "artillery",
+      "description": "",
+      "source": "common/units/artillery.txt",
+      "line": 3,
+      "version": "1.19.4.2",
+      "hash": "10f299c45b79fe67562e2508fe79ef1db077c1ece995b2eeccff612e4a51e28c",
+      "data": {
+        "stats": {
+          "max_organisation": 0,
+          "soft_attack": -0.5,
+          "hard_attack": -0.5,
+          "defense": -0.5,
+          "breakthrough": -0.5,
+          "supply_consumption": 0.16,
+          "combat_width": 0,
+          "manpower": 300
+        },
+        "need": {
+          "artillery_equipment": 12
+        },
+        "affects_speed": "no",
+        "group": "support",
+        "regimental": "no",
+        "context": [
+          {
+            "key": "type",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "infantry",
+                "line": 14
+              },
+              {
+                "key": "",
+                "value": "support",
+                "line": 15
+              }
+            ],
+            "line": 13
+          },
+          {
+            "key": "categories",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "category_support_battalions",
+                "line": 21
+              },
+              {
+                "key": "",
+                "value": "category_divisional_support_battalions",
+                "line": 22
+              },
+              {
+                "key": "",
+                "value": "category_army",
+                "line": 23
+              },
+              {
+                "key": "",
+                "value": "category_artillery",
+                "line": 24
+              },
+              {
+                "key": "",
+                "value": "category_support_artillery",
+                "line": 25
+              }
+            ],
+            "line": 20
+          }
+        ]
+      }
+    },
+    {
+      "uid": "unit:common/units/engineer.txt:engineer",
+      "id": "engineer",
+      "kind": "unit",
+      "title": "engineer",
+      "description": "",
+      "source": "common/units/engineer.txt",
+      "line": 2,
+      "version": "1.19.4.2",
+      "hash": "25d88a0e1e19dfd11248546027b19885bad2af87fb42554aeb6fbe89e7cedef0",
+      "data": {
+        "stats": {
+          "max_organisation": 20,
+          "soft_attack": -0.5,
+          "defense": 0.1,
+          "breakthrough": 0.5,
+          "supply_consumption": 0.02,
+          "combat_width": 0,
+          "manpower": 300
+        },
+        "need": {
+          "infantry_equipment": 10,
+          "support_equipment": 30
+        },
+        "affects_speed": "no",
+        "group": "support",
+        "regimental": "no",
+        "context": [
+          {
+            "key": "type",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "infantry",
+                "line": 12
+              },
+              {
+                "key": "",
+                "value": "support",
+                "line": 13
+              }
+            ],
+            "line": 11
+          },
+          {
+            "key": "categories",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "category_front_line",
+                "line": 19
+              },
+              {
+                "key": "",
+                "value": "category_support_battalions",
+                "line": 20
+              },
+              {
+                "key": "",
+                "value": "category_divisional_support_battalions",
+                "line": 21
+              },
+              {
+                "key": "",
+                "value": "category_army",
+                "line": 22
+              }
+            ],
+            "line": 18
+          },
+          {
+            "key": "battalion_mult",
+            "op": "=",
+            "value": [
+              {
+                "key": "category",
+                "op": "=",
+                "value": "category_light_infantry",
+                "line": 43
+              },
+              {
+                "key": "entrenchment",
+                "op": "=",
+                "value": "0.20",
+                "line": 44
+              },
+              {
+                "key": "add",
+                "op": "=",
+                "value": "yes",
+                "line": 45
+              }
+            ],
+            "line": 42
+          },
+          {
+            "key": "essential",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "support_equipment",
+                "line": 56
+              }
+            ],
+            "line": 55
+          }
+        ]
+      }
+    },
+    {
+      "uid": "unit:common/units/recon.txt:recon",
+      "id": "recon",
+      "kind": "unit",
+      "title": "recon",
+      "description": "",
+      "source": "common/units/recon.txt",
+      "line": 3,
+      "version": "1.19.4.2",
+      "hash": "8a1fe834193f8b648fc6a70df71a07ae318635d500bccc52c0a64a74b2eddcfc",
+      "data": {
+        "stats": {
+          "max_organisation": 20,
+          "soft_attack": -0.9,
+          "hard_attack": -0.9,
+          "defense": -0.5,
+          "breakthrough": -0.5,
+          "maximum_speed": 0.6,
+          "supply_consumption": 0.02,
+          "combat_width": 0,
+          "manpower": 500
+        },
+        "need": {
+          "infantry_equipment": 40,
+          "support_equipment": 10
+        },
+        "group": "support",
+        "regimental": "no",
+        "context": [
+          {
+            "key": "type",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "infantry",
+                "line": 12
+              },
+              {
+                "key": "",
+                "value": "support",
+                "line": 13
+              }
+            ],
+            "line": 11
+          },
+          {
+            "key": "categories",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "category_front_line",
+                "line": 19
+              },
+              {
+                "key": "",
+                "value": "category_support_battalions",
+                "line": 20
+              },
+              {
+                "key": "",
+                "value": "category_divisional_support_battalions",
+                "line": 21
+              },
+              {
+                "key": "",
+                "value": "category_army",
+                "line": 22
+              },
+              {
+                "key": "",
+                "value": "category_recon",
+                "line": 23
+              }
+            ],
+            "line": 18
+          },
+          {
+            "key": "essential",
+            "op": "=",
+            "value": [
+              {
+                "key": "",
+                "value": "infantry_equipment",
+                "line": 52
+              },
+              {
+                "key": "",
+                "value": "support_equipment",
+                "line": 53
+              }
+            ],
+            "line": 51
+          },
+          {
+            "key": "battalion_mult",
+            "op": "=",
+            "value": [
+              {
+                "key": "category",
+                "op": "=",
+                "value": "category_artillery",
+                "line": 62
+              },
+              {
+                "key": "soft_attack",
+                "op": "=",
+                "value": "0.10",
+                "line": 63
+              }
+            ],
+            "line": 61
+          }
+        ]
+      }
+    }
+  ]
+}
