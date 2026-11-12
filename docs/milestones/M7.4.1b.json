@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "M7.4.1b",
+  "status": "offline-tested",
+  "branch": "feature/hoi4-knowledge-paths-m741b",
+  "commitSha": "f4b7449e7c0a524025ebf015321b2806f161ff01",
+  "testEvidence": [
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/M741B-VERIFICATION.json",
+      "summary": "42 focused tests;136 portable fixtures+3 workflow tests;matched three-route source audit and incompatible Hungary HTTP negative."
+    },
+    {
+      "kind": "typecheck",
+      "result": "passed",
+      "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43180782000",
+      "summary": "All four runtime CI jobs pass;local production build/typecheck pass."
+    },
+    {
+      "kind": "review",
+      "result": "passed",
+      "reference": "https://github.com/connorgreenleaf22/hoi4-companion/pull/12",
+      "summary": "Separate reviewer checked exact runtime,42 tests,TypeScript,20 pins and original cached Hungary conflict;no remaining blocking runtime findings."
+    },
+    {
+      "kind": "packaged",
+      "result": "not-run",
+      "reference": "docs/application/M741B-VERIFICATION.json",
+      "summary": "Fresh-extraction Companion smoke pending; no native HOI4 qualification."
+    }
+  ],
+  "nativeQualification": {
+    "state": "not-run",
+    "scope": "Source-only offline capability. Companion package checks do not qualify native HOI4 behavior.",
+    "evidence": []
+  },
+  "artifact": {
+    "name": "M7.4.1b-f4b7449e7c0a-windows-x64.zip",
+    "reference": "Local-only retained build; docs/application/M741B-VERIFICATION.json",
+    "sha256": "914e569be4a243109016d219764be02795d5914a231865740a4ce8bd82846fab"
+  },
+  "blockers": [
+    {
+      "summary": "Complete chain mechanics,active DLC/tree/mod applicability,native qualification and owner usefulness acceptance remain open.",
+      "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/7"
+    }
+  ],
+  "acceptance": {
+    "state": "pending",
+    "evidence": [
+      "docs/application/MILESTONE-7.4.1b-ACCEPTANCE.md"
+    ]
+  },
+  "report": "docs/application/MILESTONE-7.4.1b.md",
+  "github": [
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/12",
+    "https://github.com/connorgreenleaf22/hoi4-companion/issues/7",
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/9"
+  ]
+}

@@ -9,7 +9,7 @@ import {createCloseGuard} from './close-guard';
 const stampPath=path.join(app.getAppPath(),'build','development.json');
 const development=fs.existsSync(stampPath)?JSON.parse(fs.readFileSync(stampPath,'utf8')) as {label:string}:null;
 if(development){
-  if(!/^M\d+(?:\.\d+){0,2}-[a-f0-9]{12}$/.test(development.label))throw Error('Invalid development build identity');
+  if(!/^M\d+(?:\.\d+){0,2}[a-z]?-[a-f0-9]{12}$/.test(development.label))throw Error('Invalid development build identity');
   const isolated=path.join(app.getPath('appData'),'HOI4 Companion Development',development.label);
   fs.mkdirSync(path.join(isolated,'electron'),{recursive:true});
   app.setPath('userData',path.join(isolated,'electron'));

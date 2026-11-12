@@ -1,0 +1,447 @@
+{
+  "schemaVersion": 1,
+  "milestone": "M7.4.1b",
+  "date": "2026-11-12",
+  "branch": "feature/hoi4-knowledge-paths-m741b",
+  "baseline": "895ef1cc16da27887d535165b8ea866476d148a4",
+  "runtime": "f4b7449e7c0a524025ebf015321b2806f161ff01",
+  "pr": "https://github.com/connorgreenleaf22/hoi4-companion/pull/12",
+  "source": {
+    "version": "1.19.4.2",
+    "launcherVersion": "Operation Postern v1.19.4.2.2da5 (0bdb)",
+    "indexRevision": "39404c534a84409b4cecb169cc9fdb9b1fc5aaf252ad5703bf95077911f22fc9",
+    "pins": "tests/fixtures/knowledge-path-sources-m741b.json",
+    "pinsSHA256": "a75dd1e244a31949979eae17c004851695097e5e63597860cc8f1b5076fa49d5",
+    "pinnedFiles": 20,
+    "citedRouteFiles": 15,
+    "executableSHA256": "bccc62909b6a1ec2c1d5a46ef18608e4d0c7cdc89ad341b7402a23c40f7a8037",
+    "qualification": "Source-only. Active DLC entitlement/enabled state, tree selection, playset/mod authority and current campaign facts unverified."
+  },
+  "census": {
+    "verification": "retained-index census only; not a whole-installation source revalidation or semantic coverage percentage",
+    "entries": 21262,
+    "nodes": 912816,
+    "keys": {
+      "has_completed_focus": {
+        "occurrences": 8800,
+        "definitions": {
+          "decision": 2042,
+          "event": 474,
+          "focus": 1214
+        }
+      },
+      "has_dlc": {
+        "occurrences": 2532,
+        "definitions": {
+          "decision": 292,
+          "event": 315,
+          "focus": 1028
+        }
+      },
+      "has_government": {
+        "occurrences": 8028,
+        "definitions": {
+          "decision": 794,
+          "event": 863,
+          "focus": 1945
+        }
+      },
+      "neutrality": {
+        "occurrences": 160,
+        "definitions": {
+          "decision": 26,
+          "event": 38,
+          "focus": 50
+        }
+      },
+      "controls_state": {
+        "occurrences": 3655,
+        "definitions": {
+          "decision": 429,
+          "event": 151,
+          "focus": 328
+        }
+      },
+      "owns_state": {
+        "occurrences": 2423,
+        "definitions": {
+          "decision": 234,
+          "event": 145,
+          "focus": 208
+        }
+      },
+      "has_opinion": {
+        "occurrences": 1124,
+        "definitions": {
+          "decision": 109,
+          "event": 362,
+          "focus": 93
+        }
+      },
+      "set_politics": {
+        "occurrences": 547,
+        "definitions": {
+          "decision": 32,
+          "event": 226,
+          "focus": 158
+        }
+      },
+      "set_popularities": {
+        "occurrences": 71,
+        "definitions": {
+          "decision": 3,
+          "event": 26,
+          "focus": 16
+        }
+      },
+      "promote_character": {
+        "occurrences": 278,
+        "definitions": {
+          "decision": 17,
+          "event": 104,
+          "focus": 74
+        }
+      },
+      "start_civil_war": {
+        "occurrences": 290,
+        "definitions": {
+          "decision": 32,
+          "event": 90,
+          "focus": 43
+        }
+      },
+      "random_list": {
+        "occurrences": 317,
+        "definitions": {
+          "decision": 130,
+          "event": 95,
+          "focus": 7
+        }
+      },
+      "has_country_leader": {
+        "occurrences": 860,
+        "definitions": {
+          "decision": 97,
+          "event": 119,
+          "focus": 324
+        }
+      },
+      "recruit_character": {
+        "occurrences": 0,
+        "definitions": {}
+      },
+      "add_country_leader_role": {
+        "occurrences": 700,
+        "definitions": {
+          "decision": 23,
+          "event": 218,
+          "focus": 128
+        }
+      }
+    }
+  },
+  "fieldEvidence": [
+    {
+      "country": "POR",
+      "goal": "POR_the_kingdom_reunited",
+      "sequence": [
+        "POR_estado_novo",
+        "POR_a_royal_wedding",
+        "POR_the_return_of_duarte",
+        "POR_promote_the_monarchist_cause_in_portugal",
+        "POR_restoration_of_the_monarchy",
+        "POR_monarchist_uprising_in_brazil",
+        "POR_the_empire_of_brazil",
+        "POR_the_kingdom_reunited"
+      ],
+      "nominalDays": 560,
+      "before": {
+        "politicalTransitions": [],
+        "popularitySets": [],
+        "characterPromotions": [],
+        "stateControlRequirements": [],
+        "popularityRequirements": [],
+        "weightedBranches": 0,
+        "annexation": [
+          "POR annexes Brazil and receives its troops."
+        ],
+        "refusalWarGoals": [
+          "POR gains an annexation war goal against Brazil. This does not declare war or annex territory."
+        ]
+      },
+      "after": {
+        "politicalTransitions": [
+          "Set Brazil’s ruling party to Fascist. This does not set party popularity or identify the country leader.",
+          "Set Brazil’s ruling party to Fascist. This does not set party popularity or identify the country leader.",
+          "Set Brazil’s ruling party to Non-Aligned. This does not set party popularity or identify the country leader.",
+          "Set Brazil’s ruling party to Non-Aligned. This does not set party popularity or identify the country leader.",
+          "Set Brazil’s ruling party to Non-Aligned. This does not set party popularity or identify the country leader."
+        ],
+        "popularitySets": [
+          "Set party popularities in Brazil: Democratic 0%, Non-Aligned 20%, Fascist 80%, Communist 0%; omitted ideologies become 0%. These are assigned shares, not percentage-point changes.",
+          "Set party popularities in Brazil: Democratic 0%, Non-Aligned 20%, Fascist 80%, Communist 0%; omitted ideologies become 0%. These are assigned shares, not percentage-point changes."
+        ],
+        "characterPromotions": [
+          "Promote Arlindo Veiga dos Santos to head of their political party in Brazil; becomes country leader only if that party rules. Multiple leader roles require an explicit ideology; character eligibility and current leadership are not evaluated.",
+          "Promote Arlindo Veiga dos Santos to head of their political party in Brazil; becomes country leader only if that party rules. Multiple leader roles require an explicit ideology; character eligibility and current leadership are not evaluated.",
+          "Promote Arlindo Veiga dos Santos to head of their political party in Brazil; becomes country leader only if that party rules. Multiple leader roles require an explicit ideology; character eligibility and current leadership are not evaluated."
+        ],
+        "stateControlRequirements": [],
+        "popularityRequirements": [
+          "Brazil must have less than 70% Non-Aligned popularity.",
+          "the acting country must have less than 100% Non-Aligned popularity."
+        ],
+        "weightedBranches": 0,
+        "annexation": [
+          "POR annexes Brazil and receives its troops."
+        ],
+        "refusalWarGoals": [
+          "POR gains an annexation war goal against Brazil. This does not declare war or annex territory."
+        ]
+      },
+      "blockers": {
+        "before": 196,
+        "after": 189
+      },
+      "events": 11,
+      "structuredSummary": {
+        "version": "path-brief-v1",
+        "milestones": 8,
+        "branches": 16,
+        "omittedBranches": 0,
+        "semanticChecks": 107,
+        "campaignChecks": 82,
+        "policy": {
+          "provisionalAllowed": true,
+          "confidentRecommendationAllowed": false,
+          "rankingAllowed": false,
+          "optimizationAllowed": false,
+          "blockingGapCount": 189,
+          "reasons": [
+            "Strategy-critical interpretation or campaign-state gaps remain.",
+            "No qualified objective/utility model or whole-campaign simulator exists. A coverage review is not an optimality proof."
+          ]
+        },
+        "readableBrief": ".bridge-local/m741b-POR-brief.md",
+        "readableBriefSHA256": "8d21062f7e20f38c560b32cb2257e84ffcf2c9e1da00c1237334d6adea58a1ab"
+      }
+    },
+    {
+      "country": "GER",
+      "goal": "GER_return_of_the_kaiser",
+      "sequence": [
+        "GER_oppose_hitler",
+        "GER_secure_the_new_state",
+        "GER_revive_the_kaiserreich",
+        "GER_return_of_the_kaiser"
+      ],
+      "nominalDays": 245,
+      "before": {
+        "politicalTransitions": [],
+        "popularitySets": [],
+        "characterPromotions": [],
+        "stateControlRequirements": [],
+        "popularityRequirements": [],
+        "weightedBranches": 0,
+        "annexation": [],
+        "refusalWarGoals": []
+      },
+      "after": {
+        "politicalTransitions": [],
+        "popularitySets": [],
+        "characterPromotions": [],
+        "stateControlRequirements": [],
+        "popularityRequirements": [
+          "the acting country must have more than 40% Non-Aligned popularity."
+        ],
+        "weightedBranches": 0,
+        "annexation": [],
+        "refusalWarGoals": []
+      },
+      "blockers": {
+        "before": 511,
+        "after": 511
+      },
+      "events": 17,
+      "structuredSummary": {
+        "version": "path-brief-v1",
+        "milestones": 4,
+        "branches": 16,
+        "omittedBranches": 55,
+        "semanticChecks": 378,
+        "campaignChecks": 133,
+        "policy": {
+          "provisionalAllowed": true,
+          "confidentRecommendationAllowed": false,
+          "rankingAllowed": false,
+          "optimizationAllowed": false,
+          "blockingGapCount": 511,
+          "reasons": [
+            "Strategy-critical interpretation or campaign-state gaps remain.",
+            "No qualified objective/utility model or whole-campaign simulator exists. A coverage review is not an optimality proof."
+          ]
+        },
+        "readableBrief": ".bridge-local/m741b-GER-brief.md",
+        "readableBriefSHA256": "2f51006265cc3730817251cdf110186c160d57fe1aab40867242856176565f36"
+      }
+    },
+    {
+      "country": "HUN",
+      "goal": "HUN_proclaim_the_restoration_of_austria_hungary",
+      "sequence": [
+        "HUN_balanced_budget",
+        "HUN_strengthen_the_monarchists",
+        "HUN_elect_a_king",
+        "HUN_invite_the_habsburg_prince",
+        "HUN_demand_a_referendum",
+        "HUN_proclaim_the_restoration_of_austria_hungary"
+      ],
+      "nominalDays": 420,
+      "before": {
+        "politicalTransitions": [],
+        "popularitySets": [],
+        "characterPromotions": [],
+        "stateControlRequirements": [],
+        "popularityRequirements": [],
+        "weightedBranches": 0,
+        "annexation": [
+          "HUN annexes Austria and receives its troops."
+        ],
+        "refusalWarGoals": [
+          "HUN gains an annexation war goal against Austria. This does not declare war or annex territory.",
+          "HUN gains an annexation war goal against Austria. This does not declare war or annex territory."
+        ]
+      },
+      "after": {
+        "politicalTransitions": [],
+        "popularitySets": [],
+        "characterPromotions": [
+          "Promote Otto von Habsburg to head of their political party in the acting country; becomes country leader only if that party rules. Multiple leader roles require an explicit ideology; character eligibility and current leadership are not evaluated."
+        ],
+        "stateControlRequirements": [
+          "the acting country must control Upper Austria. Ownership and control are separate requirements.",
+          "the acting country must control Tyrol. Ownership and control are separate requirements.",
+          "the acting country must control Vorarlberg. Ownership and control are separate requirements.",
+          "the acting country must control Lower Austria. Ownership and control are separate requirements."
+        ],
+        "popularityRequirements": [
+          "the acting country must have more than 30% Non-Aligned popularity."
+        ],
+        "weightedBranches": 0,
+        "annexation": [
+          "HUN annexes Austria and receives its troops."
+        ],
+        "refusalWarGoals": [
+          "HUN gains an annexation war goal against Austria. This does not declare war or annex territory.",
+          "HUN gains an annexation war goal against Austria. This does not declare war or annex territory."
+        ]
+      },
+      "blockers": {
+        "before": 225,
+        "after": 225
+      },
+      "events": 14,
+      "structuredSummary": {
+        "version": "path-brief-v1",
+        "milestones": 6,
+        "branches": 16,
+        "omittedBranches": 21,
+        "semanticChecks": 124,
+        "campaignChecks": 101,
+        "policy": {
+          "provisionalAllowed": true,
+          "confidentRecommendationAllowed": false,
+          "rankingAllowed": false,
+          "optimizationAllowed": false,
+          "blockingGapCount": 225,
+          "reasons": [
+            "Strategy-critical interpretation or campaign-state gaps remain.",
+            "No qualified objective/utility model or whole-campaign simulator exists. A coverage review is not an optimality proof."
+          ]
+        },
+        "readableBrief": ".bridge-local/m741b-HUN-brief.md",
+        "readableBriefSHA256": "20233412df999b5dede7f5de90ea000604fa1f2974710165debead1b8c7dc203"
+      }
+    }
+  ],
+  "regressions": {
+    "hungaryHabsburgPlusFascistKing": {
+      "before": "structurally valid / provisional allowed: inherited repeated-block loss",
+      "after": "HTTP 422 / structural invalid / allowed false",
+      "independentVerification": "Reviewer used original retained entries without audit normalization; stored data unchanged"
+    },
+    "originalInterpreterTests": "preserved",
+    "ambiguityAndPatchMismatch": "HTTP fixtures retain unexpanded unknowns and prevent annexation claims in summary",
+    "guardContext": "Administrative state-unknown flags and deep unsupported guards propagate to unresolvedContext"
+  },
+  "tests": {
+    "focused": {
+      "passed": 42,
+      "command": "node --import tsx --test tests/explanations.test.ts tests/planning-coverage.test.ts tests/scripted-rewards.test.ts tests/importer.test.ts tests/knowledge-importer.test.ts",
+      "output": ".bridge-local/m741b-final-focused.txt",
+      "sha256": "eb0dfd4d3b9f30e469531d8612a70e9398c67432e1f5aafd900960cb4a9c2fd5"
+    },
+    "portable": {
+      "passed": 136,
+      "workflowTests": 3,
+      "command": "npm run test-ci",
+      "output": ".bridge-local/m741b-ci-final.txt",
+      "sha256": "72a21395c2c74a83e8420d15c8371e8f1cfe6be9cfd12860d102628834641a33"
+    },
+    "build": {
+      "passed": true,
+      "command": "npm run package:development -- M7.4.1b",
+      "output": ".bridge-local/m741b-package-reviewed.txt",
+      "sha256": "c5442e8d72fb82bb0abc7f9705f8844be3851903a8533aa0a456d92de1d61223"
+    },
+    "installed": {
+      "passed": true,
+      "command": "HOI4_REFERENCE_DB=<retained read-only index> HOI4_PATH_AUDIT_OUTPUT=.bridge-local/m741b-after.json node --import tsx scripts/knowledge-path-audit.ts",
+      "beforeSHA256": "7e40a9b77aa497d2c6578684f1f011eb367e6074e5e5af67bcc73d9066054321",
+      "afterSHA256": "51b10a9fb4fe0dca71ebbea3faa8f127d433d7d315a882b9f0793fa9f6b9308a",
+      "check": "Three routes, source pins, policy restrictions and Hungary incompatible sequence; no indexing/native/provider run"
+    },
+    "hostedCI": {
+      "runtime": "f4b7449e7c0a524025ebf015321b2806f161ff01",
+      "url": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43180782000",
+      "jobs": [
+        "qa-typecheck",
+        "qa-test-ci",
+        "qa-schemas",
+        "qa-hygiene"
+      ],
+      "conclusion": "success",
+      "allowlistAndWorkflow": "unchanged"
+    }
+  },
+  "review": {
+    "reviewer": "/root/review_m741b",
+    "reviewedRuntime": "f4b7449e7c0a524025ebf015321b2806f161ff01",
+    "status": "no remaining blocking runtime findings",
+    "independentChecks": [
+      "42 focused tests",
+      "TypeScript",
+      "20 installed pins, executable and full launcher version",
+      "Original retained Hungary entries rejected through real API without modifying rows",
+      "No coverage/ranking/optimization bypass"
+    ],
+    "findingsCorrected": [
+      "Readable gates and direct milestones omitted",
+      "Unresolved guards failed to propagate",
+      "Repeated focus exclusion blocks lost by existing importer"
+    ],
+    "evidenceReview": "pending"
+  },
+  "package": {
+    "status": "pending smoke completion",
+    "archiveReceipt": ".bridge-local/m741b-archive-reviewed.json"
+  },
+  "qualification": {
+    "nativeHOI4": "not-run",
+    "paidInference": "not-run",
+    "ownerAcceptance": "pending",
+    "release": "not-performed",
+    "merge": "not-performed",
+    "PageEdits": "none"
+  }
+}
