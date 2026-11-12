@@ -1,6 +1,7 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
 import {validateProfile,startServer} from '../server/api';import {parseScript} from '../server/parser';import {evaluatePlanner} from '../server/planner/evaluate';import {reviewPlanCoverage,rankCoverageGaps,reviewProposal} from '../server/planner/coverage';import {entryMechanics,explanationPreview} from '../src/mechanics';
 import {explorePaths} from '../server/planner/strategy';
+import {summarizePath,renderPathBrief} from '../server/planner/path-summary';
 import type {Entry,CampaignPlan} from '../src/types';
 const profile=validateProfile({id:'coverage',country:'POR',tree:'tree',startDate:'1936-01-01',completed:[]});
 const tree:Entry={uid:'tree',id:'tree',title:'Fixture tree',kind:'focus_tree',source:'fixture.txt',line:1,hash:'fixture',version:'fixture',description:'',data:{countries:['POR']}};
@@ -49,12 +50,24 @@ test('HTTP proposal boundary rejects forged confidence, stale references and opt
   app.store.insert(tree);app.store.insert(focus('A','completion_reward={add_political_power=5}'));app.store.insert(focus('B','prerequisite={focus=A}',{prerequisites:[['A']]}));app.store.setSetting('meta',{version:'fixture',indexRevision:'fixture',mods:[],dlcs:[]});
   const input={schemaVersion:1,profile,plan:plan(['A','B']),supportingReferences:[],indexRevision:'fixture',intent:'provisional'};
   const ok=await post(input);assert.equal(ok.status,200);assert.equal(ok.value.coverage.structuralValidity,'valid');assert.equal(ok.value.coverage.references.length,2);
+  assert.equal(ok.value.pathSummary,undefined);
+  const summary=await post({...input,includePathSummary:true});assert.equal(summary.status,200);assert.equal(summary.value.pathSummary.milestones.length,2);assert.deepEqual(summary.value.pathSummary.policy,summary.value.coverage.policy);assert.equal(summary.value.pathSummary.reviewFingerprint,summary.value.coverage.reviewFingerprint);assert.equal(summary.value.pathSummary.documentedExternalStrategy.length,0);
+  const restricted=await post({...input,includePathSummary:true,intent:'optimize'});assert.equal(restricted.status,422);assert.equal(restricted.value.allowed,false);assert.equal(restricted.value.pathSummary.policy.optimizationAllowed,false);
+  assert.equal((await post({...input,includePathSummary:'yes'})).status,400);
   for(const intent of ['rank','optimize']){const bad=await post({...input,intent,coverage:{rankingAllowed:true},confidence:1});assert.equal(bad.status,422);assert.equal(bad.value.allowed,false);assert.equal(bad.value.coverage.policy.rankingAllowed,false);}
   assert.equal((await post({...input,plan:plan(['B','A'])})).status,422);assert.equal((await post({...input,indexRevision:'stale'})).status,409);assert.equal((await post({...input,supportingReferences:['not-a-reference']})).status,400);
   assert.equal(app.store.profile('coverage'),null);assert.deepEqual(input.plan.items.map(x=>x.reference),['A','B']);
   const changed=await post({...input,plan:{...input.plan,assumptions:['Changed scenario']}});assert.notEqual(changed.value.coverage.reviewFingerprint,ok.value.coverage.reviewFingerprint);
   app.store.saveProfile(profile,{semanticApply:true});assert.equal((await post({...input,profile:{...profile,revision:99}})).status,409);
  }finally{await app.close();fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('path summary preserves scoped choice guards and exact nested evidence with visible bounds',()=>{
+ const es=[focus('A','completion_reward={add_political_power=10}')],c=review(es);
+ c.references[0].summary=[{text:'Only if source condition holds',status:'conditional',children:[{text:'Option: accept',code:'option',status:'conditional',evidence:[{source:'events/fixture.txt',line:22,hash:'eventhash',version:'fixture'}],children:[{text:'Recipient annexes target',code:'annex_country',role:'effect',line:25}]}]}];
+ const s=summarizePath(c,es,tree);assert.deepEqual(s.policy,c.policy);assert.equal(s.verification,'source-only');assert.equal(s.milestones[0].consequences[0].evidence[0].source,'events/fixture.txt');assert.equal(s.milestones[0].consequences[0].evidence[0].line,25);assert.ok(s.milestones[0].consequences[0].appliesWhen.includes('Only if source condition holds'));assert.match(renderPathBrief(s),/Option: accept/);assert.ok(s.recommendations.every(r=>r.classification==='rules-based-inference'));
+ c.references[0].summary=Array.from({length:100},()=>({text:'Option',code:'option',status:'conditional'}));const bounded=summarizePath(c,es,tree);assert.equal(bounded.branches.length,16);assert.equal(bounded.omittedBranches,84);
+ const unsupported=review([focus('B','completion_reward={set_popularities={neutrality=variable} start_civil_war={ideology=fascism size=unknown}}')]);const u=summarizePath(unsupported,[focus('B')],tree);assert.ok(u.unsupported.total>0);assert.equal(u.policy.confidentRecommendationAllowed,false);assert.ok(u.recommendations.some(r=>r.text.includes('civil-war')));
 });
 
 test('empty root prerequisite blocks match the importer and permit structural route exploration',()=>{
