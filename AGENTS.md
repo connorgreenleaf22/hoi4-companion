@@ -1,5 +1,7 @@
 # HOI4 Companion
 
+- M7.4.2 uses `feature/hoi4-knowledge-meta-lab` from owner-confirmed `bdb8a4887522b38f5110f3900bbf1655cc5fd600`. Own `server/design-evaluation`, its versioned types, source fixtures, developer demo and validation documentation. Preserve M7.4.1 interpreter ownership and UXD-01 read-only audit scope; PR #6 remains excluded. No provider/game calls, frontend rewrite, observation changes or merges. Read `docs/application/DESIGN-EVALUATION.md` before widening qualification.
+
 - M7.3.1 works on `feature/hoi4-ai-m731`, forked from validated M7.3 fc60182. Zero paid/provider calls during implementation; the user must separately approve and initiate the one real acceptance request. Preserve user AppData read-only during diagnosis.
 - M7.3 baseline works on `feature/hoi4-ai-m73`, from validated M7.1 46b0206 with M7.2.1 f39f96d integrated. Preserve all older branches, evidence and builds. No HOI4 launches or gameplay/control experiments in M7.3; earlier native budgets are exhausted.
 - Use `.agents/skills/hoi4-game-bridge/SKILL.md` for game/source/bridge work. Read `docs/hoi4-bridge/STATUS.md` before repeating investigations.
