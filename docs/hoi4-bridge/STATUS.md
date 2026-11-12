@@ -1,5 +1,12 @@
 # HOI4 bridge status
 
+## M7.4.2b — partial combat-input layer; aggregation blocked (2026-11-12 ET)
+
+- New `feature/hoi4-combat-evaluation-m742b`, stacked on reviewed PR #8 head `1fdf0a9af79b0afcaf465ccad33ee2a048591db8`; runtime `23c49ee9752262f7c583dce43fc68d52f937da96`. [Draft PR #11](https://github.com/connorgreenleaf22/hoi4-companion/pull/11), [report](../application/MILESTONE-7.4.2b.md), [manifest](../milestones/M7.4.2b.json).
+- Formula/source audit, 15 declaration projections / 11 files, three resource comparisons, metric-level dependency/refusal API and type-only future scenario contract. **Zero qualified division combat metrics**: organization, soft/hard attack, defense and breakthrough remain null. Independent equation validation is unresolved in [Issue #10](https://github.com/connorgreenleaf22/hoi4-companion/issues/10); no full work-order completion claim.
+- 57 focused tests, 178 portable tests + 3 guards, typecheck/build/source audit pass. Separate runtime reviewer reproduced focused/type/source checks with no blocking code findings. Package/evidence: ../application/M742B-VERIFICATION.json. Owner acceptance and mechanics qualification remain open.
+- Existing resource module/fixtures, interpreter and observation contracts unchanged. No paid/provider call, HOI4 launch, invasive method, personal-data change, merge or release. Rook handoff supplied for manual transfer; HQ sync pending.
+
 ## M7.4.2 — source-backed evaluation foundation (2026-11-11 ET)
 
 - Isolated `feature/hoi4-knowledge-meta-lab` from owner-confirmed `bdb8a4887522b38f5110f3900bbf1655cc5fd600`; runtime `44549fbc5216cf1b5f2f46190c523137f45fd8ce`. [Draft PR #8](https://github.com/connorgreenleaf22/hoi4-companion/pull/8); [report](../application/MILESTONE-7.4.2.md), [manifest](../milestones/M7.4.2.json).

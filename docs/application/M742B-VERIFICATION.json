@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "M7.4.2b",
+  "delivery": "partial; division aggregation blocked",
+  "stackBaselineSha": "1fdf0a9af79b0afcaf465ccad33ee2a048591db8",
+  "integrationAncestorSha": "bdb8a4887522b38f5110f3900bbf1655cc5fd600",
+  "runtimeSha": "23c49ee9752262f7c583dce43fc68d52f937da96",
+  "branch": "feature/hoi4-combat-evaluation-m742b",
+  "qualifiedDivisionCombatMetrics": 0,
+  "prioritizedMetrics": {
+    "organization": "unsupported",
+    "softAttack": "unsupported",
+    "hardAttack": "unsupported",
+    "defense": "unsupported",
+    "breakthrough": "unsupported"
+  },
+  "blocker": "https://github.com/connorgreenleaf22/hoi4-companion/issues/10",
+  "sourceAudit": {
+    "gameVersion": "1.19.4.2",
+    "files": 11,
+    "projections": 15,
+    "passed": true,
+    "qualification": "inputs only; no combat aggregation"
+  },
+  "rawIndexIntegration": {
+    "passed": true,
+    "rawIndexedEntries": 20,
+    "candidates": 7,
+    "supportInputs": 3,
+    "qualifiedDivisionCombatMetrics": 0,
+    "scope": "Actual raw installed-index entries via existing Store resolver in isolated local data; no reindex or observation."
+  },
+  "tests": {
+    "focused": 57,
+    "newCombatTests": 20,
+    "preservedResourceRegressions": 37,
+    "portable": 178,
+    "workflowGuards": 3,
+    "typecheck": "passed",
+    "build": "passed",
+    "schemas": "passed",
+    "hygiene": "passed"
+  },
+  "runtimeCI": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43179493113",
+  "compiled": {
+    "passed": true,
+    "runtimeSha": "23c49ee9752262f7c583dce43fc68d52f937da96",
+    "sourceAndASARBytesMatch": true,
+    "baseResourceAPIBytesUnchanged": true,
+    "extractedDemoComparisons": 3,
+    "qualifiedDivisionCombatMetrics": 0,
+    "hashes": {
+      "design-evaluation": "4bce89e14bdfbf50c5d586cbebe6a858248b0ea02658f4c184d00e699768475c",
+      "design-evaluation-demo": "91da8f02cdbe339736b254b38b3d4768162179e8ccd5e511af848b9f1a6d2059",
+      "combat-evaluation": "240cd9cf5986868e2a8fefae706fe53bb005805fa59ea7b33c937df209094e6e",
+      "combat-evaluation-demo": "9f76b0d701353492d21ec409b30c60cbbf5d4456e93645888a11f22f0bc9a065"
+    }
+  },
+  "package": {
+    "label": "M7.4.2-23c49ee97522",
+    "localDirectory": "Documents/HOI4 Companion Development Builds/M7.4.2-23c49ee97522",
+    "archive": "M7.4.2-23c49ee97522-windows-x64.zip",
+    "archiveSHA256": "141c1c4910912726e37215a4ac72e8e4841d1950ac5327fa41e27683bbce4285",
+    "extractedFilesEqual": 75,
+    "executableSHA256": "4c535e80103017006634d6513b0e9a89d558226981cc34c85a0f7cca863399c6",
+    "cases": [
+      {
+        "name": "fresh packaged app loads installed sources and optional session-only provider configuration",
+        "status": "passed",
+        "ms": 166
+      },
+      {
+        "name": "offline manual strategy supports source preview, editing, validation and saved comparison",
+        "status": "passed",
+        "ms": 9556
+      },
+      {
+        "name": "packaged restart retains manual proposal and keeps provider unconfigured",
+        "status": "passed",
+        "ms": 518
+      }
+    ],
+    "sourceUnchangedDuringRun": true,
+    "ownedProcessesAbsent": true,
+    "localOnlyEvidence": "artifacts/qa/ai-package-2026-11-12T08-03-41-590Z-097ffc7e/run-record.json",
+    "screenshotInspected": "spending-preview.png; existing frontend, provider unconfigured, generation disabled",
+    "scope": "Existing application launch/service/offline save/restart regression; separately extracted API/demo modules match source/ASAR and run as a partial input-only developer API. No new combat UI or qualified combat totals."
+  },
+  "independentReview": {
+    "reviewer": "/root/review_m742",
+    "runtimeSha": "23c49ee9752262f7c583dce43fc68d52f937da96",
+    "findings": [],
+    "independentlyRun": "57 focused tests, typecheck, installed combat-input audit; reviewed strict/null/stale/support/CI boundaries and preserved resource files.",
+    "formulaAudit": "No sufficiently established primary division aggregation equation found in the bounded investigation; all five metrics must remain null/unsupported.",
+    "finalEvidenceReview": "pending",
+    "notHumanGitHubApproval": true
+  },
+  "nativeGameLaunched": false,
+  "paidProviderCalled": false,
+  "acceptance": "pending",
+  "hqSynchronization": "pending; owner transfers handoff to Rook",
+  "limitations": [
+    "Zero qualified numerical division combat metrics; full combat-stat work order not achieved.",
+    "Support inputs are inspectable but not eligible for combat evaluation.",
+    "Future scenario contract is type-only and execution is unimplemented.",
+    "Current source inputs are not current-campaign observations; technology effects and modifiers are not applied."
+  ]
+}
