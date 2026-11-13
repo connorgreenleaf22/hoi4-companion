@@ -7,6 +7,9 @@ coverage/
 test-results/
 playwright-report/
 .cache/
+.bridge-local/
+.codex/config.toml
+**/bridge-connection.json
 *.tsbuildinfo
 
 # Local QA captures and archived candidate packages (retain separately)
@@ -39,3 +42,15 @@ migration-backups/
 *.log
 .DS_Store
 Thumbs.db
+
+# Python diagnostic bytecode
+__pycache__/
+*.pyc
+
+# Private coordination and raw user data
+private/
+private-planning/
+personal-saves/
+raw-telemetry/
+account-metadata*
+credentials*

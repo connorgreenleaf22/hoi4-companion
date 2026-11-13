@@ -1,0 +1,29 @@
+# M7.3.1 Windows acceptance — one controlled request
+
+Workflow evidence index: [M7.3.1.json](../milestones/M7.3.1.json). Open gates: [Issue #2](https://github.com/connorgreenleaf22/hoi4-companion/issues/2). Migration adds links only; historical qualification and acceptance are unchanged.
+
+Extract the entire ZIP into a NEW folder. Run its commit-labeled HOI4 Companion executable inside win-unpacked, keeping resources/DLLs beside it. Do not replace the previous app or reuse its data directory. This unsigned isolated development build uses its own AppData profile. It does not install/update software, launch HOI4 or change saves/mods/playsets. Windows may require you to review the unsigned executable before running it.
+
+## Offline first — no API request
+
+1. Open Sources & settings; confirm the HOI4 installation/version and completed indexing. Planning analyzes base-game sources; detected mod overrides are not merged. Do not change the game playset.
+2. Create a disposable Portugal companion workspace with its focus tree and a 1936 start. Open Campaign planner → Build a whole strategy. Confirm AI generation is unconfigured.
+3. Enter: `Create a strategy for monarchist Portugal, economic and military preparation and Brazil opportunities.` Preview AI source bundle. Inspect the source references, omissions, estimated input/output cost and conservative reservation. Preview and settings operations are local.
+4. Try Start local draft; add Estado Novo, name the draft, Save and recheck, edit a recommendation, save again, close/reopen the app and reopen the draft. Coverage must remain provisional. This checks local service/index/database access without needing a provider or a game save.
+
+## Paid test — user must separately approve and initiate
+
+Do not treat this document as authorization for an agent to send requests. No paid test was performed during development. Use ONE request, no retry or AI revision in this acceptance session.
+
+1. Check your API project billing limits and current GPT-6.1 Sol pricing. Only enter your key in the app, never in chat, notes, screenshots or exports. Select `gpt-6.1-sol`, maximum output 3,000. Use key for this session sends no provider request.
+2. Under Spending safeguards and reasoning select low effort, session budget $0.20, request ceiling $0.20 and confirmation threshold $0.05. Save spending settings. These are local safeguards, not guaranteed final billing limits. Existing spending/unknown reservations reduce the remaining budget; do not bypass a refusal without understanding it.
+3. Use the exact objective above, empty manual campaign text and no revision instructions. Preview again. Record definition count, estimated tokens/cost, reservation, model and effort. Confirm that the necessary Portugal/Brazil references are present. If reservation exceeds $0.20, STOP and inspect context/output settings; do not approve an automatic increase.
+4. Approve data transmission and, if shown, explicitly approve above-threshold spending. Click Generate provisional strategy ONCE. Do not double-click, refresh and retry, or change instructions to evade duplicate prevention. Cancel cannot undo charges.
+5. Inspect Request history for completion status, actual returned model/tier, available input/cache-read/cache-write/output/reasoning tokens, request ID, versioned estimated cost and session total. Missing usage is unknown and keeps a reservation. Compare with the provider account separately; app estimates are not invoices or promotional-credit deductions.
+6. If incomplete, refused, timed out, malformed or locally rejected, STOP paid testing. Recover local draft when structured output is available. Inspect candidate diagnostics; correct exact canonical references locally and Save and recheck. No additional paid call is needed. Stale-source recovery intentionally refuses; keep the diagnostic export for review. M7.3's earlier missing response/usage cannot be restored by this build.
+7. For a successful proposal, compare its source-backed monarchist-union route with: Estado Novo → A Royal Wedding → The Return of Duarte → Promote the Monarchist Cause in Portugal → Restoration of the Monarchy → Monarchist Uprising in Brazil → The Empire of Brazil → The Kingdom Reunited. Raw IDs should normalize to exact focus references, despite the Estado Novo idea sharing its ID. Alternate approaches require their own prerequisites/conflicts check; do not force an invalid sequence merely to match this list.
+8. Check relevant monarchist support decisions, research priorities, economic/construction and military/production preparation. Verify that advice distinguishes heuristic preparation from interpreted mechanics, preserves conditions and cites supplied sources. Brazil acceptance/refusal, civil-war exposure, current political conditions and unavailable probability/allocation data must remain explicit risks, not invented guarantees.
+9. Confirm sequence structure and coverage warnings. A structurally valid route is not an optimal strategy or verified campaign eligibility. Ranking and numerical optimization must remain unavailable when critical mechanics are unresolved. Change a recommendation locally, Save and recheck, restart and reopen it. Compare saved revisions without requesting another generation.
+10. Forget API key. Export local evaluation history only after reviewing objective/manual text for private material. Record this build's commit, request ID, outcome and provider-account usage separately. Report any discrepancy before another paid test.
+
+The packaged app has its own embedded Node service and needs no Node/npm on PATH. `npm run browser` rebuilds the checkout and uses its configured development data directory/browser rather than this commit-isolated Electron profile. Both use the same planner, SQLite and coverage gate. Keep prior installs/builds and personal game data untouched.

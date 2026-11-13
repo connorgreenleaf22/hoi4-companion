@@ -1,0 +1,2 @@
+[04:07:29][1936.01.01.12]: HC_BRIDGE|v2|state|producer=sanitized-m65|manifest=ger-m65-1|tag=GER|n=2.324,0.81,0.35,4,35,28,10|f=0,0|t=1,0,0|r=0,0,0|END
+[04:19:55][1936.01.07.24]: HC_BRIDGE|v2|state|producer=sanitized-m65|manifest=ger-m65-1|tag=GER|n=16.268,0.81,0.35,4,37,28,10|f=0,0|t=1,0,0|r=0,1,0|END

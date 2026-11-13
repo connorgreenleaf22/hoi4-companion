@@ -1,6 +1,7 @@
 import type { Entry, Node, Profile, DLCState } from '../src/types';
 import { scalar } from './parser';
 import {evaluatePlanner} from './planner/evaluate';
+import {focusExclusions} from '../src/focus-structure';
 
 export type Truth='yes'|'no'|'unknown';
 const and=(v:Truth[]):Truth=>v.includes('no')?'no':v.includes('unknown')?'unknown':'yes';
@@ -56,7 +57,7 @@ export function treeFocuses(tree:Entry,all:Entry[],issues:TreeReferenceIssue[]=[
     const parent=byId.get(e.data.relative);const base=parent?position(parent,visited):{x:0,y:0};
     return {x:base.x+(e.data.x||0),y:base.y+(e.data.y||0)};
   }
-  return local.map(e=>({...e,data:{...e.data,position:position(e)}}));
+  return local.map(e=>({...e,data:{...e.data,exclusive:focusExclusions(e.data.nodes,e.data.exclusive),position:position(e)}}));
 }
 export function validatePlan(profile:Profile,focuses:Entry[],knownDlcs:string[]=[],dlcAvailability?:Record<string,Truth>) {
   const dlcs=Object.entries(dlcAvailability||Object.fromEntries(knownDlcs.map(name=>[name,'yes']))).map(([name,value])=>({id:name,name,disabled:value==='no',integrated:value==='yes',installed:{value,source:'Evaluation context'},owned:{value,source:'Evaluation context'},enabled:{value,source:'Evaluation context'}})) as DLCState[];

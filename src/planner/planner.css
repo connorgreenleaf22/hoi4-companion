@@ -97,3 +97,69 @@
 @media (max-width:1180px) { .cp-workbench { grid-template-columns:minmax(270px,1fr) minmax(330px,1fr); gap:14px; } .cp-queue { padding:17px; } }
 @media (max-width:940px) { .cp-workbench { grid-template-columns:1fr; } .cp-library .focus-viewport { height:390px; } .cp-focus-list { max-height:390px; } .cp-context label:nth-child(2) { max-width:none; } .cp-planbar label { min-width:180px; } }
 @media (max-width:600px) { .cp-review,.cp-planbar,.cp-queue,.cp-checklists { padding:15px; } .cp-context { gap:10px; } .cp-context label { width:100%; } .cp-review .button-row { gap:8px; } .cp-checklist-header>input { width:100%; } .cp-step-actions { margin-left:0; } .cp-source code { font-size:8px; } }
+
+.strategy-workbench { margin:20px 0; padding:24px; min-width:0; }
+.strategy-workbench h2 { margin:8px 0 12px; }
+.strategy-workbench p { line-height:1.7; color:var(--muted,#9cb0b5); }
+.strategy-controls { display:flex; gap:14px; align-items:end; flex-wrap:wrap; margin:18px 0; }
+.strategy-controls label { display:grid; gap:7px; min-width:180px; max-width:100%; }
+.strategy-controls select,.strategy-controls input { max-width:100%; min-width:0; }
+.strategy-controls select { width:320px; }
+.strategy-controls .strategy-check { display:flex; align-items:center; min-width:0; }
+.strategy-check input { width:auto; }
+.strategy-route,.strategy-comparison,.strategy-references { border-top:1px solid #334248; padding-top:20px; margin-top:20px; }
+.strategy-workbench ol { padding-left:22px; }
+.strategy-workbench li { padding:8px 0; }
+.strategy-workbench small { display:block; color:#9cb0b5; margin-top:5px; }
+.strategy-workbench details { margin:10px 0; }
+.strategy-workbench summary { cursor:pointer; color:#c5b58d; }
+.strategy-workbench pre { white-space:pre-wrap; overflow-wrap:anywhere; max-height:360px; overflow:auto; font-size:12px; padding:12px; background:#111b20; }
+.strategy-workbench code { overflow-wrap:anywhere; }
+.strategy-condition { border-left:2px solid #526267; padding:8px 12px; margin:8px 0; font-size:12px; }
+.strategy-columns { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); gap:18px; }
+.strategy-columns article,.strategy-reference-list article { background:#152126; border:1px solid #334248; border-radius:6px; padding:16px; min-width:0; }
+.strategy-reference-list { display:grid; grid-template-columns:minmax(0,1fr); gap:16px; margin-bottom:16px; }
+@media(max-width:600px) { .strategy-workbench { padding:15px; } .strategy-controls label { width:100%; } .strategy-controls select { width:100%; } }
+
+.planning-reference-card { max-width:100%; overflow-wrap:anywhere; }
+.planning-reference-card header { display:flex; justify-content:space-between; gap:16px; align-items:baseline; }
+.planning-reference-card header > span,.reference-category { color:var(--muted,#a2b3b9); font-size:.85rem; }
+.planning-reference-card h3 { margin:0 0 6px; font-size:1.15rem; }
+.reference-description { max-width:90ch; }
+.planning-reference-card details { margin:9px 0; }
+.planning-reference-card summary { cursor:pointer; padding:5px 0; }
+.planning-reference-card summary:focus-visible,.planning-reference-card button:focus-visible { outline:2px solid #dbbe78; outline-offset:4px; }
+.mechanics-compact h4 { margin:14px 0 7px; color:#e4d3a2; }
+.mechanics-costs { display:flex; flex-wrap:wrap; gap:8px 18px; font-weight:600; margin:8px 0; }
+.mechanics-compact > .mechanics-list { margin:8px 0; padding-left:20px; max-width:100ch; }
+.mechanics-compact > .mechanics-list li { margin:6px 0; }
+.explanation-status { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+.explanation-status span { border:1px solid #4b6063; border-radius:4px; padding:3px 7px; font-size:.78rem; color:#b9cbce; }
+.mechanics-diagnostics code { overflow-wrap:anywhere; }
+@media(max-width:600px){.planning-reference-card header{display:block}.planning-reference-card{padding:12px}.mechanics-costs{display:block}.mechanics-costs span{display:block;margin:5px 0}}
+
+.reference-grid.reference-reading-list { grid-template-columns:minmax(0,1fr); }
+.reference-reading-list .reference-card { min-height:0; }
+.reference-reading-list .reference-card p { display:block; -webkit-line-clamp:unset; max-width:110ch; }
+
+.planning-reference-card h3 .text-link { font-size:1.2rem; line-height:1.4; text-align:left; }
+.planning-reference-card p { margin:8px 0; }
+.planning-reference-card header { margin-bottom:12px; }
+.planning-reference-card .mechanics-list li { margin:5px 0; }
+.planning-reference-card .requirement-preview { font-size:.88rem; line-height:1.6; }
+.planning-reference-card details { border:0; padding:0; margin:5px 0; }
+.planning-reference-card > .mechanics-compact { margin-top:10px; }
+
+/* Coverage is a readable document, not the horizontal notice action bar. */
+.notice.planning-coverage { display: block; overflow-wrap: anywhere; }
+.planning-coverage > strong { display: block; }
+.planning-coverage details { min-width: 0; }
+
+.ai-planner {border-bottom:1px solid var(--border);margin-bottom:2rem;padding-bottom:2rem;min-width:0}
+.ai-planner label:not(.strategy-check) {display:block;margin:0.7rem 0}
+.ai-planner textarea {display:block;width:100%;min-height:72px;resize:vertical;box-sizing:border-box}
+.ai-planner fieldset {min-width:0;margin:1rem 0;padding:1rem}
+.ai-planner pre {max-height:320px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+.ai-planner article,.ai-planner li,.ai-planner p {overflow-wrap:anywhere}
+.ai-planner .text-link {max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.ai-planner .notice {display:block}

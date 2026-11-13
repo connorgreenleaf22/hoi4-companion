@@ -1,10 +1,26 @@
 # HOI4 Companion
 
-A local Windows encyclopedia and campaign planner that reads installed HOI4 scripts. No AI subscription or remote backend is required.
+A local Windows encyclopedia and campaign planner that reads installed HOI4 scripts. Core workflows run offline; optional AI generation uses separately configured, paid provider access.
 
-## Open the v0.4 candidate
+## Current common integration candidate — release blocked
 
-Use `release/HOI4-Companion-0.4.0-r3.exe` for this candidate. It requires no installer or Node.js installation. v0.4 keeps storage schema 3 and adds no migration from v0.3. Independent QA is pending; frozen inputs and the QA handoff are in `release/v0.4.0-r3/`.
+The isolated `integration/common-2026-11-12` branch combines reviewed base `bdb8a4887522b38f5110f3900bbf1655cc5fd600` with PRs **#6 → #9 → #12 → #8 → #11**, preserving their merge ancestry, plus the independently reviewed NAV-01 fix from candidate `6984f884`. PR #4 and live campaign Q&A are excluded. Historical branches already present in the base are not merged again.
+
+See the [continuation report](docs/workflow/COMMON-NAV01-CONTINUATION.md), [manifest](docs/milestones/COMMON-2026.11.12.json), and [rollback/promotion plan](docs/workflow/COMMON-PROMOTION-2026-11-12.md) for exact tested SHA, Windows artifact, review and gates. The new `M7.4.2n` package label identifies the NAV-01 integration build only; it does not complete a mechanics milestone. The earlier [integration report](docs/workflow/COMMON-INTEGRATION-2026-11-12.md) and `M7.4.2i` build remain historical evidence.
+
+**NAV-01 is fixed:** unsaved template names, unit rows/counts and army size stay in the current window across tools and campaigns. Save persists name/rows through the existing API; replacing different rows under the same name asks for confirmation. Loading over dirty edits and discard require an explicit choice. Global draft review supports return, download and discard; normal reload/close offers Stay/review or explicit Leave/discard. Drafts are not crash durable. Army size is not part of saved templates; scratch/deleted-campaign drafts are download/discard only. Production/comparison state and whole-strategy editor recovery are outside this fix.
+
+**Release promotion remains blocked by QUAL-195** and the existing explanation/acceptance gates. The explicit [release gate](docs/application/INTEGRATION-RELEASE-GATES.json) still makes `npm run package` refuse. Isolated development packaging remains available for review.
+
+[Draft integration PR #13](https://github.com/connorgreenleaf22/hoi4-companion/pull/13) targets develop and stays unmerged. Four required hosted checks passed at reviewed candidate `668ad4e3`; the continuation report and final native handoff retain exact SHA/check scope. No main promotion or release is performed.
+
+#11 preserves source-input inspection, not qualified division combat calculations. Organization, soft attack, hard attack, defense and breakthrough remain unsupported with null values/deltas; M7.4.2b remains blocked on [Issue #10](https://github.com/connorgreenleaf22/hoi4-companion/issues/10). Strategies remain provisional, and ranking/optimization stay disabled where coverage is insufficient. The earlier authorized provider request does not authorize further calls.
+
+The current installed game is 1.19.5.0, while retained qualification is pinned to 1.19.4.2. A [separate read-only isolated-index audit](docs/application/QUALIFICATION-195-DELTA.json) compared 39 pins: 38 unchanged and only launcher settings changed. Current-index evaluations/inspection and retained fixture-result reuse refuse the mismatch. This is not semantic or all-DLC qualification. Legacy Germany/Hungary paths and no-NSB tank fixtures remain counterfactuals, not evidence for the installed all-DLC target configuration.
+
+## Inherited v0.4 foundation
+
+`release/HOI4-Companion-0.4.0-r3.exe` and `release/v0.4.0-r3/` are historical artifact references, not this integration candidate. Storage remains schema 3; the integration introduces no database migration. Older builds and their evidence must be retained.
 
 Discovery now provides seven sourced campaign entries: Fascist USA, Elizabeth II, Japanese alternate leaders, Austrian and Hungarian Habsburgs, Liechtenstein and Scandinavia. Claims separate installed declarations, explanations, strategy and unverified research leads. Patch, DLC context, source lines/hashes, review metadata and known limits are visible. These are original summaries of narrow evidence, not completed in-game walkthroughs.
 
@@ -60,7 +76,7 @@ The [Paradox HOI4 Wiki](https://hoi4.paradoxwikis.com/Hearts_of_Iron_4_Wiki) rev
 
 ## Calculation limits
 
-- Division width, manpower, supply and equipment needs sum base unit definitions. Organization is an arithmetic mean across included units.
+- The legacy Division Lab sums base width, manpower, supply and equipment needs. Its organization arithmetic mean is not independently qualified as an engine formula. The separate versioned resource API supports only its reviewed base-only scope; the combat API exposes declarations and unresolved dependencies, with all five combat totals null.
 - Equipment inherits archetype defaults, rather than research-parent statistics. Module composition, designers, doctrines, technologies, MIOs, upgrades and campaign modifiers remain excluded from calculations.
 - Production supports military-factory equipment only. Ships and convoys remain unsupported pending a validated dockyard model. Daily IC = installed base output * factories * efficiency * output factor * resource/disruption factor. Days = ceiling(shortage * indexed equipment IC cost / daily IC), assuming constant inputs.
 - Focus timing uses installed `FOCUS_POINT_DAYS` and uninterrupted sequential work from the planning start date. Stored progress, bypasses, dynamic conditions and campaign delays are not simulated. Unknown durations remain unknown.
@@ -80,21 +96,23 @@ For rollback, close every service and use v0.3 tooling: `node build/cli.cjs --re
 
 Save conflicts retain a visible draft with download, review, save-as-new and explicit discard controls. Retrying a response-lost save that committed reports a conflict. Drafts are not automatically merged. Unsaved in-memory drafts still do not survive a forced app/process crash; resolve or download them before closing.
 
-Outstanding planner drafts are listed in **Review unsaved drafts** from every page. Download preserves the selected alternative, original revision and editable values; discard changes only the in-memory draft after reading current saved data. A late save response cannot erase a newer cached draft. The native close dialog keeps the service running when you choose Stay or Review/download. These changes do not save drafts automatically or add crash durability.
+Registered campaign/planner and Division Lab template drafts are listed in **Review unsaved drafts** from every page. Download preserves editable values; discard does not modify saved templates. A late save response cannot erase newer cached edits. The native close dialog keeps the service running when you choose Stay or Review/download. Whole-strategy editor state remains a separate limitation. Drafts have no crash durability.
 
 ## Development and validation
 
 Requires Node.js 24 or newer on Windows.
 
 ```powershell
-npm ci
+npm ci --ignore-scripts
+node node_modules/electron/install.js
 npm run build
-npm test
-node node_modules/tsx/dist/cli.mjs scripts/regression-v020-ui.ts
-node node_modules/tsx/dist/cli.mjs scripts/planner-ui.ts
-node node_modules/tsx/dist/cli.mjs scripts/knowledge-installed.ts --game-root "<installed HOI4 directory>"
-npm run package
+npm run test-ci
+npm run schemas
+npm run hygiene
+node --import tsx --test tests/integration-compatibility.test.ts tests/knowledge-store.test.ts
 ```
+
+Run focused affected tests first. The integration report records the single combined run and representative Windows package/restart; do not repeat full historical milestone suites without a changed dependency. `npm run package` remains blocked by navigation and final explanation-coverage gates. Hosted CI stays on its reviewed fixture allowlist; Windows/process and installed-source qualification remain local.
 
 The UI fixture script needs Playwright Chromium; `PLAYWRIGHT_CHROMIUM_EXECUTABLE` can select an existing executable. It uses disposable profiles and scripted references. Installed comparison additionally needs HOI4 and reads game files without writing them. Results and screenshots are under `artifacts/`. Historical v0.1.1 scripts retain original task-specific paths; adapt those before running them.
 

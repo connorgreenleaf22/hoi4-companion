@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "id": "m721-ger-basic-machine-tools-capture",
+  "report": "MILESTONE-7.2.1.md",
+  "scope": "Only the independently compared captured GER research assignment; no general save-inventory or slot-order promotion",
+  "sessionId": "b6658acf-cad8-4c3a-a9c3-251a96f9cb0a",
+  "gameVersion": "1.19.4.2",
+  "saveFullVersion": "Operation Postern v1.19.4.2.2da5 (4315)",
+  "executableHash": "bccc62909b6a1ec2c1d5a46ef18608e4d0c7cdc89ad341b7402a23c40f7a8037",
+  "processIdentity": {
+    "pid": 31900,
+    "creationTime": "134385967966839006"
+  },
+  "verifiedSaveFact": {
+    "id": "researching.basic_machine_tools",
+    "value": true,
+    "qualification": "native-verified",
+    "classification": "save-derived historical evidence",
+    "sourceHash": "3a69b4bd645a8299905503b39492c211504dfba92b26c56c77e34944ed627c8c",
+    "sourcePath": "countries/GER/technology/slots/basic_machine_tools",
+    "gameDate": "1936.1.2.8",
+    "country": "GER",
+    "captureReference": "ui/024-saved-state-research-readback.png"
+  },
+  "telemetry": [
+    {
+      "snapshotId": "f5beab4551930a45a0f0b0d40f67c5092725cd15f39e4d362afa1f18aede068b",
+      "gameDate": "1936.01.01.12",
+      "value": false,
+      "observedAt": "2026-11-08T07:35:42.087Z",
+      "sourceLineHash": "47a651200a530fdfd86975d64c4ca618c056eb9dfe83e4f15368be51ad46d416"
+    },
+    {
+      "snapshotId": "688d98bac257b8a0e15616ef44c1ec7ff91f23b880145885e27f3d62de1b3898",
+      "gameDate": "1936.01.01.24",
+      "value": true,
+      "observedAt": "2026-11-08T07:37:22.185Z",
+      "sourceLineHash": "13927802a3b98ebfe35e5b9b58fe8697a58a7dc1f5fc952d24daf58f647e0cb7"
+    }
+  ],
+  "uiEvidence": {
+    "open-research-notification": {
+      "at": "2026-11-08T07:36:18.749Z",
+      "files": [
+        {
+          "file": "ui/012-open-research-notification.png",
+          "sha256": "54430cb80fa0f48c5ab88bd30cf77f970ddc039f26a9612181485fff9dd48476",
+          "screenshotId": "screenshot-0"
+        }
+      ]
+    },
+    "assign-basic-machine-tools": {
+      "at": "2026-11-08T07:36:49.600Z",
+      "files": [
+        {
+          "file": "ui/016-assign-basic-machine-tools.png",
+          "sha256": "e30c7b15d69fb82add562544498301f584dda0300b5c05d71e756ba6d5b4d18b",
+          "screenshotId": "screenshot-0"
+        }
+      ]
+    },
+    "pause-research-state": {
+      "at": "2026-11-08T07:37:40.649Z",
+      "files": [
+        {
+          "file": "ui/020-pause-research-state.png",
+          "sha256": "18744cd30b93a470e6d1ec408a60a2eb547dc919416fab7d3b232ac33272ca3b",
+          "screenshotId": "screenshot-0"
+        }
+      ]
+    },
+    "save-dialog": {
+      "at": "2026-11-08T07:38:03.800Z",
+      "files": [
+        {
+          "file": "ui/022-save-dialog.png",
+          "sha256": "3e142d75520e179dc492735de5ecdf949397b9cf688c489a12032985141a0391",
+          "screenshotId": "screenshot-0"
+        }
+      ]
+    },
+    "saved-state-research-readback": {
+      "at": "2026-11-08T07:38:21.948Z",
+      "files": [
+        {
+          "file": "ui/024-saved-state-research-readback.png",
+          "sha256": "764953f1ac4f9e167ec51a102e7f2c627270d7bf3074637cf53f8949015a5542",
+          "screenshotId": "screenshot-0"
+        }
+      ]
+    }
+  },
+  "nativeDeadline": {
+    "scheduled": "2026-11-08T07:42:16.677Z",
+    "terminationConfirmedAt": "2026-11-08T07:42:20.295Z",
+    "reason": "deadline",
+    "outcome": "terminated",
+    "wallSecondsThroughConfirmation": 543.618,
+    "primaryOutcome": "refused",
+    "primaryDetail": "Owned handle termination failed; both deadline attempts retained. Exact cause of competing refusal not established.",
+    "backupReceiptSHA256": "610d011987480e4a5aab093eaeff328d6c4caf97cff9479577e68fa06b885c0f",
+    "primaryReceiptSHA256": "d0d0fae9e1f2d5e9dee361dfbbf39fcc896646ba97c7d315d42ebf2a7db36913"
+  },
+  "budget": {
+    "launches": 1,
+    "gameplayActions": 4,
+    "uiInputsTotal": 18,
+    "setupInspectionInputs": 14,
+    "captures": 25,
+    "stopped": true
+  },
+  "replay": {
+    "snapshots": 2,
+    "sha256": "1b6a91199fb3a4e5f01c4ecc21127cf15ddf9bd29dcbcbb24148efe26ac81dbb",
+    "exact": true,
+    "sourceLineHashesVerified": true
+  },
+  "evidenceRoot": ".bridge-local/native-lCPDJC",
+  "limitations": [
+    "Telemetry daily record 1936.01.01.24 predates paused save/UI 1936.1.2.8 by eight game hours; compare unchanged assignment, not equal full-state timestamps",
+    "Serialized position 0 is not qualified as UI slot identity",
+    "Research points 2.02 are raw, not percent or duration",
+    "Research completion/full inventory/other fields and save reload remain unqualified",
+    "Evidence cannot elevate current freshness, plan confidence or manual assumptions",
+    "Generic save-reader output intentionally remains parsed-unqualified because mixed fields contain unverified dimensions"
+  ]
+}

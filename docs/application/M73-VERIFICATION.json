@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "milestone": "M7.3",
+  "runtimeCommit": "66a1a388dcce",
+  "baselineCommit": "cf8a31bf4843",
+  "focusedTests": {
+    "passed": 42,
+    "failed": 0,
+    "overlappingFinalAiRerunPassed": 6
+  },
+  "phase0Evidence": [
+    "artifacts/qa/development-package-2026-11-08T08-08-25-064Z-f3ddc1be",
+    "artifacts/qa/platform-package-2026-11-08T08-09-44-531Z-e787835c"
+  ],
+  "installedUiEvidence": "artifacts/qa/ai-planning-2026-11-08T08-20-45-739Z-a35b0536",
+  "installedSourceEventAudit": ".bridge-local/m73-portugal-event-audit.json",
+  "packageEvidence": "artifacts/qa/ai-package-2026-11-08T08-29-41-583Z-bed74b62",
+  "packageCases": [
+    {
+      "name": "fresh packaged app loads installed sources and optional session-only provider configuration",
+      "status": "passed",
+      "level": "compiled-runtime",
+      "requirements": [
+        "M73-PACKAGE"
+      ],
+      "ms": 222
+    },
+    {
+      "name": "offline manual strategy supports source preview, editing, validation and saved comparison",
+      "status": "passed",
+      "level": "compiled-runtime",
+      "requirements": [
+        "M73-OFFLINE"
+      ],
+      "ms": 3622
+    },
+    {
+      "name": "packaged restart retains manual proposal and keeps provider unconfigured",
+      "status": "passed",
+      "level": "compiled-runtime",
+      "requirements": [
+        "M73-PACKAGE-REOPEN"
+      ],
+      "ms": 553
+    }
+  ],
+  "sourceUnchangedDuringRun": true,
+  "label": "M7.3-66a1a388dcce",
+  "zipName": "M7.3-66a1a388dcce-windows-x64.zip",
+  "zipSHA256": "b32b921478fbdc64c236781116c76e765e2bdcd63f5aed5a063c9a5e5aa5bd1e",
+  "executableSHA256": "80548af232e421729d4ea9b4582a363288febff3c652c7233a497cf98cd55724",
+  "extractedFilesMatch": 76,
+  "realProviderCalls": 0,
+  "nativeGameLaunches": 0,
+  "strategicQuality": "not independently accepted",
+  "providerQualification": "fixture transport and source UI only; user chose configure later",
+  "policy": "provisional only; no ranking or optimization",
+  "openGates": [
+    "real provider account/model access and generation",
+    "user desktop acceptance",
+    "subjective Portugal strategy usefulness",
+    "complete supported-content final-release explanation contract"
+  ]
+}

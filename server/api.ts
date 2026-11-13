@@ -5,14 +5,32 @@ import os from 'node:os';
 import { randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
 import { openStore,dataDirectory,ProfileWriteRejected } from './store';
 import { discoverGame, indexGame } from './importer';
+import {indexInBackground} from './index-background';
 import { treeFocuses, validatePlan, calculateTemplate, production, resolveEquipment, productionSupport, evaluate,dlcFacts,type TreeReferenceIssue } from './domain';
 import { guides, troubleshooting, europe, majors } from './content';
 import type { Entry, Profile, Meta, Relationship, FactState } from '../src/types';
+import {universalSearch} from './universal-search';
 import {searchEntries,summary} from './search';
 import {validatePlanner} from './planner/validation';
 import {mirrorPlanner} from './planner/plans';
+import {StrategyReferenceError} from './planner/ai-resolution';
 import {preparePlanDraft,makePreview,validatePreviewContext,PlanConflict} from './planner/service';
 import {listDiscovery,getDiscovery,previewDiscovery} from './discovery';
+import {GameBridge} from './bridge/service';
+import {replaySnapshots} from './bridge/telemetry';
+import {CampaignHistory} from './bridge/history';
+import {BridgePlatform} from './bridge/platform';
+import {callBridgeTool} from './bridge/tools';
+import {McpConnection} from './bridge/mcp-connection';
+import {explorePaths,compareStrategies,planningSources} from './planner/strategy';
+import {reviewPlanCoverage,reviewProposal} from './planner/coverage';
+import {summarizePath} from './planner/path-summary';
+import {resolveFocus} from './planner/projection';
+import {AiPlanningService} from './planner/ai';
+import type {PlanningProvider} from './planner/ai-provider';
+import {evaluatePlanner} from './planner/evaluate';
+import {evaluateRequirements,plannerDlcFacts} from './planner/requirements';
+import type {BridgeMode} from '../src/bridge-types';
 
 export function validateProfile(input:any):Profile {
   if(!input || typeof input!=='object')throw new Error('Expected a campaign profile.');
@@ -39,17 +57,21 @@ export function validateProfile(input:any):Profile {
   return profile.planner?mirrorPlanner(profile):profile;
 }
 
-export async function startServer(options:{dataDir?:string;port?:number;staticDir?:string;autoIndex?:boolean;testRemoteHost?:'127.0.0.1'}={}) {
+export async function startServer(options:{dataDir?:string;port?:number;staticDir?:string;autoIndex?:boolean;aiProvider?:PlanningProvider;indexWorkerPath?:string;testRemoteHost?:'127.0.0.1';bridge?:{mode?:BridgeMode;gameRoot?:string;userRoot?:string;logPath?:string}}={}) {
   // Internal test seam changes only listener binding. Pairing and all authorization remain active.
   if(options.testRemoteHost!==undefined){
     const fixture=options.dataDir&&path.resolve(options.dataDir),temporary=path.resolve(os.tmpdir());
     if(options.testRemoteHost!=='127.0.0.1'||options.autoIndex!==false||!fixture||fixture===path.resolve(dataDirectory())||!fixture.startsWith(temporary+path.sep)||!/^hoi4-[a-z0-9-]+$/i.test(path.basename(fixture)))throw new Error('The loopback test listener requires an explicit isolated temporary HOI4 fixture with auto-index disabled.');
   }
   const store=openStore(options.dataDir);
+  const bridge=new GameBridge(store,options.bridge);
+  const history=new CampaignHistory(bridge.database);
+  const platform=new BridgePlatform(bridge),mcpConnection=new McpConnection(store.directory);
   let meta=store.getSetting<Meta|null>('meta',null);
   let indexingError='';
   let root=store.getSetting('gameRoot','') || discoverGame();
-  if(options.autoIndex!==false && root)try{meta=indexGame(store,root);}catch(e){indexingError=String(e);}
+  if(options.autoIndex!==false && root)try{meta=options.indexWorkerPath?await indexInBackground(options.indexWorkerPath,store.directory,root):indexGame(store,root);}catch(e){indexingError=String(e);}
+  const ai=new AiPlanningService(store,()=>planningSources(store.getSetting<Meta|null>('meta',null),bridge.environment()),options.aiProvider);
   let port=options.port??39436;
   let lan:http.Server|undefined;let lanPort=0;let pairingCode='';
   const sessions=new Map<string,number>();const attempts=new Map<string,{count:number;reset:number}>();
@@ -81,11 +103,72 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
           res.setHeader('Set-Cookie',`hoi4_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=86400`);return send(res,200,{paired:true});
         }
         if(remote&&!authenticated(req))return send(res,401,{error:'Enter the pairing code shown in the desktop app.',pairing:true});
+        if(route.startsWith('ai/')){
+          if(remote)return send(res,403,{error:'AI planning and credentials are local-only.'});
+          if(req.method==='GET'){
+            if(route==='ai/config')return send(res,200,ai.status());
+            if(route==='ai/strategies')return send(res,200,ai.list(url.searchParams.get('profile')||''));
+            if(route==='ai/evaluations')return send(res,200,ai.evaluations(url.searchParams.get('profile')||''));
+          }
+          if(req.method==='POST'){
+            if(!req.headers['content-type']?.startsWith('application/json'))return send(res,415,{error:'AI operations require JSON.'});
+            const input=await body(req);
+            if(route==='ai/config')return send(res,200,ai.configure(input));
+            if(route==='ai/settings')return send(res,200,ai.updateSettings(input));
+            if(route==='ai/clear')return send(res,200,ai.clear());
+            if(route==='ai/cancel')return send(res,200,ai.cancel());
+            const profile=validateProfile(input.profile);
+            if(route==='ai/context')return send(res,200,ai.context(profile,input));
+            if(route==='ai/generate')return send(res,200,await ai.generate(profile,input));
+            if(route==='ai/save')return send(res,200,ai.save(profile,input));
+            if(route==='ai/review')return send(res,200,ai.review(profile,input.content,input));
+          }
+          return send(res,404,{error:'Unknown AI planning operation.'});
+        }
+        if(route.startsWith('bridge/')){
+          if(remote)return send(res,403,{error:'Game bridge interfaces are local-only.'});
+          if(route==='bridge/mcp'&&req.method==='POST'){
+            if(!mcpConnection.accepts(req.headers.authorization))return send(res,401,{error:'Matching local MCP connection token required'});
+            const input=await body(req);return send(res,200,await callBridgeTool(platform,input.tool,input.args));
+          }
+          if(route==='bridge/platform/status'&&req.method==='GET')return send(res,200,{...platform.status(),mcp:{connectionFile:mcpConnection.file,executionEnabled:false}});
+          if(route==='bridge/platform'&&req.method==='POST'){const input=await body(req);return send(res,200,await callBridgeTool(platform,input.tool,input.args));}
+          if(req.method==='GET'){
+            if(route==='bridge/status')return send(res,200,bridge.status());
+            if(route==='bridge/intelligence')return send(res,200,bridge.intelligence());
+            if(route==='bridge/environment')return send(res,200,bridge.environment());
+            if(route==='bridge/reference')return send(res,200,bridge.reference(url.searchParams.get('ref')||'',url.searchParams.get('kind')||undefined));
+            if(route==='bridge/snapshots')return send(res,200,{schemaVersion:1,snapshots:bridge.database.snapshots(url.searchParams.get('session')||undefined)});
+            if(route==='bridge/receipt')return send(res,200,{schemaVersion:1,receipt:bridge.gateway.receipt(url.searchParams.get('id')||'')});
+          }
+          if(req.method==='POST'){
+            if(route==='bridge/replay'){
+              const input=await body(req);
+              if(typeof input.text!=='string'||!['recording','fixture'].includes(input.origin))throw new Error('Supply snapshot JSONL and recording or fixture origin');
+              return send(res,200,{schemaVersion:1,origin:input.origin,snapshots:replaySnapshots(input.text)});
+            }
+            if(route==='bridge/poll')return send(res,200,bridge.poll());
+            if(route==='bridge/actions')return send(res,200,await bridge.gateway.submit(await body(req)));
+            if(route==='bridge/stop')return send(res,200,platform.stop());
+          }
+          return send(res,404,{error:'Unknown bridge endpoint'});
+        }
+        if(route.startsWith('history/')){
+          if(remote)return send(res,403,{error:'Campaign history is local-only.'});
+          if(route==='history/recordings'&&req.method==='GET')return send(res,200,history.list());
+          if(route==='history/import'&&req.method==='POST')return send(res,200,history.import(await body(req)));
+          if(route==='history/remove'&&req.method==='POST'){const input=await body(req);history.remove(input.id,input.confirmation);return send(res,200,{removed:true});}
+          if(route==='history/baseline'&&req.method==='GET')return send(res,200,store.getSetting('history-baseline:'+(url.searchParams.get('profile')||''),null));
+          if(route==='history/preview'&&req.method==='POST')return send(res,200,history.preview(store,await body(req)));
+          if(route==='history/apply'&&req.method==='POST'){const input=await body(req);return send(res,200,{profile:history.apply(store,input.input,input.fingerprint)});}
+          return send(res,404,{error:'Unknown history operation.'});
+        }
         if(req.method==='GET'){store.db.exec('BEGIN');readSnapshot=true;}
         const meta=store.getSetting<Meta|null>('meta',null);
         res.setHeader('X-HOI4-Index-Revision',meta?.indexRevision||'legacy');
-        if(route==='status'&&req.method==='GET')return send(res,200,{meta,appVersion:'0.3.0',dbSchemaVersion:3,indexingError,profiles:store.listProfiles(),selectedProfileId:remote?undefined:store.selectedProfileId(),local:!remote,network:remote?{enabled:true}:lanInfo(),dataDirectory:remote?undefined:store.directory,root:remote?undefined:meta?.root||root,roadmap:['Read-only save analysis','Real-time telemetry feasibility','Backup and preview based save editing','Optional local or cloud AI']});
+        if(route==='status'&&req.method==='GET')return send(res,200,{meta,appVersion:'0.3.0',dbSchemaVersion:3,indexingError,profiles:store.listProfiles(),selectedProfileId:remote?undefined:store.selectedProfileId(),local:!remote,network:remote?{enabled:true}:lanInfo(),dataDirectory:remote?undefined:store.directory,root:remote?undefined:meta?.root||root,roadmap:['Campaign intelligence: monitoring, history and alerts','Strategic planning: research and decision paths','Military and economy: supported production and logistics analysis','Assisted gameplay: one independently verified action','AI advisor: source-cited advice with explicit uncertainty']});
         if(route==='countries'&&req.method==='GET')return send(res,200,all('country').map(e=>({...e,data:{...e.data,europe:europe.includes(e.id),major:majors.includes(e.id)}})).sort((a,b)=>a.title.localeCompare(b.title)));
+        if(route==='search'&&req.method==='GET')return send(res,200,universalSearch(store,url.searchParams));
         if(route==='entries'&&req.method==='GET'){
           return send(res,200,searchEntries(store,url.searchParams));
         }
@@ -118,6 +201,45 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
           return send(res,200,trees.filter(t=>!country||t.data.countries.includes(country)||t.id==='generic_focus').map(t=>({...t,data:{...t.data,script:undefined}})));
         }
         if(route==='tree'&&req.method==='GET'){const result=getTree(url.searchParams.get('uid')||'');return send(res,200,{...result,tree:summary(result.tree),focuses:result.focuses.map(summary)});}
+        if((route==='strategy/paths'||route==='strategy/compare'||route==='strategy/review')&&req.method==='POST'){
+          const input=await body(req),profile=validateProfile(input.profile),meta=store.getSetting<Meta|null>('meta',null);
+          if(input.indexRevision!==(meta?.indexRevision||'legacy'))throw new PlanConflict('reference-conflict','References changed; refresh the planner before exploring.');
+          const sources=planningSources(meta,bridge.environment());
+          if(route==='strategy/review'){
+            if(input.includePathSummary!==undefined&&typeof input.includePathSummary!=='boolean')throw Error('includePathSummary must be a boolean.');
+            const saved=store.profile(profile.id);if(saved&&saved.revision!==profile.revision)throw new PlanConflict('profile-conflict','Campaign changed; reload before reviewing this draft.');
+            if(input.schemaVersion!==1||!['provisional','rank','optimize'].includes(input.intent))throw Error('Choose a version-1 proposal and supported review intent.');
+            if(!Array.isArray(input.supportingReferences)||input.supportingReferences.length>50||input.supportingReferences.some((r:unknown)=>typeof r!=='string'||r.length>800))throw Error('Supply at most fifty supporting decision/technology references.');
+            const {plan}=preparePlanDraft(profile,input.plan),{tree,focuses}=getTree(plan.tree);
+            const supporting=input.supportingReferences.map((ref:string)=>{const e=store.entry(ref);if(!e||!['decision','technology','formable'].includes(e.kind))throw Error('Supporting reference missing, ambiguous or unsupported: '+ref);return e;});
+            const report=evaluatePlanner(profile,plan,focuses,{tree,dlcs:meta?.dlcs||[],indexRevision:sources.indexRevision});
+            const result=reviewProposal(input.intent,reviewPlanCoverage(profile,plan,focuses,tree,report,sources,supporting,store.entry));
+            return send(res,result.allowed?200:422,input.includePathSummary?{...result,pathSummary:summarizePath(result.coverage,plan.items.flatMap(i=>{const e=resolveFocus(i.reference,focuses).entry;return e?[e]:[];}),tree)}:result);
+          }
+          if(route==='strategy/paths'){
+            if(typeof input.goal!=='string'||input.goal.length>800)throw Error('Choose a valid focus objective.');
+            const {plan}=preparePlanDraft(profile,input.plan),{tree,focuses}=getTree(plan.tree);
+            return send(res,200,explorePaths(profile,plan,input.goal,focuses,tree,meta,sources,store.entry));
+          }
+          if(!Array.isArray(input.planIds)||input.planIds.length<2||input.planIds.length>4)throw Error('Choose two to four saved plans.');
+          const saved=store.profile(profile.id);
+          if(!saved||saved.revision!==profile.revision)throw new PlanConflict('profile-conflict','Saved campaign changed; reload before comparing.');
+          const plans=input.planIds.map((id:unknown)=>{const p=saved.planner?.plans.find(p=>p.id===id);if(!p)throw Error('Saved alternative missing.');return p;});
+          return send(res,200,compareStrategies(saved,plans,getTree,meta,sources,store.entry));
+        }
+        if(route==='strategy/references'&&req.method==='GET'){
+          const kind=url.searchParams.get('kind');if(!['decision','technology'].includes(kind||''))throw Error('Choose decisions or technologies.');
+          const profile=store.profile(url.searchParams.get('profile')||'');if(!profile)throw Error('Save a campaign before browsing planning references.');
+          const params=new URLSearchParams(url.searchParams);params.set('limit','10');
+          // Country matching is a discovery hint, never an availability claim.
+          if(kind==='decision'&&params.get('scope')==='country')params.set('country',profile.country);else params.delete('country');
+          const result=searchEntries(store,params),dlcAvailability=plannerDlcFacts(profile,meta?.dlcs||[]);
+          return send(res,200,{schemaVersion:1,sources:planningSources(meta,bridge.environment()),total:result.total,entries:result.entries.map(e=>{
+            const entry=store.entry('definition:'+e.uid)!;const declarations=entry.data.nodes||[];
+            const conditions=declarations.filter((n:any)=>['allowed','visible','available','allow','potential'].includes(n.key)).map((n:any)=>({name:n.key,result:evaluateRequirements(Array.isArray(n.value)?n.value:[n],profile,{role:n.key==='visible'?'branch':'availability',dlcAvailability,source:entry.evidence?.[0]})}));
+            return {entry,relevance:kind==='decision'&&params.get('scope')==='country'?'Country ID or indexed country mention; eligibility and category gates still require review.':'All-country installed reference; ownership, current research and availability unknown.',conditions};
+          })});
+        }
         if(route==='guides'&&req.method==='GET')return send(res,200,{guides:listDiscovery(store,{spoilers:url.searchParams.get('spoilers')==='show',q:url.searchParams.get('q')||'',country:url.searchParams.get('country')||''}),troubleshooting});
         if(route==='discovery/preview'&&req.method==='POST'){
           const input=await body(req),guide=getDiscovery(store,input.guideId,input.spoilers==='show');
@@ -191,7 +313,7 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
         if(route==='reindex'&&req.method==='POST'){
           if(remote)return send(res,403,{error:'Refresh game data from the desktop.'});
           const input=await body(req);const nextRoot=typeof input.root==='string'?input.root:store.getSetting<Meta|null>('meta',null)?.root||root;
-          try{const refreshed=indexGame(store,nextRoot);root=nextRoot;indexingError='';res.setHeader('X-HOI4-Index-Revision',refreshed.indexRevision||'legacy');return send(res,200,refreshed);}catch(e){indexingError=String(e);throw e;}
+          try{const refreshed=options.indexWorkerPath?await indexInBackground(options.indexWorkerPath,store.directory,nextRoot):indexGame(store,nextRoot);root=nextRoot;indexingError='';res.setHeader('X-HOI4-Index-Revision',refreshed.indexRevision||'legacy');return send(res,200,refreshed);}catch(e){indexingError=String(e);throw e;}
         }
         if(route==='network'&&req.method==='POST'){
           if(remote)return send(res,403,{error:'Manage phone access from the desktop.'});
@@ -219,7 +341,8 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
       res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':'no-cache'});
       if(req.method==='HEAD')res.end();else fs.createReadStream(file).pipe(res);
     }catch(error){
-      if(error instanceof PlanConflict)send(res,409,{error:error.message,code:error.code,...error.context});
+      if(error instanceof StrategyReferenceError)send(res,400,{error:error.message,code:'strategy-reference',problems:error.problems});
+      else if(error instanceof PlanConflict)send(res,409,{error:error.message,code:error.code,...error.context});
       else if(error instanceof ProfileWriteRejected)send(res,409,{error:error.message,code:error.code,current:error.current});
       else send(res,400,{error:error instanceof Error?error.message:String(error)});
     }
@@ -228,5 +351,6 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
   const server=http.createServer((req,res)=>void handler(req,res));
   await new Promise<void>((resolve,reject)=>{server.once('error',reject);server.listen(port,'127.0.0.1',()=>resolve());});
   port=(server.address() as any).port;
-  return {port,url:`http://127.0.0.1:${port}`,store,close:async()=>{if(lan){lan.closeAllConnections();await new Promise<void>(r=>lan!.close(()=>r()));}server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));store.db.close();}};
+  mcpConnection.publish(port);
+  return {port,url:`http://127.0.0.1:${port}`,store,close:async()=>{ai.close();platform.close();mcpConnection.close();if(lan){lan.closeAllConnections();await new Promise<void>(r=>lan!.close(()=>r()));}server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));bridge.close();store.db.close();}};
 }

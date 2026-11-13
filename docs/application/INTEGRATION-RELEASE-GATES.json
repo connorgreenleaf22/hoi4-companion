@@ -1,0 +1,10 @@
+{
+  "releasePromotionBlocked": true,
+  "blockers": [
+    {
+      "id": "QUAL-195",
+      "summary": "Installed 1.19.5.0 and target all-DLC applicability remain outside retained 1.19.4.2 qualification",
+      "closure": "Require separately reviewed patch/applicability qualification; unchanged source hashes and fixture arithmetic do not close this gate. Keep PR11 metrics null and M7.4.2b blocked."
+    }
+  ]
+}

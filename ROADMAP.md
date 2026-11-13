@@ -1,5 +1,7 @@
 # Future implementation milestones
 
+Workflow update (2026-11-10): [development and independent QA procedure](docs/workflow/README.md); PR #3 approved and merged into `feature/hoi4-ai-m731` at `440d625`; default-branch rollout remains separately gated. Product milestone acceptance remains unchanged.
+
 The current release provides manual campaign tracking. The following are planned extensions, with separate acceptance gates.
 
 ## Read-only save analysis

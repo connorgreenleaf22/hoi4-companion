@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "version": "1.19.4.2",
+  "launcherVersion": "Operation Postern v1.19.4.2.2da5 (0bdb)",
+  "indexRevision": "39404c534a84409b4cecb169cc9fdb9b1fc5aaf252ad5703bf95077911f22fc9",
+  "sourceConfiguration": "Installed base-game source snapshot; no merged mods. Both Trial of Allegiance branches examined; DLC entitlement, active playset and campaign state are unconfirmed.",
+  "files": [
+    {
+      "source": "common/decisions/POR.txt",
+      "hash": "269bcab0bd25207246ef2dfb8637fc1a70e977fc5f4077a4beab86ce316ad5c2"
+    },
+    {
+      "source": "common/dynamic_modifiers/wuw_dynamic_modifiers.txt",
+      "hash": "bd0d7bdfe7ca255f8d7c5c78124675fe3bbc1f78b9e0b120e396941364b4d7b0"
+    },
+    {
+      "source": "common/ideas/_economic.txt",
+      "hash": "c00fd911c53f10e01afdda674e121fb50f2f63da7de647b6d39543bfb04eb03c"
+    },
+    {
+      "source": "common/ideas/GER.txt",
+      "hash": "0e8c80be2f65757ae2c53564cc9b780a309fe8601135eecd1571959c51a8d726"
+    },
+    {
+      "source": "common/ideas/portugal.txt",
+      "hash": "3701f33a49146dc3f682c16d5a04d10b5de199d23a39f890afb73f360c635ad3"
+    },
+    {
+      "source": "common/national_focus/germany.txt",
+      "hash": "ac730be5ccc9095fb400e58b2f7d44501288a94186beb148dbbb0b32cf8ea03c"
+    },
+    {
+      "source": "common/national_focus/portugal.txt",
+      "hash": "f2ab08a2667a665a58c7c92f812045dc5406a4747bb2f54d702dc15f15088180"
+    },
+    {
+      "source": "common/scripted_effects/GER_scripted_effects.txt",
+      "hash": "1d6b5cc8e00d685aa3c95cecab41cfeb2da590e90490de5dcce05e8e8e2beeb3"
+    },
+    {
+      "source": "common/technologies/industry.txt",
+      "hash": "06d45f11a0bfdee35ef72b935b2bee3b0083a49eb771e5c6b9391c087ed7d94f"
+    },
+    {
+      "source": "common/wargoals/00_invasion.txt",
+      "hash": "ce35aab00cb0fb92fe0ddf1cadc05a72aee24e3f9d121dbadea3c95bebb211fd"
+    },
+    {
+      "source": "documentation/effects_documentation.md",
+      "hash": "2cdc93d26775990468eed167442f7a416b13059fb8fe07d139b54250b79209af"
+    },
+    {
+      "source": "documentation/triggers_documentation.md",
+      "hash": "7d27ed77dadaf3a213a4b3e2c624bf9c02dae495317abe8eee833b27c2d1de29"
+    },
+    {
+      "source": "events/LAR_NewsEvents.txt",
+      "hash": "949863eaa48dc7e357a2a27828b39bb6712d35ffbb1991bfe408aaf47f32b462"
+    },
+    {
+      "source": "events/LaR_Portugal.txt",
+      "hash": "17fa5aab0631e698bd16029d1f7d572d84aa725f779e78a8829233927b333e5f"
+    },
+    {
+      "source": "events/TOA_Brazil.txt",
+      "hash": "5aafcd9332f991145c27777b602743891d4f30c31080db69ef777eef8dea900b"
+    },
+    {
+      "source": "events/WTT_Germany.txt",
+      "hash": "c7c16433a917b69cf20964833202dcaebb7dd3118d6e4c89cca9a1471e36d073"
+    },
+    {
+      "source": "events/WTT_NewsEvents.txt",
+      "hash": "4f2b6be8592e46ddf88f8d124b9c6193c7cff2782df555dc94e242a826e9dc48"
+    },
+    {
+      "source": "events/WUW_Germany.txt",
+      "hash": "b747c7be10b066220b659c33c70a1be4c1cf3266f023818cfbaa168f14335dfc"
+    },
+    {
+      "source": "launcher-settings.json",
+      "hash": "d844392e7391efe103efc96b089910adba66605bc41fe43d5bc663f4c4a7fba6"
+    }
+  ],
+  "executableSha256": "bccc62909b6a1ec2c1d5a46ef18608e4d0c7cdc89ad341b7402a23c40f7a8037",
+  "qualification": "Source/documentation interpretation only; no native gameplay observation."
+}
