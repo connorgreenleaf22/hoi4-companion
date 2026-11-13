@@ -2,9 +2,9 @@
   "releasePromotionBlocked": true,
   "blockers": [
     {
-      "id": "NAV-01",
-      "summary": "Unsaved Division Lab template edits are lost on tool navigation; recovery and close accounting require a separately reviewed fix",
-      "closure": "Verify name, rows and counts survive tool navigation and campaign switching, or require an explicit keep/discard choice; cover pending saves, reload and close behavior. Preserve saved templates and regression-test the extracted Windows build."
+      "id": "QUAL-195",
+      "summary": "Installed 1.19.5.0 and target all-DLC applicability remain outside retained 1.19.4.2 qualification",
+      "closure": "Require separately reviewed patch/applicability qualification; unchanged source hashes and fixture arithmetic do not close this gate. Keep PR11 metrics null and M7.4.2b blocked."
     }
   ]
 }

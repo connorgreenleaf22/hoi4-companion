@@ -4,15 +4,17 @@ A local Windows encyclopedia and campaign planner that reads installed HOI4 scri
 
 ## Current common integration candidate — release blocked
 
-The isolated `integration/common-2026-11-12` branch combines reviewed base `bdb8a4887522b38f5110f3900bbf1655cc5fd600` with PRs **#6 → #9 → #12 → #8 → #11**, preserving their merge ancestry. PR #4 and live campaign Q&A are excluded. Historical branches already present in the base are not merged again.
+The isolated `integration/common-2026-11-12` branch combines reviewed base `bdb8a4887522b38f5110f3900bbf1655cc5fd600` with PRs **#6 → #9 → #12 → #8 → #11**, preserving their merge ancestry, plus the independently reviewed NAV-01 fix from candidate `6984f884`. PR #4 and live campaign Q&A are excluded. Historical branches already present in the base are not merged again.
 
-See the [integration report](docs/workflow/COMMON-INTEGRATION-2026-11-12.md), [manifest](docs/milestones/COMMON-2026.11.12.json), and [rollback/promotion plan](docs/workflow/COMMON-PROMOTION-2026-11-12.md) for exact tested SHA, Windows artifact, review and gates. The `M7.4.2i` package label identifies this integration build only; it does not complete a product milestone.
+See the [continuation report](docs/workflow/COMMON-NAV01-CONTINUATION.md), [manifest](docs/milestones/COMMON-2026.11.12.json), and [rollback/promotion plan](docs/workflow/COMMON-PROMOTION-2026-11-12.md) for exact tested SHA, Windows artifact, review and gates. The new `M7.4.2n` package label identifies the NAV-01 integration build only; it does not complete a mechanics milestone. The earlier [integration report](docs/workflow/COMMON-INTEGRATION-2026-11-12.md) and `M7.4.2i` build remain historical evidence.
 
-**Release promotion is blocked by NAV-01:** unsaved Division Lab template names/rows/counts reset on tool navigation. Save templates to the intended campaign before navigating. Whole-strategy editor drafts also lack complete cross-route protection; existing campaign/planner recovery does not cover every editor. The explicit [release gate](docs/application/INTEGRATION-RELEASE-GATES.json) makes `npm run package` refuse while NAV-01 is open. Isolated development packaging remains available for review.
+**NAV-01 is fixed:** unsaved template names, unit rows/counts and army size stay in the current window across tools and campaigns. Save persists name/rows through the existing API; replacing different rows under the same name asks for confirmation. Loading over dirty edits and discard require an explicit choice. Global draft review supports return, download and discard; normal reload/close offers Stay/review or explicit Leave/discard. Drafts are not crash durable. Army size is not part of saved templates; scratch/deleted-campaign drafts are download/discard only. Production/comparison state and whole-strategy editor recovery are outside this fix.
+
+**Release promotion remains blocked by QUAL-195** and the existing explanation/acceptance gates. The explicit [release gate](docs/application/INTEGRATION-RELEASE-GATES.json) still makes `npm run package` refuse. Isolated development packaging remains available for review.
 
 #11 preserves source-input inspection, not qualified division combat calculations. Organization, soft attack, hard attack, defense and breakthrough remain unsupported with null values/deltas; M7.4.2b remains blocked on [Issue #10](https://github.com/connorgreenleaf22/hoi4-companion/issues/10). Strategies remain provisional, and ranking/optimization stay disabled where coverage is insufficient. The earlier authorized provider request does not authorize further calls.
 
-The current installed game is 1.19.5.0, while retained source/evaluation qualification is pinned to 1.19.4.2. Both evaluation source audits refuse this mismatch. Fixture/demo and package success do not qualify the current patch; separately reviewed source requalification remains open.
+The current installed game is 1.19.5.0, while retained qualification is pinned to 1.19.4.2. A [separate read-only isolated-index audit](docs/application/QUALIFICATION-195-DELTA.json) compared 39 pins: 38 unchanged and only launcher settings changed. Current-index evaluations/inspection and retained fixture-result reuse refuse the mismatch. This is not semantic or all-DLC qualification. Legacy Germany/Hungary paths and no-NSB tank fixtures remain counterfactuals, not evidence for the installed all-DLC target configuration.
 
 ## Inherited v0.4 foundation
 
@@ -92,7 +94,7 @@ For rollback, close every service and use v0.3 tooling: `node build/cli.cjs --re
 
 Save conflicts retain a visible draft with download, review, save-as-new and explicit discard controls. Retrying a response-lost save that committed reports a conflict. Drafts are not automatically merged. Unsaved in-memory drafts still do not survive a forced app/process crash; resolve or download them before closing.
 
-Registered campaign/planner drafts are listed in **Review unsaved drafts** from every page. Download preserves the selected alternative, original revision and editable values; discard changes only the in-memory draft after reading current saved data. A late save response cannot erase a newer cached draft. The native close dialog keeps the service running when you choose Stay or Review/download. This protection does not cover unsaved Division Lab templates or all whole-strategy editor state; NAV-01 blocks release promotion. Drafts have no crash durability.
+Registered campaign/planner and Division Lab template drafts are listed in **Review unsaved drafts** from every page. Download preserves editable values; discard does not modify saved templates. A late save response cannot erase newer cached edits. The native close dialog keeps the service running when you choose Stay or Review/download. Whole-strategy editor state remains a separate limitation. Drafts have no crash durability.
 
 ## Development and validation
 

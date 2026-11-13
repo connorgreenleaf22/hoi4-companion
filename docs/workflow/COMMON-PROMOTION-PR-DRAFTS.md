@@ -1,19 +1,17 @@
-# Prepared PR descriptions — no publication or merge
+# Prepared promotion descriptions
 
-Substitute the final reviewed candidate SHA and actual CI links from the integration manifest/report before opening either PR. No GitHub PR is created by this file.
+## Integration to develop — keep draft
 
-## Candidate to develop
+Title: Consolidate reviewed knowledge foundations and fix unsaved Lab template loss
 
-Title: Integrate reviewed source knowledge and evaluation foundations
+The application work is spread across reviewed feature branches. This candidate combines reviewed bdb8a488 and #6 → #9 → #12 → #8 → #11 with normal merges, preserving both stacks. It adds the independently reviewed NAV-01 correction from 6984f884: per-campaign in-window template drafts, explicit dirty load/discard/replacement choices, and existing close/reload/recovery registration. PR #4/live-Q&A and UX prototype work remain excluded; no historical branch is re-merged.
 
-The application work is spread across independently reviewed feature branches. This candidate consolidates reviewed base `bdb8a4887522b38f5110f3900bbf1655cc5fd600` and exact PRs #6 → #9 → #12 → #8 → #11 with normal merges, retaining #12 on #9 and #11 on #8. It combines corrected AI context serialization, conditional event interpretation, opt-in practical path summaries, bounded base-resource evaluation and partial combat-input inspection. PR #4/live-Q&A, UX prototypes and unrelated work are excluded; historical branches already in the base are not merged again.
+[Report](COMMON-NAV01-CONTINUATION.md), [manifest](../milestones/COMMON-2026.11.12.json), [receipt](../application/NAV01-VERIFICATION.json), [rollback](COMMON-PROMOTION-2026-11-12.md). Packaged runtime e0218610779c829bd24eb60c6d04713897fd1456; exact final independent SHA and observed hosted results belong in the published PR/native handoff. The new ZIP has75 matching extracted files and 11 actual isolated lifecycle checks; two diagnosed harness failures are retained. Native confirmation/close responses are injected, with real browser prompts tested separately. Save format/schema unchanged; drafts have no crash durability and army size is not persisted by Save.
 
-Evidence: [report](COMMON-INTEGRATION-2026-11-12.md), [manifest](../milestones/COMMON-2026.11.12.json), [rollback](COMMON-PROMOTION-2026-11-12.md). The report identifies the exact runtime/package and independent review. Hosted checks must be obtained on the eventual published candidate; local results do not stand in for Actions.
+Keep draft. A separate read-only isolated index/source delta verifies identity/refusal only: installed 1.19.5 remains unqualified against 1.19.4.2 pins. Legacy Germany/Hungary and no-NSB tank fixtures are counterfactuals, not installed all-DLC evidence. PR11's five metrics/deltas remain unsupported/null and M7.4.2b blocked. Full coverage, owner acceptance/invoice reconciliation, hosted checks/protection and explicit merge approval remain gates. No auto-merge, paid/game call or release is requested.
 
-Keep draft/blocked. NAV-01 loses unsaved Division Lab template edits on navigation and explicitly prevents release packaging/promotion. M7.4.2b remains blocked with all five combat metrics/deltas null; source inspection is not combat qualification. Complete mechanics, campaign/native qualification, invoice/owner usefulness acceptance and enforced repository checks/approval remain separate gates. No automatic merge, protected push, release, paid request or HOI4 run is requested.
-
-## Develop to main — prepare only after approved develop merge
+## Develop to main — local future draft only
 
 Title: Promote the reviewed common application baseline from develop
 
-Populate this draft only after a separately approved develop merge. Cite its actual merge SHA, final independent review and required hosted check links; compare that exact snapshot with then-current main. Carry forward the same scope exclusions, rollback source/package references, unresolved qualification and release gates. A candidate SHA is not an actual future develop merge SHA. Keep draft/blocked until the maintainer explicitly approves the exact promotion and all applicable gates pass. This task performs no main merge, release or branch-protection change.
+Populate only after a separately approved develop merge. Cite that actual merge SHA, exact review and current hosted checks, then compare it with then-current main. Preserve scope exclusions, artifact/rollback identities and all remaining qualification/release gates. A candidate SHA is not a future develop merge SHA. This task performs no main merge, release or protection change.

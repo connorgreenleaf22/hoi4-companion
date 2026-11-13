@@ -1,0 +1,347 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "startingCandidate": "6984f88463d4ec9add39b174889b0152ab9c0a30",
+  "branch": "integration/common-2026-11-12",
+  "fixSha": "58114ad8c2a93fc1b2cf04469724828b644f0e4c",
+  "runtimeSha": "e0218610779c829bd24eb60c6d04713897fd1456",
+  "harnessSha": "ed207cb31d2082c034b87085b44772eb918253c5",
+  "status": "NAV-01 fixed; release promotion blocked",
+  "included": [
+    {
+      "pr": 6,
+      "sha": "dfb27ec6a3b19e3a4240e550d501441db522c499"
+    },
+    {
+      "pr": 9,
+      "sha": "895ef1cc16da27887d535165b8ea866476d148a4"
+    },
+    {
+      "pr": 12,
+      "sha": "2bf89a5eaadcd6d22302cd1935fec5513a18b730",
+      "dependsOn": 9
+    },
+    {
+      "pr": 8,
+      "sha": "1fdf0a9af79b0afcaf465ccad33ee2a048591db8"
+    },
+    {
+      "pr": 11,
+      "sha": "747969632907827e89d261b5b157d93f3cb9f88b",
+      "dependsOn": 8
+    }
+  ],
+  "excluded": [
+    "PR #4 and live-Q&A",
+    "UX prototypes",
+    "new knowledge Goals",
+    "historical branches already inherited"
+  ],
+  "tests": {
+    "focused": {
+      "pass": 20,
+      "fail": 0,
+      "skipped": 0
+    },
+    "labBrowser": {
+      "pass": 9,
+      "fail": 0,
+      "rendererErrors": [],
+      "sourceUnchanged": true,
+      "receiptSha256": "32a8baa4fbcc5ec41a7dcdfc765bfec63b5b798514a64dd6af26e5a957eb4e74"
+    },
+    "plannerCloseBrowser": {
+      "pass": 7,
+      "fail": 0,
+      "initialFailure": "Inherited stale selector; corrected to current profile-trigger, then passed"
+    },
+    "portableCi": {
+      "pass": 195,
+      "fail": 0
+    },
+    "workflowGuards": {
+      "pass": 3,
+      "fail": 0
+    },
+    "build": "passed TypeScript/Vite/Node bundles; rebuilt integrated runtime for new package"
+  },
+  "package": {
+    "name": "M7.4.2n-e0218610779c-windows-x64.zip",
+    "reference": "Local-only Documents/HOI4 Companion Development Builds/M7.4.2n-e0218610779c",
+    "sha256": "fc4a789c18ed2b01038a63d28e6c794f4ae167a17b91fde8b6820ca3e7676ddc",
+    "matchingFreshlyExtractedFiles": 75,
+    "checks": [
+      {
+        "name": "actual extracted app/service uses copied fixture profile and stays unconfigured",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-PACKAGE"
+        ],
+        "ms": 26
+      },
+      {
+        "name": "dirty template survives tools and separate campaign drafts without saved-data writes",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01"
+        ],
+        "ms": 473
+      },
+      {
+        "name": "global review downloads exact draft; discard Cancel stays, explicit discard targets one campaign",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-DISCARD"
+        ],
+        "ms": 627
+      },
+      {
+        "name": "Save persists template through existing API and keeps all legacy campaign fields/templates",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-SAVE"
+        ],
+        "ms": 50
+      },
+      {
+        "name": "same-name replacement Cancel keeps saved data and edited draft intact",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-SAVE"
+        ],
+        "ms": 64
+      },
+      {
+        "name": "confirmed replacement pending Save remains protected outside the Lab until actual response",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-PENDING"
+        ],
+        "ms": 262
+      },
+      {
+        "name": "failed Save preserves editable template and recovery without changing saved templates",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-FAILURE"
+        ],
+        "ms": 188
+      },
+      {
+        "name": "loading a saved template requires explicit discard; Cancel leaves edits intact",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-LOAD"
+        ],
+        "ms": 69
+      },
+      {
+        "name": "clean packaged renderer reload keeps saved templates compatible",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-RELOAD"
+        ],
+        "ms": 143
+      },
+      {
+        "name": "actual close handler Stay and Review keep draft/service; explicit discard closes owned app",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-CLOSE"
+        ],
+        "ms": 387
+      },
+      {
+        "name": "full packaged restart retains legacy/new saved templates and notes, with no draft or provider carryover",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-RESTART"
+        ],
+        "ms": 358
+      }
+    ],
+    "rendererErrors": [],
+    "sourceUnchanged": true,
+    "originalFixtureUnchanged": true,
+    "receiptSha256": "f4acee99c7fd3751bc0c7005aa18b25dd6263c53f48fb00ebd811296b6bb6414",
+    "failedAttempts": [
+      {
+        "reference": "Local-only integration artifacts/qa/nav01-lab-package-2026-11-13T01-04-35-093Z-938377cd",
+        "cause": "Harness waited for browser download event instead of Electron session event"
+      },
+      {
+        "reference": "Local-only fix artifacts/qa/nav01-lab-package-2026-11-13T01-08-13-058Z-c8a79b3c",
+        "cause": "Harness mixed CDP dialog dismissal with Electron injected response"
+      }
+    ],
+    "nativeDialogQualification": "Injected known confirmation/close choices through actual Electron handlers; real browser prompts verified separately. Not human OS-dialog acceptance.",
+    "builderScreenshotReview": "packaged-restart.png"
+  },
+  "preservation": {
+    "filesChecked": 146,
+    "changedFiles": 0,
+    "otherOriginalWorktreesChecked": 18,
+    "changedWorktrees": 0,
+    "ownedQaProcessesRemaining": 0,
+    "fixtureDataRemoved": true,
+    "closedOriginalFixtureUnchanged": true,
+    "knowledgeGoalsStarted": 0,
+    "realUserDatabaseOpenedByCandidate": false,
+    "storeSchemaChanged": false
+  },
+  "limits": [
+    "Memory-only drafts; normal reload/close requires choice, but forced termination/explicit Leave/discard loses unsaved edits",
+    "Save persists name/rows, not army-size input",
+    "Scratch/deleted-campaign drafts are export/discard only",
+    "Production/comparison selections and whole-strategy editor recovery outside NAV-01"
+  ],
+  "versionAudit": {
+    "reference": "docs/application/QUALIFICATION-195-DELTA.json",
+    "scriptReference": "Local-only .bridge-local/nav01-2026-11-12/qualification-delta.ts",
+    "scriptSha256": "406ebb1dd7be4f6fa94b62bb40a7751626a4dd263d523cd4d792c8d88247b9ca",
+    "currentVersion": "1.19.5.0",
+    "pinnedVersion": "1.19.4.2",
+    "indexRuns": 1,
+    "indexElapsedMs": 53343,
+    "pinnedFiles": 39,
+    "changed": 1,
+    "unchanged": 38,
+    "missing": 0,
+    "refusal": {
+      "currentResource": "source-invalidated",
+      "currentCombat": "source-invalidated",
+      "currentInputInspection": "source-invalidated",
+      "oldResourceResultIsCurrent": false,
+      "oldCombatResultIsCurrent": false,
+      "allDlcTankRequest": "rejected",
+      "qualifiedDivisionCombatMetrics": 0,
+      "allFiveCombatMetricsNull": true
+    },
+    "currentPatchQualified": false,
+    "scope": "Retained fixture-generated result refusal, not historical user-saved evaluation readback. Legacy Germany/Hungary and no-NSB tank fixtures remain counterfactuals.",
+    "allDlcApplicabilityQualified": false
+  },
+  "independentReview": {
+    "reviewer": "/root/review_common_candidate",
+    "reviewedFixSha": "58114ad8c2a93fc1b2cf04469724828b644f0e4c",
+    "reviewedHarnessSha": "ed207cb31d2082c034b87085b44772eb918253c5",
+    "result": "No remaining blocking code/harness/evidence findings; independently verified source,11-case package receipt,artifact hashes and stale-source boundaries",
+    "finalExactShaReference": "Local-only .bridge-local/nav01-2026-11-12/final-review.json, frozen after final evidence commit"
+  },
+  "hostedChecks": {
+    "state": "pending-publication",
+    "required": [
+      "qa-typecheck",
+      "qa-test-ci",
+      "qa-schemas",
+      "qa-hygiene"
+    ],
+    "reference": "Local-only .bridge-local/nav01-2026-11-12/hosted-checks.json after draft PR publication; final native handoff gives exact checked SHA"
+  },
+  "release": {
+    "allowed": false,
+    "remaining": [
+      "QUAL-195 current-patch/all-DLC source qualification",
+      "M7.4.2b formula qualification (#10), all five metrics null",
+      "Full explanation coverage and deeper mechanics (#7)",
+      "Owner desktop/usefulness acceptance and invoice reconciliation (#2)",
+      "Required hosted checks/protection/explicit merge approval (#1)"
+    ]
+  },
+  "operations": {
+    "gameLaunches": 0,
+    "paidProviderCalls": 0,
+    "invasiveOperations": 0,
+    "protectedMerges": 0,
+    "releases": 0,
+    "goalsStarted": 0
+  },
+  "localEvidence": [
+    {
+      "file": "focused.txt",
+      "scope": "Local-only fix worktree",
+      "sha256": "2513d5bf9e5046d5309e7c14c4d75547faeecb710ddbf34dc68a3262338d9c93"
+    },
+    {
+      "file": "build-final.txt",
+      "scope": "Local-only fix worktree",
+      "sha256": "e4e1a0ed69434e980d5eca91869c3b2b82de768873afa0c8df3193aafb765019"
+    },
+    {
+      "file": "lab-ui-final.txt",
+      "scope": "Local-only fix worktree",
+      "sha256": "40f596ee38e9735349708cb1d3b4e81b736d314c37d4e3dcec5280aa9252d2bc"
+    },
+    {
+      "file": "planner-close-ui.txt",
+      "scope": "Local-only fix worktree",
+      "sha256": "bca9b1fa4e25b219ae3c72d991fec0ee3ffe6567b26a165b623e18028a1aace5"
+    },
+    {
+      "file": "planner-close-ui-final.txt",
+      "scope": "Local-only fix worktree",
+      "sha256": "bd928372cdc2aad07d4a35d7775c46f13a3062d1f2fa1975d0310d3b135d9bff"
+    },
+    {
+      "file": "test-ci.txt",
+      "scope": "Local-only fix worktree",
+      "sha256": "32dd363741f106555d14b6ce33911bfc19ce0e9e8b0f74a3f24fcf3d322260df"
+    },
+    {
+      "file": "schemas.txt",
+      "scope": "Local-only fix worktree",
+      "sha256": "3478d5a99f9c28ea511cdbfcab708208559e38310de3652d0b7fc449050e4076"
+    },
+    {
+      "file": "hygiene.txt",
+      "scope": "Local-only fix worktree",
+      "sha256": "bc167c9adb42d1e59ff92016bc7a576741f7c52cd69343a91e23a6681ab58cce"
+    },
+    {
+      "file": "package-smoke-corrected.txt",
+      "scope": "Local-only fix worktree",
+      "sha256": "2c5e51a7d298100d75a7f66d1978dd7d2cf751c9ad2e913cba5efbc3e563280c"
+    },
+    {
+      "file": "package-smoke-native-hooks.txt",
+      "scope": "Local-only fix worktree",
+      "sha256": "cae53ff12b48873a5150db7bcee225bcdca75c134a366c3c8c2cab598aaefb4c"
+    },
+    {
+      "file": "integration-build.txt",
+      "scope": "Local-only integration worktree",
+      "sha256": "b8c8b5a8d29e2956f201f5d1cb46b1752ba71946122f463931970c7df12566cf"
+    },
+    {
+      "file": "package.txt",
+      "scope": "Local-only integration worktree",
+      "sha256": "f2d50e99600fdb213bc2d7cd7bf71b516d5a5f31cd115746e38f35de94ab7eda"
+    },
+    {
+      "file": "archive.txt",
+      "scope": "Local-only integration worktree",
+      "sha256": "ec784e6e45fdfb664ad6058b09552e0291132be2d6e2c8c3642eff8220c8a956"
+    },
+    {
+      "file": "package-smoke.txt",
+      "scope": "Local-only integration worktree",
+      "sha256": "13540656645cf605bf48b4234835622af7765210083cfcba63b7ebe058432f73"
+    },
+    {
+      "file": "qualification-delta.txt",
+      "scope": "Local-only integration worktree",
+      "sha256": "925870e8c76af0a1171625d9a7ebcfe99e72c638268fc4c7cd9e5e2093fec43f"
+    }
+  ]
+}

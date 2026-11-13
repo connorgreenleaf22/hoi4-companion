@@ -1,5 +1,7 @@
 # Common integration — 2026-11-12, CJ-Laptop
 
+This is the historical initial consolidation checkpoint. The [NAV-01 continuation](COMMON-NAV01-CONTINUATION.md) supplies the current fix, replacement runtime/package, version audit and gates. Original evidence below remains scoped to its original SHA; the current manifest follows the continuation.
+
 Manifest: [COMMON-2026.11.12.json](../milestones/COMMON-2026.11.12.json). Related source PRs: [#6](https://github.com/connorgreenleaf22/hoi4-companion/pull/6), [#9](https://github.com/connorgreenleaf22/hoi4-companion/pull/9), [#12](https://github.com/connorgreenleaf22/hoi4-companion/pull/12), [#8](https://github.com/connorgreenleaf22/hoi4-companion/pull/8), [#11](https://github.com/connorgreenleaf22/hoi4-companion/pull/11).
 
 ## Candidate and scope

@@ -1,6 +1,12 @@
 # HOI4 bridge status
 
-## Common integration — 2026-11-12
+## NAV-01 continuation — 2026-11-12
+
+Current [continuation report](../workflow/COMMON-NAV01-CONTINUATION.md) supersedes the initial consolidation checkpoint below. Reviewed fix `58114ad8` and harness `ed207cb3` were normally incorporated; packaged runtime `e0218610779c829bd24eb60c6d04713897fd1456`. Template drafts now survive tool/campaign navigation and join existing close/reload/review protection; confirmation prevents dirty load/discard and same-name row replacement without a choice. 20 focused, 9 Lab browser, 7 affected planner-close browser, 195 portable +3 guard cases pass. Fresh new Windows ZIP has 75 matching files; corrected isolated package run passes 11 checks including actual shutdown/restart. Two diagnosed harness failures are retained; no application rebuild/retry was used to conceal them. Native choices were injected through actual Electron handlers, with real browser prompts tested separately.
+
+One separate read-only isolated index identifies 1.19.5.0; 39 old pins compare as 38 unchanged plus changed launcher settings. Actual-index and retained-fixture-result reuse refuse stale qualification; no relabeling, semantic/all-DLC or native qualification is claimed. Germany/Hungary legacy paths and no-NSB tank fixtures remain counterfactual. All five PR #11 combat metrics/deltas stay null; M7.4.2b remains blocked. Release guard now names QUAL-195; full coverage/owner acceptance/approval gates remain. 146 original files and 18 other original worktrees unchanged; both knowledge Goals remain unstarted. No game/provider calls, protected merges, releases or HQ edits. Final exact-SHA review/hosted-check receipts are in the native handoff.
+
+## Initial common integration checkpoint — 2026-11-12 (historical)
 
 `integration/common-2026-11-12` combines reviewed base bdb8a488 with exact PRs #6 → #9 → #12 → #8 → #11, preserving both stacks. [Current report](../workflow/COMMON-INTEGRATION-2026-11-12.md) and [promotion/rollback plan](../workflow/COMMON-PROMOTION-2026-11-12.md) supersede older branch-isolation/next-action notes below for this candidate. Source reports remain historical evidence at their original SHAs. PR #4/live-Q&A remain untouched and excluded.
 

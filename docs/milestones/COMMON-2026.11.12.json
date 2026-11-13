@@ -3,49 +3,55 @@
   "milestoneId": "COMMON-2026.11.12",
   "status": "blocked",
   "branch": "integration/common-2026-11-12",
-  "commitSha": "e27e28f8ff5ddaa9d5820bceeba2073283868f0c",
+  "commitSha": "e0218610779c829bd24eb60c6d04713897fd1456",
   "testEvidence": [
     {
       "kind": "deterministic",
       "result": "passed",
-      "reference": "docs/application/COMMON-INTEGRATION-VERIFICATION.json",
-      "summary": "77 focused +21 compatibility/preservation +2 SQLite API contract cases; 191 portable fixtures +3 workflow guards. Counts overlap across focused/portable runs; not a distinct-total claim."
+      "reference": "docs/application/NAV01-VERIFICATION.json",
+      "summary": "20 focused cases,9 Lab and7 affected planner-close browser cases;195 portable fixtures+3 guards. Scopes overlap. NAV-01 implementation/source tests pass."
     },
     {
       "kind": "typecheck",
       "result": "passed",
-      "reference": "docs/application/COMMON-INTEGRATION-VERIFICATION.json",
-      "summary": "Production build passes TypeScript, Vite and Node bundle generation. Lockfile and store/migration implementation unchanged."
+      "reference": "docs/application/NAV01-VERIFICATION.json",
+      "summary": "Integrated TypeScript/Vite/Node build passes. Store/schema/migration and PR11 contracts unchanged."
     },
     {
       "kind": "schema",
       "result": "passed",
-      "reference": "docs/workflow/COMMON-INTEGRATION-2026-11-12.md",
-      "summary": "Milestone manifests validated locally; final evidence checks recorded in report."
+      "reference": "docs/workflow/COMMON-NAV01-CONTINUATION.md",
+      "summary": "Seven manifested milestones validate; final evidence-only checks retained in native handoff."
     },
     {
       "kind": "hygiene",
       "result": "passed",
-      "reference": "docs/workflow/COMMON-INTEGRATION-2026-11-12.md",
-      "summary": "Tracked path/credential heuristic and combined whitespace pass; only sanitized source/evidence staged, raw data retained locally."
+      "reference": "docs/workflow/COMMON-NAV01-CONTINUATION.md",
+      "summary": "Path/credential heuristic and full develop-base whitespace pass; sanitized diff only. Raw index/profile evidence stays ignored/local."
     },
     {
       "kind": "packaged",
       "result": "passed",
-      "reference": "docs/application/COMMON-INTEGRATION-VERIFICATION.json",
-      "summary": "75 files match fresh extraction. Three actual isolated Electron startup/service/offline save/restart acceptance cases pass; additional NAV-01 check reproduces the release blocker. Four ASAR API/demo bundles match; all five combat metrics/deltas null."
+      "reference": "docs/application/NAV01-VERIFICATION.json",
+      "summary": "75 freshly extracted files match;11 actual isolated app/service/template lifecycle/reload/shutdown/restart cases pass after two diagnosed harness corrections. Native choices injected, real browser prompts separate."
     },
     {
       "kind": "review",
       "result": "passed",
-      "reference": "docs/application/COMMON-INTEGRATION-VERIFICATION.json",
-      "summary": "Separate reviewer /root/review_common_candidate reviewed runtime e27e28f8ff5ddaa9d5820bceeba2073283868f0c with no blocking code findings; exact final evidence-SHA review has a local-only post-freeze receipt."
+      "reference": "docs/application/NAV01-VERIFICATION.json",
+      "summary": "Separate reviewer approved exact fix58114ad8c2a93fc1b2cf04469724828b644f0e4c and harnessed207cb31d2082c034b87085b44772eb918253c5; final evidence SHA recorded locally after freeze."
+    },
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/QUALIFICATION-195-DELTA.json",
+      "summary": "One read-only isolated1.19.5 index;39 pins,38 unchanged/launcher changed; actual-index/stale-fixture refusal and NSB-enabled request rejection verified. No qualification inferred."
     },
     {
       "kind": "deterministic",
       "result": "blocked",
-      "reference": "docs/application/COMMON-INTEGRATION-VERIFICATION.json",
-      "summary": "Installed 1.19.5.0 differs from retained 1.19.4.2 resource/combat pins; both installed audits refuse as expected. No current-installation qualification claim."
+      "reference": "docs/application/QUALIFICATION-195-DELTA.json",
+      "summary": "Current-patch/all-DLC semantic qualification remains open. Legacy Germany/Hungary and no-NSB fixtures are counterfactual, not installed all-DLC evidence."
     }
   ],
   "nativeQualification": {
@@ -54,15 +60,11 @@
     "evidence": []
   },
   "artifact": {
-    "name": "M7.4.2i-e27e28f8ff5d-windows-x64.zip",
-    "reference": "Local-only Documents/HOI4 Companion Development Builds/M7.4.2i-e27e28f8ff5d; never uploaded",
-    "sha256": "1086a172f6b70f1e03dae665edd016b329006809c66373ad81a3d8eece50194c"
+    "name": "M7.4.2n-e0218610779c-windows-x64.zip",
+    "reference": "Local-only Documents/HOI4 Companion Development Builds/M7.4.2n-e0218610779c",
+    "sha256": "fc4a789c18ed2b01038a63d28e6c794f4ae167a17b91fde8b6820ca3e7676ddc"
   },
   "blockers": [
-    {
-      "summary": "NAV-01: unsaved Division Lab template edits lost on navigation; release promotion explicitly blocked until reviewed fix and extracted-build regression.",
-      "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/2"
-    },
     {
       "summary": "Current installed source 1.19.5.0 requires separate qualification; retained 1.19.4.2 fixtures are not current-installation evidence. Deeper event/campaign applicability also remains open.",
       "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/7"
@@ -79,15 +81,18 @@
   "acceptance": {
     "state": "pending",
     "evidence": [
-      "docs/application/MILESTONE-7.4.2i-ACCEPTANCE.md"
+      "docs/application/MILESTONE-7.4.2n-ACCEPTANCE.md"
     ]
   },
-  "report": "docs/workflow/COMMON-INTEGRATION-2026-11-12.md",
+  "report": "docs/workflow/COMMON-NAV01-CONTINUATION.md",
   "github": [
     "https://github.com/connorgreenleaf22/hoi4-companion/pull/6",
     "https://github.com/connorgreenleaf22/hoi4-companion/pull/9",
     "https://github.com/connorgreenleaf22/hoi4-companion/pull/12",
     "https://github.com/connorgreenleaf22/hoi4-companion/pull/8",
-    "https://github.com/connorgreenleaf22/hoi4-companion/pull/11"
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/11",
+    "https://github.com/connorgreenleaf22/hoi4-companion/issues/2",
+    "https://github.com/connorgreenleaf22/hoi4-companion/issues/7",
+    "https://github.com/connorgreenleaf22/hoi4-companion/issues/10"
   ]
 }

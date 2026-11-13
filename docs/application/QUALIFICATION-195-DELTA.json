@@ -1,0 +1,425 @@
+{
+  "date": "2026-11-12",
+  "identity": {
+    "version": "1.19.5.0",
+    "launcherVersion": "Operation Postern v1.19.5.0.7c6c (c184)",
+    "launcherSha256": "1dc5d1a666b8843268449376b2d6d7a2f70045086c4c02babd5974847ce133d4",
+    "executableSha256": "709f916afbebcfe64a26678702691aeb40945d206074c2a80de8e9d601fce148"
+  },
+  "index": {
+    "isolated": true,
+    "elapsedMs": 53343,
+    "version": "1.19.5.0",
+    "importerRevision": 5,
+    "indexRevision": "7eef6722ed6a19fe1dfb477a6448ac3919b838541f11ab0deccf4cd326083492",
+    "files": 1913,
+    "counts": {
+      "building": 55,
+      "character": 5409,
+      "character_instance": 882,
+      "character_role": 6325,
+      "command": 429,
+      "continuous_focus": 14,
+      "continuous_focus_palette": 1,
+      "country": 439,
+      "country_history": 364,
+      "decision": 3931,
+      "decision_category": 598,
+      "dlc": 32,
+      "doctrine": 107,
+      "doctrine_folder": 4,
+      "doctrine_milestone": 44,
+      "doctrine_reward": 474,
+      "doctrine_track": 14,
+      "dynamic_modifier": 679,
+      "effect": 553,
+      "equipment": 308,
+      "event": 6990,
+      "event_option": 11572,
+      "event_stage": 969,
+      "focus": 10341,
+      "focus_tree": 67,
+      "formable": 255,
+      "idea": 6515,
+      "idea_category": 14,
+      "joint_focus": 280,
+      "mechanic": 18,
+      "modifier": 722,
+      "module": 312,
+      "module_category": 95,
+      "organization": 579,
+      "project": 136,
+      "scripted_effect": 1558,
+      "shared_focus": 335,
+      "tactic": 55,
+      "technology": 552,
+      "terrain": 14,
+      "trait": 2312,
+      "trigger": 596,
+      "unit": 158,
+      "upgrade": 37
+    },
+    "rawIndexReference": "Local-only .bridge-local/nav01-2026-11-12/version-index; not uploaded"
+  },
+  "pinnedVersion": "1.19.4.2",
+  "versionRelabeling": false,
+  "sourceDelta": {
+    "filesChecked": 39,
+    "changed": 1,
+    "unchanged": 38,
+    "missing": 0,
+    "files": [
+      {
+        "source": "common/decisions/POR.txt",
+        "pinnedHashes": [
+          "269bcab0bd25207246ef2dfb8637fc1a70e977fc5f4077a4beab86ce316ad5c2"
+        ],
+        "currentHash": "269bcab0bd25207246ef2dfb8637fc1a70e977fc5f4077a4beab86ce316ad5c2",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/dynamic_modifiers/wuw_dynamic_modifiers.txt",
+        "pinnedHashes": [
+          "bd0d7bdfe7ca255f8d7c5c78124675fe3bbc1f78b9e0b120e396941364b4d7b0"
+        ],
+        "currentHash": "bd0d7bdfe7ca255f8d7c5c78124675fe3bbc1f78b9e0b120e396941364b4d7b0",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/ideas/GER.txt",
+        "pinnedHashes": [
+          "0e8c80be2f65757ae2c53564cc9b780a309fe8601135eecd1571959c51a8d726"
+        ],
+        "currentHash": "0e8c80be2f65757ae2c53564cc9b780a309fe8601135eecd1571959c51a8d726",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/ideas/_economic.txt",
+        "pinnedHashes": [
+          "c00fd911c53f10e01afdda674e121fb50f2f63da7de647b6d39543bfb04eb03c"
+        ],
+        "currentHash": "c00fd911c53f10e01afdda674e121fb50f2f63da7de647b6d39543bfb04eb03c",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/ideas/hungary.txt",
+        "pinnedHashes": [
+          "040d892b34ec4ec5d9df11a4d9029611c9e358fb1decbedbc34ff4666d5e42b9"
+        ],
+        "currentHash": "040d892b34ec4ec5d9df11a4d9029611c9e358fb1decbedbc34ff4666d5e42b9",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/ideas/portugal.txt",
+        "pinnedHashes": [
+          "3701f33a49146dc3f682c16d5a04d10b5de199d23a39f890afb73f360c635ad3"
+        ],
+        "currentHash": "3701f33a49146dc3f682c16d5a04d10b5de199d23a39f890afb73f360c635ad3",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/ideologies/00_ideologies.txt",
+        "pinnedHashes": [
+          "e04353c6b237091f2d12364937861f487a81d444e3bb89b2ce5819518da7bc83"
+        ],
+        "currentHash": "e04353c6b237091f2d12364937861f487a81d444e3bb89b2ce5819518da7bc83",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/national_focus/germany.txt",
+        "pinnedHashes": [
+          "ac730be5ccc9095fb400e58b2f7d44501288a94186beb148dbbb0b32cf8ea03c"
+        ],
+        "currentHash": "ac730be5ccc9095fb400e58b2f7d44501288a94186beb148dbbb0b32cf8ea03c",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/national_focus/hungary.txt",
+        "pinnedHashes": [
+          "dadc3fa04500c090d0b7c4bbf8b295cf950337f78959fb32401ad5f906e80a09"
+        ],
+        "currentHash": "dadc3fa04500c090d0b7c4bbf8b295cf950337f78959fb32401ad5f906e80a09",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/national_focus/hungary_wuw.txt",
+        "pinnedHashes": [
+          "b0d77d90b5303ed46e32700957a17f1ab0d34349e7083469f4497a3285e343aa"
+        ],
+        "currentHash": "b0d77d90b5303ed46e32700957a17f1ab0d34349e7083469f4497a3285e343aa",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/national_focus/portugal.txt",
+        "pinnedHashes": [
+          "f2ab08a2667a665a58c7c92f812045dc5406a4747bb2f54d702dc15f15088180"
+        ],
+        "currentHash": "f2ab08a2667a665a58c7c92f812045dc5406a4747bb2f54d702dc15f15088180",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/scripted_effects/GER_scripted_effects.txt",
+        "pinnedHashes": [
+          "1d6b5cc8e00d685aa3c95cecab41cfeb2da590e90490de5dcce05e8e8e2beeb3"
+        ],
+        "currentHash": "1d6b5cc8e00d685aa3c95cecab41cfeb2da590e90490de5dcce05e8e8e2beeb3",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/technologies/armor.txt",
+        "pinnedHashes": [
+          "ab42433b2c581b96540a315f0d8df89bf82e7994e07e7eff1fc819c1325de39d"
+        ],
+        "currentHash": "ab42433b2c581b96540a315f0d8df89bf82e7994e07e7eff1fc819c1325de39d",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/technologies/artillery.txt",
+        "pinnedHashes": [
+          "0c52edeb24427cb17bd1411db644c59971406ca947db60183b0cc49da0a96e86"
+        ],
+        "currentHash": "0c52edeb24427cb17bd1411db644c59971406ca947db60183b0cc49da0a96e86",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/technologies/industry.txt",
+        "pinnedHashes": [
+          "06d45f11a0bfdee35ef72b935b2bee3b0083a49eb771e5c6b9391c087ed7d94f"
+        ],
+        "currentHash": "06d45f11a0bfdee35ef72b935b2bee3b0083a49eb771e5c6b9391c087ed7d94f",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/technologies/infantry.txt",
+        "pinnedHashes": [
+          "a131213cf401c9fe2b0f67c446adbac8d94d04e147f7491f94dfa29c47930e72"
+        ],
+        "currentHash": "a131213cf401c9fe2b0f67c446adbac8d94d04e147f7491f94dfa29c47930e72",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/artillery.txt",
+        "pinnedHashes": [
+          "10f299c45b79fe67562e2508fe79ef1db077c1ece995b2eeccff612e4a51e28c"
+        ],
+        "currentHash": "10f299c45b79fe67562e2508fe79ef1db077c1ece995b2eeccff612e4a51e28c",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/artillery_brigade.txt",
+        "pinnedHashes": [
+          "9826452615dfa490c2167480c3e4695283d438e2a719df85fdef06a02d8b8541"
+        ],
+        "currentHash": "9826452615dfa490c2167480c3e4695283d438e2a719df85fdef06a02d8b8541",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/engineer.txt",
+        "pinnedHashes": [
+          "25d88a0e1e19dfd11248546027b19885bad2af87fb42554aeb6fbe89e7cedef0"
+        ],
+        "currentHash": "25d88a0e1e19dfd11248546027b19885bad2af87fb42554aeb6fbe89e7cedef0",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/equipment/artillery.txt",
+        "pinnedHashes": [
+          "c2288032e61a461af7b3fdb6765f72d256a502f5050567f51e25798bb690cd54"
+        ],
+        "currentHash": "c2288032e61a461af7b3fdb6765f72d256a502f5050567f51e25798bb690cd54",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/equipment/infantry.txt",
+        "pinnedHashes": [
+          "0b2b15df8618b68ceb4892510c965f0d8618b365937fd8e12581a6d512e01cf1"
+        ],
+        "currentHash": "0b2b15df8618b68ceb4892510c965f0d8618b365937fd8e12581a6d512e01cf1",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/equipment/motorized.txt",
+        "pinnedHashes": [
+          "b25c3797280f471b89a43da5b02e135091cf205acdf37c09d547a88df52d5128"
+        ],
+        "currentHash": "b25c3797280f471b89a43da5b02e135091cf205acdf37c09d547a88df52d5128",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/equipment/tank_chassis.txt",
+        "pinnedHashes": [
+          "ad420e0bffc41a062a9457d67c18d59a91f0d8972ef6985e22e443eadd4983bf"
+        ],
+        "currentHash": "ad420e0bffc41a062a9457d67c18d59a91f0d8972ef6985e22e443eadd4983bf",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/equipment/x_tank_chassis.txt",
+        "pinnedHashes": [
+          "847194cf28e16dbe9f08a863c0d7541ec34d8c591d54d70b3211f74ae696ca65"
+        ],
+        "currentHash": "847194cf28e16dbe9f08a863c0d7541ec34d8c591d54d70b3211f74ae696ca65",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/infantry.txt",
+        "pinnedHashes": [
+          "dfc319ec6ca807fdcffdd6f3555db0f8c2aa33897706630daf55339170225a60"
+        ],
+        "currentHash": "dfc319ec6ca807fdcffdd6f3555db0f8c2aa33897706630daf55339170225a60",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/medium_armor.txt",
+        "pinnedHashes": [
+          "6f6fa9612e07d0b37654032d4fea34b78d3daccbb0e40cb69badba942b0103b5"
+        ],
+        "currentHash": "6f6fa9612e07d0b37654032d4fea34b78d3daccbb0e40cb69badba942b0103b5",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/units/recon.txt",
+        "pinnedHashes": [
+          "8a1fe834193f8b648fc6a70df71a07ae318635d500bccc52c0a64a74b2eddcfc"
+        ],
+        "currentHash": "8a1fe834193f8b648fc6a70df71a07ae318635d500bccc52c0a64a74b2eddcfc",
+        "status": "unchanged"
+      },
+      {
+        "source": "common/wargoals/00_invasion.txt",
+        "pinnedHashes": [
+          "ce35aab00cb0fb92fe0ddf1cadc05a72aee24e3f9d121dbadea3c95bebb211fd"
+        ],
+        "currentHash": "ce35aab00cb0fb92fe0ddf1cadc05a72aee24e3f9d121dbadea3c95bebb211fd",
+        "status": "unchanged"
+      },
+      {
+        "source": "documentation/effects_documentation.md",
+        "pinnedHashes": [
+          "2cdc93d26775990468eed167442f7a416b13059fb8fe07d139b54250b79209af"
+        ],
+        "currentHash": "2cdc93d26775990468eed167442f7a416b13059fb8fe07d139b54250b79209af",
+        "status": "unchanged"
+      },
+      {
+        "source": "documentation/triggers_documentation.md",
+        "pinnedHashes": [
+          "7d27ed77dadaf3a213a4b3e2c624bf9c02dae495317abe8eee833b27c2d1de29"
+        ],
+        "currentHash": "7d27ed77dadaf3a213a4b3e2c624bf9c02dae495317abe8eee833b27c2d1de29",
+        "status": "unchanged"
+      },
+      {
+        "source": "events/DOD_Hungary.txt",
+        "pinnedHashes": [
+          "da374046d42e915f913a664ca5110dbce32c63122eea7996431c139df0268ad4"
+        ],
+        "currentHash": "da374046d42e915f913a664ca5110dbce32c63122eea7996431c139df0268ad4",
+        "status": "unchanged"
+      },
+      {
+        "source": "events/LAR_NewsEvents.txt",
+        "pinnedHashes": [
+          "949863eaa48dc7e357a2a27828b39bb6712d35ffbb1991bfe408aaf47f32b462"
+        ],
+        "currentHash": "949863eaa48dc7e357a2a27828b39bb6712d35ffbb1991bfe408aaf47f32b462",
+        "status": "unchanged"
+      },
+      {
+        "source": "events/LaR_Portugal.txt",
+        "pinnedHashes": [
+          "17fa5aab0631e698bd16029d1f7d572d84aa725f779e78a8829233927b333e5f"
+        ],
+        "currentHash": "17fa5aab0631e698bd16029d1f7d572d84aa725f779e78a8829233927b333e5f",
+        "status": "unchanged"
+      },
+      {
+        "source": "events/NewsEvents.txt",
+        "pinnedHashes": [
+          "cc09d58ac47f572411da43cd5c8f10e72b7078e82eda8efff4e4e1573d40b97c"
+        ],
+        "currentHash": "cc09d58ac47f572411da43cd5c8f10e72b7078e82eda8efff4e4e1573d40b97c",
+        "status": "unchanged"
+      },
+      {
+        "source": "events/TOA_Brazil.txt",
+        "pinnedHashes": [
+          "5aafcd9332f991145c27777b602743891d4f30c31080db69ef777eef8dea900b"
+        ],
+        "currentHash": "5aafcd9332f991145c27777b602743891d4f30c31080db69ef777eef8dea900b",
+        "status": "unchanged"
+      },
+      {
+        "source": "events/WTT_Germany.txt",
+        "pinnedHashes": [
+          "c7c16433a917b69cf20964833202dcaebb7dd3118d6e4c89cca9a1471e36d073"
+        ],
+        "currentHash": "c7c16433a917b69cf20964833202dcaebb7dd3118d6e4c89cca9a1471e36d073",
+        "status": "unchanged"
+      },
+      {
+        "source": "events/WTT_NewsEvents.txt",
+        "pinnedHashes": [
+          "4f2b6be8592e46ddf88f8d124b9c6193c7cff2782df555dc94e242a826e9dc48"
+        ],
+        "currentHash": "4f2b6be8592e46ddf88f8d124b9c6193c7cff2782df555dc94e242a826e9dc48",
+        "status": "unchanged"
+      },
+      {
+        "source": "events/WUW_Germany.txt",
+        "pinnedHashes": [
+          "b747c7be10b066220b659c33c70a1be4c1cf3266f023818cfbaa168f14335dfc"
+        ],
+        "currentHash": "b747c7be10b066220b659c33c70a1be4c1cf3266f023818cfbaa168f14335dfc",
+        "status": "unchanged"
+      },
+      {
+        "source": "launcher-settings.json",
+        "pinnedHashes": [
+          "d844392e7391efe103efc96b089910adba66605bc41fe43d5bc663f4c4a7fba6"
+        ],
+        "currentHash": "1dc5d1a666b8843268449376b2d6d7a2f70045086c4c02babd5974847ce133d4",
+        "status": "changed"
+      }
+    ]
+  },
+  "refusal": {
+    "currentResource": "source-invalidated",
+    "currentCombat": "source-invalidated",
+    "currentInputInspection": "source-invalidated",
+    "oldResourceResultIsCurrent": false,
+    "oldCombatResultIsCurrent": false,
+    "allDlcTankRequest": "rejected",
+    "qualifiedDivisionCombatMetrics": 0,
+    "allFiveCombatMetricsNull": true
+  },
+  "applicability": {
+    "allDlcConfiguration": "User-specified target; installed DLC descriptors are not entitlement/enabled-playset proof.",
+    "userRootDetected": false,
+    "legacyGermanyHungary": [
+      {
+        "id": "german_focus",
+        "source": "common/national_focus/germany.txt",
+        "hash": "ac730be5ccc9095fb400e58b2f7d44501288a94186beb148dbbb0b32cf8ea03c",
+        "line": 24,
+        "applicability": "Legacy/counterfactual source branch. No installed all-DLC campaign applicability is certified."
+      },
+      {
+        "id": "hungarian_focus",
+        "source": "common/national_focus/hungary.txt",
+        "hash": "dadc3fa04500c090d0b7c4bbf8b295cf950337f78959fb32401ad5f906e80a09",
+        "line": 9,
+        "applicability": "Legacy/counterfactual source branch. No installed all-DLC campaign applicability is certified."
+      }
+    ],
+    "noNsbTankFixtures": "Explicit manual counterfactual with No Step Back disabled; not evidence for installed all-DLC configuration.",
+    "mods": "Unmerged base index; active mod/playset applicability is not qualified."
+  },
+  "conclusion": "Identity/source delta and stale-result refusal verified only. No current-patch semantic, all-DLC route, resource/combat formula, live-state or engine qualification is granted.",
+  "operations": {
+    "gameLaunches": 0,
+    "providerCalls": 0,
+    "gameWrites": 0,
+    "goalsStarted": 0
+  }
+}
