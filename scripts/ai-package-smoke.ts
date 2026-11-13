@@ -25,15 +25,15 @@ async function main(){
    await panel.getByRole('button',{name:'Start local draft'}).click();await panel.getByLabel('AI strategy name').fill('My alternative review');await panel.getByRole('button',{name:'Save and recheck strategy'}).click();await expect(panel.getByRole('status')).toContainText('Strategy saved and reviewed');await panel.getByLabel('Compare whole strategy My Portugal review').check();await panel.getByLabel('Compare whole strategy My alternative review').check();await expect(panel).toContainText('comparison is unranked');
    await p.screenshot({path:path.join(run.output,'offline-planning.png'),fullPage:true});
   });
-  if(process.env.HOI4_INTEGRATION_SMOKE==='1')await run.check('NAV-01 release blocker reproduced: unsaved Lab template resets on navigation',['NAV-01-BLOCKED'],async()=>{
+  if(process.env.HOI4_INTEGRATION_SMOKE==='1')await run.check('NAV-01 corrected: unsaved Lab template survives navigation',['NAV-01'],async()=>{
    await p.getByRole('button',{name:'Division & production',exact:true}).click();
    await p.getByLabel('Template name',{exact:true}).fill('Synthetic unsaved integration template');
    await p.getByLabel('Count 1',{exact:true}).fill('7');
    await p.getByRole('button',{name:'Command center',exact:true}).click();
    await p.getByRole('button',{name:'Division & production',exact:true}).click();
-   await expect(p.getByLabel('Template name',{exact:true})).toHaveValue('Infantry division');
-   await expect(p.getByLabel('Count 1',{exact:true})).toHaveValue('9');
-   await p.screenshot({path:path.join(run.output,'navigation-release-blocker.png'),fullPage:true});
+   await expect(p.getByLabel('Template name',{exact:true})).toHaveValue('Synthetic unsaved integration template');
+   await expect(p.getByLabel('Count 1',{exact:true})).toHaveValue('7');
+   await p.screenshot({path:path.join(run.output,'navigation-draft-retained.png'),fullPage:true});p.once('dialog',d=>void d.accept());await p.getByRole('button',{name:'Discard template draft',exact:true}).click();
   });
   const origin=new URL(p.url()).origin;await app.close();app=undefined;await assert.rejects(fetch(origin+'/api/v1/status'));
   app=await _electron.launch({executablePath:exe,cwd:path.dirname(exe),env,timeout:60000});run.ownedProcesses.push({pid:app.process().pid!,kind:'Owned M731 packaged restart'});p=await app.firstWindow({timeout:60000});await expect(p.getByRole('heading',{name:'Command center',exact:true})).toBeVisible({timeout:60000});await p.getByRole('button',{name:'Campaign planner',exact:true}).click();panel=p.getByRole('region',{name:'AI strategy planner'});
