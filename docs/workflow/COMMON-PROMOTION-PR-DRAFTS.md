@@ -1,5 +1,7 @@
 # Prepared promotion descriptions
 
+Integration preparation is published as [draft PR #13](https://github.com/connorgreenleaf22/hoi4-companion/pull/13), unmerged. Four checks pass for reviewed `668ad4e3` in [run 43345100254](https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43345100254); exact final receipt-head review/checks are in the native handoff/PR. The develop-to-main description below is local future preparation only.
+
 ## Integration to develop — keep draft
 
 Title: Consolidate reviewed knowledge foundations and fix unsaved Lab template loss

@@ -12,6 +12,8 @@ See the [continuation report](docs/workflow/COMMON-NAV01-CONTINUATION.md), [mani
 
 **Release promotion remains blocked by QUAL-195** and the existing explanation/acceptance gates. The explicit [release gate](docs/application/INTEGRATION-RELEASE-GATES.json) still makes `npm run package` refuse. Isolated development packaging remains available for review.
 
+[Draft integration PR #13](https://github.com/connorgreenleaf22/hoi4-companion/pull/13) targets develop and stays unmerged. Four required hosted checks passed at reviewed candidate `668ad4e3`; the continuation report and final native handoff retain exact SHA/check scope. No main promotion or release is performed.
+
 #11 preserves source-input inspection, not qualified division combat calculations. Organization, soft attack, hard attack, defense and breakthrough remain unsupported with null values/deltas; M7.4.2b remains blocked on [Issue #10](https://github.com/connorgreenleaf22/hoi4-companion/issues/10). Strategies remain provisional, and ranking/optimization stay disabled where coverage is insufficient. The earlier authorized provider request does not authorize further calls.
 
 The current installed game is 1.19.5.0, while retained qualification is pinned to 1.19.4.2. A [separate read-only isolated-index audit](docs/application/QUALIFICATION-195-DELTA.json) compared 39 pins: 38 unchanged and only launcher settings changed. Current-index evaluations/inspection and retained fixture-result reuse refuse the mismatch. This is not semantic or all-DLC qualification. Legacy Germany/Hungary paths and no-NSB tank fixtures remain counterfactuals, not evidence for the installed all-DLC target configuration.

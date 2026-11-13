@@ -52,6 +52,12 @@
       "result": "blocked",
       "reference": "docs/application/QUALIFICATION-195-DELTA.json",
       "summary": "Current-patch/all-DLC semantic qualification remains open. Legacy Germany/Hungary and no-NSB fixtures are counterfactual, not installed all-DLC evidence."
+    },
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43345100254",
+      "summary": "All four required hosted checks pass for independently reviewed668ad4e374bdaad56449cd00a32a39c02790eb1f. Current receipt update is evidence-only; exact final-head review/checks recorded in native handoff and draft PR."
     }
   ],
   "nativeQualification": {
@@ -93,6 +99,7 @@
     "https://github.com/connorgreenleaf22/hoi4-companion/pull/11",
     "https://github.com/connorgreenleaf22/hoi4-companion/issues/2",
     "https://github.com/connorgreenleaf22/hoi4-companion/issues/7",
-    "https://github.com/connorgreenleaf22/hoi4-companion/issues/10"
+    "https://github.com/connorgreenleaf22/hoi4-companion/issues/10",
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/13"
   ]
 }

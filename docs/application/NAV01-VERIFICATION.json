@@ -237,17 +237,41 @@
     "reviewedFixSha": "58114ad8c2a93fc1b2cf04469724828b644f0e4c",
     "reviewedHarnessSha": "ed207cb31d2082c034b87085b44772eb918253c5",
     "result": "No remaining blocking code/harness/evidence findings; independently verified source,11-case package receipt,artifact hashes and stale-source boundaries",
-    "finalExactShaReference": "Local-only .bridge-local/nav01-2026-11-12/final-review.json, frozen after final evidence commit"
+    "finalExactShaReference": "Local-only .bridge-local/nav01-2026-11-12/final-review.json, frozen after final evidence commit",
+    "reviewedPrePublicationSha": "668ad4e374bdaad56449cd00a32a39c02790eb1f",
+    "prePublicationResult": "No blocking code/evidence/sanitization findings;146 original files and18 other worktrees independently rechecked unchanged"
   },
   "hostedChecks": {
-    "state": "pending-publication",
-    "required": [
-      "qa-typecheck",
-      "qa-test-ci",
-      "qa-schemas",
-      "qa-hygiene"
+    "state": "passed",
+    "commitSha": "668ad4e374bdaad56449cd00a32a39c02790eb1f",
+    "pullRequest": "https://github.com/connorgreenleaf22/hoi4-companion/pull/13",
+    "draft": true,
+    "merged": false,
+    "runId": 43345100254,
+    "url": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43345100254",
+    "checks": [
+      {
+        "name": "qa-typecheck",
+        "jobId": 131622448336,
+        "result": "success"
+      },
+      {
+        "name": "qa-test-ci",
+        "jobId": 131622448562,
+        "result": "success"
+      },
+      {
+        "name": "qa-schemas",
+        "jobId": 131622447957,
+        "result": "success"
+      },
+      {
+        "name": "qa-hygiene",
+        "jobId": 131622448318,
+        "result": "success"
+      }
     ],
-    "reference": "Local-only .bridge-local/nav01-2026-11-12/hosted-checks.json after draft PR publication; final native handoff gives exact checked SHA"
+    "scope": "Observed hosted checks associated with independently reviewed evidence candidate668ad4e3. This receipt commit is evidence-only; its own exact-head checks are retained in the native handoff/PR after publication."
   },
   "release": {
     "allowed": false,

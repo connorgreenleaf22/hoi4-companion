@@ -2,6 +2,8 @@
 
 Current evidence: [continuation report](COMMON-NAV01-CONTINUATION.md), [manifest](../milestones/COMMON-2026.11.12.json), [NAV-01 receipt](../application/NAV01-VERIFICATION.json). This prepares promotion; it is not merge or release approval.
 
+Published preparation: [draft PR #13](https://github.com/connorgreenleaf22/hoi4-companion/pull/13), unmerged, with four required checks passed on reviewed `668ad4e3` in [run 43345100254](https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43345100254). Final receipt-head review/checks are recorded in the native handoff/PR. Main remains future preparation only.
+
 ## Develop, then main
 
 1. Recheck integration/develop/main heads, actual repository rules, exact independent review and checks. Develop/main remained ba4c3c909931f57dcdff4084446f5ad26e06db9f at continuation preflight. Stop on material advancement or conflicting work; do not rebase/force-push historical branches.
