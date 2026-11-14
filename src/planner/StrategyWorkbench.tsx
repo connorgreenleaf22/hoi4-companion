@@ -38,7 +38,7 @@ export function StrategyWorkbench({profile,draft,plan,focuses,indexRevision,busy
  useEffect(()=>{let live=true;if(goal)api<Entry>(`entry?uid=${encodeURIComponent(goal)}`).then(entry=>{if(live)setObjectiveDetails({key:goal+'|'+indexRevision,entry});}).catch(e=>{if(live)setError(String(e));});return()=>{live=false;};},[goal,indexRevision]);
  const objective=objectiveDetails?.key===goal+'|'+indexRevision?objectiveDetails.entry:focuses.find(e=>'definition:'+e.uid===goal);const lookup=(id:string)=>focuses.find(f=>f.id===id)?.title||id;
  return <section className="panel strategy-workbench" aria-label="Strategy workbench">
-  <AiPlanner key={profile.id+plan.tree} profile={draft} plan={plan} focuses={focuses} indexRevision={indexRevision} openEntry={openEntry} addAlternative={addAlternative}/>
+  <AiPlanner key={JSON.stringify([draft.id,plan.tree])} profile={draft} plan={plan} focuses={focuses} indexRevision={indexRevision} openEntry={openEntry} addAlternative={addAlternative}/>
   <div className="eyebrow">SOURCE-BACKED STRATEGY</div><h2>Plan toward an objective</h2><p>Explore prerequisite routes, save alternatives, then compare their requirements and declared rewards. These are hypothetical sequences, not verified selectable focuses.</p>
   <p className="planning-context">Planning for <strong>{draft.country}</strong> · {profile.name} · Alternative: {plan.name}</p>
   <div className="strategy-controls"><EntryPicker label="Find an objective" query={query} onQuery={q=>{setQuery(q);setGoal('');}} entries={matches} onSelect={e=>{setGoal('definition:'+e.uid);setQuery(e.title);}}/><button className="button primary" disabled={!goal||pending||busy} onClick={()=>void explore()}>Explore prerequisite routes</button></div>
