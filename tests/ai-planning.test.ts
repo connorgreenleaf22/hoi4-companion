@@ -138,3 +138,13 @@ test('outgoing uncertainty locations retain helper provenance and nearer idea pr
   assert.deepEqual(b.interpretationGaps.find((g:any)=>g.code==='unsupported_modifier').locations,[{source:'common/ideas/fixture.txt',line:1,hash:'idea-hash',version:'idea-version'}]);
  });
 });
+
+
+test('manual save retains revision instructions and expanded references in stored strategy and legacy saves remain valid',async()=>{
+ await fixture({name:'offline',async generate(){throw Error('No provider call authorized');}},async({post,input,app})=>{
+  const id=randomUUID();const saved=await post('ai/save',{...input,id,expectedRevision:0,instruction:'Retain these revision instructions',additionalReferences:['definition:tools'],content:content()});assert.equal(saved.status,200);assert.equal(saved.value.instruction,'Retain these revision instructions');assert.deepEqual(saved.value.additionalReferences,['definition:tools']);
+  const rows=await fetch(app.url+'/api/v1/ai/strategies?profile='+encodeURIComponent(input.profile.id)).then(r=>r.json());assert.equal(rows.find((s:any)=>s.id===id).instruction,'Retain these revision instructions');assert.deepEqual(rows.find((s:any)=>s.id===id).additionalReferences,['definition:tools']);
+  const stored=JSON.parse(String(app.store.db.prepare('SELECT payload FROM ai_strategies WHERE id=?').get(id).payload));assert.deepEqual(stored.additionalReferences,['definition:tools']);
+  const legacy=await post('ai/save',{...input,id,expectedRevision:1,content:content()});assert.equal(legacy.status,200);assert.deepEqual(legacy.value.additionalReferences,[]);
+ });
+});

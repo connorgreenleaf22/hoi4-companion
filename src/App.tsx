@@ -8,6 +8,7 @@ import {MechanicsView} from './MechanicsView';
 import './usability.css';
 import { DivisionLab } from './Lab';
 import {subscribeLabDrafts,getOutstandingLabDrafts,getPendingLabWrites,discardLabDraft,downloadableLabDraft} from './lab-drafts';
+import {subscribeStrategyDrafts,getOutstandingStrategyDrafts,getPendingStrategyWrites,discardStrategyDraft,downloadableStrategyDraft} from './planner/strategy-drafts';
 import { CampaignIntelligence } from './CampaignIntelligence';
 import {PlannerObservation} from './BaselineTransfer';
 import { Discovery } from './Discovery';
@@ -33,6 +34,7 @@ export default function App(){
   const [recoveries,setRecoveries]=useState<Recovery[]>([]);const [pendingSaves,setPendingSaves]=useState(0);
   const plannerDrafts=useSyncExternalStore(subscribePlannerDrafts,getOutstandingPlannerDrafts);
   const labDrafts=useSyncExternalStore(subscribeLabDrafts,getOutstandingLabDrafts);
+  const strategyDrafts=useSyncExternalStore(subscribeStrategyDrafts,getOutstandingStrategyDrafts);
   const [draftReview,setDraftReview]=useState(false);
   const saveTail=useRef<Promise<unknown>>(Promise.resolve());const selectionTail=useRef<Promise<unknown>>(Promise.resolve());const recoveryKey=useRef(0);
   const [page,setPage]=useState<Page>('overview');const [countries,setCountries]=useState<Entry[]>([]);
@@ -63,11 +65,11 @@ export default function App(){
     document.addEventListener('wheel',preventWheelEdit,{passive:false});return()=>document.removeEventListener('wheel',preventWheelEdit);
   },[]);
   useEffect(()=>{
-    const state={pendingWrites:pendingSaves+getPendingPlannerWrites()+getPendingLabWrites(),unsavedDrafts:plannerDrafts.length+recoveries.length+labDrafts.length};
+    const state={pendingWrites:pendingSaves+getPendingPlannerWrites()+getPendingLabWrites()+getPendingStrategyWrites(),unsavedDrafts:plannerDrafts.length+recoveries.length+labDrafts.length+strategyDrafts.length};
     (window as Window&{__hoi4CloseState?:typeof state}).__hoi4CloseState=state;
-    const warn=(event:BeforeUnloadEvent)=>{if(pendingSaves||getPendingPlannerWrites()||getPendingLabWrites()||recoveries.length||getOutstandingPlannerDrafts().length||getOutstandingLabDrafts().length){event.preventDefault();event.returnValue='';}};
+    const warn=(event:BeforeUnloadEvent)=>{if(pendingSaves||getPendingPlannerWrites()||getPendingLabWrites()||getPendingStrategyWrites()||recoveries.length||getOutstandingPlannerDrafts().length||getOutstandingLabDrafts().length||getOutstandingStrategyDrafts().length){event.preventDefault();event.returnValue='';}};
     window.addEventListener('beforeunload',warn);return()=>window.removeEventListener('beforeunload',warn);
-  },[pendingSaves,recoveries.length,plannerDrafts,labDrafts]);
+  },[pendingSaves,recoveries.length,plannerDrafts,labDrafts,strategyDrafts]);
   useEffect(()=>{const review=()=>setDraftReview(true);window.addEventListener('hoi4:review-drafts',review);return()=>window.removeEventListener('hoi4:review-drafts',review);},[]);
   const selectProfile=async(id:string)=>{
     setSelected(id);
@@ -151,7 +153,7 @@ export default function App(){
         <button className="profile-trigger" onClick={()=>setProfileEditor(active?structuredClone(active):blank())}><Flag size={16}/><span>{active?`${countries.find(c=>c.id===active.country)?.title||active.country} · ${active.name}`:'Choose a country / campaign'}</span><ChevronDown size={14}/></button>
       </header>
       {error&&<div className="error-banner" role="alert"><AlertTriangle size={18}/>{error}{!status&&<button className="button" onClick={()=>void load()}>Retry loading</button>}<button onClick={()=>setError('')} aria-label="Dismiss error"><X size={18}/></button></div>}
-      {!!(plannerDrafts.length+labDrafts.length)&&<section role="region" aria-label="Planner drafts kept in this window" style={{display:'flex',alignItems:'center',gap:14,padding:'10px 30px',fontSize:12}}><span>{labDrafts.length?`${plannerDrafts.length+labDrafts.length} unsaved planner/template drafts`:`${plannerDrafts.length} unsaved planner ${plannerDrafts.length===1?'draft':'drafts'}`}</span><button className="text-link" onClick={()=>setDraftReview(true)}>Review unsaved drafts</button></section>}
+      {!!(plannerDrafts.length+labDrafts.length+strategyDrafts.length)&&<section role="region" aria-label="Planner drafts kept in this window" style={{display:'flex',alignItems:'center',gap:14,padding:'10px 30px',fontSize:12}}><span>{plannerDrafts.length+labDrafts.length+strategyDrafts.length} unsaved planning drafts</span><button className="text-link" onClick={()=>setDraftReview(true)}>Review unsaved drafts</button></section>}
       {!!recoveries.length&&<section className="conflict-banner" role="region" aria-label="Unsaved campaign drafts">
         {recoveries.map(r=><div key={r.key}><h2>{r.conflict?'Campaign changed in another window':'Campaign save did not finish'}</h2><p><strong>{r.draft.name}</strong>: {r.message}</p><p>Your draft is kept here. Save it as a separate campaign or download it before discarding.</p><div className="button-row">
           <button className="button" onClick={()=>download(r.draft.name+' — unsaved draft.json',r.draft)}><Download size={15}/>Download draft</button>
@@ -192,8 +194,9 @@ export default function App(){
       {plannerDrafts.map(value=><article className="conflict-panel" key={value.draft.id}><h3>{value.draft.name}</h3><p>{value.draft.planner?.plans.find(p=>p.id===value.selected)?.name||'Planner draft'} · based on campaign revision {value.baseRevision}</p><div className="button-row"><button className="button" onClick={()=>download(value.draft.name+' - unsaved planner draft.json',downloadablePlannerDraft(value))}>Download planner draft</button><button className="button" disabled={pendingSaves>0||getPendingPlannerWrites()>0} onClick={()=>void discardPlanner(value.draft.id)}>Discard planner draft</button></div></article>)}
       {recoveries.map(value=><article className="conflict-panel" key={value.key}><h3>{value.draft.name}</h3><p>{value.message}</p><div className="button-row"><button className="button" onClick={()=>download(value.draft.name+' - unsaved campaign draft.json',value.draft)}>Download campaign draft</button><button className="button" disabled={pendingSaves>0||getPendingPlannerWrites()>0} onClick={()=>void discardDraft(value.key)}>Discard campaign draft</button></div></article>)}
       {labDrafts.map(value=><article className="conflict-panel" key={'lab:'+value.profileId}><h3>{value.value.name||'Untitled template'}</h3><p>Division template · {profiles.find(p=>p.id===value.profileId)?.name||'No available campaign'}. Kept in this window; download or save before reload/restart.</p><div className="button-row"><button className="button" onClick={()=>download((value.value.name||'template')+' - unsaved template draft.json',downloadableLabDraft(value))}>Download template draft</button>{profiles.some(p=>p.id===value.profileId)&&<button className="button" onClick={()=>{void selectProfile(value.profileId);setPage('lab');setDraftReview(false);}}>Review template</button>}<button className="button" disabled={value.pending>0} onClick={()=>{if(window.confirm('Discard this unsaved template draft? Saved templates will not change. Cancel keeps the draft.'))discardLabDraft(value.profileId);}}>Discard template draft</button></div></article>)}
-      {!plannerDrafts.length&&!recoveries.length&&!labDrafts.length&&<p>No unsaved drafts remain.</p>}
-      {(pendingSaves>0||getPendingPlannerWrites()>0||getPendingLabWrites()>0)&&<p role="status">A campaign write is in progress. Wait for it to finish before discarding or closing.</p>}
+      {strategyDrafts.map(value=><article className="conflict-panel" key={'strategy:'+value.profileId}><h3>{value.value.content?.name||value.value.objective||'Whole-strategy draft'}</h3><p>Whole strategy · {profiles.find(p=>p.id===value.profileId)?.name||'No available campaign'} · {value.basis.country}. Kept in this window. Download includes objective, manual context, source references and proposal provenance; review before sharing.</p><div className="button-row"><button className="button" onClick={()=>download((value.value.content?.name||'strategy')+' - unsaved strategy draft.json',downloadableStrategyDraft(value))}>Download strategy draft</button>{profiles.some(p=>p.id===value.profileId)&&<button className="button" onClick={()=>{void selectProfile(value.profileId);setPage('planner');setDraftReview(false);}}>Review strategy</button>}<button className="button" disabled={value.pending>0} onClick={()=>{if(window.confirm('Discard this unsaved whole-strategy draft? Saved strategies will not change. Cancel keeps the draft.'))discardStrategyDraft(value.profileId);}}>Discard strategy draft</button></div></article>)}
+      {!plannerDrafts.length&&!recoveries.length&&!labDrafts.length&&!strategyDrafts.length&&<p>No unsaved drafts remain.</p>}
+      {(pendingSaves>0||getPendingPlannerWrites()>0||getPendingLabWrites()>0||getPendingStrategyWrites()>0)&&<p role="status">A planning operation is in progress. Wait for it to finish before discarding or closing.</p>}
       <div className="button-row"><button className="button primary" onClick={()=>setDraftReview(false)}>Stay in app</button></div>
     </section></div>}
     {toast&&<div className="toast" role="status"><CheckCircle2 size={18}/>{toast}</div>}
