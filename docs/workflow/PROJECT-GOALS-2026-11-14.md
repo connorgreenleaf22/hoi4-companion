@@ -25,6 +25,8 @@ There is no defensible single completion percentage for the full project: the ro
 
 These estimates must not be averaged: the goals overlap, and their scope differs substantially. Completing a defect is real progress within a goal; it does not make the whole application accepted.
 
+Completed in this execution: **Protect editable whole-strategy work across navigation and close choices — 100% of its bounded engineering scope.** Runtime `f6ef73f2ea2d47da20840facc6cf0535a86853ff` passed 10 strategy browser cases, 11 extracted Windows cases and independent review, including delayed/failed saves and saved-strategy reopening after full process restart. Unsaved work follows an explicit in-window policy; crash durability is outside this scope. Main delivery is recorded in the final PR. See the [completion report](../application/STRATEGY-DRAFT-01.md) for exact evidence and remaining broader gates.
+
 ## Technical summary
 
 The application uses a sandboxed Electron/React renderer, one existing Node service, ordered script parsing, a persistent reference index and SQLite campaign data. Planning uses versioned profiles, `CampaignPlan`, expected profile/index revisions and reviewed preview/apply fingerprints. Source mechanics flow through the deterministic interpreter and the planning coverage gate. AI prose cannot raise confidence or certify engine behavior. Bridge SQLite, the shared gateway/receipts and authenticated MCP adapters remain separate from source analysis and manual planning assertions.

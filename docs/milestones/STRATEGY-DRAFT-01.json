@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "STRATEGY-DRAFT-01",
+  "status": "complete",
+  "branch": "fix/strategy-draft-recovery-20261114",
+  "commitSha": "f6ef73f2ea2d47da20840facc6cf0535a86853ff",
+  "testEvidence": [
+    {"kind":"deterministic","result":"passed","reference":"docs/application/STRATEGY-DRAFT-01-VERIFICATION.json","summary":"32 focused tests;200 portable fixtures+3 guards. Independent overlapping18 tests. Counts overlap. No provider/game calls."},
+    {"kind":"deterministic","result":"passed","reference":"docs/application/STRATEGY-DRAFT-01-VERIFICATION.json","summary":"Final10 strategy browser and7 planner-close cases;9 unchanged-scope Lab cases at prior reviewed SHA. Real browser Stay/Leave; failed/delayed save and mocked provider failure covered."},
+    {"kind":"typecheck","result":"passed","reference":"docs/application/STRATEGY-DRAFT-01.md","summary":"Final TypeScript/Vite/Node build and explicit strict harness typecheck pass."},
+    {"kind":"packaged","result":"passed","reference":"docs/application/STRATEGY-DRAFT-01-VERIFICATION.json","summary":"75 extracted files match;11 actual isolated Windows app/service/pending-close/explicit-close/full-restart cases pass,zero renderer errors. Native dialog responses injected."},
+    {"kind":"review","result":"passed","reference":"docs/application/STRATEGY-DRAFT-01.md","summary":"Separate reviewer approved exact runtime f6ef73f2ea2d47da20840facc6cf0535a86853ff and final browser/package evidence,with no remaining blocker for bounded engineering goal."}
+  ],
+  "nativeQualification": {"state":"not-applicable","scope":"Local strategy-editor safety only; no gameplay or observation qualification changed. Actual Electron lifecycle is packaged evidence,not native HOI4 qualification.","evidence":[]},
+  "artifact": {"name":"M7.4.2s-f6ef73f2ea2d-windows-x64.zip","reference":"Local-only Documents/HOI4 Companion Development Builds/M7.4.2s-f6ef73f2ea2d","sha256":"89a2fe0508dac4d84c5b0608e8c081c96e5731b0b4e28549fc278cfe0341727c"},
+  "blockers": [],
+  "acceptance": {"state":"not-applicable","evidence":["docs/application/STRATEGY-DRAFT-01.md: objective engineering exit criteria pass; broader owner usefulness/desktop acceptance is neither asserted nor waived."]},
+  "report": "docs/application/STRATEGY-DRAFT-01.md",
+  "github": ["https://github.com/connorgreenleaf22/hoi4-companion/issues/15"]
+}
