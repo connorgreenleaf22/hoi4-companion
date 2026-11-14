@@ -1,7 +1,8 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {randomUUID} from 'node:crypto';
 import {startServer,validateProfile} from '../server/api';import {parseScript} from '../server/parser';
-import {OpenAiPlanningProvider,type PlanningProvider} from '../server/planner/ai-provider';
+import {OpenAiPlanningProvider,providerWire,type PlanningProvider} from '../server/planner/ai-provider';
 import {entryMechanics} from '../src/mechanics';import type {Entry} from '../src/types';import type {StrategyContent,AiContext} from '../src/ai-planning-types';
+import {CONTEXT_LIMIT_CHARACTERS,CONTEXT_LIMIT_WIRE_BYTES} from '../server/planner/ai-context';
 const content=():StrategyContent=>({name:'Fixture monarchist route',secondaryObjectives:['Build economic capacity'],focusIds:['A','B'],recommendations:[{category:'research',text:'Consider basic tools; actual research state unknown.',references:['tools'],conditions:['Inspect prerequisites and slots']},{category:'economy',text:'Keep construction adaptable.',references:[],conditions:['Manual scenario']}],assumptions:['No prior completion asserted'],risks:['Conditional civil war; allocation unknown'],milestones:['Sequential nominal timing only'],alternatives:['Different political route remains unranked'],unknowns:['Current campaign conditions']});
 const tree:Entry={uid:'tree',id:'tree',title:'Fixture Portugal tree',kind:'focus_tree',source:'fixture.txt',line:1,hash:'fixture',version:'fixture',description:'',data:{countries:['POR']}};
 const focus=(id:string,script='',extra:object={}):Entry=>({...tree,uid:id,id,title:id==='B'?'Monarchist restoration':id,kind:'focus',data:{treeId:'tree',days:70,nodes:parseScript('cost=10 '+script),prerequisites:[],exclusive:[],...extra}});
@@ -146,5 +147,52 @@ test('manual save retains revision instructions and expanded references in store
   const rows=await fetch(app.url+'/api/v1/ai/strategies?profile='+encodeURIComponent(input.profile.id)).then(r=>r.json());assert.equal(rows.find((s:any)=>s.id===id).instruction,'Retain these revision instructions');assert.deepEqual(rows.find((s:any)=>s.id===id).additionalReferences,['definition:tools']);
   const stored=JSON.parse(String(app.store.db.prepare('SELECT payload FROM ai_strategies WHERE id=?').get(id).payload));assert.deepEqual(stored.additionalReferences,['definition:tools']);
   const legacy=await post('ai/save',{...input,id,expectedRevision:1,content:content()});assert.equal(legacy.status,200);assert.deepEqual(legacy.value.additionalReferences,[]);
+ });
+});
+
+test('source preview measures exact escaped UTF-8 provider wire and drops only whole optional groups',async()=>{
+ let calls=0;await fixture({name:'offline',async generate(){calls++;return {content:content()};}},async({post,input,app})=>{
+  app.store.insert({...focus('huge'),title:'Military infantry '+'Ω'.repeat(110000)});
+  app.store.insert({...focus('small','prerequisite={focus=A} completion_reward={add_stability=0.1}',{prerequisites:[['A']]}),title:'Military "quoted" infantry \\ Ω 日本語'});
+  const request={...input,objective:'Military infantry research production'};const result=await post('ai/context',request);assert.equal(result.status,200);const ctx=result.value as AiContext;
+  const {fingerprint,contextBudget,costPreview,quoteFingerprint,budget,settings,...sourceEnvelope}=ctx;assert.ok(contextBudget);assert.equal(contextBudget.policyVersion,'dependency-groups-v1');
+  const bytes=Buffer.byteLength(JSON.stringify(providerWire(ctx,settings!)));assert.equal(bytes,contextBudget.wireBytes);assert.equal(JSON.stringify(sourceEnvelope).length,contextBudget.sourceCharacters);
+  assert.equal(contextBudget.limitCharacters,CONTEXT_LIMIT_CHARACTERS);assert.equal(contextBudget.limitWireBytes,CONTEXT_LIMIT_WIRE_BYTES);assert.ok(bytes<=CONTEXT_LIMIT_WIRE_BYTES);assert.ok(contextBudget.sourceCharacters<=CONTEXT_LIMIT_CHARACTERS);
+  assert.ok(contextBudget.omittedGroups.some(g=>g.reference==='definition:huge'&&g.reason==='payload-budget'));assert.ok(!ctx.references.some(r=>r.id==='huge'));
+  const small=ctx.references.find(r=>r.id==='small')!;assert.equal(small.title,'Military "quoted" infantry \\ Ω 日本語');assert.deepEqual(small.prerequisites,[['A']]);assert.equal(small.hash,'fixture');assert.ok(small.costsAndTiming?.some(t=>t.includes('70 nominal days')));assert.ok(ctx.references.some(r=>r.id==='A'));assert.ok(ctx.references.some(r=>r.kind==='technology'));
+  assert.ok(bytes>JSON.stringify(providerWire(ctx,settings!)).length);assert.equal(costPreview?.conservativeInputTokens,bytes+512);assert.equal(calls,0);
+  await post('ai/config',{provider:'openai',model:'gpt-6.1-sol',key:'fixture',maxOutputTokens:1000});
+  const mandatory=await post('ai/context',{...request,additionalReferences:['definition:huge']});assert.equal(mandatory.status,400);assert.match(mandatory.value.error,/Required source context exceeds.*180,000-byte.*Remove additional references/);assert.match(mandatory.value.error,/\d+ characters; \d+ UTF-8 bytes; \d+ required definitions/);
+  const blocked=await post('ai/generate',{...request,additionalReferences:['definition:huge'],requestId:randomUUID(),disclosureAccepted:true});assert.equal(blocked.status,400);assert.equal(calls,0);assert.equal(app.store.db.prepare('SELECT COUNT(*) n FROM ai_evaluations').get().n,0);
+ });
+});
+
+test('changed mandatory selection invalidates the approved fingerprint and quote before dispatch',async()=>{
+ let calls=0;await fixture({name:'offline',async generate(){calls++;return {content:content()};}},async({post,input,app})=>{
+  app.store.insert({...tree,uid:'extra',id:'unrelated_extra',title:'Additional declaration',kind:'idea'});await post('ai/config',{provider:'openai',model:'gpt-6.1-sol',key:'fixture',maxOutputTokens:1000});
+  const first=(await post('ai/context',input)).value,changedInput={...input,additionalReferences:['definition:extra']},second=(await post('ai/context',changedInput)).value;
+  assert.notEqual(first.fingerprint,second.fingerprint);assert.notEqual(first.quoteFingerprint,second.quoteFingerprint);assert.ok(second.references.some((r:any)=>r.reference==='definition:extra'));
+  const result=await post('ai/generate',{...changedInput,contextFingerprint:first.fingerprint,quoteFingerprint:first.quoteFingerprint,requestId:randomUUID(),disclosureAccepted:true,overThresholdApproved:true});assert.equal(result.status,400);assert.match(result.value.error,/Preview and approve/);assert.equal(calls,0);assert.equal(app.store.db.prepare('SELECT COUNT(*) n FROM ai_evaluations').get().n,0);
+ });
+});
+
+test('saved revision references remain mandatory and oversized prior proposal refuses without dropping its content',async()=>{
+ let calls=0;await fixture({name:'offline',async generate(){calls++;return {content:content()};}},async({post,input,app})=>{
+  const id=randomUUID(),saved=await post('ai/save',{...input,id,expectedRevision:0,content:content()});assert.equal(saved.status,200);
+  const context=await post('ai/context',{...input,parentId:id,objective:'A different military objective'});assert.equal(context.status,200);assert.deepEqual(context.value.previousProposal,saved.value.content);assert.ok(['A','B','tools'].every(id=>context.value.references.some((r:any)=>r.id===id)));assert.ok(context.value.contextBudget.mandatoryReferences>=4);
+  const large={...content(),secondaryObjectives:Array(20).fill('x'.repeat(2000)),risks:Array(20).fill('x'.repeat(2000)),milestones:Array(20).fill('x'.repeat(2000)),alternatives:Array(20).fill('x'.repeat(2000)),unknowns:Array(20).fill('x'.repeat(2000))};
+  const revision=await post('ai/save',{...input,id,expectedRevision:1,content:large});assert.equal(revision.status,200);await post('ai/config',{provider:'openai',model:'gpt-6.1-sol',key:'fixture',maxOutputTokens:1000});
+  const oversized=await post('ai/context',{...input,parentId:id});assert.equal(oversized.status,400);assert.match(oversized.value.error,/smaller saved strategy/);assert.deepEqual(app.store.db.prepare('SELECT payload FROM ai_strategies WHERE id=?').get(id).payload,JSON.stringify(revision.value));
+  const blocked=await post('ai/generate',{...input,parentId:id,requestId:randomUUID(),disclosureAccepted:true});assert.equal(blocked.status,400);assert.equal(calls,0);
+ });
+});
+
+test('the exact final-wire byte boundary is admitted and one additional mandatory byte refuses',async()=>{
+ await fixture({name:'offline-never-called',async generate(){throw Error('Provider must not be called');}},async({post,input,app})=>{
+  app.store.db.prepare('DELETE FROM entries WHERE uid<>?').run(tree.uid);
+  const padding={...tree,uid:'padding',id:'padding',kind:'idea' as const,title:'x'};app.store.insert(padding);const request={...input,additionalReferences:['definition:padding']};
+  const probe=await post('ai/context',request);assert.equal(probe.status,200);const paddingLength=CONTEXT_LIMIT_WIRE_BYTES-probe.value.contextBudget.wireBytes+1;assert.ok(paddingLength>0);
+  app.store.insert({...padding,title:'x'.repeat(paddingLength)});const boundary=await post('ai/context',request);assert.equal(boundary.status,200);assert.equal(boundary.value.contextBudget.wireBytes,CONTEXT_LIMIT_WIRE_BYTES);
+  app.store.insert({...padding,title:'x'.repeat(paddingLength+1)});const overflow=await post('ai/context',request);assert.equal(overflow.status,400);assert.match(overflow.value.error,/No required reference was dropped/);
  });
 });
