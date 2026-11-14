@@ -7,5 +7,6 @@
   "tests/planning-coverage.test.ts",
   "tests/ai-reliability.test.ts",
   "tests/lab-drafts.test.ts",
-  "tests/strategy-drafts.test.ts"
+  "tests/strategy-drafts.test.ts",
+  "tests/page-scroll.test.ts"
 ]
