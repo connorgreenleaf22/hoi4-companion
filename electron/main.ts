@@ -30,6 +30,8 @@ else {
     app.setName('HOI4 Companion');diagnostic('app-ready');
     mainWindow=new BrowserWindow({width:1500,height:960,minWidth:760,minHeight:600,backgroundColor:'#111b20',title:development?`HOI4 Companion ${development.label}`:'HOI4 Companion',icon:path.join(app.getAppPath(),'assets','icon.png'),autoHideMenuBar:true,webPreferences:{nodeIntegration:false,contextIsolation:true,sandbox:true}});
     const window=mainWindow;diagnostic('window-created');
+    window.webContents.setWindowOpenHandler(({url})=>{if(service&&url.startsWith('https://'))void shell.openExternal(url);return {action:'deny'};});
+    window.webContents.on('will-navigate',(event,url)=>{if(!service||new URL(url).origin!==service.url)event.preventDefault();});
     await window.loadURL(startupPage);diagnostic('startup-visible');
     const start=()=>startServer({port:0,staticDir:path.join(app.getAppPath(),'dist'),indexWorkerPath:path.join(app.getAppPath(),'build','index-worker.cjs')});
     try{diagnostic('service-start');service=await start();diagnostic('service-ready',{url:service.url});}catch(error){
@@ -59,8 +61,6 @@ else {
       if(guard.discardConfirmed())event.preventDefault();
       else {guard.blocked();void guard.request(true);}
     });
-    mainWindow.webContents.setWindowOpenHandler(({url})=>{if(url.startsWith('https://'))void shell.openExternal(url);return {action:'deny'};});
-    mainWindow.webContents.on('will-navigate',(event,url)=>{if(new URL(url).origin!==service!.url)event.preventDefault();});
     diagnostic('renderer-load');await mainWindow.loadURL(service.url);diagnostic('renderer-ready');
     if(development){mainWindow.on('page-title-updated',event=>event.preventDefault());mainWindow.setTitle(`HOI4 Companion ${development.label}`);}
   }).catch(error=>{diagnostic('startup-failed',{message:String(error)});if(mainWindow&&!mainWindow.isDestroyed())mainWindow.hide();void dialog.showMessageBox({type:'error',title:'Could not start HOI4 Companion',message:String(error),detail:diagnosticFile?`Diagnostics: ${diagnosticFile}`:'',buttons:['Close']}).finally(()=>{if(mainWindow&&!mainWindow.isDestroyed())mainWindow.destroy();app.quit();});});
