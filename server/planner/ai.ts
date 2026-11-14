@@ -95,7 +95,7 @@ export class AiPlanningService {
   const sources=this.sources(),meta=this.store.getSetting<Meta|null>('meta',null);
   const report=evaluatePlanner(profile,plan,focuses,{tree,dlcs:meta?.dlcs||[],indexRevision:r.indexRevision});
   const review=reviewProposal('provisional',reviewPlanCoverage(profile,plan,focuses,tree,report,sources,support,this.store.entry));
-  return {schemaVersion:1,id,profileId:profile.id,objective:r.objective,content,plan,review,sources,repairs,instruction:r.instruction,...(r.parentId?{parentId:r.parentId}:{}),manualContext:r.manualContext,classification:'provisional',campaignContext:aiCampaignContext(profile)};
+  return {schemaVersion:1,id,profileId:profile.id,objective:r.objective,content,plan,review,sources,repairs,instruction:r.instruction,additionalReferences:r.additionalReferences,...(r.parentId?{parentId:r.parentId}:{}),manualContext:r.manualContext,classification:'provisional',campaignContext:aiCampaignContext(profile)};
  }
  private record(id:string,value:unknown){if(this.disposed)return;this.store.db.prepare('INSERT OR REPLACE INTO ai_evaluations VALUES(?,?)').run(id,JSON.stringify(value));}
  async generate(profile:Profile,input:any):Promise<AiGeneration>{

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "STRATEGY-DRAFT-01",
+  "status": "complete",
+  "branch": "fix/strategy-draft-recovery-20261114",
+  "commitSha": "b21e08b3ca7c403ef3e4aa28428ea37cf4f092d1",
+  "testEvidence": [
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/STRATEGY-DRAFT-01-VERIFICATION.json",
+      "summary": "32 focused tests;200 portable fixtures+3 guards. Independent overlapping18 tests. Counts overlap. No provider/game calls."
+    },
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/STRATEGY-DRAFT-01-VERIFICATION.json",
+      "summary": "Final11 strategy browser cases include same-tree saved-list ownership. Inherited7 planner-close/9 Lab cases retain exact earlier scope. Real browser Stay/Leave; failed/delayed save and mocked provider failure covered."
+    },
+    {
+      "kind": "typecheck",
+      "result": "passed",
+      "reference": "docs/application/STRATEGY-DRAFT-01.md",
+      "summary": "Final TypeScript/Vite/Node build and explicit strict harness typecheck pass."
+    },
+    {
+      "kind": "packaged",
+      "result": "passed",
+      "reference": "docs/application/STRATEGY-DRAFT-01-VERIFICATION.json",
+      "summary": "75 extracted files match;12 actual isolated Windows app/service/saved-list isolation/pending-close/explicit-close/full-restart cases pass,zero renderer errors. Native dialog responses injected."
+    },
+    {
+      "kind": "review",
+      "result": "passed",
+      "reference": "docs/application/STRATEGY-DRAFT-01.md",
+      "summary": "Separate reviewer approved final runtime b21e08b3ca7c403ef3e4aa28428ea37cf4f092d1 including independently reproduced and verified campaign-list fix. Final evidence review recorded in report/PR."
+    }
+  ],
+  "nativeQualification": {
+    "state": "not-applicable",
+    "scope": "Local strategy-editor safety only; no gameplay or observation qualification changed. Actual Electron lifecycle is packaged evidence,not native HOI4 qualification.",
+    "evidence": []
+  },
+  "artifact": {
+    "name": "M7.4.2s-b21e08b3ca7c-windows-x64.zip",
+    "reference": "Local-only Documents/HOI4 Companion Development Builds/M7.4.2s-b21e08b3ca7c",
+    "sha256": "f640df63cb5128ef000a5e0d9ee4366d5eb370d8fd8623ffe054d10eaff35019"
+  },
+  "blockers": [],
+  "acceptance": {
+    "state": "not-applicable",
+    "evidence": [
+      "docs/application/STRATEGY-DRAFT-01.md: objective engineering exit criteria pass; broader owner usefulness/desktop acceptance is neither asserted nor waived."
+    ]
+  },
+  "report": "docs/application/STRATEGY-DRAFT-01.md",
+  "github": [
+    "https://github.com/connorgreenleaf22/hoi4-companion/issues/15"
+  ]
+}

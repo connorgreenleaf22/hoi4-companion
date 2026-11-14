@@ -1,5 +1,7 @@
 # Future implementation milestones
 
+Current management assessment (November 14, 2026): [project goals, completion estimates, blockers and execution gameplan](docs/workflow/PROJECT-GOALS-2026-11-14.md). The common application baseline is now on main through PRs #13/#14. STRATEGY-DRAFT-01 closes the separate whole-strategy editor loss; current-patch qualification, production Campaign-first workflow and existing final-release gates remain independent work. Historical milestone notes below retain their original scope.
+
 Workflow update (2026-11-10): [development and independent QA procedure](docs/workflow/README.md); PR #3 approved and merged into `feature/hoi4-ai-m731` at `440d625`; default-branch rollout remains separately gated. Product milestone acceptance remains unchanged.
 
 The current release provides manual campaign tracking. The following are planned extensions, with separate acceptance gates.

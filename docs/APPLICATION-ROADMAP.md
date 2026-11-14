@@ -1,3 +1,5 @@
+Current assessment (2026-11-14): [project goals and execution gameplan](workflow/PROJECT-GOALS-2026-11-14.md). The common baseline is on main via PRs #13/#14. One real-provider technical evaluation already passed; usefulness, invoice and mechanics gates remain separate. STRATEGY-DRAFT-01 addresses whole-strategy draft loss. Older milestone notes below are historical and do not override current evidence.
+
 > M7.3 update (2026-11-08): integrated baseline and editable provider-neutral proposal workflow are implemented on feature/hoi4-ai-m73. Deterministic/installed-source tests pass; real-provider and user quality acceptance remain open (configure later). See application/MILESTONE-7.3.md. No optimization eligibility or new native qualification is implied. Next gate is actual provider evaluation of monarchist Portugal; M7.5/M8 remain separate.
 
 Workflow update (2026-11-10): [development and independent QA procedure](workflow/README.md); PR #3 approved and merged into `feature/hoi4-ai-m731` at `440d625`; default-branch rollout remains separately gated. Product milestone acceptance remains unchanged.
