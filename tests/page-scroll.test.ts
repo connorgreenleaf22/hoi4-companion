@@ -35,3 +35,8 @@ test('only the latest queued reference close restores position on the current pa
  const {navigation,calls,flush}=fixture();navigation.commitPage('planner');navigation.captureReference(500)();navigation.captureReference(1200)();flush();
  assert.deepEqual(calls,[{top:0,left:0,behavior:'instant'},{top:1200,behavior:'instant'}]);
 });
+
+test('opening a new reference invalidates a previous queued restoration on the same page',()=>{
+ const {navigation,calls,flush}=fixture();navigation.commitPage('planner');navigation.captureReference(500)();const closeCurrent=navigation.captureReference(900);flush();
+ assert.equal(calls.length,1);closeCurrent();flush();assert.deepEqual(calls.at(-1),{top:900,behavior:'instant'});
+});
