@@ -1,5 +1,7 @@
 # Future implementation milestones
 
+Completed continuation (2026-11-14): [AI-CONTEXT-01](docs/application/AI-CONTEXT-01.md), bounded and disclosed strategy source previews. The exact broad Germany request succeeds against the retained corpus, with atomic source groups, mandatory-reference preservation and measured overflow recovery. This closes one AI workflow blocker; current-patch semantics, source applicability, generated usefulness and final release remain separate.
+
 Current management assessment (November 14, 2026): [project goals, completion estimates, blockers and execution gameplan](docs/workflow/PROJECT-GOALS-2026-11-14.md). The common application baseline is now on main through PRs #13/#14. STRATEGY-DRAFT-01 closes the separate whole-strategy editor loss; current-patch qualification, production Campaign-first workflow and existing final-release gates remain independent work. Historical milestone notes below retain their original scope.
 
 Workflow update (2026-11-10): [development and independent QA procedure](docs/workflow/README.md); PR #3 approved and merged into `feature/hoi4-ai-m731` at `440d625`; default-branch rollout remains separately gated. Product milestone acceptance remains unchanged.

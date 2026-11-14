@@ -4,6 +4,8 @@ A local Windows encyclopedia and campaign planner that reads installed HOI4 scri
 
 ## Current source delivery — release blocked
 
+[AI-CONTEXT-01](docs/application/AI-CONTEXT-01.md) makes broad strategy source previews fit disclosed source/request-body budgets while preserving complete included records and mandatory references. The retained-source Germany request now previews 79 definitions, including 34 focuses and nine technologies, within both limits. Oversized mandatory content gives measured recovery guidance and keeps editable work. Source fitting does not approve spending or certify strategy mechanics.
+
 As of November 14, 2026, [PR #13](https://github.com/connorgreenleaf22/hoi4-companion/pull/13) and [PR #14](https://github.com/connorgreenleaf22/hoi4-companion/pull/14) are merged; main contains the common baseline and NAV-01. See the [project goals and execution plan](docs/workflow/PROJECT-GOALS-2026-11-14.md) for current completion estimates, blockers and exit criteria, and [whole-strategy draft protection](docs/application/STRATEGY-DRAFT-01.md) for the separate strategy-editor fix. The implementation and packaging evidence below retains its original SHA/scope. Main delivery does not grant final release or mechanics qualification.
 
 ### Historical common integration checkpoint
