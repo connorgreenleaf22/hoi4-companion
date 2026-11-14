@@ -1,0 +1,21 @@
+{
+  "schemaVersion":1,
+  "milestoneId":"AI-CONTEXT-01",
+  "status":"complete",
+  "branch":"fix/ai-context-budget-20261114",
+  "commitSha":"7f8cd6e4a3e7d1c507e736fd2931ddf0b93a5998",
+  "testEvidence":[
+    {"kind":"deterministic","result":"passed","reference":"docs/application/AI-CONTEXT-01-VERIFICATION.json","summary":"32 focused tests,206 portable fixtures+3 guards; independent overlapping27 AI tests. Exact wire boundary, Unicode/escaping, required/prior context, stale approvals, group closure and deterministic diversity pass. Existing hosted allowlist only."},
+    {"kind":"deterministic","result":"passed","reference":"docs/application/AI-CONTEXT-01-VERIFICATION.json","summary":"Six new browser and11 prior strategy-draft cases pass at frozen runtime; full fields, explicit overflow recovery, stale error, save/navigation and prior safety verified."},
+    {"kind":"deterministic","result":"passed","reference":"docs/application/AI-CONTEXT-01-VERIFICATION.json","summary":"Four retained-source HTTP cases pass with79 definitions including34 focuses/9 techs;165477source characters/179747wirebytes within both180000 limits; identical repeat fingerprints/quotes/wire, original index unchanged. No semantic/native qualification."},
+    {"kind":"typecheck","result":"passed","reference":"docs/application/AI-CONTEXT-01.md","summary":"Production TypeScript/Vite/Node build and strict new-harness typecheck pass. Runtime inputs identical across harness-only follow-up."},
+    {"kind":"packaged","result":"passed","reference":"docs/application/AI-CONTEXT-01-VERIFICATION.json","summary":"75 extracted files match;9 actual isolated Windows preview/overflow/recovery/save/shutdown/service-refusal/full-restart checks pass with zero renderer errors."},
+    {"kind":"review","result":"passed","reference":"docs/application/AI-CONTEXT-01.md","summary":"Separate reviewer approved exact7f8cd6e4a3e7d1c507e736fd2931ddf0b93a5998, independently reran27 AI tests and checked frozen rawrecords, hashes and final browser/package screenshots; no remaining bounded-goal blocker."}
+  ],
+  "nativeQualification":{"state":"not-applicable","scope":"Source-preview/local-app engineering only; retained corpus and Electron lifecycle evidence do not qualify current gameplay, observations, DLC applicability or engine semantics.","evidence":[]},
+  "artifact":{"name":"M7.4.2c-7f8cd6e4a3e7-windows-x64.zip","reference":"Local-only Documents/HOI4 Companion Development Builds/M7.4.2c-7f8cd6e4a3e7","sha256":"49647597786abf6eb1cf5414458f61707900f4dcf688d96eba67a223fd1ab279"},
+  "blockers":[],
+  "acceptance":{"state":"not-applicable","evidence":["docs/application/AI-CONTEXT-01.md: objective engineering preview criteria pass; owner strategic usefulness and broader desktop/release acceptance are not asserted or waived."]},
+  "report":"docs/application/AI-CONTEXT-01.md",
+  "github":["https://github.com/connorgreenleaf22/hoi4-companion/issues/17"]
+}

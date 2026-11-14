@@ -2,6 +2,8 @@
 
 ## Executive summary
 
+Continuation update: STRATEGY-DRAFT-01 reached main in [PR #16](https://github.com/connorgreenleaf22/hoi4-companion/pull/16), merge `40ecca641022c626a7b7fea0499659252a9cc1cf`. The next completed bounded engineering goal is [AI-CONTEXT-01](../application/AI-CONTEXT-01.md): broad Germany source preview now fits both disclosed limits with mandatory references/full included records retained, measured overflow recovery and frozen source/browser/package evidence. This closes the source-selection item in the AI MVP row below; it does not complete that broader MVP or change its other acceptance/qualification gates. Earlier assessment percentages and baseline statements retain their original checkpoint scope.
+
 HOI4 Companion should help a player decide what to do, understand why, build an editable campaign strategy, and carry that strategy into military and economic preparation. It should use the installed game's sources, retain the player's work, and distinguish reliable facts from assumptions. Trustworthy observations and authorized gameplay assistance extend that product later.
 
 The foundation is substantial: a Windows application, offline reference index, manual campaigns, focus planning, history, source explanations, optional AI strategy generation, military resource models, and a shared observation platform. The principal delivery gap is a useful, coherent player journey through those capabilities. Backend delivery has outpaced usability and qualification.
