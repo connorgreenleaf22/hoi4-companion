@@ -1,0 +1,13 @@
+HOI4txt
+# Synthetic parser fixture; not a native capture.
+player="GER"
+date="1936.4.1.1"
+version="Operation Postern v1.19.4.2.2da5 (24df)"
+player_countries={GER={user="omitted"}}
+countries={GER={
+ # Braces in comments and strings must not affect the structural index: }
+ note="quoted braces { }"
+ research_slot=4
+ focus={completed="GER_prioritize_economic_growth" progress=10}
+ technology={technologies={infantry_weapons={level=1 research_points=165} basic_machine_tools={research_points=91.91 date="1.1.1.1"}} slots={basic_machine_tools={} empty={points=30} empty={points=30} empty={points=30}}}
+}}

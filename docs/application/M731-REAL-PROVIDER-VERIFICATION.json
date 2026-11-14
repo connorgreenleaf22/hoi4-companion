@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "milestone": "M7.3.1",
+  "testedRuntimeSha": "155594f9c4d27780b969b217f19b01275d3d01bf",
+  "branch": "fix/hoi4-m731-context",
+  "testDateLocal": "2026-11-10",
+  "authorization": "Explicit user approval of one request at $0.1395925 estimate / $0.41485 reservation",
+  "providerCalls": 1,
+  "nativeGameLaunches": 0,
+  "provider": {
+    "model": "gpt-6.1-sol",
+    "serviceTier": "default",
+    "completionStatus": "completed",
+    "httpStatus": 200,
+    "usage": {
+      "input": 36215,
+      "cachedInput": 0,
+      "cacheWrite": 36212,
+      "output": 2405,
+      "reasoning": 0
+    }
+  },
+  "cost": {
+    "pricingVersion": "openai-sol-2026-11-09-v1",
+    "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+    "currency": "USD",
+    "billing": "estimate-not-invoice",
+    "usd": 0.114586,
+    "reason": "Reported usage \u00d7 versioned rates. Reasoning is already included in output; not charged twice. Taxes, credits, discounts and provider adjustments are excluded."
+  },
+  "quote": {
+    "estimatedInputTokens": 43837,
+    "maximumOutputTokens": 3000,
+    "estimatedUsd": 0.1395925,
+    "reservedUsd": 0.41485,
+    "initialBudgetUsd": 0.5,
+    "remainingBudgetUsd": 0.385414,
+    "heldUsd": 0
+  },
+  "validation": {
+    "unchangedProviderContent": true,
+    "contentSha256": "160eda9d90308c059cf4458a25863ef2f6d52bdd589e68bf643166765f6c2ce9",
+    "uniqueTypedReferences": 17,
+    "referenceOccurrences": 29,
+    "missing": [],
+    "focusSteps": 8,
+    "recommendations": 6,
+    "structuralValidity": "valid",
+    "policy": {
+      "provisionalAllowed": true,
+      "confidentRecommendationAllowed": false,
+      "rankingAllowed": false,
+      "optimizationAllowed": false,
+      "blockingGapCount": 106,
+      "reasons": [
+        "Strategy-critical interpretation or campaign-state gaps remain.",
+        "No qualified objective/utility model or whole-campaign simulator exists. A coverage review is not an optimality proof."
+      ]
+    },
+    "dimensions": {
+      "costs": "reviewed",
+      "prerequisites": "incomplete",
+      "branch-conflicts": "reviewed",
+      "rewards": "incomplete",
+      "downstream-events": "incomplete",
+      "source-context": "incomplete"
+    },
+    "paidAttempts": 1,
+    "repairs": []
+  },
+  "persistence": {
+    "savedRevision": 1,
+    "uiRecovery": true,
+    "uiSave": true,
+    "rendererReload": true,
+    "uiReopen": true,
+    "apiReadbackMatchesOriginal": true,
+    "fullProcessRestartThisAcceptance": false
+  },
+  "credentialStateAfterTest": "cleared; boolean configured=false; no credential retained in evidence",
+  "artifact": {
+    "name": "M7.3.1-155594f9c4d2-windows-x64.zip",
+    "sha256": "3eaad6e5da22d01006d4c150fbdcc5a4c887439b3c4c31f00655a1c612e4ee6f",
+    "freshExtractedMatchingFiles": 75
+  },
+  "independentRuntimeReview": {
+    "reviewer": "/root/review_context_fix",
+    "sha": "155594f9c4d27780b969b217f19b01275d3d01bf",
+    "result": "no blockers",
+    "scope": "Diff and evidence review; no independent rerun of builder tests"
+  },
+  "hostedCi": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/42927656643",
+  "userAcceptance": "pending user review",
+  "invoice": "not inspected; cost is an estimate",
+  "report": "docs/application/M731-REAL-PROVIDER-ACCEPTANCE.md"
+}

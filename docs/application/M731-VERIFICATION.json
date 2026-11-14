@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "milestone": "M7.3.1",
+  "runtimeCommit": "4d7c04f38fd7",
+  "branch": "feature/hoi4-ai-m731",
+  "baselineCommit": "fc60182",
+  "focusedTests": {
+    "passed": 50,
+    "failed": 0,
+    "overlappingFinalAiRerunPassed": 10
+  },
+  "preFixReproduction": ".bridge-local/m731-reproduction.json",
+  "installedUiEvidence": "artifacts/qa/ai-planning-2026-11-09T23-54-26-024Z-a5540a59",
+  "installedUiCases": [
+    {
+      "name": "installed Portugal objective generates through explicitly labeled fixture provider and deterministic gate",
+      "status": "passed",
+      "level": "headless-renderer",
+      "requirements": [
+        "M73-FIXTURE"
+      ],
+      "ms": 6062
+    },
+    {
+      "name": "editing, reordering rejection, revision generation and unranked saved comparison",
+      "status": "passed",
+      "level": "headless-renderer",
+      "requirements": [
+        "M73-EDIT"
+      ],
+      "ms": 10046
+    },
+    {
+      "name": "service restart forgets key, preserves whole strategy revisions and leaves actual history alone",
+      "status": "passed",
+      "level": "headless-renderer",
+      "requirements": [
+        "M73-REOPEN"
+      ],
+      "ms": 1272
+    }
+  ],
+  "packageEvidence": "artifacts/qa/ai-package-2026-11-09T23-59-52-763Z-b7d7ddae",
+  "packageCases": [
+    {
+      "name": "fresh packaged app loads installed sources and optional session-only provider configuration",
+      "status": "passed",
+      "level": "compiled-runtime",
+      "requirements": [
+        "M73-PACKAGE"
+      ],
+      "ms": 200
+    },
+    {
+      "name": "offline manual strategy supports source preview, editing, validation and saved comparison",
+      "status": "passed",
+      "level": "compiled-runtime",
+      "requirements": [
+        "M73-OFFLINE"
+      ],
+      "ms": 9451
+    },
+    {
+      "name": "packaged restart retains manual proposal and keeps provider unconfigured",
+      "status": "passed",
+      "level": "compiled-runtime",
+      "requirements": [
+        "M73-PACKAGE-REOPEN"
+      ],
+      "ms": 1188
+    }
+  ],
+  "sourceUnchangedDuringRuns": true,
+  "label": "M7.3.1-4d7c04f38fd7",
+  "zipName": "M7.3.1-4d7c04f38fd7-windows-x64.zip",
+  "zipSHA256": "9189d90ff15eb5c9f8f59ce452aa91ff8d223bbb6c553c2b1525a091416e599f",
+  "executableSHA256": "bf628faeeb806e8e40757af0fd11c37f0cca732ec5968e10f68128bc37f80cd5",
+  "extractedFilesMatch": 75,
+  "ownedTestProcessesAbsent": true,
+  "screenshotsReviewed": true,
+  "realProviderCalls": 0,
+  "nativeGameLaunches": 0,
+  "fixtureProviderCalls": 2,
+  "legacyFailure": {
+    "id": "POR_estado_novo",
+    "cause": "Valid focus and idea share raw ID; untyped resolver rejected a unique compatible disclosed focus",
+    "usageRecoverable": false,
+    "contentRecoverable": false,
+    "oldDefinitionCount": 210,
+    "oldContextBytes": 129946
+  },
+  "retrieval": {
+    "definitions": 65,
+    "bytes": 42179,
+    "omissions": [
+      "11973 other definitions omitted by objective/country/dependency selection. This is not complete mechanical or event closure; hidden scripted helpers and state conditions remain subject to the coverage gate."
+    ],
+    "preview": {
+      "pricingVersion": "openai-sol-2026-11-09-v1",
+      "inputTokens": 13454,
+      "conservativeInputTokens": 47601,
+      "maxOutputTokens": 3000,
+      "estimatedUsd": 0.063635,
+      "reservedUsd": 0.14900251,
+      "method": "UTF-8 bytes / 3.5 estimate; byte-count + 512 input reservation; full output cap; no assumed cache discount. Not an exact tokenizer or billing guarantee.",
+      "fingerprint": "05bac7aff138926f6868727561c5eb2c1f2dea82a27c0cc898cba219b26482ba"
+    },
+    "canonicalCollisionNormalized": "definition:focus:common/national_focus/portugal.txt:POR_estado_novo"
+  },
+  "policy": {
+    "routeStructure": "valid after local repair",
+    "focusCount": 8,
+    "blockingChecks": 104,
+    "confidentRecommendations": false,
+    "ranking": false,
+    "optimization": false
+  },
+  "openGates": [
+    "single separately user-approved GPT-6.1 Sol acceptance request",
+    "actual provider usage/invoice comparison",
+    "user desktop acceptance and subjective strategic usefulness",
+    "complete supported-content final-release explanation contract"
+  ]
+}

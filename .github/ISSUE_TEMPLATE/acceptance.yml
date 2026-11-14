@@ -1,0 +1,39 @@
+name: User acceptance finding
+description: Record a user acceptance finding with scoped evidence.
+title: "[User acceptance finding] "
+body:
+  - type: markdown
+    attributes:
+      value: "Public repository: use sanitized summaries and hashes only. Do not upload saves, credentials, account metadata, raw logs or private planning notes."
+  - type: input
+    id: milestone
+    attributes:
+      label: Milestone, branch and full commit SHA
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: App artifact and game version, DLC and mod scope
+    validations:
+      required: true
+  - type: textarea
+    id: finding
+    attributes:
+      label: Finding
+      description: Acceptance criterion, user-observed result, expected experience and acceptance decision
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence and related manifest, report or PR links
+      description: Separate fixture results, native observations, unknowns and user acceptance. Native work requires a separately authorized plan; this issue does not authorize a launch.
+    validations:
+      required: true
+  - type: textarea
+    id: next
+    attributes:
+      label: Smallest next check and completion criterion
+    validations:
+      required: true

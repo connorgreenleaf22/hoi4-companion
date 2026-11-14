@@ -1,0 +1,4 @@
+interface:
+  display_name: "HOI4 Game Bridge"
+  short_description: "Inspect HOI4 state and test the companion bridge"
+  default_prompt: "Use $hoi4-game-bridge to inspect the local game and verify the next bridge milestone."

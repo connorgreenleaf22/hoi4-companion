@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "id": "hoi4-1.19.4.2-combat-inputs-v1",
+  "gameVersion": "1.19.4.2",
+  "importerRevision": 5,
+  "qualification": "source-inputs-only",
+  "divisionAggregationQualified": false,
+  "entries": [
+    {
+      "id": "infantry",
+      "kind": "unit",
+      "source": "common/units/infantry.txt",
+      "line": 7,
+      "hash": "dfc319ec6ca807fdcffdd6f3555db0f8c2aa33897706630daf55339170225a60",
+      "digest": "58bdf261da55a52bd2269f5bfd76011372adcdee5987d6175caba3c4963facd1"
+    },
+    {
+      "id": "artillery_brigade",
+      "kind": "unit",
+      "source": "common/units/artillery_brigade.txt",
+      "line": 3,
+      "hash": "9826452615dfa490c2167480c3e4695283d438e2a719df85fdef06a02d8b8541",
+      "digest": "9db8a188f2828f22f23aec0aa7dcf888b8c7afef1e5c83d0a2d5abec2d88d36b"
+    },
+    {
+      "id": "motorized",
+      "kind": "unit",
+      "source": "common/units/infantry.txt",
+      "line": 410,
+      "hash": "dfc319ec6ca807fdcffdd6f3555db0f8c2aa33897706630daf55339170225a60",
+      "digest": "a720ee89bba893c72667ae5d079f69eb4c08340e87d99ddb93f35025245cd70e"
+    },
+    {
+      "id": "medium_armor",
+      "kind": "unit",
+      "source": "common/units/medium_armor.txt",
+      "line": 3,
+      "hash": "6f6fa9612e07d0b37654032d4fea34b78d3daccbb0e40cb69badba942b0103b5",
+      "digest": "e9fdaf44c537e579ae0894f015f5e92549d402f82f35443268b06c090cf7d7f7"
+    },
+    {
+      "id": "infantry_equipment",
+      "kind": "equipment",
+      "source": "common/units/equipment/infantry.txt",
+      "line": 5,
+      "hash": "0b2b15df8618b68ceb4892510c965f0d8618b365937fd8e12581a6d512e01cf1",
+      "digest": "19c57648ae2dbd3a28b067ed0d02eba8aa2cc8c0abe003d86c091fb370b4b29c"
+    },
+    {
+      "id": "infantry_equipment_1",
+      "kind": "equipment",
+      "source": "common/units/equipment/infantry.txt",
+      "line": 56,
+      "hash": "0b2b15df8618b68ceb4892510c965f0d8618b365937fd8e12581a6d512e01cf1",
+      "digest": "cd0eddc8da4bdf7a0d43b8f671e25126ba787ccc213f4a5ff849550ff6d90569"
+    },
+    {
+      "id": "artillery_equipment",
+      "kind": "equipment",
+      "source": "common/units/equipment/artillery.txt",
+      "line": 3,
+      "hash": "c2288032e61a461af7b3fdb6765f72d256a502f5050567f51e25798bb690cd54",
+      "digest": "9a38170c53d2b40979700087c2d9e8ce558a2ce78daa3b294132e370a8ea2f21"
+    },
+    {
+      "id": "artillery_equipment_1",
+      "kind": "equipment",
+      "source": "common/units/equipment/artillery.txt",
+      "line": 42,
+      "hash": "c2288032e61a461af7b3fdb6765f72d256a502f5050567f51e25798bb690cd54",
+      "digest": "e721df141c5d90e744a124f0b3d8a97629636ef0c9b8e4cf386dfbb24426b962"
+    },
+    {
+      "id": "motorized_equipment",
+      "kind": "equipment",
+      "source": "common/units/equipment/motorized.txt",
+      "line": 3,
+      "hash": "b25c3797280f471b89a43da5b02e135091cf205acdf37c09d547a88df52d5128",
+      "digest": "c210e1e7210b3778a786a75730a2b7ca951ed838695337983bd6891e47a56d4d"
+    },
+    {
+      "id": "motorized_equipment_1",
+      "kind": "equipment",
+      "source": "common/units/equipment/motorized.txt",
+      "line": 47,
+      "hash": "b25c3797280f471b89a43da5b02e135091cf205acdf37c09d547a88df52d5128",
+      "digest": "f28becf879a6d7490288896b27b61ea0ee757f67073bd1d46ff8e0110c520fd1"
+    },
+    {
+      "id": "medium_tank_chassis",
+      "kind": "equipment",
+      "source": "common/units/equipment/tank_chassis.txt",
+      "line": 279,
+      "hash": "ad420e0bffc41a062a9457d67c18d59a91f0d8972ef6985e22e443eadd4983bf",
+      "digest": "d0cbc671120e59d6af88ca1c84fc65075e92b6a337c66872b246665b5a0a7f0d"
+    },
+    {
+      "id": "medium_tank_equipment_1",
+      "kind": "equipment",
+      "source": "common/units/equipment/x_tank_chassis.txt",
+      "line": 661,
+      "hash": "847194cf28e16dbe9f08a863c0d7541ec34d8c591d54d70b3211f74ae696ca65",
+      "digest": "fc53d26edd0aed2c7e114fcd4aace943958e947d5e5dc76ae69c48522e2d05f0"
+    },
+    {
+      "id": "artillery",
+      "kind": "unit",
+      "source": "common/units/artillery.txt",
+      "line": 3,
+      "hash": "10f299c45b79fe67562e2508fe79ef1db077c1ece995b2eeccff612e4a51e28c",
+      "digest": "514f41e0f71c73f7acefc1c19046ba1d5d136ddb8c637951c42298199de20180"
+    },
+    {
+      "id": "engineer",
+      "kind": "unit",
+      "source": "common/units/engineer.txt",
+      "line": 2,
+      "hash": "25d88a0e1e19dfd11248546027b19885bad2af87fb42554aeb6fbe89e7cedef0",
+      "digest": "adbf654a00fb9450e4b9a45b69aa3f3228f732822173c88a5f83ff061ec8761f"
+    },
+    {
+      "id": "recon",
+      "kind": "unit",
+      "source": "common/units/recon.txt",
+      "line": 3,
+      "hash": "8a1fe834193f8b648fc6a70df71a07ae318635d500bccc52c0a64a74b2eddcfc",
+      "digest": "976d581f0129c0c5fc0280b4529069f00e597cfc1f0126d183a08f6bf9685fdc"
+    }
+  ]
+}

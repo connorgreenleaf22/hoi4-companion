@@ -1,0 +1,26 @@
+.universal-search { flex:1; max-width:470px; min-width:180px; }
+.entry-picker { position:relative; min-width:0; width:100%; }
+.entry-picker>label { display:block; color:#aab9bd; font-size:11px; margin-bottom:5px; }
+.entry-picker>input { width:100%; box-sizing:border-box; }
+.entry-suggestions { position:absolute; left:0; right:0; top:100%; z-index:45; background:#17262b; border:1px solid #8e794c; border-radius:6px; box-shadow:0 12px 32px #0009; max-height:360px; overflow:auto; text-align:left; }
+.entry-suggestions [role=option] { padding:10px 14px; border-bottom:1px solid #34454a; cursor:pointer; }
+.entry-suggestions [role=option]:hover,.entry-suggestions .active { background:#34464b; outline:1px solid #c2a56a; outline-offset:-1px; }
+.entry-suggestions strong,.entry-suggestions span,.entry-suggestions small { display:block; overflow-wrap:anywhere; }
+.entry-suggestions strong { color:#f0ece2; font-size:14px; }
+.entry-suggestions small { color:#d5bd86; font-size:11px; }
+.entry-suggestions span { color:#b2c4c9; font-size:11px; margin-top:3px; }
+.entry-suggestions p,.entry-suggestions>.text-link { padding:10px 14px; }
+.strategy-controls>.entry-picker { flex:1; min-width:220px; }
+.selected-objective { padding:18px; border:1px solid #6a674c; border-radius:6px; background:#1b2b30; }
+.selected-objective h3 { margin:0 0 8px; }
+.mechanics-list { padding-left:22px; line-height:1.75; color:#d1dedf; }
+.mechanics-list li { padding:4px 0; }
+.mechanics-unknown { color:#d9bd8b; }
+.plain-requirement { padding:9px 12px; border-left:2px solid #647a80; margin:10px 0; }
+.plain-requirement>details { font-size:11px; color:#a6b6bb; }
+.workflow-start { padding:18px 22px; border:1px solid #425457; border-radius:7px; background:#1b2b30; margin:0 0 22px; }
+.workflow-start h2 { font-size:21px; margin:0 0 12px; }
+.workflow-start p,.planning-context { color:#aabdc2; font-size:12px; line-height:1.6; }
+.nav-description { display:block; font-size:9px; color:#91a7ad; line-height:1.5; }
+.strategy-references>summary,.strategy-comparison>summary { font-size:20px; }
+@media(max-width:800px) { .topbar { flex-wrap:wrap; } .universal-search { max-width:none; flex-basis:100%; order:3; } .strategy-controls>.entry-picker { min-width:0; width:100%; flex-basis:100%; } }

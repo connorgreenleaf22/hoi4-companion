@@ -6,6 +6,8 @@ import type { Node, Entry, Meta, Coverage, CoverageItem, DLCState } from '../src
 import type { Store } from './store';
 import {mechanics} from './content';
 import {buildRelationships,buildCategoryEntries} from './knowledge';
+import {attachScriptContext} from './mechanic-context';
+import {focusExclusions} from '../src/focus-structure';
 import {discoverRecords,reconcileRecords} from './coverage';
 import {sourceNotes,applySourceNotes} from './source-notes';
 import guideContent from './discovery-content.json';
@@ -26,8 +28,8 @@ const safeJSON=(p:string)=>{try{return JSON.parse(fs.readFileSync(p,'utf8'));}ca
 const wrapped=(nodes:Node[],key:string):Node[]=>children(nodes,key).flatMap(n=>Array.isArray(n.value)?n.value:[]);
 const blocks=(nodes:Node[])=>nodes.filter((n):n is Node&{value:Node[]}=>Array.isArray(n.value)&&!n.key.startsWith('@'));
 const conditionKeys=new Set(['limit','allowed','available','allow','visible','trigger','enable','potential','allow_branch','bypass','cancel','target_trigger']);
-export const supportedRoots=['common/country_tags','common/national_focus','common/continuous_focus','common/technologies','common/ideas','common/idea_tags','common/doctrines','common/units','common/terrain','common/decisions','common/characters','common/country_leader','common/unit_leader','common/buildings','common/military_industrial_organization','common/special_projects','common/combat_tactics.txt','history/countries','events','dlc_metadata/dlc_info','dlc','integrated_dlc','localisation/english','common/defines','documentation'];
-const RULES='knowledge-foundation-v5.4';
+export const supportedRoots=['common/scripted_effects','common/dynamic_modifiers','common/country_tags','common/national_focus','common/continuous_focus','common/technologies','common/ideas','common/idea_tags','common/doctrines','common/units','common/terrain','common/decisions','common/characters','common/country_leader','common/unit_leader','common/buildings','common/military_industrial_organization','common/special_projects','common/combat_tactics.txt','history/countries','events','dlc_metadata/dlc_info','dlc','integrated_dlc','localisation/english','common/defines','documentation'];
+const RULES='knowledge-foundation-v5.7-scripted-rewards';
 
 /** Publish a whole coherent reference snapshot or retain the preceding snapshot on failure. */
 export function indexGame(store:Store,root:string,onProgress?:(source:string,completed:number,total:number)=>void):Meta{
@@ -75,6 +77,14 @@ export function indexGame(store:Store,root:string,onProgress?:(source:string,com
   for(const d of fs.readdirSync(path.join(root,'common'),{withFileTypes:true}))if(d.isFile()&&d.name.endsWith('.txt')&&!supportedRoots.includes(`common/${d.name}`))coverage.unsupportedRoots.push({path:`common/${d.name}`,files:1,reason:'Standalone mechanic/metadata file outside the approved record manifest; no semantic extraction.'});
   for(const d of fs.existsSync(path.join(root,'history'))?fs.readdirSync(path.join(root,'history'),{withFileTypes:true}):[])if(d.isDirectory()&&d.name!=='countries')coverage.unsupportedRoots.push({path:`history/${d.name}`,files:walk(path.join(root,'history',d.name),'.txt').length,reason:'Map/state/unit history is outside this release reference manifest.'});
   for(const d of fs.existsSync(path.join(root,'localisation'))?fs.readdirSync(path.join(root,'localisation'),{withFileTypes:true}):[])if(d.isDirectory()&&d.name!=='english')coverage.unsupportedRoots.push({path:`localisation/${d.name}`,files:walk(path.join(root,'localisation',d.name),'.yml').length,reason:'This release indexes English localization only.'});
+  const countryAliases=new Map<string,any[]>();
+  const sameCountryCosmetics=(nodes:Node[]):string[]=>nodes.flatMap(n=>n.key==='set_cosmetic_tag'&&typeof n.value==='string'?[n.value]:Array.isArray(n.value)&&(['if','else_if','else','hidden_effect'].includes(n.key)||/^\d{4}\.\d{1,2}\.\d{1,2}$/.test(n.key))?sameCountryCosmetics(n.value):[]);
+
+  for(const [source,file] of fileMap)if(source.startsWith('history/countries/')){
+    const tag=path.basename(source).slice(0,3),cosmetics=sameCountryCosmetics(parseScript(file.text,{recover:true}));
+    const roots=[tag,...cosmetics];const keys=roots.flatMap(root=>[root,...['fascism','democratic','neutrality','communism'].map(ideology=>root+'_'+ideology)]);
+    countryAliases.set(tag,[...new Set(keys)].filter(key=>localization.has(key)).map(key=>({key,name:loc(key),evidence:localization.evidence(key),...(cosmetics.some(root=>key===root||key.startsWith(root+'_'))?{mapping:{source,hash:file.hash,rule:'Country history declares cosmetic identity'}}:{})})).filter(a=>!/[\$\[\]]/.test(a.name)));
+  }
   const allEntries:Entry[]=[];const dlcs:DLCState[]=[];
   store.db.exec('BEGIN IMMEDIATE');
   try{
@@ -88,6 +98,13 @@ export function indexGame(store:Store,root:string,onProgress?:(source:string,com
         const nameKey=titleKey;const descriptionKey=scalar(b,'description',`${id}_desc`);const sourceClass=source.startsWith('companion/')?'editorial':source.startsWith('documentation/')?'bundled-doc':'installed-script';
         const localizationEvidence=[...localization.evidence(nameKey),...localization.evidence(descriptionKey)];
         const e:Entry={uid:base+(variant>1?`:variant:${variant}`:''),id,kind,title:title??loc(nameKey),description:localization.has(descriptionKey)?loc(descriptionKey):'',source,line,version,hash:file.hash,verification:'extracted',evidence:[{class:sourceClass,source,line,hash:file.hash,gameVersion:version,rule:RULES,dependencies:[...new Set(localizationEvidence.filter(x=>x.source).map(x=>x.source as string))]}],data:{...data,nodes:b,definitionVariant:variant,aliases:[id,id.replaceAll('_',' '),...(data.aliases||[])],localizationEvidence,...(parseWarnings.length?{importWarnings:parseWarnings}:{}),script:formatScript(b)}};
+        if(['focus','shared_focus','joint_focus','decision','formable','technology'].includes(kind)){
+          const refs:string[]=[data.category||''];
+          const names=(ns:Node[])=>{for(const n of ns){refs.push(n.key);if(/^\d+$/.test(n.key))refs.push('STATE_'+n.key);if(Array.isArray(n.value))names(n.value);else {refs.push(n.value);if(/^\d+$/.test(n.value))refs.push('STATE_'+n.value);}}};names(b);for(const ref of [...refs])if(/^[A-Z0-9]{3}$/.test(ref))refs.push(ref+'_ADJ');
+          for(const part of [loc(nameKey),localization.has(descriptionKey)?loc(descriptionKey):''].join(' ').matchAll(/\[([A-Z0-9]{3})\.Get(?:Name|NameDef|Adjective)\]/g))refs.push(part[1],part[1]+'_ADJ');
+          e.data.mechanicNames=Object.fromEntries([...new Set(refs)].filter(id=>localization.has(id)).map(id=>[id,loc(id)]));
+          e.data.mechanicNameEvidence=Object.fromEntries(Object.keys(e.data.mechanicNames).map(id=>[id,localization.evidence(id)]));
+        }
         applySourceNotes(e);entries.push(e);return e;
       };
       const omit=(n:Node,reason:string)=>omitted.push({path:n.key||'<anonymous>',line:n.line,reason});
@@ -100,7 +117,8 @@ export function indexGame(store:Store,root:string,onProgress?:(source:string,com
       }else{
         try{nodes=parseScript(file.text,{recover:true,warnings:parseWarnings});}catch(e){throw new Error(`${source}: fatal parse failure; previous index retained. ${String(e)}`);}
         warnings.push(...parseWarnings.map(w=>`${source}: ${w}`));constants=new Map(nodes.filter(n=>n.key.startsWith('@')&&typeof n.value==='string').map(n=>[n.key,n.value as string]));
-        if(source.includes('/country_tags/')){for(const n of nodes)if(typeof n.value==='string'&&/^[A-Z0-9]{3}$/.test(n.key))add('country',n.key,[n],n.line,{tag:n.key,aliases:[path.basename(n.value,'.txt')]},n.key,localization.has(n.key)?loc(n.key):path.basename(n.value,'.txt'));else omit(n,'Not a country tag definition.');}
+        if(source.includes('/scripted_effects/')||source.includes('/dynamic_modifiers/')){for(const n of blocks(nodes))structured(n,source.includes('/scripted_effects/')?'scripted_effect':'dynamic_modifier');for(const n of nodes)if(!Array.isArray(n.value))omit(n,'Script metadata/local constant retained in source.');}
+        else if(source.includes('/country_tags/')){for(const n of nodes)if(typeof n.value==='string'&&/^[A-Z0-9]{3}$/.test(n.key))add('country',n.key,[n],n.line,{tag:n.key,aliases:[path.basename(n.value,'.txt'),...(countryAliases.get(n.key)||[]).map(a=>a.name)],nameAliases:countryAliases.get(n.key)||[]},n.key,localization.has(n.key)?loc(n.key):path.basename(n.value,'.txt'));else omit(n,'Not a country tag definition.');}
         else if(source.startsWith('history/countries/')){const tag=path.basename(source).slice(0,3);add('country_history',tag,nodes,1,{tag,countries:[tag],semanticScope:tag,sourceScope:[`history:${tag}`]},tag,`${loc(tag)} starting history`);}
         else if(source.includes('/national_focus/')||source.includes('/continuous_focus/')){
           for(const tree of nodes){
@@ -114,7 +132,7 @@ export function indexGame(store:Store,root:string,onProgress?:(source:string,com
             const b=n.value as Node[];const id=scalar(b,'id');const stats=numeric(b,constants);const rawCost=scalar(b,'cost','10');const cost=Number(rawCost.startsWith('@')?constants.get(rawCost):rawCost);const reward=block(b,'completion_reward');
             const labels:Record<string,string>={add_political_power:'Political power',add_stability:'Stability',add_war_support:'War support',add_manpower:'Manpower',army_experience:'Army experience',navy_experience:'Navy experience',air_experience:'Air experience'};
             const summary=reward.flatMap(n=>{if(n.key==='custom_effect_tooltip'&&typeof n.value==='string')return [loc(n.value)];if(n.key==='add_ideas'&&typeof n.value==='string')return [`Add idea: ${loc(n.value)}`];if(n.key==='remove_ideas'&&typeof n.value==='string')return [`Remove idea: ${loc(n.value)}`];if(labels[n.key]&&typeof n.value==='string'&&Number.isFinite(Number(n.value))){const v=Number(n.value);return [`${labels[n.key]}: ${v>=0?'+':''}${['add_stability','add_war_support'].includes(n.key)?Math.round(v*100)+'%':v}`];}if(['if','else_if','else','hidden_effect','random_list'].includes(n.key))return ['Conditional or hidden effects - inspect the script below.'];return [];});
-            add(kind,id,b,n.line,{treeId,semanticScope:treeId,parentUid,cost:stats.cost??10,days:Number.isFinite(cost)&&defines.FOCUS_POINT_DAYS?cost*defines.FOCUS_POINT_DAYS:null,x:stats.x??0,y:stats.y??0,relative:scalar(b,'relative_position_id'),prerequisites:children(b,'prerequisite').map(p=>Array.isArray(p.value)?collect(p.value,'focus'):[]).filter(g=>g.length),exclusive:collect(block(b,'mutually_exclusive'),'focus'),sharedIds:children(b,'shared_focus').map(n=>n.value).filter(v=>typeof v==='string'),dlcs:[...new Set(collect(b,'has_dlc'))],conditions:Object.fromEntries([...conditionKeys].filter(k=>block(b,k).length).map(k=>[k,block(b,k)])),effects:formatScript(reward),effectsSummary:[...new Set(summary)],offsets:children(b,'offset').map(n=>n.value),durationEvidence:{rule:'local cost * FOCUS_POINT_DAYS',rawCost,constant:rawCost.startsWith('@')?constants.get(rawCost):undefined,definesHashes:defineFiles.map(f=>({source:path.relative(root,f).replaceAll('\\','/'),hash:fileMap.get(path.relative(root,f).replaceAll('\\','/'))?.hash}))}});
+            add(kind,id,b,n.line,{treeId,semanticScope:treeId,parentUid,cost:stats.cost??10,days:Number.isFinite(cost)&&defines.FOCUS_POINT_DAYS?cost*defines.FOCUS_POINT_DAYS:null,x:stats.x??0,y:stats.y??0,relative:scalar(b,'relative_position_id'),prerequisites:children(b,'prerequisite').map(p=>Array.isArray(p.value)?collect(p.value,'focus'):[]).filter(g=>g.length),exclusive:focusExclusions(b),sharedIds:children(b,'shared_focus').map(n=>n.value).filter(v=>typeof v==='string'),dlcs:[...new Set(collect(b,'has_dlc'))],conditions:Object.fromEntries([...conditionKeys].filter(k=>block(b,k).length).map(k=>[k,block(b,k)])),effects:formatScript(reward),effectsSummary:[...new Set(summary)],offsets:children(b,'offset').map(n=>n.value),durationEvidence:{rule:'local cost * FOCUS_POINT_DAYS',rawCost,constant:rawCost.startsWith('@')?constants.get(rawCost):undefined,definesHashes:defineFiles.map(f=>({source:path.relative(root,f).replaceAll('\\','/'),hash:fileMap.get(path.relative(root,f).replaceAll('\\','/'))?.hash}))}});
           }
         }
         else if(source.includes('/units/equipment/modules/')){
@@ -179,6 +197,17 @@ export function indexGame(store:Store,root:string,onProgress?:(source:string,com
     // Inherited spirit costs remain references to category evidence, not copied verified gameplay numbers.
     const categories=new Map(allEntries.filter(e=>e.kind==='idea_category').map(e=>[e.id,e]));
     for(const idea of allEntries.filter(e=>e.kind==='idea')){const category=categories.get(idea.data.group);if(category){idea.data.ideaCategory={id:category.id,type:category.data.type,declaredBaseCost:category.data.stats?.cost,source:category.source,line:category.line,hash:category.hash};store.db.prepare('UPDATE entries SET payload=? WHERE uid=?').run(JSON.stringify(idea),idea.uid);}}
+    // Attach bounded, uniquely resolved idea modifiers and event names from this same reference snapshot.
+    attachScriptContext(allEntries,localization);
+    const related=new Map<string,Entry[]>();for(const e of allEntries)if(['idea','event','decision_category'].includes(e.kind)){const key=e.kind+':'+e.id;related.set(key,[...(related.get(key)||[]),e]);}
+    for(const e of allEntries)if(['focus','shared_focus','joint_focus','decision','formable','technology'].includes(e.kind)){
+      const ids=[...new Set(['idea','add_ideas','remove_ideas','add_idea','remove_idea'].flatMap(key=>collect([...(e.data.nodes||[]),...Object.values(e.data.mechanicScripts||{}).flatMap((s:any)=>s.nodes||[])],key)))];
+      const links:Record<string,any>={};for(const id of ids.slice(0,64)){const found=related.get('idea:'+id)||[];if(found.length===1){const idea=found[0];const titleKey=scalar(idea.data.nodes||[],'name',idea.id);const ideaTitle=localization.has(titleKey)?loc(titleKey):idea.title;e.data.mechanicNames[id]=ideaTitle;e.data.mechanicNameEvidence[id]=localization.evidence(titleKey);links[id]={title:ideaTitle,modifiers:block(idea.data.nodes||[],'modifier'),source:idea.source,line:idea.line,hash:idea.hash,version:idea.version};}else if(found.length>1)links[id]={ambiguous:true};}
+      e.data.mechanicIdeas=links;
+      for(const id of collect([...(e.data.nodes||[]),...Object.values(e.data.mechanicScripts||{}).flatMap((s:any)=>s.nodes||[])],'id')){const events=related.get('event:'+id)||[];if(events.length===1)e.data.mechanicNames[id]=events[0].title;}
+      const category=related.get('decision_category:'+e.data.category)||[];if(category.length===1){const c=category[0];e.data.categoryTitle=c.title;e.data.categoryConditions=(c.data.nodes||[]).filter((n:Node)=>['allowed','visible','available'].includes(n.key));e.data.categoryEvidence={source:c.source,line:c.line,hash:c.hash,version:c.version};}
+      store.db.prepare('UPDATE entries SET payload=? WHERE uid=?').run(JSON.stringify(e),e.uid);
+    }
     const categoryEntries=buildCategoryEntries(allEntries);for(const e of categoryEntries){store.insert(e);allEntries.push(e);}
     if(categoryEntries.length)coverage.files.push({source:'companion/derived/module_categories',hash:hash(categoryEntries.map(e=>e.hash).join('\n')),status:'complete',discovered:categoryEntries.length,emitted:categoryEntries.length,accounted:categoryEntries.length,omissions:[],warnings:[],kinds:{module_category:categoryEntries.length},records:categoryEntries.map(e=>({path:e.id,line:1,uid:e.uid,disposition:'emitted'}))});
     const edges=buildRelationships(allEntries);store.replaceRelationships(edges);

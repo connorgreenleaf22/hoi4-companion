@@ -1,0 +1,216 @@
+[
+  {
+    "id": "AUS_german_animosity_towards_high_command",
+    "title": "[GER.GetAdjective] Animosity Towards Military High Command",
+    "source": "common/decisions/AUS.txt",
+    "line": 3,
+    "hash": "d74c450d02af0023c7fd94372966272b4af022c4941fce7e8b96bf001ea79219",
+    "version": "1.19.4.2",
+    "cost": [],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 2,
+    "recognizedRequirements": [
+      "Country must be Austria."
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "AUS_up_security_around_high_command",
+    "title": "Up Security Around the High Command",
+    "source": "common/decisions/AUS.txt",
+    "line": 56,
+    "hash": "d74c450d02af0023c7fd94372966272b4af022c4941fce7e8b96bf001ea79219",
+    "version": "1.19.4.2",
+    "cost": [
+      "Listed decision cost: 30 political power. Modifiers and special cost scripts are not included."
+    ],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 6,
+    "recognizedRequirements": [
+      "Original country identity must be Austria."
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "AUS_state_garrison",
+    "title": "State Garrisons in [FROM.GetName]",
+    "source": "common/decisions/AUS.txt",
+    "line": 103,
+    "hash": "d74c450d02af0023c7fd94372966272b4af022c4941fce7e8b96bf001ea79219",
+    "version": "1.19.4.2",
+    "cost": [
+      "Listed decision cost: 25 political power. Modifiers and special cost scripts are not included."
+    ],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 7,
+    "recognizedRequirements": [
+      "Original country identity must be Austria."
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "AUS_recruitment_push",
+    "title": "Recruitment Push",
+    "source": "common/decisions/AUS.txt",
+    "line": 456,
+    "hash": "d74c450d02af0023c7fd94372966272b4af022c4941fce7e8b96bf001ea79219",
+    "version": "1.19.4.2",
+    "cost": [],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 18,
+    "recognizedRequirements": [
+      "Original country identity must be Austria."
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "AUS_send_infantry_equipment_to_italy",
+    "title": "Send Infantry Equipment to [ITA.GetNameDef]",
+    "source": "common/decisions/AUS.txt",
+    "line": 688,
+    "hash": "d74c450d02af0023c7fd94372966272b4af022c4941fce7e8b96bf001ea79219",
+    "version": "1.19.4.2",
+    "cost": [
+      "Listed decision cost: 100 political power. Modifiers and special cost scripts are not included."
+    ],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 5,
+    "recognizedRequirements": [
+      "Original country identity must be Austria."
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "AUS_industrial_coaxing_decision",
+    "title": "Send Industrial Support to [FROM.GetNameDef]",
+    "source": "common/decisions/AUS.txt",
+    "line": 2684,
+    "hash": "d74c450d02af0023c7fd94372966272b4af022c4941fce7e8b96bf001ea79219",
+    "version": "1.19.4.2",
+    "cost": [
+      "Listed decision cost: 100 political power. Modifiers and special cost scripts are not included."
+    ],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 9,
+    "recognizedRequirements": [
+      "Original country identity must be Austria.",
+      "Complete The Protector of the Danube."
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "BEL_invest_congo_gold_into_welfare_decision",
+    "title": "Invest [COG.GetAdjective] Gold into Welfare",
+    "source": "common/decisions/BEL.txt",
+    "line": 125,
+    "hash": "7888596c0407e8773e8c7c723b7d1d0199ccd99efd4c6af78097e6c708ff66e7",
+    "version": "1.19.4.2",
+    "cost": [
+      "Listed decision cost: 10 political power. Modifiers and special cost scripts are not included."
+    ],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 4,
+    "recognizedRequirements": [
+      "Original country identity must be Belgium.",
+      "Complete Gold And Diamonds.",
+      "Complete Gold And Diamonds."
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "BEL_emergency_measures_on_production_front",
+    "title": "Emergency Measures on the Production Front",
+    "source": "common/decisions/BEL.txt",
+    "line": 308,
+    "hash": "7888596c0407e8773e8c7c723b7d1d0199ccd99efd4c6af78097e6c708ff66e7",
+    "version": "1.19.4.2",
+    "cost": [
+      "Listed decision cost: 100 political power. Modifiers and special cost scripts are not included."
+    ],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 1,
+    "recognizedRequirements": [
+      "Original country identity must be Belgium.",
+      "Complete Unity Makes Strength.",
+      "To start:"
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "BEL_EU_west_slavic_expansion_decision",
+    "title": "West Slavic Expansion",
+    "source": "common/decisions/BEL.txt",
+    "line": 1981,
+    "hash": "7888596c0407e8773e8c7c723b7d1d0199ccd99efd4c6af78097e6c708ff66e7",
+    "version": "1.19.4.2",
+    "cost": [
+      "Listed decision cost: 100 political power. Modifiers and special cost scripts are not included."
+    ],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 8,
+    "recognizedRequirements": [
+      "Original country identity must be Belgium.",
+      "Original country identity must be Austria.",
+      "Original country identity must be Netherlands."
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "BEL_EU_baltic_expansion_decision",
+    "title": "Baltic Expansion",
+    "source": "common/decisions/BEL.txt",
+    "line": 2166,
+    "hash": "7888596c0407e8773e8c7c723b7d1d0199ccd99efd4c6af78097e6c708ff66e7",
+    "version": "1.19.4.2",
+    "cost": [
+      "Listed decision cost: 100 political power. Modifiers and special cost scripts are not included."
+    ],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 8,
+    "recognizedRequirements": [
+      "Original country identity must be Belgium.",
+      "Original country identity must be Austria.",
+      "Original country identity must be Netherlands."
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "BEL_EU_scandinavian_expansion_decision",
+    "title": "Scandinavian Expansion",
+    "source": "common/decisions/BEL.txt",
+    "line": 2460,
+    "hash": "7888596c0407e8773e8c7c723b7d1d0199ccd99efd4c6af78097e6c708ff66e7",
+    "version": "1.19.4.2",
+    "cost": [
+      "Listed decision cost: 100 political power. Modifiers and special cost scripts are not included."
+    ],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 13,
+    "recognizedRequirements": [
+      "Original country identity must be Belgium.",
+      "Original country identity must be Austria.",
+      "Original country identity must be Netherlands."
+    ],
+    "recognizedEffectsInDetails": []
+  },
+  {
+    "id": "BEL_worker_rallies_decision",
+    "title": "Hold Worker Rallies",
+    "source": "common/decisions/BEL.txt",
+    "line": 4324,
+    "hash": "7888596c0407e8773e8c7c723b7d1d0199ccd99efd4c6af78097e6c708ff66e7",
+    "version": "1.19.4.2",
+    "cost": [
+      "Listed decision cost: 50 political power. Modifiers and special cost scripts are not included."
+    ],
+    "visibleSpecificOutcomes": [],
+    "unresolved": 4,
+    "recognizedRequirements": [
+      "Eligibility:",
+      "To appear:"
+    ],
+    "recognizedEffectsInDetails": [
+      "Decrease stability by 5 percentage points."
+    ]
+  }
+]

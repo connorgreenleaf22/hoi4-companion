@@ -19,6 +19,13 @@ function fixture(){
   return {temp,root,store,put,list,edges,done};
 }
 
+test('importer preserves every repeated mutually-exclusive focus block',()=>{
+ const f=fixture();try{
+  f.put('common/national_focus/main.txt','focus_tree={id=main focus={id=A mutually_exclusive={focus=B} mutually_exclusive={focus=C}} focus={id=B} focus={id=C}}');
+  indexGame(f.store,f.root);const a=f.list().find(e=>e.kind==='focus'&&e.id==='A')!;assert.deepEqual(a.data.exclusive,['B','C']);assert.equal(a.data.nodes.filter((n:any)=>n.key==='mutually_exclusive').length,2);
+ }finally{f.done();}
+});
+
 test('knowledge records preserve module inheritance, typed unlocks, comparison limits and scoped mission statistics',()=>{
   const f=fixture();try{
     f.put('common/technologies/artillery.txt','technologies={ artillery1={ enable_equipment_modules={ tank_medium_cannon } enable_subunits={ light_armor } enable_building={building=radar_station level=1} allow={ROOT={is_special_project_completed=sp:radar}} path={leads_to_tech=artillery2} ai_will_do={modifier={factor=2 has_dlc="Test DLC"}} } artillery2={} }');

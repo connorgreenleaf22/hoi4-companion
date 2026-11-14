@@ -1,0 +1,19 @@
+{
+  "origin": "Hand-worked arithmetic from the pinned numeric declarations; not generated from the evaluator.",
+  "candidates": {
+    "i6": {"combatWidth":12,"manpower":6000,"industrialCost":300,"equipment":{"infantry_equipment_1":600}},
+    "i9": {"combatWidth":18,"manpower":9000,"industrialCost":450,"equipment":{"infantry_equipment_1":900}},
+    "i9-a1": {"combatWidth":21,"manpower":9500,"industrialCost":534,"equipment":{"infantry_equipment_1":900,"artillery_equipment_1":24}},
+    "i9-a2": {"combatWidth":24,"manpower":10000,"industrialCost":618,"equipment":{"infantry_equipment_1":900,"artillery_equipment_1":48}},
+    "t6-m4": {"combatWidth":20,"manpower":7800,"industrialCost":4150,"equipment":{"medium_tank_equipment_1":300,"infantry_equipment_1":400,"motorized_equipment_1":140}},
+    "t5-m5": {"combatWidth":20,"manpower":8500,"industrialCost":3687.5,"equipment":{"medium_tank_equipment_1":250,"infantry_equipment_1":500,"motorized_equipment_1":175}},
+    "t8-m7": {"combatWidth":30,"manpower":12400,"industrialCost":5762.5,"equipment":{"medium_tank_equipment_1":400,"infantry_equipment_1":700,"motorized_equipment_1":245}}
+  },
+  "comparisons": [
+    {"left":"i9","right":"i6","combatWidth":-6,"manpower":-3000,"industrialCost":-150},
+    {"left":"i9","right":"i9-a1","combatWidth":3,"manpower":500,"industrialCost":84},
+    {"left":"i9","right":"i9-a2","combatWidth":6,"manpower":1000,"industrialCost":168},
+    {"left":"t6-m4","right":"t5-m5","combatWidth":0,"manpower":700,"industrialCost":-462.5},
+    {"left":"t6-m4","right":"t8-m7","combatWidth":10,"manpower":4600,"industrialCost":1612.5}
+  ]
+}

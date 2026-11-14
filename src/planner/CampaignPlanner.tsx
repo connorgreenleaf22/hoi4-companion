@@ -6,6 +6,9 @@ import {ensurePlanner,mirrorPlanner} from '../../server/planner/plans';
 import {captureChecklist} from '../../server/planner/checklists';
 import {capturedGuideCorrections} from '../guide-corrections';
 import './planner.css';
+import {RequirementView} from '../MechanicsView';
+import {StrategyWorkbench} from './StrategyWorkbench';
+import {conditionState,conditionText} from './condition-state';
 import {getPlannerDraft,rememberPlannerDraft,forgetPlannerDraft,subscribePlannerDiscard,beginPlannerWrite,downloadablePlannerDraft,type CachedPlannerDraft} from './drafts';
 
 type Props={profile?:Profile;save:(p:Profile)=>Promise<Profile>;countries:Entry[];onCountry:(tag:string)=>void;openEntry:(ref:string)=>void;fail:(e:unknown)=>void;jump:string;onNew:()=>void;indexRevision?:string;onApplied:(p:Profile)=>void};
@@ -140,6 +143,7 @@ export function CampaignPlanner({profile,save,countries,openEntry,fail,jump,onNe
     {checking&&<p className="muted" role="status">Rechecking queue order and source conditions…</p>}
     {report?.applicability&&report.applicability.truth!=='yes'&&<details className="notice small"><summary>Tree applicability needs review</summary><Requirement result={report.applicability} openEntry={openEntry}/></details>}
     {!!tree?.data.referenceIssues?.length&&<details className="notice small"><summary>{tree.data.referenceIssues.length} missing or ambiguous tree references</summary>{tree.data.referenceIssues.map((issue:any,i:number)=><p key={i}><button className="text-link" onClick={()=>openEntry(issue.id)}>{issue.id}</button> — {issue.reason}</p>)}</details>}
+    <StrategyWorkbench profile={profile} draft={payload||draft} plan={plan} focuses={focuses} indexRevision={contextRevision} busy={busy} openEntry={openEntry} addAlternative={(items,name,assumptions)=>{const id=crypto.randomUUID();updatePlanner(p=>({...p,plans:[...p.plans,{...structuredClone(plan),id,name:name.slice(0,100),items,assumptions:assumptions||plan.assumptions,referenceIndexRevision:contextRevision}]}));setSelected(id);setMessage('New route is a draft. Review conditions, then Apply to save it.');}}/>
     <div className="cp-workbench">
       <section className="panel cp-library" aria-label="Focus browser"><div className="tree-toolbar"><div><strong>Explore the tree</strong><small>{focuses.length} installed definitions</small></div><div className="segmented"><button aria-label="List view" className={view.mode==='list'?'selected':''} onClick={()=>setView({...view,mode:'list'})}><List size={17}/></button><button aria-label="Map view" className={view.mode==='map'?'selected':''} onClick={()=>setView({...view,mode:'map'})}><MapIcon size={17}/></button></div></div>
         <div className="tree-controls"><div className="search-box"><Search size={15}/><input aria-label="Find focus" placeholder="Find a focus…" value={view.filter} onChange={e=>setView({...view,filter:e.target.value})}/></div>{view.mode==='map'&&<label className="cp-zoom">Zoom<input aria-label="Map zoom" type="range" min=".3" max="1.3" step=".1" value={view.zoom} onChange={e=>setView({...view,zoom:Number(e.target.value)})}/></label>}<button className="text-link" disabled={dirty||busy} title={dirty?'Apply or cancel the preview first':'Save this view for next time'} onClick={()=>void saveActual(p=>({...p,planner:{...p.planner!,view}}),'View remembered for this campaign.')}>Remember view</button></div>
@@ -170,13 +174,4 @@ function AmbiguityPicker({reference,position,candidateUids,disabled,openEntry,ch
   return <section className="cp-definition-picker" aria-label={`Choose definition for queue item ${position+1}`}><strong>Choose the intended definition</strong><p>This updates only the preview. Inspect its source before Apply.</p>{error&&<p className="danger">{error}</p>}{!entries.length&&!error&&<p className="muted">Loading exact candidate definitions…</p>}{entries.map(entry=><div key={entry.uid}><strong>{entry.title}</strong><small>{entry.source}:{entry.line} · {entry.version}</small><code>{entry.uid}</code><div className="button-row"><button className="text-link" onClick={()=>openEntry(`definition:${entry.uid}`)}>Inspect source<ChevronRight size={12}/></button><button className="button" disabled={disabled} aria-label={`Use definition ${entry.uid} for queue item ${position+1}`} onClick={()=>choose(entry)}>Use this definition</button></div></div>)}</section>;
 }
 
-function Requirement({result,openEntry}:{result:RequirementResult;openEntry:(ref:string)=>void}){
-  return <div className={`cp-requirement ${result.truth}`}><div><span className={`cp-truth ${result.truth}`}>{truthLabel(result.truth)}</span><code>{result.key}{result.op?` ${result.op}`:''}{result.value!==undefined?` ${result.value}`:''}</code><small>{result.role}{result.scope?.length?` · scope ${result.scope.join(' / ')}`:''}</small></div><p>{result.reason}</p>{result.value&&result.key==='has_completed_focus'&&<button className="text-link" onClick={()=>openEntry(result.value!)}>Inspect completion reference<ChevronRight size={12}/></button>}{result.assumptions.map((a,i)=><p key={i} className="cp-assumption">{a}</p>)}{result.source&&<p className="cp-source">{result.source.source}:{result.source.line??'?'}<code>{result.source.hash}</code></p>}{!!result.children.length&&<div className="cp-children">{result.children.map((child,i)=><Requirement key={i} result={child} openEntry={openEntry}/>)}</div>}</div>;
-}
-
-
-
-
-
-
-
+function Requirement({result}:{result:RequirementResult;openEntry:(ref:string)=>void}){return <RequirementView result={result}/>;}

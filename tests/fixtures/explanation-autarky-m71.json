@@ -1,0 +1,13 @@
+{
+  "id": "GER_autarky_achieved",
+  "title": "Autarky Achieved",
+  "version": "1.19.4.2",
+  "hash": "ac730be5ccc9095fb400e58b2f7d44501288a94186beb148dbbb0b32cf8ea03c",
+  "source": "common/national_focus/germany.txt",
+  "line": 2387,
+  "days": 70,
+  "baselineCommit": "9105ae747b70df13f6b2619f175a1fc4f8ef249b",
+  "specificOutcomesBefore": 0,
+  "unresolvedBefore": ["GER_autarky_achieved_effects", "swap_ideas", "all_core_state", "has_resources_in_collection"],
+  "regression": "Keep supported conditional replacements and literal modifier-variable changes visible alongside unsupported formulas; do not infer campaign availability or final economic totals."
+}

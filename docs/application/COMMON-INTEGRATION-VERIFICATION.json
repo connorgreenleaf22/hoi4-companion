@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "host": "CJ-Laptop",
+  "branch": "integration/common-2026-11-12",
+  "baseSha": "bdb8a4887522b38f5110f3900bbf1655cc5fd600",
+  "runtimeSha": "e27e28f8ff5ddaa9d5820bceeba2073283868f0c",
+  "included": [
+    {
+      "pr": 6,
+      "sha": "dfb27ec6a3b19e3a4240e550d501441db522c499"
+    },
+    {
+      "pr": 9,
+      "sha": "895ef1cc16da27887d535165b8ea866476d148a4"
+    },
+    {
+      "pr": 12,
+      "sha": "2bf89a5eaadcd6d22302cd1935fec5513a18b730",
+      "dependsOn": 9
+    },
+    {
+      "pr": 8,
+      "sha": "1fdf0a9af79b0afcaf465ccad33ee2a048591db8"
+    },
+    {
+      "pr": 11,
+      "sha": "747969632907827e89d261b5b157d93f3cb9f88b",
+      "dependsOn": 8
+    }
+  ],
+  "excluded": [
+    {
+      "pr": 4,
+      "sha": "fef4efec13e353d54e7b7afd291c6958e1107873"
+    },
+    "live-Q&A readiness",
+    "UX audit/prototype branches",
+    "historical branches already inherited in base"
+  ],
+  "runtimeIdentity": "Tests ran against the same runtime/test source content before its clean commit; subsequent candidate edits are documentation/evidence only. Packaged smoke records full source identity.",
+  "tests": {
+    "focused": {
+      "pass": 77,
+      "fail": 0,
+      "skipped": 0
+    },
+    "compatibility": {
+      "pass": 21,
+      "fail": 0,
+      "skipped": 0
+    },
+    "indexedContracts": {
+      "pass": 2,
+      "fail": 0,
+      "skipped": 0
+    },
+    "portableCi": {
+      "pass": 191,
+      "fail": 0,
+      "skipped": 0
+    },
+    "workflowGuards": {
+      "pass": 3,
+      "fail": 0,
+      "skipped": 0
+    },
+    "build": "passed (TypeScript, Vite, Node bundles)",
+    "releaseRefusal": {
+      "exit": 1,
+      "reason": "NAV-01",
+      "expected": true
+    }
+  },
+  "package": {
+    "name": "M7.4.2i-e27e28f8ff5d-windows-x64.zip",
+    "reference": "Local-only Documents/HOI4 Companion Development Builds/M7.4.2i-e27e28f8ff5d; never uploaded",
+    "sha256": "1086a172f6b70f1e03dae665edd016b329006809c66373ad81a3d8eece50194c",
+    "matchingFreshlyExtractedFiles": 75,
+    "smokeReference": "Local-only artifacts/qa/ai-package-2026-11-12T20-17-55-374Z-2d01e8a6/run-record.json",
+    "smokeSha256": "67dfe9b0bd01256903cc036b32701ed4555a813b7e1f2ca04f5e740c854e5578",
+    "checks": [
+      {
+        "name": "fresh packaged app loads installed sources and optional session-only provider configuration",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "M73-PACKAGE"
+        ],
+        "ms": 170
+      },
+      {
+        "name": "offline manual strategy supports source preview, editing, validation and saved comparison",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "M73-OFFLINE"
+        ],
+        "ms": 9140
+      },
+      {
+        "name": "NAV-01 release blocker reproduced: unsaved Lab template resets on navigation",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "NAV-01-BLOCKED"
+        ],
+        "ms": 912
+      },
+      {
+        "name": "packaged restart retains manual proposal and keeps provider unconfigured",
+        "status": "passed",
+        "level": "compiled-runtime",
+        "requirements": [
+          "M73-PACKAGE-REOPEN"
+        ],
+        "ms": 507
+      }
+    ],
+    "sourceUnchangedDuringRun": true,
+    "screenshotsReviewedByBuilder": [
+      "reopened.png",
+      "navigation-release-blocker.png"
+    ]
+  },
+  "compiledContracts": {
+    "runtimeSha": "e27e28f8ff5ddaa9d5820bceeba2073283868f0c",
+    "modules": [
+      {
+        "name": "design-evaluation.cjs",
+        "sha256": "d47e23341083b6c1e2dde9a0a4c55a41a87f155cf4e49ff174276ce4052bbeef",
+        "matchesBuiltBundle": true
+      },
+      {
+        "name": "design-evaluation-demo.cjs",
+        "sha256": "d0d39076ef5f0b42240cf71dd8c0a54547f1f1518ad5f4f164f4453aff420ef6",
+        "matchesBuiltBundle": true
+      },
+      {
+        "name": "combat-evaluation.cjs",
+        "sha256": "1549c88b94af7843b3a71cf368ffdf84acaa842ffec843ffac7c03a071b41623",
+        "matchesBuiltBundle": true
+      },
+      {
+        "name": "combat-evaluation-demo.cjs",
+        "sha256": "1736448b6f1f3a5cd9eecd440ca97c40e86603b4a8f949c9fb73f42c454b8d43",
+        "matchesBuiltBundle": true
+      }
+    ],
+    "designTopLevelFields": [
+      "schemaVersion",
+      "origin",
+      "results",
+      "comparisons"
+    ],
+    "combatComparisons": 3,
+    "combatQualifiedMetricCount": 0,
+    "allFiveTotalsAndDeltasNull": true,
+    "supportInspectionStatus": "inputs-qualified",
+    "supportInputCount": 3,
+    "divisionAggregationQualified": false
+  },
+  "preservation": {
+    "originalHistoricalZipsHashed": 21,
+    "existingProfileFilesHashed": 124,
+    "hashChanges": 0,
+    "originalWorktreesChecked": 16,
+    "originalWorktreeChanges": 0,
+    "ownedQaProcessesRemaining": 0,
+    "testDataRemoved": true,
+    "gameUserRootDetected": false,
+    "gameConfigEvidence": "Conventional Documents HOI4 config paths absent at initial inventory; Documents and OneDrive HOI4 user roots absent afterward. No game configuration edited. This is absence evidence, not before/after config hashes.",
+    "oldDataCompatibility": "Synthetic closed original database copied; only copy reopened twice; original SHA-256 unchanged. Old raw AI payloads, campaign data, revisions, selected profile and unknown-usage reservations preserved. No real database migrated/opened by the candidate."
+  },
+  "installedSource": {
+    "currentVersion": "1.19.5.0",
+    "qualificationVersion": "1.19.4.2",
+    "currentInstallationQualified": false,
+    "designAuditExit": 1,
+    "combatAuditExit": 1,
+    "reason": "Both existing installed audits refuse the version mismatch before deeper source checks. Original pins/fixtures unchanged; current-patch requalification remains open. Compiled demos use retained 1.19.4.2 fixtures."
+  },
+  "review": {
+    "runtimeReviewer": "/root/review_common_candidate",
+    "runtimeSha": "e27e28f8ff5ddaa9d5820bceeba2073283868f0c",
+    "result": "No blocking code/integration findings; independently checked ancestry, exact contract preservation, fixture-only CI imports, 1 compatibility case, compiled combat refusal contract, release refusal, ZIP/extraction and ASAR bundles.",
+    "finalCandidateReviewReference": "Local-only .bridge-local/integration-2026-11-12/final-review.json; exact final evidence SHA reviewed after freeze; see final task handoff."
+  },
+  "promotion": {
+    "releaseCandidate": "blocked development review artifact",
+    "releasePromotionAllowed": false,
+    "protectedMergesPerformed": false,
+    "remotePublicationPerformed": false,
+    "order": [
+      "candidate to develop (draft/prepared)",
+      "approved develop snapshot to main (future draft)"
+    ],
+    "rollbackRef": "rollback/common-reviewed-base-2026-11-12",
+    "remainingGates": [
+      "NAV-01 unsaved template navigation loss",
+      "Current 1.19.5.0 source requalification against old 1.19.4.2 pins",
+      "M7.4.2b aggregation qualification (#10)",
+      "Deeper mechanics/campaign applicability (#7)",
+      "Complete explanation coverage",
+      "Owner desktop/usefulness acceptance and invoice reconciliation (#2)",
+      "Required hosted checks/protection and explicit exact-SHA merge approval (#1)"
+    ]
+  },
+  "operations": {
+    "paidCalls": 0,
+    "hoi4Launches": 0,
+    "invasiveOperations": 0,
+    "releases": 0,
+    "protectedMerges": 0,
+    "privateDataPublication": 0,
+    "localGoalsStarted": 0
+  },
+  "localEvidence": [
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/npm-ci.txt",
+      "sha256": "2bc125182e766ab422e1a0b9157434e6f1bff85ca34e2362b0e2dda4723fd9f0"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/electron-install.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/focused.txt",
+      "sha256": "ec1356dda1e8717b1111c99cb3e947d1e0fd085389eb90c8957ca6f70cde83ec"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/compatibility.txt",
+      "sha256": "258aaae34871a9584ea205743bc234531045c66efbb4845d3112e625628ae2f1"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/indexed-contracts.txt",
+      "sha256": "1dbb149bfc44e1d9fc48de72a59f7749dd7ec6ebc7638ee9aacc95a21e263e03"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/test-ci.txt",
+      "sha256": "52e5d1a3eb466fc3b4edfefabdf45066a4bec80da902f1fd45aedcc40ddaa661"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/build.txt",
+      "sha256": "ef03fb20b1c006e8b4d496a5899896706bd6bdefbb620dd4af8d7d7400dd3d28"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/schemas-prepackage.txt",
+      "sha256": "d78f4d2321756f54d29691d1961ea9d64be2920f9053fbb4ae4fefb8ddec836d"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/hygiene-prepackage.txt",
+      "sha256": "70bd8a4b17d359e3f42e374b1dbfd80f98fb09bc87129a5cb8d87b6060b56461"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/release-refusal.txt",
+      "sha256": "8cdbd1b2aa3234ae252894689a264b64be279f921efe21a15497fad22a57df23"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/package.txt",
+      "sha256": "5b7280c74e2d0ab430c661f363e3115200d4ac9cd167bf276712d7584dd87983"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/archive.txt",
+      "sha256": "809b35c332f9da1bf60cade20e2e324a6dd471958301b63a4571432fc09c1398"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/package-smoke.txt",
+      "sha256": "ff50bb2a8ba9eec59778e629b835199cfc6dad1f2d7d2ffe0f3582ee56c2266b"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/design-current-version-refusal.txt",
+      "sha256": "6a25a70b8a08e1ef1f18fcc10ab07b78b15818613f9f41835e118cfb27403ad5"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/combat-current-version-refusal.txt",
+      "sha256": "2edc49de22ef936c618430fe6fb96f194e2fa5ec2e44544a120061747122e2f4"
+    },
+    {
+      "reference": "Local-only .bridge-local/integration-2026-11-12/remote-final.txt",
+      "sha256": "1e7ed8d68706cb36129088deaded61359e9b22cfef8d03100d203b06c1dd72ed"
+    }
+  ]
+}

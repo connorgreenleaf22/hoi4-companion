@@ -1,0 +1,3 @@
+[21:07:08][1936.01.01.12]: HC_BRIDGE|v1|begin|producer=sanitized-native-m1|END
+[21:08:18][1936.01.01.24]: HC_BRIDGE|v1|state|producer=sanitized-native-m1|tag=GER|pp=2.324|stability=0.81|END
+[21:09:37][1936.01.02.24]: HC_BRIDGE|v1|state|producer=sanitized-native-m1|tag=GER|pp=4.648|stability=0.81|END

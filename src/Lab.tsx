@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { Plus, Trash2, Save, ArrowRight, Shield, Factory, ArrowUpRight, RefreshCw } from 'lucide-react';
 import type { Entry, Profile } from './types';
 import { api } from './api';
 import { PageTitle, number } from './App';
 import { declaredYear } from './year';
+import {getLabDraft,subscribeLabDrafts,editLabDraft,loadLabTemplate,discardLabDraft,beginLabWrite,acknowledgeLabSave} from './lab-drafts';
 
 type Row = { id: string; count: number | '' };
 type ProductionLine = { equipment: string; quantity: string; stockpile: string; factories: string; efficiency: string; output: string; resourceFactor: string };
@@ -24,13 +25,16 @@ export function DivisionLab({ profile, save, fail, notify, openEntry, baseFactor
   const [loadedIndexRevision,setLoadedIndexRevision]=useState<string>();
   const [loadError, setLoadError] = useState('');
   const [reload, setReload] = useState(0);
-  const [rows, setRows] = useState<Row[]>([{ id: 'infantry', count: 9 }]);
-  const [divisions, setDivisions] = useState('24');
-  const [name, setName] = useState('Infantry division');
+  const draftKey=profile?.id||'';
+  const draft=useSyncExternalStore(subscribeLabDrafts,()=>getLabDraft(draftKey));
+  const {rows,divisions,name}=draft.value;
+  const setRows=(next:Row[]|((previous:Row[])=>Row[]))=>editLabDraft(draftKey,{rows:typeof next==='function'?next(getLabDraft(draftKey).value.rows):next});
+  const setDivisions=(divisions:string)=>editLabDraft(draftKey,{divisions});
+  const setName=(name:string)=>editLabDraft(draftKey,{name});
   const [calculation, setCalculation] = useState<KeyedResult>();
   const [compare, setCompare] = useState<any>();
   const [compareName, setCompareName] = useState('');
-  const [templateBusy, setTemplateBusy] = useState(false);
+  const templateBusy=draft.pending>0;
   const [a, setA] = useState('infantry_equipment_1');
   const [b, setB] = useState('infantry_equipment_2');
   const [line, setLine] = useState<ProductionLine>({ equipment: 'infantry_equipment_1', quantity: '21600', stockpile: '0', factories: '10', efficiency: '.5', output: '1', resourceFactor: '1' });
@@ -107,6 +111,24 @@ export function DivisionLab({ profile, save, fail, notify, openEntry, baseFactor
   const productionPending = !productionBlock && !production && !productionError;
   const updateRow = (index: number, patch: Partial<Row>) => setRows(previous => previous.map((row, i) => i === index ? { ...row, ...patch } : row));
   const saved = profile?.templates || [];
+  const saveTemplate=async()=>{
+    if(!profile||!result||!name.trim()||templateBusy)return;
+    const submitted=structuredClone(getLabDraft(draftKey).value);
+    const replacement=saved.find(t=>t.name===submitted.name.trim());
+    if(replacement&&JSON.stringify(replacement.rows)!==JSON.stringify(submitted.rows)&&!window.confirm('Replace the saved template with these edits? Cancel keeps both the saved template and your draft.'))return;
+    const finish=beginLabWrite(draftKey);
+    try{
+      const template={name:submitted.name.trim(),rows:submitted.rows.map(row=>({id:row.id,count:Number(row.count)}))};
+      await save({...profile,templates:[...saved.filter(t=>t.name!==template.name),template]});
+      acknowledgeLabSave(draftKey,submitted);notify('Template saved to this campaign.');
+    }catch{/* App keeps failed campaign writes recoverable; retain the template draft too. */}finally{finish();}
+  };
+  const discardTemplate=()=>{if(!templateBusy&&window.confirm('Discard unsaved template edits? Saved templates will not change. Cancel stays with your draft.'))discardLabDraft(draftKey);};
+  const loadTemplate=(template:NonNullable<Profile['templates']>[number])=>{
+    if(templateBusy)return;
+    if(getLabDraft(draftKey).dirty){if(!window.confirm('Discard unsaved template edits and load this saved template? Cancel stays with your draft.'))return;discardLabDraft(draftKey);}
+    loadLabTemplate(draftKey,template);
+  };
   const comparison=compare?.indexRevision===indexRevision?compare?.value:undefined;
   const statCards = [{ label: 'COMBAT WIDTH', value: result?.width, key: 'width' }, { label: 'MANPOWER / DIVISION', value: result?.manpower, key: 'manpower' }, { label: 'BASE ORGANIZATION', value: result?.organization, key: 'organization' }, { label: 'BASE SUPPLY / DIVISION', value: result?.supply, key: 'supply' }];
   const equipmentSelect = (value: string, onChange: (value: string) => void, label: string) => <select aria-label={label} value={value} disabled={!referenceReady || !equipment.length} onChange={event => onChange(event.target.value)}>{!equipment.length && <option value={value}>Equipment unavailable</option>}{equipment.map(entry => <option key={entry.uid} value={entry.id}>{entry.title} ({declaredYear({year:entry.data.resolvedStats?.year??entry.data.year})??'Unknown year'})</option>)}</select>;
@@ -118,29 +140,26 @@ export function DivisionLab({ profile, save, fail, notify, openEntry, baseFactor
     {loadState === 'loading' && <p role="status" className="muted">Loading installed units and equipment…</p>}
     {loadState === 'error' && <div className="notice small" role="alert"><span>{loadError || 'Unit and equipment data could not be loaded.'}</span><button className="button" onClick={() => setReload(value => value + 1)}><RefreshCw size={14} />Retry loading</button></div>}
     {loadState === 'ready' && (!units.length || !equipment.length) && <div className="notice small">Some unit or equipment definitions are missing. Refresh game data in Sources & settings.</div>}
+    {draft.dirty&&<div className="notice small" role="status"><span>Unsaved template edits are kept in this window across tools and campaigns. Save or download the draft before leaving the app. Reloading or closing requires an explicit choice.</span><button className="button" disabled={templateBusy} onClick={discardTemplate}>Discard template draft</button></div>}
     <div className="lab-layout">
       <section className="panel">
         <div className="section-label">DIVISION TEMPLATE <Shield size={18} /></div>
-        <label>Template name<input value={name} maxLength={100} onChange={event => setName(event.target.value)} /></label>
+        <label>Template name<input disabled={templateBusy} value={name} maxLength={100} onChange={event => setName(event.target.value)} /></label>
         <div className="template-rows">{rows.map((row, i) => <div className="template-row" key={i}>
-          <select aria-label={`Unit ${i + 1}`} value={row.id} disabled={!referenceReady || !units.length} onChange={event => updateRow(i, { id: event.target.value })}>{units.map(unit => <option value={unit.id} key={unit.uid}>{unit.title}{unit.data.support ? ' · support' : ''}</option>)}</select>
-          <input aria-label={`Count ${i + 1}`} type="number" min={0} max={units.find(unit => unit.id === row.id)?.data.support ? 1 : 25} value={row.count} onChange={event => updateRow(i, { count: event.target.value === '' ? '' : Number(event.target.value) })} />
-          <button className="icon-button" title="Remove unit" onClick={() => setRows(previous => previous.filter((_, index) => i !== index))}><Trash2 size={15} /></button>
+          <select aria-label={`Unit ${i + 1}`} value={row.id} disabled={templateBusy || !referenceReady || !units.length} onChange={event => updateRow(i, { id: event.target.value })}>{units.map(unit => <option value={unit.id} key={unit.uid}>{unit.title}{unit.data.support ? ' · support' : ''}</option>)}</select>
+          <input disabled={templateBusy} aria-label={`Count ${i + 1}`} type="number" min={0} max={units.find(unit => unit.id === row.id)?.data.support ? 1 : 25} value={row.count} onChange={event => updateRow(i, { count: event.target.value === '' ? '' : Number(event.target.value) })} />
+          <button className="icon-button" title="Remove unit" disabled={templateBusy} onClick={() => setRows(previous => previous.filter((_, index) => i !== index))}><Trash2 size={15} /></button>
         </div>)}</div>
         <div className="button-row">
-          <button className="button" disabled={!referenceReady || !units.some(unit => !rows.some(row => row.id === unit.id))} onClick={() => { const next = units.find(unit => !rows.some(row => row.id === unit.id)); if (next) setRows(previous => [...previous, { id: next.id, count: 1 }]); }}><Plus size={15} />Add unit type</button>
-          <button className="button primary" disabled={!profile || !result || !name.trim() || templateBusy} onClick={async () => {
-            if (!profile || !result) return;
-            setTemplateBusy(true);
-            try { const list = [...saved.filter(template => template.name !== name.trim()), { name: name.trim(), rows: rows.map(row => ({ id: row.id, count: Number(row.count) })) }]; await save({ ...profile, templates: list }); notify('Template saved to this campaign.'); }
-            catch {} finally { setTemplateBusy(false); }
-          }}><Save size={15} />{templateBusy ? 'Saving…' : 'Save template'}</button>
+          <button className="button" disabled={templateBusy || !referenceReady || !units.some(unit => !rows.some(row => row.id === unit.id))} onClick={() => { const next = units.find(unit => !rows.some(row => row.id === unit.id)); if (next) setRows(previous => [...previous, { id: next.id, count: 1 }]); }}><Plus size={15} />Add unit type</button>
+          <button className="button primary" disabled={!profile || !result || !name.trim() || templateBusy} onClick={()=>void saveTemplate()}><Save size={15} />{templateBusy ? 'Saving…' : 'Save template'}</button>
         </div>
         {!profile && <small className="muted">Create a campaign to save templates.</small>}
-        <label>Divisions to field<input aria-label="Army division count" type="number" min={1} max={10000} value={divisions} onChange={event => setDivisions(event.target.value)} /></label>
+        <label>Divisions to field<input disabled={templateBusy} aria-label="Army division count" type="number" min={1} max={10000} value={divisions} onChange={event => setDivisions(event.target.value)} /></label>
+        <small className="muted">Saved templates store the name and unit rows. Army size is a calculation input kept only in this window.</small>
         {calculationError && <p className="danger" role="alert">{calculationError}</p>}
         {!calculationError && !result && <p className="muted" role="status">Calculating requirements…</p>}
-        {saved.length > 0 && <><h3>Saved templates</h3>{saved.map(template => <div className="saved-template" key={template.name}><strong>{template.name}</strong><button className="text-link" onClick={() => { setRows(template.rows); setName(template.name); }}>Load</button><button className="text-link" disabled={!!templateInputError} onClick={async () => { try { setCompare({value:await api('calculate', { rows: template.rows, divisions: divisionCount }),indexRevision}); setCompareName(template.name); } catch (error) { fail(error); } }}>Compare</button><button title="Delete saved template" className="icon-button" disabled={templateBusy} onClick={async () => { if (!profile) return; setTemplateBusy(true); try { await save({ ...profile, templates: saved.filter(value => value.name !== template.name) }); } catch {} finally { setTemplateBusy(false); } }}><Trash2 size={13} /></button></div>)}</>}
+        {saved.length > 0 && <><h3>Saved templates</h3>{saved.map(template => <div className="saved-template" key={template.name}><strong>{template.name}</strong><button className="text-link" disabled={templateBusy} onClick={() => loadTemplate(template)}>Load</button><button className="text-link" disabled={!!templateInputError} onClick={async () => { try { setCompare({value:await api('calculate', { rows: template.rows, divisions: divisionCount }),indexRevision}); setCompareName(template.name); } catch (error) { fail(error); } }}>Compare</button><button title="Delete saved template" className="icon-button" disabled={templateBusy} onClick={async () => { if (!profile||templateBusy) return; const finish=beginLabWrite(draftKey); try { await save({ ...profile, templates: saved.filter(value => value.name !== template.name) }); } catch {} finally { finish(); } }}><Trash2 size={13} /></button></div>)}</>}
       </section>
       <div>
         <div className="lab-stats">{statCards.map(stat => <div className="stat" key={stat.key}><span>{stat.label}</span><strong>{stat.value == null ? '—' : number(stat.value)}</strong>{comparison && <small>vs {number(comparison[stat.key])} · {compareName}</small>}</div>)}</div>

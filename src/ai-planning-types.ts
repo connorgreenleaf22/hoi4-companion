@@ -1,0 +1,21 @@
+import type {CampaignPlan,Profile} from './types';
+import type {ProposalReview} from './planning-coverage-types';
+import type {PlanningSources} from './strategy-types';
+export type RecommendationCategory='decision'|'research'|'economy'|'military'|'event';
+export type StrategyContent={name:string;secondaryObjectives:string[];focusIds:string[];recommendations:{category:RecommendationCategory;text:string;references:string[];conditions:string[]}[];assumptions:string[];risks:string[];milestones:string[];alternatives:string[];unknowns:string[]};
+export type AiSettings={model:string;maxOutputTokens:number;reasoningEffort:'low'|'medium'|'high'|'xhigh'|'max';sessionBudgetUsd:number;requestCeilingUsd:number;confirmationThresholdUsd:number};
+export type AiUsage={input?:number;cachedInput?:number;cacheWrite?:number;output?:number;reasoning?:number};
+export type AiPriceEstimate={pricingVersion:string;source:string;currency:'USD';billing:'estimate-not-invoice';usd:number|null;reason:string};
+export type AiCostPreview={pricingVersion:string;inputTokens:number;conservativeInputTokens:number;maxOutputTokens:number;estimatedUsd:number|null;reservedUsd:number|null;method:string;fingerprint:string};
+export type AiBudget={sessionId:string;estimatedUsd:number;heldUsd:number;committedUsd:number;remainingUsd:number;unknownRequests:number};
+export type AiConfiguration=AiSettings&{provider:'openai';configured:boolean;busy:boolean;budget:AiBudget};
+export type ReferenceProblem={reference:string;location:string;reason:string;candidates:{reference:string;id:string;kind:string;title:string;source:string;tree:string|null}[]};
+export type AiProviderMetadata={model:string;serviceTier:string;completionStatus:string;usage?:AiUsage;httpStatus?:number;responseId?:string;requestId?:string;errorCode?:string};
+export type AiAttempt={schemaVersion:2;requestId:string;profileId:string;sessionId:string;objective:string;context:AiContext;startedAt:string;status:'pending'|'reviewed'|'needs-correction'|'failed';provider:string;model:string;metadata?:AiProviderMetadata;cost?:AiPriceEstimate;reservedUsd:number;content?:StrategyContent;problems?:ReferenceProblem[];error?:string;strategy?:AiStrategy;requestFingerprint:string};
+export type AiGeneration={attempt:AiAttempt;strategy?:AiStrategy};
+export type AiStrategy={schemaVersion:1;id:string;profileId:string;revision:number;objective:string;content:StrategyContent;plan:CampaignPlan;review:ProposalReview;sources:PlanningSources;createdAt:string;updatedAt:string;origin:'provider'|'manual';provider:{name:string;model:string;usage?:AiUsage};repairs:string[];instruction:string;parentId?:string;manualContext:string;classification:'provisional';campaignContext:string;};
+export type AiSourceGap={status:string;code:string;text:string;locations:{line?:number;source?:string;hash?:string;version?:string}[]};
+export type AiSource={reference:string;id:string;kind:string;title:string;source:string;line:number;hash:string;version:string;prerequisites:string[][];exclusions:string[];summary:string[];requirements:string[];costsAndTiming?:string[];interpretationGaps?:AiSourceGap[];omittedOutcomeCount?:number};
+export type AiContext={schemaVersion:1;fingerprint:string;country:string;startDate:string;sources:PlanningSources;references:AiSource[];omitted:number;omissions?:string[];disclosure:string;manualContext:string;dlcAssertions:unknown;objective:string;revisionInstruction:string;previousProposal?:StrategyContent;costPreview?:AiCostPreview;quoteFingerprint?:string;budget?:AiBudget;settings?:AiSettings};
+
+export const aiCampaignContext=(p:Profile)=>JSON.stringify([p.id,p.revision,p.country,p.tree.replace(/^definition:/,''),p.startDate,p.completed,p.dlcStates,p.dlcs,p.dlcConfirmed,p.historical]);

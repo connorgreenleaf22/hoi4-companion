@@ -1,0 +1,18 @@
+{
+  "repository": "https://github.com/klimPaskov/HOI4-Live-Tools",
+  "revision": "5b9ec1ec7578c37ecf77a4e8a8c96c3a24317dc6",
+  "sourceDirectory": ".bridge-local/community/2-HOI4-Live-Tools",
+  "license": "Apache-2.0",
+  "gameVersion": "1.19.4.1",
+  "executableHash": "cf781ed178cd801643b233b7e3fcd1c0efd19bd01aecd24bf07a35f69f10476f",
+  "focusId": "GER_prioritize_economic_growth",
+  "focusName": "Prioritize Economic Growth",
+  "clientSize": [
+    1280,
+    720
+  ],
+  "physicalClientSize": [
+    1600,
+    900
+  ]
+}

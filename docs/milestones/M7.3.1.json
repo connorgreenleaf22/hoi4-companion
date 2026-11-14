@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "M7.3.1",
+  "status": "implemented",
+  "branch": "fix/hoi4-m731-context",
+  "commitSha": "155594f9c4d27780b969b217f19b01275d3d01bf",
+  "testEvidence": [
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/M731-VERIFICATION.json",
+      "summary": "Historical evidence: 50 focused tests plus overlapping 10-test follow-up; not rerun by workflow migration."
+    },
+    {
+      "kind": "packaged",
+      "result": "passed",
+      "reference": "docs/application/M731-VERIFICATION.json",
+      "summary": "Historical isolated Windows package: 75 files matched; three package cases passed. Real provider acceptance had not run at that checkpoint."
+    },
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/M731-REAL-PROVIDER-ACCEPTANCE.md",
+      "summary": "16 focused generation/reference tests pass, including failing-before/passing-after source requirement and provenance regressions; typecheck/build/schema/hygiene pass."
+    },
+    {
+      "kind": "packaged",
+      "result": "passed",
+      "reference": "docs/application/M731-REAL-PROVIDER-VERIFICATION.json",
+      "summary": "Corrected runtime: 75 fresh-extracted files match; app/local service/source bundle verified; actual UI recovery/save/renderer reload/reopen matches unchanged response. No new full-process restart check."
+    },
+    {
+      "kind": "provider",
+      "result": "passed",
+      "reference": "docs/application/M731-REAL-PROVIDER-VERIFICATION.json",
+      "summary": "One explicitly approved GPT-6.1 Sol request completed; 17 unique typed references valid without repairs; $0.114586 usage-based estimate. Structurally valid, provisional only; 106 blocking checks. User acceptance pending."
+    },
+    {
+      "kind": "review",
+      "result": "passed",
+      "reference": "docs/application/M731-REAL-PROVIDER-ACCEPTANCE.md",
+      "summary": "Separate reviewer /root/review_context_fix reviewed runtime 155594f9c4d27780b969b217f19b01275d3d01bf: no blockers. Four hosted CI jobs passed."
+    }
+  ],
+  "nativeQualification": {
+    "state": "not-run",
+    "scope": "No new native qualification in M7.3.1; earlier narrowly scoped native evidence is not expanded.",
+    "evidence": []
+  },
+  "artifact": {
+    "name": "M7.3.1-155594f9c4d2-windows-x64.zip",
+    "reference": "Local-only retained package; receipt: docs/application/M731-REAL-PROVIDER-VERIFICATION.json",
+    "sha256": "3eaad6e5da22d01006d4c150fbdcc5a4c887439b3c4c31f00655a1c612e4ee6f"
+  },
+  "blockers": [
+    {
+      "summary": "User usefulness/desktop acceptance, invoice reconciliation and final-release mechanics coverage remain open. Provisional strategy retains 106 checks; no confident ranking or optimization. Draft correction PR remains unmerged.",
+      "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/2"
+    }
+  ],
+  "acceptance": {
+    "state": "pending",
+    "evidence": [
+      "docs/application/MILESTONE-7.3.1-ACCEPTANCE.md",
+      "docs/application/M731-REAL-PROVIDER-ACCEPTANCE.md"
+    ]
+  },
+  "report": "docs/application/M731-REAL-PROVIDER-ACCEPTANCE.md",
+  "github": [
+    "https://github.com/connorgreenleaf22/hoi4-companion/issues/2",
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/6"
+  ]
+}

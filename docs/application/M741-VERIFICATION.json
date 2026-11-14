@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "M7.4.1",
+  "dateLocal": "2026-11-11",
+  "baseSha": "bdb8a4887522b38f5110f3900bbf1655cc5fd600",
+  "runtimeSha": "1d58eb7b79f756620225998bed04ded9e5d16c74",
+  "branch": "feature/hoi4-knowledge-mechanics",
+  "sourcePins": "tests/fixtures/mechanics-portugal-sources-m741.json",
+  "sourcePinSha256": "38605d78e71c7ae56813ee9f28875d1f912ebb59a350fa00b4aaf456e4edd0d1",
+  "sourceConfiguration": "Installed base-game 1.19.4.2; no merged mods; entitlement/active playset/campaign applicability unconfirmed",
+  "verifiedPinnedFiles": 19,
+  "verifiedCitedFiles": 15,
+  "portugalFields": {
+    "before": {
+      "acceptRefuseBranches": false,
+      "acceptanceRecipientAnnexation": false,
+      "acceptanceConditionalCores": false,
+      "refusalWarGoal": false,
+      "followupNotifications": false,
+      "randomizedNewsTiming": false,
+      "aiModifierConditions": false,
+      "dlcAlternativeDelivery": false
+    },
+    "after": {
+      "acceptRefuseBranches": true,
+      "acceptanceRecipientAnnexation": true,
+      "acceptanceConditionalCores": true,
+      "refusalWarGoal": true,
+      "followupNotifications": true,
+      "randomizedNewsTiming": true,
+      "aiModifierConditions": true,
+      "dlcAlternativeDelivery": true
+    },
+    "note": "Eight targeted field checks, not a global coverage percentage. More discovered risks can increase blocker counts."
+  },
+  "coverage": [
+    {
+      "goal": "POR_the_kingdom_reunited",
+      "beforeBlockingGaps": 104,
+      "afterBlockingGaps": 197,
+      "beforeEvents": 7,
+      "afterEvents": 11,
+      "structure": "valid",
+      "rankingAllowed": false,
+      "optimizationAllowed": false
+    },
+    {
+      "goal": "GER_autarky_achieved",
+      "beforeBlockingGaps": 206,
+      "afterBlockingGaps": 206,
+      "beforeEvents": 0,
+      "afterEvents": 0,
+      "structure": "valid",
+      "rankingAllowed": false,
+      "optimizationAllowed": false
+    },
+    {
+      "goal": "GER_oppose_hitler",
+      "beforeBlockingGaps": 19,
+      "afterBlockingGaps": 67,
+      "beforeEvents": 1,
+      "afterEvents": 4,
+      "structure": "valid",
+      "rankingAllowed": false,
+      "optimizationAllowed": false
+    }
+  ],
+  "localOnlyEvidence": {
+    "beforeAudit": {
+      "reference": ".bridge-local/m741-before-audit.json in original base checkout",
+      "sha256": "d6c54aa732200ba590b288ad2bf4258ab95a66317764880a4031e6dcc9ef0915"
+    },
+    "afterAudit": {
+      "reference": ".bridge-local/m741-after-audit.json",
+      "sha256": "6bf087dee59d9e8c5da6768fbe1bdcea2708bd07c6a465405080c16b5b4a6c1e"
+    },
+    "packageSmoke": {
+      "reference": "artifacts/qa/development-package-2026-11-12T00-52-43-788Z-1f2d5be3",
+      "recordSha256": "286949b20bf2def32269b88a7ef2989b641b9e04f8e00435d66b9f6831a3343f"
+    }
+  },
+  "tests": {
+    "focused": {
+      "count": 31,
+      "passed": true,
+      "sha": "472b6a8c273fd0b39b48efbbf8111475a292a5aa",
+      "scope": "Interpreter, strategy coverage and helper regressions; builder and independent reviewer runs"
+    },
+    "finalExplanationFollowup": {
+      "count": 15,
+      "passed": true,
+      "sha": "1d58eb7b79f756620225998bed04ded9e5d16c74",
+      "scope": "Final timing disclosure and all explanation regressions"
+    },
+    "portableCI": {
+      "count": 130,
+      "workflowGuardCount": 3,
+      "passed": true,
+      "sha": "1d58eb7b79f756620225998bed04ded9e5d16c74",
+      "url": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43130168168",
+      "checks": [
+        "qa-typecheck",
+        "qa-test-ci",
+        "qa-schemas",
+        "qa-hygiene"
+      ]
+    },
+    "build": {
+      "passed": true,
+      "sha": "1d58eb7b79f756620225998bed04ded9e5d16c74",
+      "command": "npm run package:development -- M7.4.1 (includes TypeScript/Vite/service build)"
+    },
+    "installedAudit": {
+      "passed": true,
+      "sha": "1d58eb7b79f756620225998bed04ded9e5d16c74",
+      "command": "node --import tsx scripts/planning-coverage-audit.ts",
+      "reindexed": false,
+      "nativeGameLaunched": false
+    }
+  },
+  "package": {
+    "label": "M7.4.1-1d58eb7b79f7",
+    "runtimeSha": "1d58eb7b79f756620225998bed04ded9e5d16c74",
+    "name": "M7.4.1-1d58eb7b79f7-windows-x64.zip",
+    "localLocation": "Documents/HOI4 Companion Development Builds/M7.4.1-1d58eb7b79f7",
+    "zipSha256": "393c4a042e4db9f4a2b21c7dc2809309516be7d4e542a690e5816445faf5e2d6",
+    "extractedFilesEqual": 75,
+    "sourceUnchangedDuringRun": true,
+    "cases": [
+      {
+        "name": "packaged first window appears",
+        "status": "passed",
+        "ms": 32611
+      },
+      {
+        "name": "packaged renderer, embedded API and installed references load",
+        "status": "passed",
+        "ms": 12014
+      },
+      {
+        "name": "closed packaged service stops and recording survives packaged restart",
+        "status": "passed",
+        "ms": 5061
+      }
+    ],
+    "screenshotsReviewed": [
+      "packaged-reopened.png"
+    ],
+    "ownedProcessesAbsent": true,
+    "nativeGameLaunched": false,
+    "paidProviderCalls": 0,
+    "limitation": "Companion launch/service/persistence and package bytes, not native gameplay or Portugal UI semantic acceptance"
+  },
+  "review": {
+    "reviewer": "/root/review_m741",
+    "reviewedRuntimeSha": "1d58eb7b79f756620225998bed04ded9e5d16c74",
+    "remainingBlockingFindings": 0,
+    "independentSourceChecks": true,
+    "independentFocusedTestsSha": "472b6a8c273fd0b39b48efbbf8111475a292a5aa",
+    "finalDiffReviewed": true,
+    "resolvedFindings": [
+      "Shared-budget bypass in wide AI/control/condition traversal",
+      "Unqualified simultaneous legacy random/random_hours aliases",
+      "Top-level trigger applicability across dispatch modes",
+      "Precision of conservative combined random-delay bound"
+    ],
+    "limits": [
+      "No native gameplay",
+      "No reviewer package/UI rerun",
+      "No complete-mechanics certification",
+      "No human GitHub approval or owner acceptance"
+    ]
+  },
+  "acceptance": "pending",
+  "nativeQualification": "not-run",
+  "hqSynchronization": "pending; handoff only",
+  "remainingGapsIssue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/7"
+}
