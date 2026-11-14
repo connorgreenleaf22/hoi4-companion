@@ -3,19 +3,66 @@
   "goal": "STRATEGY-DRAFT-01",
   "dateLocal": "2026-11-14",
   "baselineSha": "89ddada9a56afb15bbdc03f96620312fbaf9f462",
-  "runtimeSha": "f6ef73f2ea2d47da20840facc6cf0535a86853ff",
+  "runtimeSha": "b21e08b3ca7c403ef3e4aa28428ea37cf4f092d1",
   "independentReviewer": "/root/independent_review",
-  "independentReviewedRuntimeSha": "f6ef73f2ea2d47da20840facc6cf0535a86853ff",
-  "focusedTests": {"passed": 32, "failed": 0, "independentOverlappingRerunPassed": 18},
-  "portableTests": {"passed": 200, "workflowGuardsPassed": 3},
-  "browser": {"passed": 10, "failed": 0, "record": "Local-only artifacts/qa/strategy-drafts-2026-11-14T17-03-35-850Z-56bda303/run-record.json", "recordSha256": "09fa8104325b4f57abc0d18705e0047a05fc11ac392772fd2ab37c775be0af38", "sourceUnchanged": true, "originalSyntheticFixtureUnchanged": true},
-  "inheritedPlannerBrowser": {"passed": 7, "failed": 0, "record": "Local-only artifacts/qa/r2-draft-close-2026-11-14T17-03-35-854Z-8cff208f/run-record.json", "recordSha256": "539c9a90c1684bc3434609385a3b0d4eb09ce64083092554e2926daa8021cd38", "sourceUnchanged": true},
-  "inheritedLabBrowser": {"passed": 9, "failed": 0, "runtimeSha": "979e6e7b82222ff78185ee23a08b1230b08b78e2", "unchangedScope": "Subsequent App delta changes banner wording only; Lab behavior unchanged.", "record": "Local-only artifacts/qa/nav01-lab-drafts-2026-11-14T17-02-00-551Z-b5eee50f/run-record.json", "recordSha256": "c50375b97f62ffeccaf3e715c44ebc79ed1be3c27eab5c6ab15e2c7f9005dd7e"},
-  "package": {"name": "M7.4.2s-f6ef73f2ea2d-windows-x64.zip", "sha256": "89a2fe0508dac4d84c5b0608e8c081c96e5731b0b4e28549fc278cfe0341727c", "freshExtractedMatchingFiles": 75, "passed": 11, "failed": 0, "record": "Local-only artifacts/qa/strategy-drafts-package-2026-11-14T17-05-21-025Z-643f5174/run-record.json", "recordSha256": "a51c81879e169c492fa6f1b096b6d7b1aadf28aa6d0747af6bfbe9cf6dc2f960", "sourceUnchanged": true, "originalSyntheticFixtureUnchanged": true, "nativeChoices": "Injected known responses through actual Electron handlers; not human OS-dialog acceptance."},
+  "independentReviewedRuntimeSha": "b21e08b3ca7c403ef3e4aa28428ea37cf4f092d1",
+  "focusedTests": {
+    "passed": 32,
+    "failed": 0,
+    "independentOverlappingRerunPassed": 18
+  },
+  "portableTests": {
+    "passed": 200,
+    "workflowGuardsPassed": 3
+  },
+  "browser": {
+    "passed": 11,
+    "failed": 0,
+    "record": "Local-only artifacts/qa/strategy-drafts-2026-11-14T17-10-04-464Z-0c588436/run-record.json",
+    "recordSha256": "afff043be512224b78d0976b20c7c60b7feeae6b8a816c38500d5ee6efc4f6fb",
+    "sourceUnchanged": true,
+    "originalSyntheticFixtureUnchanged": true
+  },
+  "inheritedPlannerBrowser": {
+    "passed": 7,
+    "failed": 0,
+    "record": "Local-only artifacts/qa/r2-draft-close-2026-11-14T17-03-35-854Z-8cff208f/run-record.json",
+    "recordSha256": "539c9a90c1684bc3434609385a3b0d4eb09ce64083092554e2926daa8021cd38",
+    "sourceUnchanged": true
+  },
+  "inheritedLabBrowser": {
+    "passed": 9,
+    "failed": 0,
+    "runtimeSha": "979e6e7b82222ff78185ee23a08b1230b08b78e2",
+    "unchangedScope": "Subsequent App delta changes banner wording only; Lab behavior unchanged.",
+    "record": "Local-only artifacts/qa/nav01-lab-drafts-2026-11-14T17-02-00-551Z-b5eee50f/run-record.json",
+    "recordSha256": "c50375b97f62ffeccaf3e715c44ebc79ed1be3c27eab5c6ab15e2c7f9005dd7e"
+  },
+  "package": {
+    "name": "M7.4.2s-b21e08b3ca7c-windows-x64.zip",
+    "sha256": "f640df63cb5128ef000a5e0d9ee4366d5eb370d8fd8623ffe054d10eaff35019",
+    "freshExtractedMatchingFiles": 75,
+    "passed": 12,
+    "failed": 0,
+    "record": "Local-only artifacts/qa/strategy-drafts-package-2026-11-14T17-12-05-203Z-8038e5fe/run-record.json",
+    "recordSha256": "95f9e51001c0d793553ec8bd52d0620ca92641e1e18c61d5dbc5a84722f51c6e",
+    "sourceUnchanged": true,
+    "originalSyntheticFixtureUnchanged": true,
+    "nativeChoices": "Injected known responses through actual Electron handlers; not human OS-dialog acceptance."
+  },
   "rendererErrors": [],
   "realProviderCalls": 0,
   "nativeGameLaunches": 0,
   "durability": "In-window retention. Explicit save persists strategy fields. Forced termination or explicit Leave/discard can lose unsaved work.",
-  "failedAttempts": ["QA fixture setup used nonexistent store.profiles; corrected to store.profile and setup cleanup strengthened.", "Inherited planner-close expected legacy banner label; restored text compatibility and fixed singular/plural."],
-  "limits": ["Counts overlap and must not be summed as distinct coverage.", "No current-patch semantic, all-DLC, combat, native gameplay or owner-usefulness acceptance.", "QUAL-195 and final explanation/release gates retained.", "Raw records and packages remain local; sanitized hashes only are published."]
+  "failedAttempts": [
+    "QA fixture setup used nonexistent store.profiles; corrected to store.profile and setup cleanup strengthened.",
+    "Inherited planner-close expected legacy banner label; restored text compatibility and fixed singular/plural.",
+    "Independent old-renderer diagnostic reproduced stale campaign A strategy list after same-tree switch to B. Actual draft-key fix and permanent saved-list regression passed in final browser/package. Old ad hoc diagnostic had concurrent source change; it is not frozen-source certification."
+  ],
+  "limits": [
+    "Counts overlap and must not be summed as distinct coverage.",
+    "No current-patch semantic, all-DLC, combat, native gameplay or owner-usefulness acceptance.",
+    "QUAL-195 and final explanation/release gates retained.",
+    "Raw records and packages remain local; sanitized hashes only are published."
+  ]
 }

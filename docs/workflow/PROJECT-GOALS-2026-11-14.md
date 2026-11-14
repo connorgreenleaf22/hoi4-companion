@@ -25,7 +25,7 @@ There is no defensible single completion percentage for the full project: the ro
 
 These estimates must not be averaged: the goals overlap, and their scope differs substantially. Completing a defect is real progress within a goal; it does not make the whole application accepted.
 
-Completed in this execution: **Protect editable whole-strategy work across navigation and close choices — 100% of its bounded engineering scope.** Runtime `f6ef73f2ea2d47da20840facc6cf0535a86853ff` passed 10 strategy browser cases, 11 extracted Windows cases and independent review, including delayed/failed saves and saved-strategy reopening after full process restart. Unsaved work follows an explicit in-window policy; crash durability is outside this scope. Main delivery is recorded in the final PR. See the [completion report](../application/STRATEGY-DRAFT-01.md) for exact evidence and remaining broader gates.
+Completed in this execution: **Protect editable whole-strategy work across navigation and close choices — 100% of its bounded engineering scope.** Runtime `b21e08b3ca7c403ef3e4aa28428ea37cf4f092d1` passed 11 strategy browser cases, 12 extracted Windows cases and independent review, including same-tree saved-list isolation, delayed/failed saves and saved-strategy reopening after full process restart. Unsaved work follows an explicit in-window policy; crash durability is outside this scope. Main delivery is recorded in the final PR. See the [completion report](../application/STRATEGY-DRAFT-01.md) for exact evidence and remaining broader gates.
 
 ## Technical summary
 
