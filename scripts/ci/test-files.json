@@ -8,5 +8,6 @@
   "tests/ai-reliability.test.ts",
   "tests/lab-drafts.test.ts",
   "tests/strategy-drafts.test.ts",
-  "tests/electron-startup.test.ts"
+  "tests/electron-startup.test.ts",
+  "tests/page-scroll.test.ts"
 ]

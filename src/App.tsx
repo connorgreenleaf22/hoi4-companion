@@ -1,7 +1,8 @@
-import { useEffect, useState, useCallback, useRef, useSyncExternalStore } from 'react';
+import { useEffect, useLayoutEffect, useState, useCallback, useRef, useSyncExternalStore } from 'react';
 import { ArrowRight, ArrowUpRight, BookOpen, Search, Flag, Compass, LayoutDashboard, Settings, Shield, Factory, ChevronDown, X, Plus, Check, Bookmark, GitBranch, Clock, ExternalLink, RefreshCw, Smartphone, Download, Trash2, Eye, EyeOff, List, Map as MapIcon, ZoomIn, ZoomOut, ArrowUp, ArrowDown, CircleHelp, CheckCircle2, AlertTriangle, Crosshair, ChevronRight, Globe } from 'lucide-react';
 import type { Entry, Profile, Meta, Guide, Resolution, DLCState } from './types';
 import { api, download } from './api';
+import {createPageScrollController} from './page-scroll';
 import { sourceNumber } from './format';
 import {UniversalSearch} from './UniversalSearch';
 import {MechanicsView} from './MechanicsView';
@@ -38,11 +39,13 @@ export default function App(){
   const [draftReview,setDraftReview]=useState(false);
   const saveTail=useRef<Promise<unknown>>(Promise.resolve());const selectionTail=useRef<Promise<unknown>>(Promise.resolve());const recoveryKey=useRef(0);
   const [page,setPage]=useState<Page>('overview');const [countries,setCountries]=useState<Entry[]>([]);
+  const [documentScroll]=useState(()=>createPageScrollController(options=>window.scrollTo(options),restore=>{requestAnimationFrame(restore);}));
+  useLayoutEffect(()=>{documentScroll.commitPage(page);},[page,documentScroll]);
   const [guideData,setGuideData]=useState<{guides:GuideView[];troubleshooting:any[]}>({guides:[],troubleshooting:[]});
   const [profileEditor,setProfileEditor]=useState<Profile>();const [detail,setDetail]=useState<Entry>();
   const [referenceIssue,setReferenceIssue]=useState<Resolution>();const [detailHistory,setDetailHistory]=useState<DrawerHistory[]>([]);const [drawerScroll,setDrawerScroll]=useState(0);
   const [drawerNoteDraft,setDrawerNoteDraft]=useState<NoteDraft>();
-  const referenceRequest=useRef(0);const originScroll=useRef(0);
+  const referenceRequest=useRef(0);const restoreReferenceScroll=useRef<(()=>void)|undefined>(undefined);
   const [error,setError]=useState('');const [pairing,setPairing]=useState(false);const [query,setQuery]=useState('');
   const [toast,setToast]=useState('');const [focusJump,setFocusJump]=useState('');
   const active=profiles.find(p=>p.id===selected)||profiles[0];
@@ -116,11 +119,11 @@ export default function App(){
     const reviewed=getPlannerDraft(id);if(!reviewed)return;
     try{const data=await api<Status>('status');if(JSON.stringify(getPlannerDraft(id))!==JSON.stringify(reviewed)){notify('The draft changed while loading saved data. Review it before discarding.');return;}discardPlannerDraft(id,data.profiles.find(p=>p.id===id));setProfiles(data.profiles);setStatus(data);if(!data.profiles.some(p=>p.id===selected))setSelected(data.selectedProfileId);}catch(e){fail(e);}
   };
-  const closeReference=()=>{referenceRequest.current++;setDetail(undefined);setReferenceIssue(undefined);setDetailHistory([]);requestAnimationFrame(()=>window.scrollTo({top:originScroll.current}));};
+  const closeReference=()=>{referenceRequest.current++;setDetail(undefined);setReferenceIssue(undefined);setDetailHistory([]);restoreReferenceScroll.current?.();};
   const backReference=()=>{const previous=detailHistory.at(-1);if(!previous)return;referenceRequest.current++;setDetail(previous.entry);setReferenceIssue(undefined);setDrawerScroll(previous.scroll);setDrawerNoteDraft(previous.noteDraft);setDetailHistory(history=>history.slice(0,-1));};
   const openEntry=async(reference:string)=>{
     const request=++referenceRequest.current;const noteInput=document.querySelector<HTMLTextAreaElement>('.entry-drawer textarea[aria-label="Reference notes"]');const previous=detail?{entry:detail,scroll:document.querySelector('.entry-drawer')?.scrollTop||0,noteDraft:noteInput?{key:noteInput.dataset.noteKey||detail.entityKey||detail.uid,text:noteInput.value}:undefined}:undefined;
-    if(!detail&&!referenceIssue)originScroll.current=window.scrollY;
+    if(!detail&&!referenceIssue)restoreReferenceScroll.current=documentScroll.captureReference(window.scrollY);
     try{
       const resolution=await api<Resolution>(`resolve?ref=${encodeURIComponent(reference)}`);if(request!==referenceRequest.current)return;
       const resolved=resolution.entry||(resolution.status==='resolved'?resolution.candidates[0]:undefined);
