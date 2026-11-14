@@ -2,7 +2,11 @@
 
 A local Windows encyclopedia and campaign planner that reads installed HOI4 scripts. Core workflows run offline; optional AI generation uses separately configured, paid provider access.
 
-## Current common integration candidate — release blocked
+## Current source delivery — release blocked
+
+As of November 14, 2026, [PR #13](https://github.com/connorgreenleaf22/hoi4-companion/pull/13) and [PR #14](https://github.com/connorgreenleaf22/hoi4-companion/pull/14) are merged; main contains the common baseline and NAV-01. See the [project goals and execution plan](docs/workflow/PROJECT-GOALS-2026-11-14.md) for current completion estimates, blockers and exit criteria, and [whole-strategy draft protection](docs/application/STRATEGY-DRAFT-01.md) for the separate strategy-editor fix. The implementation and packaging evidence below retains its original SHA/scope. Main delivery does not grant final release or mechanics qualification.
+
+### Historical common integration checkpoint
 
 The isolated `integration/common-2026-11-12` branch combines reviewed base `bdb8a4887522b38f5110f3900bbf1655cc5fd600` with PRs **#6 → #9 → #12 → #8 → #11**, preserving their merge ancestry, plus the independently reviewed NAV-01 fix from candidate `6984f884`. PR #4 and live campaign Q&A are excluded. Historical branches already present in the base are not merged again.
 
@@ -12,7 +16,7 @@ See the [continuation report](docs/workflow/COMMON-NAV01-CONTINUATION.md), [mani
 
 **Release promotion remains blocked by QUAL-195** and the existing explanation/acceptance gates. The explicit [release gate](docs/application/INTEGRATION-RELEASE-GATES.json) still makes `npm run package` refuse. Isolated development packaging remains available for review.
 
-[Draft integration PR #13](https://github.com/connorgreenleaf22/hoi4-companion/pull/13) targets develop and stays unmerged. Four required hosted checks passed at reviewed candidate `668ad4e3`; the continuation report and final native handoff retain exact SHA/check scope. No main promotion or release is performed.
+[Integration PR #13](https://github.com/connorgreenleaf22/hoi4-companion/pull/13) originally targeted develop as a draft; it is now merged and included on main through #14. Four required hosted checks passed at reviewed candidate `668ad4e3`; the continuation report and final native handoff retain exact historical SHA/check scope. Final release remains blocked.
 
 #11 preserves source-input inspection, not qualified division combat calculations. Organization, soft attack, hard attack, defense and breakthrough remain unsupported with null values/deltas; M7.4.2b remains blocked on [Issue #10](https://github.com/connorgreenleaf22/hoi4-companion/issues/10). Strategies remain provisional, and ranking/optimization stay disabled where coverage is insufficient. The earlier authorized provider request does not authorize further calls.
 
