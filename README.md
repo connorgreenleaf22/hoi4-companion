@@ -2,6 +2,18 @@
 
 A local Windows encyclopedia and campaign planner that reads installed HOI4 scripts. Core workflows run offline; optional AI generation uses separately configured, paid provider access.
 
+## Compact game companion modes
+
+The desktop starts in a narrow **Side panel**. The **Integration mode** menu switches to **Field HUD** (a small radio bar that expands on demand), **Quick Intel** (an on-demand panel that focuses search), or the original **Full workspace**. Every mode shares the same seven tools, campaign, reference drawers, drafts and service. Use the **Companion tool** menu inside a compact panel; expanding the HUD opens tools inside that panel.
+
+**Ctrl+Shift+Space** shows/hides the companion; **Ctrl+Shift+M** cycles modes. The pin keeps a compact panel above other windows. Use HOI4 in borderless or windowed mode. The tray icon can recover the panel when a shortcut is unavailable; help shows actual shortcut registration status. Window title bars remain draggable. Mode, HUD expansion and pin preference survive restart; unsaved drafts retain the existing in-window durability limits. Browser access previews the layouts and labels native-only controls honestly.
+
+Quick Intel is a companion panel, not an injected game hover tooltip. Expand its observation status for available fields, unavailable fields, source/time/version and qualification. A selected campaign is manual planning context, not proof of the active game country. See [game visibility assessment](docs/application/IN-GAME-BRIDGE-ASSESSMENT.md) for the still-limited bridge and the separate work needed for native tooltips and process-memory observation.
+
+Focused desktop exercise: `npm run build`, then `npm run test:in-game` (or pass an extracted development executable after `--`). This creates disposable synthetic data and an isolated Electron profile, exercises mode/feature access and persistence, and makes no game/provider call.
+
+For independent desktop profiles, `HOI4_ELECTRON_DATA_DIR` overrides Electron preferences and the single-instance lock; `HOI4_DATA_DIR` separately overrides the campaign database. QA sets both to disposable directories.
+
 ## Current source delivery — release blocked
 
 [AI-CONTEXT-01](docs/application/AI-CONTEXT-01.md) makes broad strategy source previews fit disclosed source/request-body budgets while preserving complete included records and mandatory references. The retained-source Germany request now previews 79 definitions, including 34 focuses and nine technologies, within both limits. Oversized mandatory content gives measured recovery guidance and keeps editable work. Source fitting does not approve spending or certify strategy mechanics.

@@ -1,0 +1,5 @@
+.integration-readiness{margin:8px 0 12px;padding:9px 12px;border:1px solid #514d38;background:#242a24;color:#cecdbb;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+.integration-readiness>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;font-weight:600;font-size:11px;letter-spacing:.2px}
+.integration-signal{width:6px;height:6px;background:#b9a16c;border-radius:50%;flex:none}
+.integration-readiness p,.integration-readiness li,.integration-readiness dd{font-size:12px;color:#bec2b4;line-height:1.6;margin:8px 0}
+.integration-readiness ul{padding-left:18px}.integration-readiness dl>div{padding:6px 0;border-top:1px solid #444b3b}.integration-readiness dt{text-transform:capitalize;color:#e3d9bc}.integration-readiness dd{margin:0}.integration-readiness button{margin-top:8px;padding:8px 12px;border:1px solid #8a7e56;background:#363e30;color:#efe3c3;border-radius:3px;font-size:12px;cursor:pointer}.integration-readiness details{margin:8px 0}

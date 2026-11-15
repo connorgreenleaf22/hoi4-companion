@@ -21,14 +21,18 @@ test('desktop shows a local startup window before slow indexing, reuses it, and 
   const events:string[]=[],windows:any[]=[],dialogs:any[]=[],external:string[]=[];
   let started=false,serviceClosed=false;
   class Window extends EventEmitter{
-   destroyed=false;openHandler!:(input:{url:string})=>{action:string};webContents=Object.assign(new EventEmitter(),{executeJavaScript:async()=>({}),setWindowOpenHandler:(handler:any)=>{this.openHandler=handler;}});
+   destroyed=false;openHandler!:(input:{url:string})=>{action:string};webContents=Object.assign(new EventEmitter(),{executeJavaScript:async()=>({}),send:()=>{},setWindowOpenHandler:(handler:any)=>{this.openHandler=handler;}});
    constructor(_options:any){super();windows.push(this);events.push('window');}
    async loadURL(url:string){events.push(url.startsWith('data:')?'startup':'workspace');if(url.startsWith('data:')){assert.match(decodeURIComponent(url),/several minutes/);assert.match(decodeURIComponent(url),/default-src 'none'/);}}
    isDestroyed(){return this.destroyed;} show(){events.push('show');} focus(){events.push('focus');} hide(){events.push('hide');}
    destroy(){this.destroyed=true;events.push('destroy');}close(){this.destroy();}setTitle(){}
+   getBounds(){return {x:0,y:0,width:460,height:800};} isVisible(){return true;}isFullScreen(){return false;}isMaximized(){return false;}
+   isMinimized(){return false;}getChildWindows(){return [];}moveTop(){}
+   setMinimumSize(){}setBounds(){}setMaximizable(){}setFullScreenable(){}setAlwaysOnTop(){}
   }
   const app=Object.assign(new EventEmitter(),{getAppPath:()=>directory,getPath:()=>directory,setPath:()=>{},requestSingleInstanceLock:()=>true,whenReady:async()=>{},setName:()=>{},quit:()=>{events.push('quit');}});
-  const fixture={directory,electron:{app,BrowserWindow:Window,shell:{openExternal:(url:string)=>external.push(url)},dialog:{showMessageBox:async(value:any)=>{dialogs.push(value);events.push('dialog');return {response:0};}}},start:()=>{started=true;events.push('service');return pending;}};
+  const screen=Object.assign(new EventEmitter(),{getDisplayMatching:()=>({workArea:{x:0,y:0,width:1920,height:1040}})});
+  const fixture={directory,electron:{app,BrowserWindow:Window,screen,ipcMain:{handle:()=>{},removeHandler:()=>{}},globalShortcut:{register:()=>true,unregister:()=>{}},Menu:{buildFromTemplate:()=>[]},Tray:class extends EventEmitter{setToolTip(){}setContextMenu(){}destroy(){}},shell:{openExternal:(url:string)=>external.push(url)},dialog:{showMessageBox:async(value:any)=>{dialogs.push(value);events.push('dialog');return {response:0};}}},start:()=>{started=true;events.push('service');return pending;}};
   (globalThis as any).__startupFixture=fixture;delete require.cache[output];require(output);
   await new Promise(r=>setImmediate(r));
   assert.equal(started,true);assert.deepEqual(events.slice(0,3),['window','startup','service']);assert.equal(windows.length,1);

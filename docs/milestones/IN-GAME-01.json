@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "IN-GAME-01",
+  "status": "implemented",
+  "branch": "feature/in-game-companion-20261115",
+  "commitSha": "8b0aa27688e6491798a7a76f563752ebdd419199",
+  "testEvidence": [
+    {"kind":"typecheck","result":"passed","reference":"docs/application/IN-GAME-01.md","summary":"Production TypeScript/Vite/Node build passes; sandboxed preload is included in packaged build files."},
+    {"kind":"deterministic","result":"passed","reference":"docs/application/IN-GAME-01.md","summary":"Native model/IPC/startup/readiness/close and draft protections pass; 213 portable fixtures plus three workflow guards pass without changing the hosted allowlist."},
+    {"kind":"packaged","result":"passed","reference":"Local-only artifacts/qa/in-game-modes-2026-11-15T11-14-27-485Z-4e6ef108/run-record.json","summary":"74 freshly extracted files match; eight actual Windows groups pass including 21 compact mode/tool entries, unique database/userData, draft retention, modal recovery, browser fallback and full restart. Zero renderer errors; no game/provider call in the harness."},
+    {"kind":"native","result":"passed","reference":"docs/application/IN-GAME-01.md","summary":"Scoped over-game borderless window acceptance: three compact modes, topbar clearance, pin after game focus, hide staying hidden, native menus and Stay/save after close dialog. Existing game process retained; no new launch or engine-state qualification."},
+    {"kind":"review","result":"passed","reference":"docs/application/IN-GAME-01.md","summary":"Independent exact-SHA review of 8b0aa27688e6491798a7a76f563752ebdd419199; 13 overlapping focused tests rerun, no remaining code blocker."},
+    {"kind":"hygiene","result":"passed","reference":"https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43707834292","summary":"Four hosted runtime checks pass; raw screenshots, telemetry, local profiles, game assets and packages remain excluded from Git."}
+  ],
+  "nativeQualification":{"state":"partial","scope":"External window overlay tested on the existing installed 1.19.5.0 borderless game. Exclusive fullscreen, other physical display configurations, process-memory access, native tooltip injection and game-state semantics are not qualified.","evidence":["docs/application/IN-GAME-01.md"]},
+  "artifact":{"name":"M8.0b-8b0aa27688e6-windows-x64.zip","reference":"Local-only Documents/HOI4 Companion Development Builds/M8.0b-8b0aa27688e6","sha256":"3abc4db90ae9166f524b64f3d9c228b42f15c6a0a054905f742f5a3048044ed3"},
+  "blockers":[],
+  "acceptance":{"state":"pending","evidence":["Developer over-game testing and independent source review pass within their stated scopes; owner usefulness/acceptance and merge approval remain pending. Complete game visibility is not implemented."]},
+  "report":"docs/application/IN-GAME-01.md",
+  "github":["https://github.com/connorgreenleaf22/hoi4-companion/issues/21","https://github.com/connorgreenleaf22/hoi4-companion/pull/22"]
+}
