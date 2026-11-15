@@ -17,6 +17,7 @@ import type {GuideView} from './discovery-types';
 import { CampaignPlanner } from './planner/CampaignPlanner';
 import {subscribePlannerDrafts,getOutstandingPlannerDrafts,getPlannerDraft,discardPlannerDraft,downloadablePlannerDraft,getPendingPlannerWrites} from './planner/drafts';
 import { ReferenceLibrary, ReferenceIssue, RelationshipExplorer, DlcSetup, CoveragePanel, referenceLabels, sourceStatus } from './ReferenceTools';
+import {IntegrationShell} from './IntegrationShell';
 
 type Page='overview'|'planner'|'encyclopedia'|'discover'|'lab'|'manual'|'settings';
 type Recovery={key:number;draft:Profile;message:string;conflict:boolean};
@@ -142,7 +143,7 @@ export default function App(){
     setPage('planner');
   };
   if(pairing)return <PairScreen onPaired={load}/>;
-  return <div className="shell">
+  return <IntegrationShell tools={nav} page={page} onPage={value=>setPage(value as Page)} campaign={active?.name} modalOpen={!!(detail||profileEditor||referenceIssue||draftReview)}><div className="shell">
     <aside className="sidebar" inert={!!(detail||profileEditor||referenceIssue||draftReview)}>
       <a className="brand" href="#" onClick={e=>{e.preventDefault();setPage('overview');}}><div className="brand-mark"><Crosshair size={27}/></div><span>HOI4<span className="brand-sub">COMPANION</span></span></a>
       <div className="rail-label">WORKSPACE</div>
@@ -203,7 +204,7 @@ export default function App(){
       <div className="button-row"><button className="button primary" onClick={()=>setDraftReview(false)}>Stay in app</button></div>
     </section></div>}
     {toast&&<div className="toast" role="status"><CheckCircle2 size={18}/>{toast}</div>}
-  </div>;
+  </div></IntegrationShell>;
 }
 
 export function PageTitle({eyebrow,title,text,action}:{eyebrow:string;title:string;text:string;action?:React.ReactNode}){return <div className="page-title"><div><div className="eyebrow">{eyebrow}</div><h1>{title}<span className="gold">.</span></h1><p>{text}</p></div>{action}</div>;}

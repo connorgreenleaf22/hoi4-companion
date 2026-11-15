@@ -6,6 +6,7 @@ import {dataDirectory} from '../server/store';
 import {MigrationRequired,migrateStore} from '../server/migrations';
 import {createCloseGuard} from './close-guard';
 import {startupPage} from './startup-page';
+import {installIntegrationWindow} from './integration-window';
 
 const stampPath=path.join(app.getAppPath(),'build','development.json');
 const development=fs.existsSync(stampPath)?JSON.parse(fs.readFileSync(stampPath,'utf8')) as {label:string}:null;
@@ -28,7 +29,7 @@ else {
   app.on('second-instance',()=>{mainWindow?.show();mainWindow?.focus();});
   app.whenReady().then(async()=>{
     app.setName('HOI4 Companion');diagnostic('app-ready');
-    mainWindow=new BrowserWindow({width:1500,height:960,minWidth:760,minHeight:600,backgroundColor:'#111b20',title:development?`HOI4 Companion ${development.label}`:'HOI4 Companion',icon:path.join(app.getAppPath(),'assets','icon.png'),autoHideMenuBar:true,webPreferences:{nodeIntegration:false,contextIsolation:true,sandbox:true}});
+    mainWindow=new BrowserWindow({width:460,height:800,minWidth:360,minHeight:480,backgroundColor:'#111b20',title:development?`HOI4 Companion ${development.label}`:'HOI4 Companion',icon:path.join(app.getAppPath(),'assets','icon.png'),autoHideMenuBar:true,webPreferences:{preload:path.join(app.getAppPath(),'build','preload.cjs'),nodeIntegration:false,contextIsolation:true,sandbox:true}});
     const window=mainWindow;diagnostic('window-created');
     window.webContents.setWindowOpenHandler(({url})=>{if(service&&url.startsWith('https://'))void shell.openExternal(url);return {action:'deny'};});
     window.webContents.on('will-navigate',(event,url)=>{if(!service||new URL(url).origin!==service.url)event.preventDefault();});
@@ -42,6 +43,7 @@ else {
     }
     if(window.isDestroyed()){await service.close();service=undefined;return;}
     window.webContents.on('did-fail-load',(_event,code,description,url)=>diagnostic('did-fail-load',{code,description,url}));
+    const integration=installIntegrationWindow(window,service.url);
     const guard=createCloseGuard({
       read:async()=>{
         let timer:ReturnType<typeof setTimeout>|undefined;
@@ -51,7 +53,7 @@ else {
         const result=await dialog.showMessageBox(window,{type:'warning',title:'Unsaved campaign drafts',message:'Keep your unsaved drafts before closing?',detail:'Drafts are kept in this window, including plans on other pages or campaigns. Review and download them, stay in the app, or explicitly discard them. Saved campaigns will not be changed.',buttons:['Stay','Review / download drafts','Discard drafts and close'],defaultId:0,cancelId:0,noLink:true});
         return result.response===1?'review':result.response===2?'discard':'stay';
       },
-      review:()=>{void window.webContents.executeJavaScript("window.dispatchEvent(new Event('hoi4:review-drafts'))").catch(()=>{});},
+      review:()=>{integration.reveal();void window.webContents.executeJavaScript("window.dispatchEvent(new Event('hoi4:review-drafts'))").catch(()=>{});},
       pending:async()=>{await dialog.showMessageBox(window,{type:'info',title:'Campaign save in progress',message:'Wait for the campaign save to finish before closing.',detail:'The app is staying open so the pending write can complete. Close again after the save status clears.',buttons:['Stay'],defaultId:0,cancelId:0});},
       failed:async()=>{if(!window.isDestroyed())await dialog.showMessageBox(window,{type:'warning',title:'Could not check unsaved drafts',message:'The app is staying open to protect pending work.',detail:'Try closing again when the window responds. Saved campaigns have not been changed by this close attempt.',buttons:['Stay'],defaultId:0,cancelId:0});},
       close:()=>{if(!window.isDestroyed())window.close();}
