@@ -22,8 +22,11 @@ export function nextIntegrationMode(mode:IntegrationMode):IntegrationMode{
 export function integrationBounds(preferences:IntegrationPreferences,area:Rectangle):Rectangle{
   const {mode,expanded}=preferences;
   const margin=Math.min(12,Math.floor(Math.min(area.width,area.height)/10));
-  const wanted=mode==='workspace'?{width:1280,height:860}:mode==='sidecar'?{width:460,height:area.height-margin*2}:mode==='hud'?{width:440,height:expanded?700:160}:{width:520,height:720};
+  // Leave the game's clock, speed and resource controls visible above the panel.
+  // Small displays retain room for the minimum usable tool height instead.
+  const top=mode==='workspace'?margin:Math.min(88,Math.max(margin,area.height-480-margin));
+  const wanted=mode==='workspace'?{width:1280,height:860}:mode==='sidecar'?{width:460,height:area.height-top-margin}:mode==='hud'?{width:440,height:expanded?700:160}:{width:520,height:720};
   const width=Math.min(wanted.width,Math.max(1,area.width-margin*2));
-  const height=Math.min(wanted.height,Math.max(1,area.height-margin*2));
-  return {width,height,x:mode==='workspace'?area.x+Math.floor((area.width-width)/2):area.x+area.width-width-margin,y:mode==='workspace'||mode==='intel'?area.y+Math.floor((area.height-height)/2):mode==='hud'?area.y+Math.min(88,Math.max(margin,area.height-height-margin)):area.y+margin};
+  const height=Math.min(wanted.height,Math.max(1,area.height-top-margin));
+  return {width,height,x:mode==='workspace'?area.x+Math.floor((area.width-width)/2):area.x+area.width-width-margin,y:mode==='workspace'?area.y+Math.floor((area.height-height)/2):mode==='intel'?area.y+Math.max(top,Math.floor((area.height-height)/2)):area.y+top};
 }

@@ -20,4 +20,8 @@ test('all modes including collapsed HUD stay in scaled/secondary work areas',()=
   }
   const collapsed=integrationBounds({mode:'hud',expanded:false,pinned:true},{x:0,y:0,width:1920,height:1040});
   assert.equal(collapsed.height,160);
+  for(const mode of ['sidecar','hud','intel'] as const){
+    const bounds=integrationBounds({mode,expanded:true,pinned:true},{x:0,y:0,width:1536,height:824});
+    assert.ok(bounds.y>=88,'Compact mode covers the game top bar: '+mode);
+  }
 });
