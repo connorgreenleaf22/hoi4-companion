@@ -50,18 +50,19 @@ else {
     if(window.isDestroyed()){await service.close();service=undefined;return;}
     window.webContents.on('did-fail-load',(_event,code,description,url)=>diagnostic('did-fail-load',{code,description,url}));
     const integration=installIntegrationWindow(window,service.url);
+    const withNativeDialog=async<T>(operation:()=>Promise<T>)=>{const resume=integration.suspendPin();try{return await operation();}finally{resume();}};
     const guard=createCloseGuard({
       read:async()=>{
         let timer:ReturnType<typeof setTimeout>|undefined;
         try{return await Promise.race([window.webContents.executeJavaScript('window.__hoi4CloseState'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Close state timed out.')),3000);})]);}finally{if(timer)clearTimeout(timer);}
       },
       choose:async()=>{
-        const result=await dialog.showMessageBox(window,{type:'warning',title:'Unsaved campaign drafts',message:'Keep your unsaved drafts before closing?',detail:'Drafts are kept in this window, including plans on other pages or campaigns. Review and download them, stay in the app, or explicitly discard them. Saved campaigns will not be changed.',buttons:['Stay','Review / download drafts','Discard drafts and close'],defaultId:0,cancelId:0,noLink:true});
+        const result=await withNativeDialog(()=>dialog.showMessageBox(window,{type:'warning',title:'Unsaved campaign drafts',message:'Keep your unsaved drafts before closing?',detail:'Drafts are kept in this window, including plans on other pages or campaigns. Review and download them, stay in the app, or explicitly discard them. Saved campaigns will not be changed.',buttons:['Stay','Review / download drafts','Discard drafts and close'],defaultId:0,cancelId:0,noLink:true}));
         return result.response===1?'review':result.response===2?'discard':'stay';
       },
       review:()=>{integration.reveal();void window.webContents.executeJavaScript("window.dispatchEvent(new Event('hoi4:review-drafts'))").catch(()=>{});},
-      pending:async()=>{await dialog.showMessageBox(window,{type:'info',title:'Campaign save in progress',message:'Wait for the campaign save to finish before closing.',detail:'The app is staying open so the pending write can complete. Close again after the save status clears.',buttons:['Stay'],defaultId:0,cancelId:0});},
-      failed:async()=>{if(!window.isDestroyed())await dialog.showMessageBox(window,{type:'warning',title:'Could not check unsaved drafts',message:'The app is staying open to protect pending work.',detail:'Try closing again when the window responds. Saved campaigns have not been changed by this close attempt.',buttons:['Stay'],defaultId:0,cancelId:0});},
+      pending:async()=>{await withNativeDialog(()=>dialog.showMessageBox(window,{type:'info',title:'Campaign save in progress',message:'Wait for the campaign save to finish before closing.',detail:'The app is staying open so the pending write can complete. Close again after the save status clears.',buttons:['Stay'],defaultId:0,cancelId:0}));},
+      failed:async()=>{if(!window.isDestroyed())await withNativeDialog(()=>dialog.showMessageBox(window,{type:'warning',title:'Could not check unsaved drafts',message:'The app is staying open to protect pending work.',detail:'Try closing again when the window responds. Saved campaigns have not been changed by this close attempt.',buttons:['Stay'],defaultId:0,cancelId:0}));},
       close:()=>{if(!window.isDestroyed())window.close();}
     });
     window.on('close',event=>{if(!guard.isApproved()){event.preventDefault();void guard.request();}});

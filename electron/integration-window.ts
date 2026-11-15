@@ -11,6 +11,16 @@ export function installIntegrationWindow(window:BrowserWindow,trustedOrigin:stri
   const shortcuts={toggle:false,cycle:false};
   let tray:Tray|undefined;
   let disposed=false;
+  let pinSuspensions=0;
+  const pinnedCompact=()=>preferences.mode!=='workspace'&&preferences.pinned;
+  const setPinLevel=()=>window.setAlwaysOnTop(pinnedCompact(),'screen-saver');
+  // HOI4 can promote its borderless window when it regains focus. Restore only Z-order;
+  // moveTop deliberately leaves keyboard focus with the game and never shows a hidden window.
+  const reassertPin=()=>{
+    if(disposed||window.isDestroyed()||pinSuspensions||!pinnedCompact()||!window.isVisible()||window.isMinimized())return;
+    if(window.getChildWindows().some(child=>child.isVisible()&&child.isModal()))return;
+    setPinLevel();window.moveTop();
+  };
   const state=():IntegrationState=>({...preferences,native:true,visible:window.isVisible(),shortcuts:{...shortcuts}});
   const notify=()=>{if(!window.isDestroyed())window.webContents.send('hoi4:integration:state',state());};
   const persist=()=>{
@@ -33,7 +43,7 @@ export function installIntegrationWindow(window:BrowserWindow,trustedOrigin:stri
     window.setMinimumSize(Math.min(preferences.mode==='workspace'?760:360,bounds.width),Math.min(preferences.mode==='hud'&&!preferences.expanded?160:480,bounds.height));
     window.setMaximizable(preferences.mode==='workspace');
     window.setFullScreenable(preferences.mode==='workspace');
-    window.setAlwaysOnTop(preferences.mode!=='workspace'&&preferences.pinned);
+    setPinLevel();
   };
   const setMode=(mode:typeof preferences.mode)=>{
     if(mode!==preferences.mode)preferences={...preferences,mode,expanded:mode!=='hud'};
@@ -47,7 +57,7 @@ export function installIntegrationWindow(window:BrowserWindow,trustedOrigin:stri
     {channel:'get',run:()=>{}},
     {channel:'mode',run:value=>{if(!isIntegrationMode(value))throw Error('Unknown integration mode.');setMode(value);}},
     {channel:'expanded',run:value=>{if(typeof value!=='boolean')throw Error('Expanded must be boolean.');preferences={...preferences,expanded:value};applyBounds();persist();notify();}},
-    {channel:'pinned',run:value=>{if(typeof value!=='boolean')throw Error('Pinned must be boolean.');preferences={...preferences,pinned:value};window.setAlwaysOnTop(preferences.mode!=='workspace'&&value);persist();notify();}},
+    {channel:'pinned',run:value=>{if(typeof value!=='boolean')throw Error('Pinned must be boolean.');preferences={...preferences,pinned:value};setPinLevel();persist();notify();}},
     {channel:'hide',run:()=>{if(!tray&&!shortcuts.toggle)throw Error('No background recovery control is available. Minimize using the title bar instead.');window.hide();notify();trayMenu();}}
   ];
   for(const {channel,run} of handlers)ipcMain.handle(`hoi4:integration:${channel}`,(event,value)=>{requireTrusted(event);run(value);return state();});
@@ -58,10 +68,13 @@ export function installIntegrationWindow(window:BrowserWindow,trustedOrigin:stri
   const onDisplayChanged=()=>{if(!window.isDestroyed())applyBounds();};
   const onShowHide=()=>{notify();trayMenu();};
   window.on('show',onShowHide);window.on('hide',onShowHide);
+  window.on('blur',reassertPin);
+  const pinTimer=setInterval(reassertPin,750);pinTimer.unref?.();
   screen.on('display-removed',onDisplayChanged);screen.on('display-metrics-changed',onDisplayChanged);
   applyBounds();notify();
   const dispose=()=>{
     if(disposed)return;disposed=true;
+    clearInterval(pinTimer);window.removeListener('blur',reassertPin);
     for(const {channel} of handlers)ipcMain.removeHandler(`hoi4:integration:${channel}`);
     if(shortcuts.toggle)globalShortcut.unregister('CommandOrControl+Shift+Space');
     if(shortcuts.cycle)globalShortcut.unregister('CommandOrControl+Shift+M');
@@ -73,5 +86,10 @@ export function installIntegrationWindow(window:BrowserWindow,trustedOrigin:stri
     if(preferences.mode==='hud'&&!preferences.expanded){preferences={...preferences,expanded:true};applyBounds();persist();}
     window.show();window.focus();notify();trayMenu();
   };
-  return {state,dispose,reveal};
+  const suspendPin=()=>{
+    pinSuspensions++;
+    let resumed=false;
+    return ()=>{if(resumed)return;resumed=true;pinSuspensions--;reassertPin();};
+  };
+  return {state,dispose,reveal,suspendPin};
 }

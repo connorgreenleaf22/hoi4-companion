@@ -96,8 +96,8 @@
 .integration-compact .intelligence .baseline-transfer{grid-template-columns:minmax(0,1fr)}
 .integration-compact .intelligence-environment details{min-width:0;flex-basis:100%}
 .integration-compact .modal-backdrop{padding:8px}
-.integration-compact .modal{padding:24px 16px;max-width:100%;max-height:calc(100vh - 16px)}
-.integration-compact .entry-drawer{width:100%;max-width:100%;padding:20px 16px 30px}
+.integration-compact .modal{padding:24px 16px;max-width:100%;max-height:calc(100vh - 16px);background:#272e24;border-color:#646047}
+.integration-compact .entry-drawer{width:100%;max-width:100%;padding:20px 16px 30px;background:#252b23;border-color:#595a43}
 .integration-compact .entry-drawer h1{font-size:29px}
 .integration-compact .toast{left:50%;bottom:12px;max-width:calc(100% - 24px);width:max-content;font-size:11px;padding:11px}
 .integration-compact .conflict-banner{margin:12px}

@@ -27,6 +27,7 @@ test('desktop shows a local startup window before slow indexing, reuses it, and 
    isDestroyed(){return this.destroyed;} show(){events.push('show');} focus(){events.push('focus');} hide(){events.push('hide');}
    destroy(){this.destroyed=true;events.push('destroy');}close(){this.destroy();}setTitle(){}
    getBounds(){return {x:0,y:0,width:460,height:800};} isVisible(){return true;}isFullScreen(){return false;}isMaximized(){return false;}
+   isMinimized(){return false;}getChildWindows(){return [];}moveTop(){}
    setMinimumSize(){}setBounds(){}setMaximizable(){}setFullScreenable(){}setAlwaysOnTop(){}
   }
   const app=Object.assign(new EventEmitter(),{getAppPath:()=>directory,getPath:()=>directory,setPath:()=>{},requestSingleInstanceLock:()=>true,whenReady:async()=>{},setName:()=>{},quit:()=>{events.push('quit');}});
