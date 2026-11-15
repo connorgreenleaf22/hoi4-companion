@@ -12,6 +12,8 @@ Quick Intel is a companion panel, not an injected game hover tooltip. Expand its
 
 Focused desktop exercise: `npm run build`, then `npm run test:in-game` (or pass an extracted development executable after `--`). This creates disposable synthetic data and an isolated Electron profile, exercises mode/feature access and persistence, and makes no game/provider call.
 
+For independent desktop profiles, `HOI4_ELECTRON_DATA_DIR` overrides Electron preferences and the single-instance lock; `HOI4_DATA_DIR` separately overrides the campaign database. QA sets both to disposable directories.
+
 ## Current source delivery — release blocked
 
 [AI-CONTEXT-01](docs/application/AI-CONTEXT-01.md) makes broad strategy source previews fit disclosed source/request-body budgets while preserving complete included records and mandatory references. The retained-source Germany request now previews 79 definitions, including 34 focuses and nine technologies, within both limits. Oversized mandatory content gives measured recovery guidance and keeps editable work. Source fitting does not approve spending or certify strategy mechanics.

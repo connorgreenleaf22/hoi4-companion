@@ -1,14 +1,12 @@
 // Isolated desktop exercise: synthetic campaign data; no game/provider control.
 import {_electron,expect} from '@playwright/test';
-import assert from 'node:assert/strict';import fs from 'node:fs';import path from 'node:path';import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';import path from 'node:path';
 import {createQaRun,assertOwnedStatus} from './qa/fixture';import {seedLabFixture} from './qa/lab-fixture';
 
 async function main(){
  const exe=process.argv[2]?path.resolve(process.argv[2]):undefined;
- const stamp=path.resolve('build/development.json');
- if(!exe){if(fs.existsSync(stamp))throw Error('Refusing existing development stamp.');fs.writeFileSync(stamp,JSON.stringify({label:'M8.0-'+createHash('sha256').update(String(Date.now())).digest('hex').slice(0,12)}));}
  const run=createQaRun('in-game-modes','compiled-runtime');seedLabFixture(run.dataDirectory);
- const env={...process.env,HOI4_DATA_DIR:run.dataDirectory};delete env.ELECTRON_RUN_AS_NODE;
+ const env={...process.env,HOI4_DATA_DIR:run.dataDirectory,HOI4_ELECTRON_DATA_DIR:run.renderer};delete env.ELECTRON_RUN_AS_NODE;
  let app:Awaited<ReturnType<typeof _electron.launch>>|undefined,p:import('@playwright/test').Page|undefined;const errors:string[]=[];
  const launch=async()=>{app=await _electron.launch({...(exe?{executablePath:exe,args:[]}:{args:['.']}),cwd:exe?path.dirname(exe):process.cwd(),env,timeout:60000});run.ownedProcesses.push({pid:app.process().pid!,kind:'Isolated integration desktop'});p=await app.firstWindow();p.on('pageerror',e=>errors.push(e.message));await expect(p.getByLabel('Integration mode',{exact:true})).toBeVisible();await expect(p.getByRole('heading',{name:'Command center',exact:true})).toBeVisible();await app.evaluate(({dialog})=>{dialog.showMessageBox=(async()=>({response:2,checkboxChecked:false})) as any;});};
  const native=async(method:string,value?:unknown)=>p!.evaluate(async({method,value})=>{const api=(window as any).hoi4Integration;return await api[method](value);},{method,value});
@@ -16,7 +14,7 @@ async function main(){
  const capture=async(name:string)=>p!.screenshot({path:path.join(run.output,name+'.png')});
  try{
   await launch();
-  await run.check('isolated desktop and sandboxed preload use a compact default',['MODES-NATIVE'],async()=>{assertOwnedStatus(await p!.evaluate(()=>fetch('/api/v1/status').then(r=>r.json())),run.dataDirectory);assert.equal((await native('getState')).mode,'sidecar');assert.equal(await p!.evaluate(()=>typeof (window as any).require),'undefined');assert.ok(await p!.evaluate(()=>innerWidth)<600);});
+  await run.check('isolated desktop and sandboxed preload use a compact default',['MODES-NATIVE'],async()=>{assertOwnedStatus(await p!.evaluate(()=>fetch('/api/v1/status').then(r=>r.json())),run.dataDirectory);assert.equal(await app!.evaluate(({app})=>app.getPath('userData')),run.renderer);assert.equal((await native('getState')).mode,'sidecar');assert.equal(await p!.evaluate(()=>typeof (window as any).require),'undefined');assert.ok(await p!.evaluate(()=>innerWidth)<600);});
   const titles={overview:'Command center',planner:'Campaign planner',encyclopedia:'The encyclopedia',discover:'Campaign ideas',lab:'Division & production',manual:'The field manual',settings:'Sources & settings'};
   for(const mode of ['sidecar','hud','intel'])await run.check(mode+' exposes all seven existing tools within the panel',['MODES-PARITY'],async()=>{
    await native('setMode',mode);await native('setExpanded',true);
@@ -52,6 +50,6 @@ async function main(){
   });
   assert.deepEqual(errors,[]);
  }catch(error){await capture('failure').catch(()=>{});throw error;}
- finally{await app?.close();run.finish({rendererErrors:errors,realProviderCalled:false,nativeGameLaunched:false,gameControlsDispatched:false,executable:exe||'local Electron with development isolation stamp'});run.cleanup();if(!exe)fs.unlinkSync(stamp);console.log(run.output);}
+ finally{await app?.close();run.finish({rendererErrors:errors,realProviderCalled:false,nativeGameLaunched:false,gameControlsDispatched:false,executable:exe||'local Electron with isolated renderer profile'});run.cleanup();console.log(run.output);}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

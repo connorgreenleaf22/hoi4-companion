@@ -17,6 +17,12 @@ if(development){
   app.setPath('userData',path.join(isolated,'electron'));
   process.env.HOI4_DATA_DIR ||= path.join(isolated,'data');
 }
+// QA and explicit parallel profiles must isolate window preferences and the
+// single-instance lock as well as the campaign database.
+if(process.env.HOI4_ELECTRON_DATA_DIR){
+  const rendererProfile=path.resolve(process.env.HOI4_ELECTRON_DATA_DIR);
+  fs.mkdirSync(rendererProfile,{recursive:true});app.setPath('userData',rendererProfile);
+}
 const diagnosticFile=process.env.HOI4_STARTUP_DIAGNOSTICS==='1'||development?path.join(dataDirectory(),'diagnostics',`startup-${Date.now()}-${process.pid}.jsonl`):null;
 const diagnostic=(event:string,details:unknown={})=>{if(!diagnosticFile)return;try{fs.mkdirSync(path.dirname(diagnosticFile),{recursive:true});fs.appendFileSync(diagnosticFile,JSON.stringify({at:new Date().toISOString(),event,details})+'\n');}catch{/* Diagnostics must not replace the original failure. */}};
 diagnostic('runtime',{versions:process.versions,packaged:app.isPackaged});
