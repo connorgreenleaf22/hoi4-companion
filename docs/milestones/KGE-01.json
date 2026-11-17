@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "KGE-01",
+  "status": "offline-tested",
+  "branch": "feature/knowledge-engine-20261116",
+  "commitSha": "7c9b7e7d13e0fc997db1cf2ce6bfea671af9cd23",
+  "testEvidence": [
+    {"kind": "deterministic", "result": "passed", "reference": "docs/application/KGE-01-VERIFICATION.json", "summary": "43 focused engine/HTTP/existing-AI tests; 22 pure engine cases; installed 1.19.5.0 probes remain partial estimates, not parity."},
+    {"kind": "typecheck", "result": "passed", "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43988586991", "summary": "Frozen runtime build and hosted qa-typecheck pass."},
+    {"kind": "schema", "result": "passed", "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43988586991", "summary": "Runtime hosted schema check passes; this evidence manifest is separately validated at delivery."},
+    {"kind": "hygiene", "result": "passed", "reference": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43988586991", "summary": "Runtime hosted hygiene and manual source audit pass. Raw installed assets, databases and packages remain untracked."},
+    {"kind": "packaged", "result": "passed", "reference": "docs/application/KGE-01-VERIFICATION.json", "summary": "Browser8 and extracted Windows9 checks pass with0 renderer errors;74 archive members and6 bundled application files match. Restart uses explicit canonical Load."},
+    {"kind": "review", "result": "passed", "reference": "docs/application/KGE-01-DELIVERY.md", "summary": "Separate reviewer /root/knowledge_review approved exact runtime7c9b7e7d13e0fc997db1cf2ce6bfea671af9cd23 for isolated packaging; not owner acceptance or formal GitHub approval."}
+  ],
+  "nativeQualification": {"state": "not-applicable", "scope": "Experimental mathematical estimates and ordinary desktop persistence checks; no game-engine, live-state or gameplay qualification.", "evidence": []},
+  "artifact": {"name": "KGE-01-7c9b7e7d13e0-windows-x64.zip", "reference": "Local Documents/HOI4 Companion Development Builds/KGE-01/M7.4.4a-7c9b7e7d13e0; docs/application/KGE-01-VERIFICATION.json", "sha256": "762bf82a0ad2901709e3e2fe19d5035fa65596b20749a13271fa3a3d7ba6b8ac"},
+  "blockers": [{"summary": "Independent numerical qualification and broad near-complete knowledge coverage remain incomplete; this development slice does not close existing combat/release gates.", "issue": "https://github.com/connorgreenleaf22/hoi4-companion/issues/10"}, {"summary": "Owner usefulness acceptance and main merge approval pending.", "issue": "https://github.com/connorgreenleaf22/hoi4-companion/pull/24"}],
+  "acceptance": {"state": "pending", "evidence": ["docs/application/KGE-01-DELIVERY.md"]},
+  "report": "docs/application/KGE-01-DELIVERY.md",
+  "github": ["https://github.com/connorgreenleaf22/hoi4-companion/pull/24", "https://github.com/connorgreenleaf22/hoi4-companion/issues/10"]
+}

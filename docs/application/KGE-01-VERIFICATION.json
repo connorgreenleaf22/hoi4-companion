@@ -1,0 +1,18 @@
+{
+  "runtimeSha": "7c9b7e7d13e0fc997db1cf2ce6bfea671af9cd23",
+  "baseSha": "6f0762a892efce1575834abb34fc49c52dbeeca1",
+  "focused": {"command": "node --import tsx --test tests/knowledge-engine.test.ts tests/knowledge-engine-api.test.ts tests/ai-planning.test.ts", "passed": 43, "failed": 0},
+  "pureEngine": {"passed": 22, "failed": 0},
+  "browser": {"passed": 8, "rendererErrors": 0, "evidence": "Local artifacts/knowledge-ui-1794875288257/results.json"},
+  "extractedWindows": {"passed": 9, "rendererErrors": 0, "evidence": "Local artifacts/knowledge-ui-1794875768340/results.json", "restart": "Canonical SQLite inputs explicitly reopened with Load saved comparison; same-origin drafts are separate."},
+  "hostedRuntimeChecks": {"run": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43988586991", "passed": ["qa-typecheck", "qa-test-ci", "qa-schemas", "qa-hygiene"]},
+  "independentReview": {"reviewer": "/root/knowledge_review", "reviewedRuntimeSha": "7c9b7e7d13e0fc997db1cf2ce6bfea671af9cd23", "disposition": "Approved for isolated development packaging; no remaining blocking findings inside documented experimental scope."},
+  "installedSourceProbe": {"version": "1.19.5.0", "samples": 3, "sampleStatuses": ["partial", "partial", "partial"], "unmodeledEffectsPerSample": 9, "nativeEngineParity": "not-tested"},
+  "artifact": {"name": "KGE-01-7c9b7e7d13e0-windows-x64.zip", "sha256": "762bf82a0ad2901709e3e2fe19d5035fa65596b20749a13271fa3a3d7ba6b8ac", "matchedExtractedFiles": 74, "matchedApplicationBundleFiles": 6},
+  "gameCalls": 0,
+  "realProviderCalls": 0,
+  "ownerAcceptance": "pending",
+  "mainMerge": "not-performed",
+  "nearCompleteKnowledgeEngine": "not-complete",
+  "existingQualificationGates": "unchanged"
+}
