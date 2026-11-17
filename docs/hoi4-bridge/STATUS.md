@@ -1,5 +1,9 @@
 # HOI4 bridge status
 
+## KGE-01 experimental military knowledge slice — 2026-11-16
+
+The isolated knowledge-engine branch adds source-grounded experimental division/tank estimates, modifier-layer inspection, finite candidate search, campaign comparison persistence and opt-in bounded AI-preview summaries. Manual inputs remain separate from observations. Current installed 1.19.5.0 source probes are not engine parity or entitlement evidence. Legacy five null combat totals, QUAL-195, planner coverage, spending and final-release gates remain. See [engine contract and remaining scope](../application/KNOWLEDGE-ENGINE.md); final runtime/review/package receipts are recorded in its delivery report. No game launch/control or real provider call.
+
 ## Bounded source-preview goal completed â€” 2026-11-14
 
 [AI-CONTEXT-01](../application/AI-CONTEXT-01.md), runtime `7f8cd6e4a3e7d1c507e736fd2931ddf0b93a5998`, closes the broad-objective preview overflow through complete dependency-group budgeting, preserved mandatory references, exact source-character/provider-body-byte disclosure and measured recovery errors. Retained Germany source-only HTTP proof: 79 definitions (34 focuses/nine technologies), 165,477 characters and 179,747 UTF-8 bytes; repeat selection/quotes/wire identical, original index unchanged. Six new browser, 11 prior draft-safety and nine extracted Windows checks pass; 75 files match, clean shutdown/service refusal/full restart pass, zero renderer errors. Independent review/27-test rerun and 206 portable fixtures+3 guards pass. Earlier research starvation and event-order findings were corrected before freeze. No real provider/game call or source/engine/native qualification promotion; spending, QUAL-195, combat and final-release gates remain. PR #16 already placed prior draft safety on main at `40ecca6`; this goal's final delivery SHA/checks are tracked separately in its PR. Project HQ update pending.

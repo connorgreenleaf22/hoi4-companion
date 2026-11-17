@@ -5,6 +5,7 @@ import { api } from './api';
 import { PageTitle, number } from './App';
 import { declaredYear } from './year';
 import {getLabDraft,subscribeLabDrafts,editLabDraft,loadLabTemplate,discardLabDraft,beginLabWrite,acknowledgeLabSave} from './lab-drafts';
+import {KnowledgeWorkbench} from './KnowledgeWorkbench';
 
 type Row = { id: string; count: number | '' };
 type ProductionLine = { equipment: string; quantity: string; stockpile: string; factories: string; efficiency: string; output: string; resourceFactor: string };
@@ -136,6 +137,7 @@ export function DivisionLab({ profile, save, fail, notify, openEntry, baseFactor
 
   return <>
     <PageTitle eyebrow="TEMPLATES & EQUIPMENT" title="Division & production" text="Plan army requirements and estimate military production." />
+    <KnowledgeWorkbench key={profile?.id||'scratch'} profile={profile} indexRevision={indexRevision} openEntry={openEntry}/>
     <div className="notice small"><Shield size={18} /><span>Base values only. Technologies, doctrines, designers, equipment variants, terrain, and national modifiers are excluded.</span></div>
     {loadState === 'loading' && <p role="status" className="muted">Loading installed units and equipment…</p>}
     {loadState === 'error' && <div className="notice small" role="alert"><span>{loadError || 'Unit and equipment data could not be loaded.'}</span><button className="button" onClick={() => setReload(value => value + 1)}><RefreshCw size={14} />Retry loading</button></div>}

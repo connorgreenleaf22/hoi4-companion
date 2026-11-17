@@ -9,5 +9,6 @@
   "tests/lab-drafts.test.ts",
   "tests/strategy-drafts.test.ts",
   "tests/electron-startup.test.ts",
-  "tests/page-scroll.test.ts"
+  "tests/page-scroll.test.ts",
+  "tests/knowledge-engine.test.ts"
 ]

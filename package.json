@@ -33,7 +33,10 @@
     "test-ci": "node scripts/ci/test.mjs && node --test scripts/ci/workflow.test.mjs",
     "schemas": "node scripts/ci/schemas.mjs",
     "hygiene": "node scripts/ci/hygiene.mjs",
-    "hq:handoff": "node scripts/ci/handoff.mjs"
+    "hq:handoff": "node scripts/ci/handoff.mjs",
+    "knowledge:test": "tsx --test tests/knowledge-engine.test.ts tests/knowledge-engine-api.test.ts",
+    "knowledge:ui": "tsx scripts/knowledge-engine-ui.ts",
+    "knowledge:audit": "tsx scripts/knowledge-engine-installed.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.4.0",

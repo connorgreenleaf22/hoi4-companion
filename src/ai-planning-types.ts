@@ -1,3 +1,4 @@
+import type {DesignAdviceStudy} from './knowledge-engine-types';
 import type {CampaignPlan,Profile} from './types';
 import type {ProposalReview} from './planning-coverage-types';
 import type {PlanningSources} from './strategy-types';
@@ -18,6 +19,6 @@ export type AiSourceGap={status:string;code:string;text:string;locations:{line?:
 export type AiSource={reference:string;id:string;kind:string;title:string;source:string;line:number;hash:string;version:string;prerequisites:string[][];exclusions:string[];summary:string[];requirements:string[];costsAndTiming?:string[];interpretationGaps?:AiSourceGap[];omittedOutcomeCount?:number};
 /** Sizes exclude preview-only metadata; wireBytes measures the exact provider request body. */
 export type AiContextBudget={policyVersion:'dependency-groups-v1';limitCharacters:number;sourceCharacters:number;limitWireBytes:number;wireBytes:number;mandatoryReferences:number;selectedGroups:number;omittedGroups:{reference:string;reason:'payload-budget'|'dependency-limit'}[]};
-export type AiContext={schemaVersion:1;fingerprint:string;country:string;startDate:string;sources:PlanningSources;references:AiSource[];omitted:number;omissions?:string[];disclosure:string;manualContext:string;dlcAssertions:unknown;objective:string;revisionInstruction:string;previousProposal?:StrategyContent;costPreview?:AiCostPreview;quoteFingerprint?:string;budget?:AiBudget;settings?:AiSettings;contextBudget?:AiContextBudget};
+export type AiContext={schemaVersion:1;designStudy?:DesignAdviceStudy;fingerprint:string;country:string;startDate:string;sources:PlanningSources;references:AiSource[];omitted:number;omissions?:string[];disclosure:string;manualContext:string;dlcAssertions:unknown;objective:string;revisionInstruction:string;previousProposal?:StrategyContent;costPreview?:AiCostPreview;quoteFingerprint?:string;budget?:AiBudget;settings?:AiSettings;contextBudget?:AiContextBudget};
 
 export const aiCampaignContext=(p:Profile)=>JSON.stringify([p.id,p.revision,p.country,p.tree.replace(/^definition:/,''),p.startDate,p.completed,p.dlcStates,p.dlcs,p.dlcConfirmed,p.historical]);
