@@ -1,3 +1,6 @@
+import {readConversation,appendConversation} from './campaign-conversation';
+import {inspectCombatInputs} from './combat-evaluation';
+import {indexedDesignSource} from './design-evaluation';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -103,6 +106,16 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
           res.setHeader('Set-Cookie',`hoi4_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=86400`);return send(res,200,{paired:true});
         }
         if(remote&&!authenticated(req))return send(res,401,{error:'Enter the pairing code shown in the desktop app.',pairing:true});
+        if(route==='campaign/conversation'){
+          if(remote)return send(res,403,{error:'Campaign conversations are local-only.'});
+          if(req.method==='GET')return send(res,200,readConversation(store,url.searchParams.get('profile')||''));
+          if(req.method==='POST')return send(res,200,appendConversation(store,await body(req),(id,profileId)=>ai.get(id,profileId)));
+        }
+        if(route==='campaign/comparison'&&req.method==='POST'){
+          if(remote)return send(res,403,{error:'Campaign comparisons are local-only.'});
+          const input=await body(req);
+          return send(res,200,inspectCombatInputs(indexedDesignSource(store),input));
+        }
         if(route.startsWith('ai/')){
           if(remote)return send(res,403,{error:'AI planning and credentials are local-only.'});
           if(req.method==='GET'){

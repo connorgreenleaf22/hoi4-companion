@@ -41,4 +41,7 @@ export function beginStrategyWrite(profileId:string){
 }
 export function strategyDraftMatches(profileId:string,submitted:StrategyDraftValue){const d=cache.get(profileId);return !!d&&editable(d.value)===editable(submitted);}
 /** Deliberately excludes provider credentials, transmission consent and spending approvals. */
-export const downloadableStrategyDraft=(draft:CachedStrategyDraft)=>({schemaVersion:1,kind:'unsaved-whole-strategy',profileId:draft.profileId,basis:structuredClone(draft.basis),...structuredClone(draft.value)});
+export const downloadableStrategyDraft=(draft:CachedStrategyDraft)=>{
+ const {recovery,...value}=structuredClone(draft.value);
+ return {schemaVersion:1,kind:'unsaved-whole-strategy',profileId:draft.profileId,basis:structuredClone(draft.basis),...value,...(recovery?{recovery:{requestId:recovery.requestId,status:recovery.status,content:recovery.content,problems:recovery.problems,error:recovery.error}}:{})};
+};

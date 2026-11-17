@@ -41,3 +41,7 @@ Keep credentials, personal saves, raw telemetry/account metadata, private planni
 ## When a future Site would be justified
 
 No custom website now. Reconsider only after a documented repeated limitation: cross-repository manifest aggregation cannot be expressed with Projects; non-GitHub acceptance contributors cannot use the agreed forms; or artifact access needs permissions GitHub/HQ cannot provide. Record actual frequency, users affected, security requirements and simpler alternatives in an Issue before proposing a Site. A second status database or prettier dashboard alone does not justify it.
+
+## Current-base delivery rule (November 16, 2026)
+
+New bounded work starts from verified remote main or its existing matching isolated branch. Record dirty worktrees, active ownership and bounded base deltas; historical milestone branches and integration instructions above retain their original evidence, not current execution authority. ALPHA-01 uses one builder and one independent reviewer with three checkpoints at most. Preserve separate compact-mode PR #22 and knowledge-engine work. The root AGENTS.md states current restrictions; final release, native budgets, provider approval and independent review remain unchanged.
