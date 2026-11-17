@@ -1,0 +1,9 @@
+import type {StrategyContent} from '../ai-planning-types';
+/** Editorial checklist only. No model output, inferred live facts, automatic source choices or numerical claims. */
+export function preparationChecklist(context:string):StrategyContent{
+ return {name:'Eastern campaign preparation · provisional',secondaryObjectives:['Fun > Winning > Efficiency unless overridden'],focusIds:[],recommendations:[
+  {category:'economy',text:'Before committing to the eastern campaign, review equipment shortfalls and reserve production capacity for replacements. Keep your preferred playstyle and political route explicit.',references:[],conditions:['Manual planning checklist; actual industry and stockpiles are unknown.']},
+  {category:'military',text:'Plan an infantry holding force and a separate mobile force, then check your intended route, supply access, fuel and air coverage in game before setting an offensive date.',references:[],conditions:['Qualitative heuristic, not a validated force size or combat prediction.']},
+  {category:'research',text:'Check the technologies required by your chosen designs against your actual completed research. Review source requirements before selecting focuses or spending resources.',references:[],conditions:['No research schedule, unlock eligibility or 1941 readiness is established.']}
+ ],assumptions:[context],risks:['Campaign state and readiness are manually declared; no qualified live context.','Current-patch all-DLC combat and resource calculations are unavailable.'],milestones:['Before 1941: review production, logistics and design assumptions; revise the date if preparation is incomplete.'],alternatives:['Composition A — enter your proposed infantry, support and equipment mix.','Composition B — enter an alternative mix and its intended role.'],unknowns:['Exact research, production, equipment, fuel and supply state','Source applicability, downstream events and campaign eligibility']};
+}

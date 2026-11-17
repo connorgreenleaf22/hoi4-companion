@@ -31,3 +31,12 @@ test('whole-strategy pending writes block close, and Stay/Review never discard c
  const guard=createCloseGuard({read:async()=>({pendingWrites:getPendingStrategyWrites(),unsavedDrafts:getOutstandingStrategyDrafts().filter(d=>d.profileId===id).length}),choose:async()=>choice,review:()=>{reviews++;},pending:async()=>{waiting++;},failed:async()=>{throw Error('Unexpected failure');},close:()=>{closes++;}});
  const finish=beginStrategyWrite(id);await guard.request();assert.equal(waiting,1);assert.equal(closes,0);finish();await guard.request();assert.equal(reviews,choice==='review'?1:0);assert.equal(closes,choice==='discard'?1:0);assert.equal(getStrategyDraft(id,basis).value.objective,'Objective-only close protection');discardStrategyDraft(id);}
 });
+
+
+test('recovery draft export omits transmission and spending quotes while keeping recoverable content',()=>{
+ const id='export-recovery';getStrategyDraft(id,basis);
+ editStrategyDraft(id,{objective:'Recover',recovery:{requestId:'fixture',status:'needs-correction',content:{name:'Retained'},context:{quoteFingerprint:'quote',costPreview:{reservedUsd:1},settings:{model:'fixture'}},key:'never-export',consent:true} as any});
+ const exported=downloadableStrategyDraft(getStrategyDraft(id,basis));const text=JSON.stringify(exported);
+ assert.match(text,/Retained/);for(const forbidden of ['quoteFingerprint','costPreview','settings','never-export','consent'])assert.equal(text.includes(forbidden),false);
+ discardStrategyDraft(id);
+});
