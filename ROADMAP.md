@@ -1,5 +1,7 @@
 # Future implementation milestones
 
+KGE-01 (November 16, 2026) starts the owner-selected campaign adviser/design-search direction with experimental division/tank estimates, explicit modifiers, bounded searches and optional AI-preview context. Broad knowledge-engine completion remains staged; [the contract](docs/application/KNOWLEDGE-ENGINE.md) defines storage, useful tasks, limits and continuation. This does not block the Campaign-first alpha or qualify legacy combat/release gates.
+
 Completed continuation (2026-11-14): [AI-CONTEXT-01](docs/application/AI-CONTEXT-01.md), bounded and disclosed strategy source previews. The exact broad Germany request succeeds against the retained corpus, with atomic source groups, mandatory-reference preservation and measured overflow recovery. This closes one AI workflow blocker; current-patch semantics, source applicability, generated usefulness and final release remain separate.
 
 Current management assessment (November 14, 2026): [project goals, completion estimates, blockers and execution gameplan](docs/workflow/PROJECT-GOALS-2026-11-14.md). The common application baseline is now on main through PRs #13/#14. STRATEGY-DRAFT-01 closes the separate whole-strategy editor loss; current-patch qualification, production Campaign-first workflow and existing final-release gates remain independent work. Historical milestone notes below retain their original scope.

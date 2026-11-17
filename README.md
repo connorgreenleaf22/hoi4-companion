@@ -2,6 +2,12 @@
 
 A local Windows encyclopedia and campaign planner that reads installed HOI4 scripts. Core workflows run offline; optional AI generation uses separately configured, paid provider access.
 
+## Experimental campaign design adviser
+
+KGE-01 adds a design adviser inside **Division & production**. Supply manual research, doctrines, spirits and MIO traits; build divisions and modular tanks; inspect estimated contributions; compare under explicit budgets; or search bounded battalion counts/module alternatives. Save and reopen comparisons by campaign. Optionally share a saved study with the existing AI advice preview; transmission still requires its existing approval and spending flow.
+
+These are experimental estimates, not validated game statistics, live campaign facts, battle predictions or global optima. Partial-effect ranking requires explicit opt-in; failed eligibility checks still exclude designs. Aircraft/ship evaluation, comprehensive MIO/doctrine semantics and broad engine completion remain future work. Existing qualified/legacy calculation and release gates remain unchanged. See [knowledge engine contract and continuation](docs/application/KNOWLEDGE-ENGINE.md).
+
 ## Current source delivery — release blocked
 
 [AI-CONTEXT-01](docs/application/AI-CONTEXT-01.md) makes broad strategy source previews fit disclosed source/request-body budgets while preserving complete included records and mandatory references. The retained-source Germany request now previews 79 definitions, including 34 focuses and nine technologies, within both limits. Oversized mandatory content gives measured recovery guidance and keeps editable work. Source fitting does not approve spending or certify strategy mechanics.

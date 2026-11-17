@@ -31,6 +31,10 @@ import type {PlanningProvider} from './planner/ai-provider';
 import {evaluatePlanner} from './planner/evaluate';
 import {evaluateRequirements,plannerDlcFacts} from './planner/requirements';
 import type {BridgeMode} from '../src/bridge-types';
+import {indexedKnowledgeSource,knowledgeCatalog,chassisBlueprint} from './knowledge-engine/source';
+import {evaluateKnowledgeDesign,compareKnowledgeDesigns} from './knowledge-engine';
+import {searchSchema} from './knowledge-engine/schema';
+import {searchKnowledgeDesigns} from './knowledge-engine/search';
 
 export function validateProfile(input:any):Profile {
   if(!input || typeof input!=='object')throw new Error('Expected a campaign profile.');
@@ -103,6 +107,40 @@ export async function startServer(options:{dataDir?:string;port?:number;staticDi
           res.setHeader('Set-Cookie',`hoi4_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=86400`);return send(res,200,{paired:true});
         }
         if(remote&&!authenticated(req))return send(res,401,{error:'Enter the pairing code shown in the desktop app.',pairing:true});
+        if(route.startsWith('knowledge/')){
+          if(remote)return send(res,403,{error:'Knowledge scenario inputs and estimates are local-only.'});
+          const knowledgeInput=req.method==='POST'?await body(req):undefined;
+          store.db.exec('BEGIN');readSnapshot=true;
+          const source=indexedKnowledgeSource(store);
+          if(route==='knowledge/catalog'&&req.method==='GET'){
+            const offset=Number(url.searchParams.get('offset')||0),limit=Number(url.searchParams.get('limit')||100);
+            if(!Number.isInteger(offset)||offset<0||!Number.isInteger(limit)||limit<1||limit>250)throw new Error('Invalid catalog page.');
+            return send(res,200,knowledgeCatalog(source,url.searchParams.get('kind')||undefined,(url.searchParams.get('q')||'').slice(0,150),offset,limit));
+          }
+          if(route==='knowledge/chassis'&&req.method==='GET'){const modules=url.searchParams.getAll('module');if(modules.length>32||modules.some(m=>m.length>1600))throw new Error('Too many or oversized modules.');return send(res,200,chassisBlueprint(source,(url.searchParams.get('reference')||'').slice(0,1600),modules));}
+          if(route==='knowledge/evaluate'&&req.method==='POST')return send(res,200,evaluateKnowledgeDesign(source,knowledgeInput));
+          if(route==='knowledge/compare'&&req.method==='POST')return send(res,200,compareKnowledgeDesigns(source,knowledgeInput));
+          if(route==='knowledge/search'&&req.method==='POST')return send(res,200,searchKnowledgeDesigns(source,knowledgeInput));
+          if(route==='knowledge/workspace'&&req.method==='GET'){
+            const profileId=url.searchParams.get('profile')||'';if(!store.profile(profileId))return send(res,404,{error:'Select an existing campaign.'});
+            return send(res,200,store.getSetting('knowledge-workspace:'+profileId,{schemaVersion:1,revision:0,request:null}));
+          }
+          if(route==='knowledge/workspace'&&req.method==='POST'){
+            const input=knowledgeInput;if(typeof input?.profileId!=='string'||!Number.isSafeInteger(input.expectedRevision)||input.expectedRevision<0)throw new Error('Expected a campaign and workspace revision.');
+            const profile=store.profile(input.profileId);if(!profile)return send(res,404,{error:'Campaign no longer exists; download your inputs.'});
+            const request=searchSchema.parse(input.request);if(request.scenario.country!==profile.country)throw new Error('Scenario country must match the selected campaign.');
+            if(new Set(request.candidates.map(c=>c.name)).size!==request.candidates.length||new Set(request.candidates.map(c=>c.kind)).size!==1)throw new Error('Saved comparisons require unique candidate names and one design family.');
+            // End the read snapshot before taking the write lock; compare revisions inside the lock.
+            store.db.exec('COMMIT');readSnapshot=false;store.db.exec('BEGIN IMMEDIATE');
+            try{
+              if(!store.profile(input.profileId)){store.db.exec('ROLLBACK');return send(res,404,{error:'Campaign no longer exists; download your inputs.'});}
+              const current=store.getSetting<any>('knowledge-workspace:'+input.profileId,{schemaVersion:1,revision:0,request:null});
+              if(current.revision!==input.expectedRevision){store.db.exec('ROLLBACK');return send(res,409,{error:'Saved comparison changed in another window. Download your inputs before reloading.',revision:current.revision});}
+              const saved={schemaVersion:1,revision:current.revision+1,request};store.setSetting('knowledge-workspace:'+input.profileId,saved);store.db.exec('COMMIT');return send(res,200,saved);
+            }catch(error){store.db.exec('ROLLBACK');throw error;}
+          }
+          return send(res,404,{error:'Unknown knowledge operation.'});
+        }
         if(route.startsWith('ai/')){
           if(remote)return send(res,403,{error:'AI planning and credentials are local-only.'});
           if(req.method==='GET'){

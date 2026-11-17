@@ -1,0 +1,15 @@
+import {z} from 'zod';
+const ref=z.string().min(1).max(1600);
+const date=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v=>{const d=new Date(v+'T00:00:00Z');return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===v;},'Use a real calendar date.');
+export const selectionSchema=z.strictObject({reference:ref,path:z.array(z.number().int().min(0).max(100000)).max(12).optional()});
+export const scenarioSchema=z.strictObject({schemaVersion:z.literal(1),gameVersion:z.string().min(1).max(100),indexRevision:z.string().min(1).max(150),configuration:z.literal('all-dlc-no-mods'),stateSource:z.literal('manual'),country:z.string().regex(/^[A-Z0-9]{3}$/),date,researched:z.array(ref).max(2500),modifiers:z.array(selectionSchema).max(200)});
+const name=z.string().trim().min(1).max(120);
+const tank=z.strictObject({kind:z.literal('tank'),name,chassis:ref,modules:z.array(z.strictObject({slot:z.string().min(1).max(120),module:ref})).min(1).max(32),upgrades:z.array(z.strictObject({reference:ref,level:z.number().int().min(0).max(20)})).max(12)});
+const division=z.strictObject({kind:z.literal('division'),name,rows:z.array(z.strictObject({unit:ref,count:z.number().int().min(1).max(25)})).min(1).max(30),equipment:z.array(z.strictObject({archetype:z.string().min(1).max(150),model:ref.optional(),variant:tank.optional()}).refine(v=>!!v.model!==!!v.variant,'Choose exactly one equipment model or designed tank variant.')).max(30)});
+export const designSchema=z.discriminatedUnion('kind',[tank,division]);
+export const evaluationSchema=z.strictObject({scenario:scenarioSchema,design:designSchema});
+export const searchSchema=z.strictObject({scenario:scenarioSchema,candidates:z.array(designSchema).min(2).max(128),objective:z.strictObject({metric:z.string().min(1).max(60),direction:z.enum(['maximize','minimize']),perIndustrialCost:z.boolean()}),constraints:z.array(z.strictObject({metric:z.string().min(1).max(60),min:z.number().finite().optional(),max:z.number().finite().optional()}).refine(v=>(v.min!==undefined||v.max!==undefined)&&(v.min===undefined||v.max===undefined||v.min<=v.max),'Supply a valid minimum or maximum.')).max(20),includePartialEstimates:z.boolean().optional(),shareWithAdvisor:z.boolean().optional()});
+// UI drafts may be incomplete while editing, but must have a safe, bounded structural shape.
+const draftTank=tank.extend({name:z.string().max(120),chassis:z.string().max(1600),modules:z.array(tank.shape.modules.element).max(32)});
+const draftDivision=division.extend({name:z.string().max(120),rows:z.array(z.strictObject({unit:ref,count:z.number().finite()})).max(30),equipment:z.array(z.strictObject({archetype:ref,model:ref.optional(),variant:draftTank.optional()})).max(30)});
+export const draftSchema=searchSchema.extend({scenario:scenarioSchema.extend({country:z.string().max(3),date:z.string().max(10)}),candidates:z.array(z.discriminatedUnion('kind',[draftTank,draftDivision])).min(1).max(128),constraints:z.array(z.strictObject({metric:z.string().max(60),min:z.number().finite().optional(),max:z.number().finite().optional()})).max(20)});
