@@ -227,7 +227,7 @@ function division(c:Context,d:DivisionDesign):Record<string,KnowledgeMetric>{
     for(const [key,v] of [['armor_value',unitArmor],['ap_attack',unitPiercing],['hardness',unitHardness]] as const)(totals[key]||=[]).push(...v.traces);
     for(let i=0;i<row.count;i++){armor.push(unitArmor.value);piercing.push(unitPiercing.value);if(scalar(nodes(u),'group')!=='support')hardness.push(unitHardness.value);}
     const declaredSpeed=unitStats.maximum_speed;const v=declaredSpeed===undefined?rowStats.maximum_speed:declaredSpeed;
-    if(v>0){const adjusted=modified('maximum_speed',v);speed.push(contribution(u,u.title,'aggregate',adjusted.value),...adjusted.traces);}
+    if(v>0&&scalar(nodes(u),'affects_speed')!=='no'){const adjusted=modified('maximum_speed',v);speed.push(contribution(u,u.title,'aggregate',adjusted.value),...adjusted.traces);}
     if(block(nodes(u),'battalion_mult').length||nodes(u).some(n=>n.key==='battalion_mult'))issue(c,'battalion-adjuster',`${u.title}: category-targeted support effects are not applied.`,true,u);
   }
   if(lineCount<1||lineCount>25||supportCount>5)issue(c,'template-layout','Templates need 1–25 line battalions and at most 5 support companies; regiment placement remains manual.');

@@ -109,3 +109,9 @@ test('finite module search excludes illegal alternatives and refuses oversized s
  const r=searchKnowledgeDesigns(source,input);assert.equal(r.candidatesEvaluated,2);assert.equal(r.feasible,1);
  assert.throws(()=>searchKnowledgeDesigns(source,{...input,dimensions:[{slot:'a',modules:Array.from({length:16},(_,i)=>'a'+i)},{slot:'b',modules:Array.from({length:16},(_,i)=>'b'+i)}]}),/No search was truncated/);
 });
+test('support companies with affects_speed=no do not slow the division or fail a speed constraint',()=>{
+ const {source,entries,scenario,division}=fixtures();entries.find(e=>e.id==='infantry')!.data.stats.maximum_speed=8;
+ entries.push(entry('unit','support','active = yes group = support affects_speed = no combat_width = 0 manpower = 100 max_strength = 1 max_organisation = 0 supply_consumption = 0 need = { rifles = 5 }'));
+ division.rows.push({unit:'support',count:1});const r=evaluateKnowledgeDesign(source,{scenario,design:division});assert.equal(r.status,'estimated');assert.equal(r.metrics.maximum_speed.value,8);
+ const compared=compareKnowledgeDesigns(source,{scenario,candidates:[division,{...division,name:'Other'}],objective:{metric:'defense',direction:'maximize',perIndustrialCost:false},constraints:[{metric:'maximum_speed',min:8}]});assert.equal(compared.feasible,2);
+});
