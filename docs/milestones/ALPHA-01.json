@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "milestoneId": "ALPHA-01",
+  "status": "offline-tested",
+  "branch": "feature/alpha-01-campaign-first",
+  "commitSha": "158d943819afd12c8a4c73b6101077800b5045d1",
+  "testEvidence": [
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/ALPHA-01-VERIFICATION.json",
+      "summary": "9 focused +1 desktop startup;217 portable fixtures+3 workflow guards. Independent overlapping58/26/1 tests across reviewed checkpoints; strict conversation append/ownership, recovery export privacy and Unicode context bound."
+    },
+    {
+      "kind": "deterministic",
+      "result": "passed",
+      "reference": "docs/application/ALPHA-01-VERIFICATION.json",
+      "summary": "11 frozen browser cases: actual source preview, local checklist, composition refusal, tool return, A/B/A, failed/delayed saves, restart and1 explicitly injected TEST FIXTURE generation/recovery. No real provider/game call."
+    },
+    {
+      "kind": "typecheck",
+      "result": "passed",
+      "reference": "docs/application/ALPHA-01.md",
+      "summary": "TypeScript, Vite and bundled Node/Electron build pass; new acceptance harness imports strict-typechecked. Four required hosted runtime checks pass at158d943."
+    },
+    {
+      "kind": "packaged",
+      "result": "passed",
+      "reference": "docs/application/ALPHA-01-VERIFICATION.json",
+      "summary": "75 freshly extracted files match.11 exact158d943 Windows app cases pass, clean close/service stop/restart reopen revision2+conversation+composition;zero renderer errors/generate calls."
+    },
+    {
+      "kind": "review",
+      "result": "passed",
+      "reference": "docs/application/ALPHA-01.md",
+      "summary": "Independent alpha_review approved exact158d943 source and extracted package. Reviewed affected contracts/fixtures, all75 extracted and14 packaged runtime files, artifact/stamp identity, raw browser/package records and screenshots; no remaining engineering blockers."
+    },
+    {
+      "kind": "provider",
+      "result": "not-run",
+      "reference": "docs/application/ALPHA-01-ACCEPTANCE.md",
+      "summary": "Real-provider usefulness requires owner explicit displayed-quote approval after candidate readiness. No paid request authorized/performed."
+    }
+  ],
+  "nativeQualification": {
+    "state": "not-applicable",
+    "scope": "Companion-only development alpha; Windows app lifecycle is packaged evidence, not HOI4 gameplay/observation/engine/all-DLC semantic qualification. Earlier native budgets remain unchanged.",
+    "evidence": []
+  },
+  "artifact": {
+    "name": "ALPHA-01-158d943819af-windows-x64.zip",
+    "reference": "Local-only Documents/HOI4 Companion Development Builds/ALPHA-01-158d943819af",
+    "sha256": "ebd3a25bd859555dbefbc332a4e77fe5b99de72b399881a480853afec46cc011"
+  },
+  "blockers": [],
+  "acceptance": {
+    "state": "pending",
+    "evidence": [
+      "Owner walkthrough supplied. Engineering checks do not establish usefulness or authorize a real paid request."
+    ]
+  },
+  "report": "docs/application/ALPHA-01.md",
+  "github": [
+    "https://github.com/connorgreenleaf22/hoi4-companion/pull/23"
+  ]
+}

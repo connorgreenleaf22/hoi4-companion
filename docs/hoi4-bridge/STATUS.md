@@ -1,3 +1,5 @@
+ALPHA-01 development candidate — November 16, 2026: Campaign-first Germany preparation is engineering-ready in draft [PR #23](https://github.com/connorgreenleaf22/hoi4-companion/pull/23), runtime `158d943819afd12c8a4c73b6101077800b5045d1`. Existing service/strategy APIs and draft registries are reused; per-campaign conversation persists, manual compositions remain editable and unqualified 1.19.5 all-DLC calculations refuse. 11 browser and 11 exact extracted Windows cases pass with independent review; owner acceptance/real-provider usefulness remain pending. No game launch or new native qualification. Compact PR 22 and separate knowledge work are untouched. See [report](../application/ALPHA-01.md) and [manifest](../milestones/ALPHA-01.json). Earlier status entries below retain their original scope.
+
 # HOI4 bridge status
 
 ## Bounded source-preview goal completed — 2026-11-14

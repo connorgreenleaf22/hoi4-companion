@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "goal": "ALPHA-01",
+  "dateLocal": "2026-11-16",
+  "baselineSha": "6f0762a892efce1575834abb34fc49c52dbeeca1",
+  "rollbackAnchor": "6f0762a892efce1575834abb34fc49c52dbeeca1",
+  "runtimeSha": "158d943819afd12c8a4c73b6101077800b5045d1",
+  "rendererServiceBrowserSha": "e06c2a09fbb117a9491afb658fbe8353146cfe5e",
+  "browserInputsUnchangedExceptDesktopIdentity": true,
+  "branch": "feature/alpha-01-campaign-first",
+  "independentReviewer": "/root/alpha_review",
+  "independentReviewedRuntimeSha": "158d943819afd12c8a4c73b6101077800b5045d1",
+  "independentPackageReview": "approved: exact runtime158d943819afd12c8a4c73b6101077800b5045d1; all75 extracted files and14 packaged runtime files match; ZIP/exe/stamp hashes independently verified; no blocking findings",
+  "focusedTests": {
+    "passed": 9,
+    "desktopStartupPassed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "independentOverlappingTests": [
+    {
+      "sha": "c26852b90aea3bfb7c31f207da6dc87fca3f7e21",
+      "passed": 58
+    },
+    {
+      "sha": "e06c2a09fbb117a9491afb658fbe8353146cfe5e",
+      "passed": 26
+    },
+    {
+      "sha": "158d943819afd12c8a4c73b6101077800b5045d1",
+      "passed": 1,
+      "scope": "desktop development identity/startup delta"
+    }
+  ],
+  "portableTests": {
+    "passed": 217,
+    "workflowGuardsPassed": 3,
+    "allowlistExpanded": true,
+    "expansionScope": "Two fixture-only campaign conversation/continuity files. Independently reviewed transitive effects; no real provider, installed source, personal profile or process control."
+  },
+  "browser": {
+    "passed": 11,
+    "failed": 0,
+    "record": "Local-only artifacts/qa/alpha-01-ui-2026-11-17T00-18-48-167Z-dc7883d5/run-record.json",
+    "recordSha256": "3d11ebd6794bc3ad8e48de55aa253ec1092793074a5b06ed98b1479bd10d9ac7",
+    "sourceUnchanged": true,
+    "rendererErrors": []
+  },
+  "retainedSourceAudit": {
+    "version": "1.19.5.0",
+    "indexRevision": "7b2d4bf94ac9cc04b96f3c4d604fb22af61dd8fb3a98646d0f2c1a2daf01d53b",
+    "sourceIndexSha256": "e0b7a514cc66c5435deb3bc05d3e040a080414a27e6d87b5f768a64349c97ad5",
+    "entriesCopied": 65144,
+    "originalSourceIndexUnchanged": true,
+    "tree": {
+      "uid": "focus_tree:common/national_focus/germany.txt:german_focus",
+      "id": "german_focus",
+      "source": "common/national_focus/germany.txt",
+      "hash": "ac730be5ccc9095fb400e58b2f7d44501288a94186beb148dbbb0b32cf8ea03c",
+      "version": "1.19.5.0",
+      "line": 24
+    },
+    "focus": {
+      "uid": "focus:common/national_focus/germany.txt:GER_prioritize_economic_growth",
+      "id": "GER_prioritize_economic_growth",
+      "source": "common/national_focus/germany.txt",
+      "hash": "ac730be5ccc9095fb400e58b2f7d44501288a94186beb148dbbb0b32cf8ea03c",
+      "version": "1.19.5.0",
+      "line": 124
+    },
+    "includedDefinitions": 84,
+    "includedKinds": {
+      "decision": 7,
+      "event": 37,
+      "focus": 30,
+      "focus_tree": 1,
+      "technology": 9
+    },
+    "sourceCharacters": 165618,
+    "providerJsonBodyUtf8Bytes": 179759,
+    "limitCharacters": 180000,
+    "limitProviderJsonBodyUtf8Bytes": 180000,
+    "mandatoryReferences": 3,
+    "selectedOptionalGroups": 24,
+    "omittedOptionalGroups": 12,
+    "privateProfileNoteExcluded": true,
+    "scope": "Source identity/retrieval only. Synthetic manual campaigns, owner-default all DLC/no mods/no exceptions. No current engine applicability qualification.",
+    "allIncludedSourceIdentitiesMatch": true,
+    "requirementsCostsAndGapsRetainedAsArrays": true,
+    "sourceFieldContentEvidence": "Unchanged serializer covered by inherited AI-CONTEXT-01 and deterministic field-preservation regressions; new actual-index journey checks field presence, not independent semantic equality."
+  },
+  "package": {
+    "name": "ALPHA-01-158d943819af-windows-x64.zip",
+    "reference": "Local-only Documents/HOI4 Companion Development Builds/ALPHA-01-158d943819af",
+    "sha256": "ebd3a25bd859555dbefbc332a4e77fe5b99de72b399881a480853afec46cc011",
+    "executableSha256": "e3a617ba75715cd168618ddf3facb9a2ad09098da81833e9389d66ca6c574255",
+    "embeddedFullSourceCommit": "158d943819afd12c8a4c73b6101077800b5045d1",
+    "freshExtractedMatchingFiles": 75,
+    "passed": 11,
+    "failed": 0,
+    "record": "Local-only artifacts/qa/alpha-01-package-2026-11-17T00-23-01-485Z-0e019fba/run-record.json",
+    "recordSha256": "51be444e4a5161e9aba36d445712f1765172fe78e9b2bc477a4acd4470942d0c",
+    "sourceUnchanged": true,
+    "rendererErrors": [],
+    "cleanShutdownServiceRefusalAndRestartPassed": true,
+    "savedRevisionReopened": 2,
+    "ownedApplicationProcessesClosed": true,
+    "generateCalls": 0
+  },
+  "hostedRuntimeChecks": {
+    "sha": "158d943819afd12c8a4c73b6101077800b5045d1",
+    "run": "https://github.com/connorgreenleaf22/hoi4-companion/actions/runs/43986933318",
+    "checks": {
+      "qa-typecheck": "success",
+      "qa-test-ci": "success",
+      "qa-schemas": "success",
+      "qa-hygiene": "success"
+    }
+  },
+  "rendererErrors": [],
+  "realProviderCalls": 0,
+  "testFixtureProviderCalls": 1,
+  "nativeGameLaunches": 0,
+  "acceptance": "pending owner acceptance; real-provider usefulness waits for separate displayed-quote approval",
+  "diagnoses": [
+    {
+      "category": "harness/environment",
+      "result": "corrected",
+      "detail": "Nested locator scope, missing FTS fixture rows and wrapped select label were distinct failures; corrected before continuing. No unchanged failure repeated more than twice."
+    },
+    {
+      "category": "product",
+      "result": "corrected and rebuilt",
+      "detail": "Composer below fold, ineffective alternative copying, failed conversation close accounting, provider transcript omission, quote-bearing recovery export, create-new entry and long context/schema bound."
+    },
+    {
+      "category": "product",
+      "result": "corrected before packaging; affected startup test and exact package rerun passed",
+      "detail": "Independent review found Electron rejected the new ALPHA label; runtime validation now matches package naming while rejecting traversal."
+    },
+    {
+      "category": "qualification",
+      "result": "safe qualitative fallback",
+      "detail": "Current1.19.5 all-DLC calculations unavailable; existing source inspection refuses and no totals/winner/optimization appear."
+    },
+    {
+      "category": "owner dependency",
+      "result": "pending",
+      "detail": "Usefulness acceptance and any real paid generation remain owner decisions."
+    }
+  ],
+  "limits": [
+    "Counts overlap and are not additive distinct coverage.",
+    "Unsaved strategy edits are in-window; explicit save/download before restart. Conversation is bounded to160 entries and offers retry/download/discard on failed writes.",
+    "Provider keys stay service-memory; conversation and recovery draft exports omit quotes, consent and provider settings.",
+    "Synthetic fixture generation validates wiring only, not real AI usefulness.",
+    "QUAL-195, final mechanics coverage, native budgets, all unsupported combat metrics and release controls remain unchanged.",
+    "Compact-mode PR22 and separate knowledge-engine work are preserved; no merge, release or game action performed."
+  ],
+  "hqSynchronization": {
+    "page": "https://chatgpt.com/space/page_873a0b5a11fc819196334ba3859b3d52",
+    "dateLocal": "2026-11-16",
+    "state": "applied and verified by fresh readback",
+    "scope": "Engineering-ready candidate, five engineering checklist items, owner acceptance and player-understanding items remain unchecked. No owner acceptance change."
+  }
+}
