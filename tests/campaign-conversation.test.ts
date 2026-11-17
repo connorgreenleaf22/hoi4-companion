@@ -1,3 +1,5 @@
+import {preparationChecklist} from '../src/campaign/local-advice';
+import {strategyContentSchema} from '../server/planner/ai-provider';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {randomUUID} from 'node:crypto';
@@ -27,4 +29,10 @@ test('conversation namespace is campaign-scoped, atomic, bounded, idempotent and
   const value=readConversation(store,'a');value.messages=Array.from({length:160},()=>({...value.messages[0],id:randomUUID()}));store.setSetting('campaign-conversation:v1:a',value);
   assert.throws(()=>appendConversation(store,{profileId:'a',messages:[{...message,id:randomUUID()}]},get),/full/);assert.equal(readConversation(store,'a').messages.length,160);
  }finally{store.db.close();fs.rmSync(directory,{recursive:true,force:true});}
+});
+
+
+test('maximum manual composer context remains complete and saveable through the existing strategy schema',()=>{
+ const context=('😀A\n').repeat(1000);assert.equal(context.length,4000);
+ const content=strategyContentSchema.parse(preparationChecklist(context));assert.equal(content.assumptions.join(''),context);assert.ok(content.assumptions.every(text=>text.length<=2000));assert.deepEqual(content.focusIds,[]);
 });

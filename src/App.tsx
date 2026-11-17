@@ -173,7 +173,7 @@ export default function App(){
       </section>}
       {pendingSaves>0&&<div className="save-status" role="status">Saving campaign…</div>}
       {!status?<div className="loading" role="status">Loading game data and campaigns…</div>:<main>
-        {(['campaign','chat','saved'] as Page[]).includes(page)&&<CampaignWorkspace key={active?.id||'none'} profile={active} meta={status.meta} view={page as 'campaign'|'chat'|'saved'} onNew={()=>setProfileEditor(active?structuredClone(active):blank(status?.meta?.dlcs))} onSetup={()=>setPage('planner')} onEdit={()=>setProfileEditor(structuredClone(active!))} openEntry={openEntry}/>}
+        {(['campaign','chat','saved'] as Page[]).includes(page)&&<CampaignWorkspace key={active?.id||'none'} profile={active} meta={status.meta} view={page as 'campaign'|'chat'|'saved'} onNew={()=>setProfileEditor(blank(status?.meta?.dlcs))} onSetup={()=>setPage('planner')} onEdit={()=>setProfileEditor(structuredClone(active!))} openEntry={openEntry}/>}
         {page==='tools'&&<><PageTitle eyebrow="CAMPAIGN TOOLKIT" title="Tools" text="All existing tools use the same local service and saved campaigns."/><div className="tool-hub">{toolNav.map(n=><button key={n.id} className="button" onClick={()=>setPage(n.id)}><n.icon size={20}/>{n.label}</button>)}</div></>}
         {page==='overview'&&<>
           <div className="page-heading"><div><div className="eyebrow"><span className="tiny-line"/> CAMPAIGN WORKSPACE</div><h1>Command center</h1><p>Plan a focus route, look up a game mechanic, or review recorded campaign history.</p></div><div className="edition"><Globe size={38}/><span>HEARTS OF IRON IV</span><strong>FIELD COMPANION</strong><span>PERSONAL EDITION / {status.meta?.version||'SETUP'}</span></div></div>

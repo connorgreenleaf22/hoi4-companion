@@ -15,7 +15,7 @@ export function CampaignWorkspace({profile,meta,onNew,onSetup,onEdit,openEntry,v
  const key=JSON.stringify([profile?.id,plan?.tree,meta?.indexRevision]);
  useEffect(()=>{let live=true;setError('');if(plan?.tree)void api<{tree:Entry;focuses:Entry[]}>(`tree?uid=${encodeURIComponent(plan.tree)}`).then(v=>{if(live)setSource({key,...v});}).catch(e=>{if(live)setError(String(e));});return()=>{live=false;};},[key]);
  function addAlternative(items:import('../types').CampaignPlan['items'],name:string,assumptions?:string[]){
-  if(!profile||!plan)return;const previous=getPlannerDraft(profile.id);const draft=structuredClone(previous?.dirty?previous.draft:profile);const state=ensurePlanner(draft);const id=crypto.randomUUID();state.plans.push({...plan,id,name:name.slice(0,100),items,assumptions:assumptions||plan.assumptions,referenceIndexRevision:meta?.indexRevision});draft.planner=state;
+  if(!profile||!plan)return;const previous=getPlannerDraft(profile.id);const draft=structuredClone(previous?.dirty?previous.draft:profile);const state=ensurePlanner(draft);if(state.plans.length>=20){window.alert('This campaign already has 20 focus alternatives. Review or remove one in the planner before adding another.');return;}const id=crypto.randomUUID();state.plans.push({...plan,id,name:name.slice(0,100),items,assumptions:assumptions||plan.assumptions,referenceIndexRevision:meta?.indexRevision});draft.planner=state;
   rememberPlannerDraft({draft:mirrorPlanner(draft),selected:id,baseRevision:previous?.dirty?previous.baseRevision:profile.revision||0,view:previous?.view||state.view,dirty:true});onSetup();
  }
  const current=source?.key===key?source:undefined;
